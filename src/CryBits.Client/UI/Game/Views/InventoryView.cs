@@ -6,6 +6,7 @@ using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
+using CryBits.Definitions.Slots;
 using SFML.Window;
 using System;
 using System.Drawing;
@@ -41,7 +42,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
     private void OnRenderSlot(int slot, Point pos)
     {
         ref var inv = ref context.LocalPlayer.GetInventory();
-        var item = _catalog.Items.Get(inv.Slots[slot]?.ItemId ?? Guid.Empty);
+        var item = _catalog.Items.Get(inv.Slots[slot] is ItemSlot s ? s.ItemId : Guid.Empty);
         itemRenderer.DrawItem(item, inv.Slots[slot]?.Amount ?? 0, pos);
     }
 
@@ -53,12 +54,12 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
         switch (e.Button)
         {
             case Mouse.Button.Right:
-                var item = _catalog.Items.Get(inv.Slots[slot].ItemId);
+                var item = _catalog.Items.Get(inv.Slots[slot]?.ItemId ?? Guid.Empty);
                 if (item?.Bind != BindOn.Pickup)
                     // Sell the item if shop is open
                     if (ShopView.Panel.Visible)
                     {
-                        if (inv.Slots[slot].Amount != 1)
+                        if (inv.Slots[slot]?.Amount != 1)
                         {
                             ShopSellView.InventorySlot = slot;
                             ShopSellView.AmountTextBox.Text = string.Empty;
@@ -68,7 +69,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
                     }
                     // Otherwise drop the item
                     else if (!TradeView.Panel.Visible)
-                        if (inv.Slots[slot].Amount != 1)
+                        if (inv.Slots[slot]?.Amount != 1)
                         {
                             DropItemView.InventorySlot = slot;
                             DropItemView.AmountTextBox.Text = string.Empty;

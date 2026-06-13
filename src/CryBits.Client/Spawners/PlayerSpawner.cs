@@ -27,7 +27,7 @@ internal static class PlayerSpawner
     /// </summary>
     public static Entity Spawn(
         World world,
-        Guid networkId,
+        long networkId,
         string name,
         short textureNum,
         short[] vitals,
@@ -63,7 +63,7 @@ internal static class PlayerSpawner
     /// </summary>
     public static Entity SpawnLocal(
         World world,
-        Guid networkId,
+        long networkId,
         string name,
         short textureNum,
         short level,

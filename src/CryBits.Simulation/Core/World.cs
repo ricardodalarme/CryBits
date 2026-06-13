@@ -11,7 +11,6 @@ public sealed class World
     public long TickCount { get; set; }
     public EntityRegistry Entities { get; } = new();
     public DirtyTracking Dirty { get; } = new();
-    public Tick? CurrentTick { get; set; }
 
     public EntityId? FindPlayer(string name)
     {
@@ -25,19 +24,17 @@ public sealed class World
         return null;
     }
 
-    public EntityId? FindPlayerByValue(Guid id)
+    public EntityId? FindPlayer(EntityId id)
     {
-        var entityId = new EntityId(id);
-        var state = Entities.Get(entityId);
-        if (state != null && state.Has<PlayerTag>()) return entityId;
+        var state = Entities.Get(id);
+        if (state != null && state.Has<PlayerTag>()) return id;
         return null;
     }
 
-    public EntityId? FindNpcInstance(Guid id)
+    public EntityId? FindNpcInstance(EntityId id)
     {
-        var entityId = new EntityId(id);
-        var state = Entities.Get(entityId);
-        if (state != null && state.Has<NpcTag>()) return entityId;
+        var state = Entities.Get(id);
+        if (state != null && state.Has<NpcTag>()) return id;
         return null;
     }
 }

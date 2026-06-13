@@ -1,11 +1,10 @@
 using CryBits.Simulation.Components;
+using CryBits.Definitions.Utils;
 using CryBits.Simulation.Events;
-using System.Drawing;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
-
 namespace CryBits.Simulation.Systems.Party;
 
 public sealed class PartySystem : ISimulationSystem
@@ -18,9 +17,9 @@ public sealed class PartySystem : ISimulationSystem
         {
             switch (intent)
             {
-                case PartyInviteIntent i: Invite(world, i.SourceEntityId, i.PlayerName); break;
-                case PartyAcceptIntent a: Accept(world, a.SourceEntityId); break;
-                case PartyDeclineIntent d: Decline(world, d.SourceEntityId); break;
+                case PartyInviteIntent i: Invite(world, tick, i.SourceEntityId, i.PlayerName); break;
+                case PartyAcceptIntent a: Accept(world, tick, a.SourceEntityId); break;
+                case PartyDeclineIntent d: Decline(world, tick, d.SourceEntityId); break;
                 case PartyLeaveIntent l: Leave(world, l.SourceEntityId); break;
             }
         }
@@ -28,12 +27,12 @@ public sealed class PartySystem : ISimulationSystem
         foreach (var ev in tick.Events.Events)
         {
             if (ev is not PlayerDisconnectedEvent e) continue;
-            var playerId = world.FindPlayerByValue(e.PlayerId);
+            var playerId = world.FindPlayer(e.PlayerId);
             if (playerId != null) Leave(world, playerId.Value);
         }
     }
 
-    private void Invite(World world, EntityId entityId, string targetName)
+    private void Invite(World world, Tick tick, EntityId entityId, string targetName)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -43,13 +42,13 @@ public sealed class PartySystem : ISimulationSystem
 
         if (invitedId == null)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The player isn't connected.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player isn't connected.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (invitedId.Value == entityId)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You can't be invited.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You can't be invited.", ColorArgb = ChatColors.White });
             return;
         }
 
@@ -58,42 +57,42 @@ public sealed class PartySystem : ISimulationSystem
 
         if (invitedParty.Members.Count != 0)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The player is already part of a party.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player is already part of a party.", ColorArgb = ChatColors.White });
             return;
         }
 
-        if (!string.IsNullOrEmpty(invitedParty.Request))
+        if (invitedParty.PendingInviterId.HasValue)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The player is analyzing an invitation to another party.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player is analyzing an invitation to another party.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (party.Members.Count == Config.MaxPartyMembers - 1)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "Your party is full.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "Your party is full.", ColorArgb = ChatColors.White });
             return;
         }
 
-        invitedParty.Request = appearance.Name;
+        invitedParty.PendingInviterId = entityId;
     }
 
-    private void Accept(World world, EntityId entityId)
+    private void Accept(World world, Tick tick, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
         var party = e.Get<PartyState>()!;
 
-        var inviterId = world.FindPlayer(party.Request);
+        var inviterId = party.PendingInviterId;
 
         if (party.Members.Count != 0)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You are already part of a party.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You are already part of a party.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (inviterId == null)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "Who invited you is no longer available.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "Who invited you is no longer available.", ColorArgb = ChatColors.White });
             return;
         }
 
@@ -103,7 +102,7 @@ public sealed class PartySystem : ISimulationSystem
 
         if (inviterParty.Members.Count == Config.MaxPartyMembers - 1)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The party is full.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The party is full.", ColorArgb = ChatColors.White });
             return;
         }
 
@@ -120,23 +119,23 @@ public sealed class PartySystem : ISimulationSystem
 
         party.Members.Insert(0, inviterId.Value);
         inviterParty.Members.Add(entityId);
-        party.Request = string.Empty;
-        world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = inviterId.Value.Value, Text = appearance.Name + " joined the party.", ColorArgb = Color.White.ToArgb() });
-
+        party.PendingInviterId = null;
+        tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You joined " + inviterAppearance.Name + "'s party.", ColorArgb = ChatColors.White });
+        tick.Events.Emit(new ChatMessageEvent { RecipientId = inviterId.Value, Text = appearance.Name + " joined the party.", ColorArgb = ChatColors.White });
         world.Dirty.Mark<PartyState>(entityId);
         world.Dirty.Mark<PartyState>(inviterId.Value);
         for (byte i = 0; i < party.Members.Count; i++) world.Dirty.Mark<PartyState>(party.Members[i]);
     }
 
-    private void Decline(World world, EntityId entityId)
+    private void Decline(World world, Tick tick, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
         var party = e.Get<PartyState>()!;
 
-        var inviterId = world.FindPlayer(party.Request);
-        if (inviterId != null) world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = inviterId.Value.Value, Text = appearance.Name + " decline the party.", ColorArgb = Color.White.ToArgb() });
-        party.Request = string.Empty;
+        var inviterId = party.PendingInviterId;
+        if (inviterId != null) tick.Events.Emit(new ChatMessageEvent { RecipientId = inviterId.Value, Text = appearance.Name + " decline the party.", ColorArgb = ChatColors.White });
+        party.PendingInviterId = null;
     }
 
     private void Leave(World world, EntityId entityId)

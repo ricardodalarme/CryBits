@@ -1,53 +1,91 @@
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Core;
-using System.Linq;
+using System;
+using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Simulation.Systems.Combat;
 
 public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-
-
     public void Execute(World world, Tick tick)
     {
-        foreach (var ev in tick.Events.Events.ToArray())
+        var events = tick.Events.Events;
+        var count = events.Count;
+        for (var i = 0; i < count; i++)
         {
-            if (ev is not EntityDiedEvent died) continue;
-            if (!died.EntityIsPlayer) continue;
-            var playerId = world.FindPlayerByValue(died.EntityId);
-            if (playerId == null) continue;
-
-            var e = world.Entities.Get(playerId.Value)!;
-            var vitals = e.Get<Vitals>()!;
-            var pos = e.Get<Position>()!;
-            var stats = e.Get<StatBlock>()!;
-            var appearance = e.Get<PlayerAppearance>()!;
-            var playerClass = _catalog.Classes.Get(appearance.ClassId);
-
-            for (byte n = 0; n < (byte)Vital.Count; n++)
-            {
-                if (n == 0) vitals.Hp = vitals.MaxHp; else vitals.Mp = vitals.MaxMp;
-            }
-
-            world.Dirty.Mark<Vitals>(playerId.Value);
-
-            stats.Experience /= 10;
-            world.Dirty.Mark<StatBlock>(playerId.Value);
-
-            pos.Direction = (Direction)playerClass.SpawnDirection;
-            tick.Events.Emit(new PlayerRespawnEvent
-            {
-                PlayerId = playerId.Value.Value,
-                MapId = playerClass.SpawnMapId,
-                X = playerClass.SpawnX,
-                Y = playerClass.SpawnY
-            });
+            var ev = events[i];
+            if (ev is PlayerDiedEvent died)
+                HandlePlayerDeath(world, tick, died);
+            else if (ev is NpcDiedEvent npcDied)
+                HandleNpcDeath(world, tick, npcDied);
         }
+    }
+
+    private void HandlePlayerDeath(World world, Tick tick, PlayerDiedEvent died)
+    {
+        var playerId = world.FindPlayer(died.EntityId);
+        if (playerId == null) return;
+
+        var e = world.Entities.Get(playerId.Value)!;
+        var vitals = e.Get<Vitals>()!;
+        var pos = e.Get<Position>()!;
+        var appearance = e.Get<PlayerAppearance>()!;
+        var playerClass = catalog.Classes.Get(appearance.ClassId);
+
+        vitals.Hp = vitals.MaxHp;
+        vitals.Mp = vitals.MaxMp;
+
+        var oldMapId = pos.MapId;
+        pos.Direction = (Direction)playerClass.SpawnDirection;
+        pos.MapId = playerClass.SpawnMapId;
+        pos.X = playerClass.SpawnX;
+        pos.Y = playerClass.SpawnY;
+
+        if (oldMapId != pos.MapId)
+            pos.LoadingMap = true;
+
+        tick.Events.Emit(new PlayerWarpedEvent
+        {
+            PlayerId = playerId.Value,
+            OldMapId = oldMapId,
+            NewMapId = pos.MapId,
+            NeedsMapData = true
+        });
+
+        world.Dirty.Mark<Vitals>(playerId.Value);
+        world.Dirty.Mark<Position>(playerId.Value);
+    }
+
+    private void HandleNpcDeath(World world, Tick tick, NpcDiedEvent died)
+    {
+        var e = world.Entities.Get(died.EntityId);
+        if (e == null) return;
+
+        var pos = e.Get<Position>()!;
+        var posMap = world.Maps.Get(pos.MapId);
+        if (posMap == null) return;
+
+        var npcData = catalog.Npcs.Get(died.NpcDefId);
+        if (npcData == null) return;
+
+        for (byte d = 0; d < npcData.Drop.Count; d++)
+            if (npcData.Drop[d].ItemId != Guid.Empty)
+                if (Random.Shared.Next(1, 99) <= npcData.Drop[d].Chance)
+                    tick.Events.Emit(new LootDroppedEvent
+                    {
+                        MapId = pos.MapId,
+                        X = pos.X,
+                        Y = pos.Y,
+                        ItemId = npcData.Drop[d].ItemId,
+                        Amount = npcData.Drop[d].Amount,
+                        DespawnTick = tick.TickNumber + GroundItemDespawnTicks
+                    });
+
+        world.Entities.Destroy(died.EntityId);
+        posMap.NpcIds.Remove(died.EntityId);
     }
 }

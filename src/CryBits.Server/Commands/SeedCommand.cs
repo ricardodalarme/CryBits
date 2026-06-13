@@ -357,15 +357,11 @@ internal sealed class SeedCommand : IConsoleCommand
         foreach (var mapDef in _catalog.Maps.Values)
         {
             var mapState = new MapState(mapDef.Id, mapDef);
-            mapState.SpawnItems(WorldHost.Current.Entities, DefinitionCatalog.Instance);
+            mapState.SpawnItems(WorldHost.Current.Entities);
             WorldHost.Current.Simulation.Maps.Add(mapDef.Id, mapState);
 
             for (byte i = 0; i < mapDef.Npc.Count; i++)
-            {
-                var entityId = NpcSpawner.Spawn(WorldHost.Current.Simulation, DefinitionCatalog.Instance, mapState.Id, i);
-                if (entityId.Value != Guid.Empty)
-                    mapState.NpcIds.Add(entityId);
-            }
+                NpcSpawner.Spawn(WorldHost.Current.Simulation, DefinitionCatalog.Instance, mapState.Id, i);
         }
 
         Console.WriteLine("[Seed] All data written to disk. Done.");

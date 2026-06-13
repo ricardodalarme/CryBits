@@ -17,7 +17,7 @@ namespace CryBits.Client.Spawners;
 /// </summary>
 internal static class NpcSpawner
 {
-    public static Entity Spawn(World world, Guid npcId, Npc data, byte x, byte y, Direction direction, short[] currentVitals)
+    public static Entity Spawn(World world, long npcId, Npc data, byte x, byte y, Direction direction, short[] currentVitals)
     {
         var texture = Textures.Characters[data.Texture];
         var size = texture.ToSize();

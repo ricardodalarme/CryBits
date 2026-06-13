@@ -26,7 +26,7 @@ internal class PartyHandler(PartySender partySender, GameContext context)
         }
 
         ref var party = ref world.AddOrGet(entity, new PartyComponent());
-        party.MemberIds = new Guid[packet.MemberIds.Length];
+        party.MemberIds = new long[packet.MemberIds.Length];
         for (byte i = 0; i < party.MemberIds.Length; i++)
             party.MemberIds[i] = packet.MemberIds[i];
     }

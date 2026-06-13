@@ -9,6 +9,7 @@ using System.IO;
 using static CryBits.Definitions.Globals;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Host.Core;
+using CryBits.Definitions.Characters;
 
 namespace CryBits.Host.Persistence.Repositories;
 
@@ -36,7 +37,7 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
         var stats = new StatBlock();
         stats.Level = data.ReadInt16();
         appearance.ClassId = new Guid(data.ReadString());
-        appearance.Genre = data.ReadBoolean();
+        appearance.Gender = (Gender)data.ReadByte();
         stats.Experience = data.ReadInt32();
         stats.Points = data.ReadByte();
 
@@ -72,7 +73,7 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
         state.Set(inv);
         state.Set(equip);
         state.Set(hotbar);
-        state.Set(new CombatState());
+        state.Set(new AttackCooldown());
         state.Set(new TradeState());
         state.Set(new PartyState());
         state.Set(new ShopState());
@@ -115,7 +116,7 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
         data.Write(appearance.TextureNum);
         data.Write(stats.Level);
         data.Write(appearance.ClassId.ToString());
-        data.Write(appearance.Genre);
+        data.Write((byte)appearance.Gender);
         data.Write(stats.Experience);
         data.Write(stats.Points);
         data.Write(pos.MapId.ToString());

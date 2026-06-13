@@ -1,8 +1,6 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.Spawners;
 using CryBits.Simulation.State;
 using System;
 using System.Collections.Generic;
@@ -78,7 +76,7 @@ public sealed class MapState
         return null;
     }
 
-    public void SpawnItems(EntityRegistry entities, DefinitionCatalog catalog)
+    public void SpawnItems(EntityRegistry entities)
     {
         for (byte x = 0; x < Map.Width; x++)
             for (byte y = 0; y < Map.Height; y++)
@@ -100,8 +98,7 @@ public sealed class MapState
 
     public bool TileBlocked(byte x, byte y, Direction direction, EntityRegistry entities, bool countEntities = true)
     {
-        byte nextX = x, nextY = y;
-        direction.NextTile(ref nextX, ref nextY);
+        var (nextX, nextY) = direction.NextTile(x, y);
 
         if (Data.TileBlocked(nextX, nextY)) return true;
         if (Data.Attribute[nextX, nextY].Block[(byte)direction.Reverse()]) return true;

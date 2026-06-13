@@ -64,7 +64,7 @@ internal sealed class EditorService(
 
         foreach (var tempMap in WorldHost.Current.Maps.Values)
         {
-            tempMap.SpawnItems(WorldHost.Current.Entities, _catalog);
+            tempMap.SpawnItems(WorldHost.Current.Entities);
 
             foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
             {
@@ -147,14 +147,13 @@ internal sealed class EditorService(
             var world = WorldHost.Current;
             var state = world.Entities.Get(entityId)!;
             var pos = state.Get<Position>()!;
-            var combat = state.Get<CombatState>()!;
             var mapInstance = world.Maps[pos.MapId];
 
             if (packet.SendMap) mapSender.Map(session, mapInstance.Data);
 
             mapSender.MapPlayers(entityId);
 
-            combat.GettingMap = false;
+            pos.LoadingMap = false;
             PlayerSender.Instance.JoinMap(entityId);
         }
     }

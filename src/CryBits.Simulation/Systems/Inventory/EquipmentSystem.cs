@@ -5,7 +5,6 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using System;
-using System.Linq;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
@@ -14,34 +13,40 @@ namespace CryBits.Simulation.Systems.Inventory;
 
 public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
-    private readonly DefinitionCatalog _catalog = catalog;
     public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
         {
             if (intent is EquipmentRemoveIntent remove)
-                Unequip(world, remove.SourceEntityId, remove.Slot);
+                Unequip(world, tick, remove.SourceEntityId, remove.Slot);
         }
 
-        foreach (var ev in tick.Events.Events.ToArray())
+        var events = tick.Events.Events;
+        for (var i = 0; i < events.Count; i++)
         {
-            if (ev is not ItemUsedEvent use) continue;
-            var playerId = world.FindPlayerByValue(use.PlayerId);
+            if (events[i] is not ItemUsedEvent use) continue;
+            var playerId = world.FindPlayer(use.PlayerId);
             if (playerId == null) continue;
-            var item = _catalog.Items.Get(use.ItemId);
+            var item = catalog.Items.Get(use.ItemId);
             if (item == null || item.Type != ItemType.Equipment) continue;
-            Equip(world, playerId.Value, item);
+            Equip(world, tick, playerId.Value, item);
+            tick.Events.Emit(new ItemTakenEvent
+            {
+                EntityId = use.PlayerId,
+                SlotIndex = (byte)use.SlotIndex,
+                Amount = 1
+            });
         }
     }
 
-    private void Equip(World world, EntityId entityId, Item item)
+    private void Equip(World world, Tick tick, EntityId entityId, Item item)
     {
         var e = world.Entities.Get(entityId)!;
         var equip = e.Get<EquipmentState>()!;
         var stats = e.Get<StatBlock>()!;
 
         var oldItemId = equip.Slots[item.EquipType];
-        var oldItem = oldItemId != Guid.Empty ? _catalog.Items.Get(oldItemId) : null;
+        var oldItem = oldItemId != Guid.Empty ? catalog.Items.Get(oldItemId) : null;
 
         equip.Slots[item.EquipType] = item.Id;
         for (byte i = 0; i < (byte)Attribute.Count; i++)
@@ -50,9 +55,9 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
             for (byte i = 0; i < (byte)Attribute.Count; i++)
                 stats.Attribute[i] -= oldItem.EquipAttribute[i];
 
-        world.CurrentTick?.Events.Emit(new ItemEquippedEvent
+        tick.Events.Emit(new ItemEquippedEvent
         {
-            PlayerId = entityId.Value,
+            PlayerId = entityId,
             EquipSlot = item.EquipType,
             ItemId = item.Id,
             OldItemId = oldItem?.Id
@@ -62,7 +67,7 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
         world.Dirty.Mark<StatBlock>(entityId);
     }
 
-    private void Unequip(World world, EntityId entityId, byte equipSlot)
+    private void Unequip(World world, Tick tick, EntityId entityId, byte equipSlot)
     {
         var e = world.Entities.Get(entityId)!;
         var equip = e.Get<EquipmentState>()!;
@@ -70,16 +75,16 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
 
         var oldItemId = equip.Slots[equipSlot];
         if (oldItemId == Guid.Empty) return;
-        var oldItem = _catalog.Items.Get(oldItemId);
+        var oldItem = catalog.Items.Get(oldItemId);
         if (oldItem?.Bind == BindOn.Equip) return;
 
         for (byte i = 0; i < (byte)Attribute.Count; i++)
             stats.Attribute[i] -= oldItem.EquipAttribute[i];
         equip.Slots[equipSlot] = Guid.Empty;
 
-        world.CurrentTick?.Events.Emit(new ItemEquippedEvent
+        tick.Events.Emit(new ItemEquippedEvent
         {
-            PlayerId = entityId.Value,
+            PlayerId = entityId,
             EquipSlot = equipSlot,
             ItemId = null,
             OldItemId = oldItem.Id

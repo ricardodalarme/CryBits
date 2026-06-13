@@ -1,6 +1,5 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
-using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
@@ -76,7 +75,7 @@ internal sealed class CharacterService(
         var world = WorldHost.Current;
         var @class = catalog.Classes.Get(new Guid(packet.ClassId));
 
-        var entityId = PlayerSpawner.Spawn(WorldHost.Current.Simulation, catalog, name, @class, packet.GenderMale, packet.TextureNum);
+        var entityId = PlayerSpawner.Spawn(WorldHost.Current.Simulation, catalog, name, @class, packet.Gender, packet.TextureNum);
         var state = world.Entities.Get(entityId)!;
         var inv = state.Get<InventoryState>()!;
         var equip = state.Get<EquipmentState>()!;
@@ -155,7 +154,7 @@ internal sealed class CharacterService(
         characterRepository.Write(session.Account!, entityId);
         playerSender.PlayerLeave(entityId);
 
-        world.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent { PlayerId = entityId.Value });
+        world.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent { PlayerId = entityId });
 
         world.Sessions.Unregister(entityId);
         world.Entities.Destroy(entityId);
@@ -181,12 +180,12 @@ internal sealed class CharacterService(
         playerSender.PlayerInventory(entityId);
         playerSender.PlayerHotbar(entityId);
 
-        WorldHost.Current.CurrentTick?.Events.Emit(new PlayerRespawnEvent
+        WorldHost.Current.CurrentTick?.Events.Emit(new PlayerWarpedEvent
         {
-            PlayerId = entityId.Value,
-            MapId = pos.MapId,
-            X = pos.X,
-            Y = pos.Y
+            PlayerId = entityId,
+            OldMapId = pos.MapId,
+            NewMapId = pos.MapId,
+            NeedsMapData = true
         });
 
         playerSender.JoinGame(entityId);

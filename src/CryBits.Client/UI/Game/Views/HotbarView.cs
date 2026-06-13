@@ -8,6 +8,7 @@ using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
+using CryBits.Definitions.Slots;
 using SFML.Window;
 using System;
 using System.Drawing;
@@ -46,14 +47,14 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
         if (!context.World.TryGet<HotbarComponent>(context.LocalPlayer.Entity, out var hotbar)) return;
 
         var hotbarSlot = hotbar.Slots[slot];
-        if (hotbarSlot?.Slot > 0 && hotbarSlot.Type == SlotType.Item)
-            itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[hotbarSlot.Slot]?.ItemId ?? Guid.Empty), 1, pos);
+        if (hotbarSlot is HotbarSlot { Slot: > 0, Type: SlotType.Item } h)
+            itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty), 1, pos);
     }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
         var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[slot];
-        if (hotbarSlot == null || hotbarSlot.Slot == 0) return;
+        if (hotbarSlot is not HotbarSlot { Slot: not 0 }) return;
 
         switch (e.Button)
         {
@@ -77,7 +78,7 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
     {
         var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[slot];
-        if (hotbarSlot == null || hotbarSlot.Slot <= 0) return;
+        if (hotbarSlot is not HotbarSlot { Slot: > 0 }) return;
 
         // Use item from hotbar
         playerSender.HotbarUse((byte)slot);
@@ -87,10 +88,12 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
     private void OnGridSlotHover(short slot)
     {
         var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[slot];
-        if (hotbarSlot == null || hotbarSlot.Slot <= 0 || hotbarSlot.Type != SlotType.Item) return;
-        var item = _catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[hotbarSlot.Slot]?.ItemId ?? Guid.Empty);
-        if (item == null) return;
-        InformationView.Show(item.Id, Panel.Position + new Size(0, 42));
+        if (hotbarSlot is HotbarSlot { Slot: > 0, Type: SlotType.Item } h)
+        {
+            var item = _catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty);
+            if (item == null) return;
+            InformationView.Show(item.Id, Panel.Position + new Size(0, 42));
+        }
     }
 
     private static void OnGridSlotLeave(short slot) => InformationView.Hide();

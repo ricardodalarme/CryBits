@@ -34,7 +34,7 @@ public struct MapNpcsPacket : IServerPacket
 [Serializable]
 public struct MapNpcPacket : IServerPacket
 {
-    public Guid InstanceId;
+    public long InstanceId;
     public Guid NpcId;
     public byte X, Y;
     public byte Direction;
@@ -44,7 +44,7 @@ public struct MapNpcPacket : IServerPacket
 [Serializable]
 public struct MapNpcMovementPacket : IServerPacket
 {
-    public Guid InstanceId;
+    public long InstanceId;
     public byte X, Y;
     public byte Direction;
     public byte Movement;
@@ -54,21 +54,21 @@ public struct MapNpcMovementPacket : IServerPacket
 [Serializable]
 public struct MapNpcDirectionPacket : IServerPacket
 {
-    public Guid InstanceId;
+    public long InstanceId;
     public byte Direction;
 }
 
 [Serializable]
 public struct MapNpcVitalsPacket : IServerPacket
 {
-    public Guid InstanceId;
+    public long InstanceId;
     public short[] Vital;
 }
 
 [Serializable]
 public struct MapNpcDiedPacket : IServerPacket
 {
-    public Guid InstanceId;
+    public long InstanceId;
 }
 
 [Serializable]
@@ -87,7 +87,7 @@ public struct PacketsMapItem
 [Serializable]
 public struct PacketsMapNpc
 {
-    public Guid InstanceId;
+    public long InstanceId;
     public Guid NpcId;
     public byte X, Y;
     public byte Direction;

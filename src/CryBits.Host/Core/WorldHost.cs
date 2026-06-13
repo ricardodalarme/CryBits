@@ -4,6 +4,7 @@ using CryBits.Host.Network.Senders;
 using CryBits.Host.Services;
 using CryBits.Simulation.Systems.Combat;
 using CryBits.Simulation.Systems.Inventory;
+using CryBits.Simulation.Systems.Regeneration;
 using CryBits.Simulation.Systems.Movement;
 using CryBits.Simulation.Systems.Npc;
 using CryBits.Simulation.Systems.Party;
@@ -31,7 +32,7 @@ internal sealed class WorldHost
     public Dictionary<Guid, MapState> Maps => Simulation.Maps;
     public EntityRegistry Entities => Simulation.Entities;
     public DirtyTracking Dirty => Simulation.Dirty;
-    public Tick? CurrentTick => Simulation.CurrentTick;
+    public Tick? CurrentTick { get; set; }
 
     public SessionManager Sessions { get; } = new();
 
@@ -42,22 +43,23 @@ internal sealed class WorldHost
         Current = this;
 
         var movementSystem = new MovementSystem();
-        var npcBrainSystem = new NpcBrainSystem();
+        var npcBrainSystem = new NpcBrainSystem(DefinitionCatalog.Instance);
         var combatSystem = new CombatSystem(DefinitionCatalog.Instance);
         var levelingSystem = new LevelingSystem(DefinitionCatalog.Instance);
         var deathSystem = new DeathSystem(DefinitionCatalog.Instance);
-        var groundItemSystem = new GroundItemSystem();
+        var groundItemSystem = new GroundItemSystem(DefinitionCatalog.Instance);
         var equipmentSystem = new EquipmentSystem(DefinitionCatalog.Instance);
         var inventorySystem = new InventorySystem(DefinitionCatalog.Instance);
         var hotbarSystem = new HotbarSystem();
-        var tradeSystem = new TradeSystem(DefinitionCatalog.Instance);
+        var tradeSystem = new TradeSystem();
         var shopSystem = new ShopSystem(DefinitionCatalog.Instance);
 
         Pipeline = new TickPipeline();
-        Pipeline.AddSystem(new VitalsRegenSystem(DefinitionCatalog.Instance));
-        Pipeline.AddSystem(movementSystem);
+        Pipeline.AddSystem(new VitalsRegenSystem());
         Pipeline.AddSystem(npcBrainSystem);
+        Pipeline.AddSystem(movementSystem);
         Pipeline.AddSystem(combatSystem);
+        Pipeline.AddSystem(new AggroSystem());
         Pipeline.AddSystem(levelingSystem);
         Pipeline.AddSystem(deathSystem);
         Pipeline.AddSystem(groundItemSystem);
@@ -67,7 +69,7 @@ internal sealed class WorldHost
         Pipeline.AddSystem(tradeSystem);
         Pipeline.AddSystem(shopSystem);
         Pipeline.AddSystem(new PartySystem());
-        Pipeline.AddSystem(new RespawnSystem(DefinitionCatalog.Instance));
+        Pipeline.AddSystem(new NpcRespawnSystem(DefinitionCatalog.Instance));
         Pipeline.AddSystem(new ReplicationService(
             PlayerSender.Instance, NpcSender.Instance,
             MapSender.Instance, CombatSender.Instance));
@@ -76,8 +78,8 @@ internal sealed class WorldHost
     public void Tick()
     {
         Simulation.TickCount++;
-        var tick = new Tick(Simulation.TickCount, new IntentBuffer(), new EventBuffer());
-        Simulation.CurrentTick = tick;
+        var tick = new Tick(Simulation.TickCount, new IntentBuffer(), new EventBuffer { TickNumber = Simulation.TickCount });
+        CurrentTick = tick;
 
         NetworkServer.HandleData();
         Pipeline.Execute(Simulation, tick);
@@ -86,12 +88,12 @@ internal sealed class WorldHost
         {
             if (ev is ChatMessageEvent chat)
             {
-                var session = Sessions.Get(new EntityId(chat.RecipientId));
+                var session = Sessions.Get(chat.RecipientId);
                 if (session != null)
                     ChatSender.SendMessage(session, chat.Text, chat.ColorArgb);
             }
         }
 
-        Simulation.CurrentTick = null;
+        CurrentTick = null;
     }
 }

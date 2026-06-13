@@ -6,11 +6,6 @@ public sealed class TickPipeline
 {
     private readonly List<ISimulationSystem> _systems = [];
 
-    public void Add<T>() where T : ISimulationSystem, new()
-    {
-        _systems.Add(new T());
-    }
-
     public TickPipeline AddSystem(ISimulationSystem system)
     {
         _systems.Add(system);

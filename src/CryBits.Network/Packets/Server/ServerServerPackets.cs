@@ -26,5 +26,5 @@ public struct ItemsPacket : IServerPacket
 [Serializable]
 public struct JoinPacket : IServerPacket
 {
-    public Guid PlayerId;
+    public long PlayerId;
 }

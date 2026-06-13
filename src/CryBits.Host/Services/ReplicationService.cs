@@ -48,7 +48,7 @@ internal sealed class ReplicationService(
                 mapSender.RemoveGroundItem(removed.EntityId);
 
             if (ev is NpcDiedEvent died)
-                npcSender.MapNpcDied(died.MapId, new EntityId(died.EntityId));
+                npcSender.MapNpcDied(died.MapId, died.EntityId);
 
             if (ev is PlayerWarpedEvent warp && warp.NeedsMapData)
                 ReplicatePlayerWarp(world, warp);
@@ -61,9 +61,8 @@ internal sealed class ReplicationService(
     {
         var entity = world.Entities.Get(entityId);
         if (entity == null) return;
-        var combat = entity.Get<CombatState>();
 
-        if (combat?.GettingMap == true) return;
+        if (pos.LoadingMap) return;
 
         if (entity.Has<PlayerTag>())
             playerSender.PlayerMove(entityId, 1);
@@ -98,7 +97,7 @@ internal sealed class ReplicationService(
 
     private void ReplicatePlayerWarp(World world, PlayerWarpedEvent warp)
     {
-        var entityId = new EntityId(warp.PlayerId);
+        var entityId = warp.PlayerId;
         foreach (var map in world.Maps.Values)
         {
             if (map.Id == warp.NewMapId)

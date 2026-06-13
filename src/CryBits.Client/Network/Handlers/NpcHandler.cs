@@ -32,7 +32,7 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
     {
         // Destroy any existing NPC entities from the previous map.
         var npcQuery = new QueryDescription().WithAll<NpcTagComponent, NetworkIdComponent>();
-        var toDestroy = new List<(Guid id, Entity e)>();
+        var toDestroy = new List<(long id, Entity e)>();
         context.World.Query(in npcQuery, (Entity e, ref NetworkIdComponent nid) =>
             toDestroy.Add((nid.Value, e)));
         foreach (var (id, e) in toDestroy)

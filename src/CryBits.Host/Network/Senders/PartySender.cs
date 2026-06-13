@@ -13,7 +13,7 @@ internal sealed class PartySender(PackageSender packageSender)
     public void Party(EntityId entityId)
     {
         var party = WorldHost.Current.Entities.Get(entityId)!.Get<PartyState>()!;
-        var packet = new PartyPacket { MemberIds = new Guid[party.Members.Count] };
+        var packet = new PartyPacket { MemberIds = new long[party.Members.Count] };
         for (var i = 0; i < party.Members.Count; i++) packet.MemberIds[i] = party.Members[i].Value;
         packageSender.ToPlayer(entityId, packet);
     }

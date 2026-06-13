@@ -16,13 +16,13 @@ internal sealed class PlayerService()
     internal void PlayerMove(EntityId entityId, PlayerMovePacket packet)
     {
         WorldHost.Current.CurrentTick?.Intents.Enqueue(
-            new MoveIntent(entityId, (Direction)packet.Direction, packet.Movement));
+            new MoveIntent(entityId, (Direction)packet.Direction, (Movement)packet.Movement));
     }
 
     [PacketHandler]
     internal void PlayerAttack(EntityId entityId, PlayerAttackPacket _)
     {
-        WorldHost.Current.CurrentTick?.Intents.Enqueue(new AttackIntent(entityId));
+        WorldHost.Current.CurrentTick?.Intents.Enqueue(new AttackIntent(entityId, null));
     }
 
     [PacketHandler]
@@ -41,7 +41,7 @@ internal sealed class PlayerService()
     internal void DropItem(EntityId entityId, DropItemPacket packet)
     {
         WorldHost.Current.CurrentTick?.Intents.Enqueue(
-            new DropItemIntent(entityId, packet.Slot, packet.Amount));
+            new DropItemIntent(entityId, (byte)packet.Slot, packet.Amount));
     }
 
     [PacketHandler]

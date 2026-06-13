@@ -30,8 +30,7 @@ public static class NpcSpawner
         {
             Index = npcIndex,
             NpcDefId = npcSpawn.NpcId,
-            TargetId = null,
-            AttackTimer = 0
+            TargetId = null
         });
 
         entity.Set(new Position
@@ -50,12 +49,21 @@ public static class NpcSpawner
             MaxMp = npcData.Vital[(byte)Vital.Mp]
         });
 
-        entity.Set(new CombatState());
+        entity.Set(new StatBlock
+        {
+            Level = 1,
+            Experience = 0,
+            Points = 0,
+            Attribute = (short[])npcData.Attribute.Clone()
+        });
+        entity.Set(new AttackCooldown());
         entity.Set(new NpcTag());
 
+        map.NpcIds.Add(entityId);
         world.Dirty.Mark<NpcState>(entityId);
         world.Dirty.Mark<Position>(entityId);
         world.Dirty.Mark<Vitals>(entityId);
+        world.Dirty.Mark<StatBlock>(entityId);
 
         return entityId;
     }

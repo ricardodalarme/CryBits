@@ -54,15 +54,15 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
     }
 
     private void OnRenderOwnSlot(int slot, Point pos) =>
-        itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetTrade().Offer[slot].ItemId), context.LocalPlayer.GetTrade().Offer[slot].Amount, pos);
+        itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetTrade().Offer[slot]?.ItemId ?? Guid.Empty), context.LocalPlayer.GetTrade().Offer[slot]?.Amount ?? 0, pos);
 
     private void OnRenderTheirSlot(int slot, Point pos) =>
-        itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetTrade().TheirOffer[slot].ItemId), context.LocalPlayer.GetTrade().TheirOffer[slot].Amount, pos);
+        itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetTrade().TheirOffer[slot]?.ItemId ?? Guid.Empty), context.LocalPlayer.GetTrade().TheirOffer[slot]?.Amount ?? 0, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
         if (!Panel.Visible) return;
-        if (context.LocalPlayer.GetTrade().Offer[slot].ItemId == Guid.Empty) return;
+        if (context.LocalPlayer.GetTrade().Offer[slot]?.ItemId == Guid.Empty) return;
 
         if (e.Button == Mouse.Button.Right) tradeSender.TradeOffer(slot, 0);
     }
@@ -97,8 +97,8 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
         tradeSender.TradeOfferState(TradeStatus.Accepted);
 
         ref var trade = ref context.LocalPlayer.GetTrade();
-        trade.Offer = new ItemSlot[MaxInventory];
-        trade.TheirOffer = new ItemSlot[MaxInventory];
+        trade.Offer = new ItemSlot?[MaxInventory];
+        trade.TheirOffer = new ItemSlot?[MaxInventory];
     }
 
     private void OnDeclineOfferPressed()

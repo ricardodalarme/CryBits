@@ -6,6 +6,6 @@ namespace CryBits.Simulation.Components;
 public sealed class TradeState
 {
     public EntityId? Partner { get; set; }
-    public string Request { get; set; } = string.Empty;
+    public EntityId? PendingInviterId { get; set; }
     public TradeSlot[]? Offer { get; set; }
 }

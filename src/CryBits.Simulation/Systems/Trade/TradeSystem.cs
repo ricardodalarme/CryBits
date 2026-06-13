@@ -1,13 +1,11 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Slots;
+using CryBits.Definitions.Utils;
 using System.Linq;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 
 using System;
-using System.Drawing;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
@@ -15,21 +13,20 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Systems.Trade;
 
-public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class TradeSystem : ISimulationSystem
 {
-    private readonly DefinitionCatalog _catalog = catalog;
     public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
         {
             switch (intent)
             {
-                case TradeInviteIntent i: Invite(world, i.SourceEntityId, i.PlayerName); break;
-                case TradeAcceptIntent a: Accept(world, a.SourceEntityId); break;
-                case TradeDeclineIntent d: Decline(world, d.SourceEntityId); break;
-                case TradeLeaveIntent l: Leave(world, l.SourceEntityId); break;
-                case TradeOfferIntent o: Offer(world, o.SourceEntityId, o.OfferSlot, o.InventorySlot, o.Amount); break;
-                case TradeOfferStateIntent s: OfferState(world, s.SourceEntityId, s.State); break;
+                case TradeInviteIntent i: Invite(world, tick, i.SourceEntityId, i.PlayerName); break;
+                case TradeAcceptIntent a: Accept(world, tick, a.SourceEntityId); break;
+                case TradeDeclineIntent d: Decline(world, tick, d.SourceEntityId); break;
+                case TradeLeaveIntent l: Leave(world, tick, l.SourceEntityId); break;
+                case TradeOfferIntent o: Offer(world, tick, o.SourceEntityId, o.OfferSlot, o.InventorySlot, o.Amount); break;
+                case TradeOfferStateIntent s: OfferState(world, tick, s.SourceEntityId, s.State); break;
             }
         }
 
@@ -39,27 +36,27 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
             {
                 case PlayerStartedMovingEvent e:
                     {
-                        var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(world, playerId.Value);
+                        var playerId = world.FindPlayer(e.PlayerId);
+                        if (playerId != null) Leave(world, tick, playerId.Value);
                         break;
                     }
                 case PlayerWarpedEvent e:
                     {
-                        var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(world, playerId.Value);
+                        var playerId = world.FindPlayer(e.PlayerId);
+                        if (playerId != null) Leave(world, tick, playerId.Value);
                         break;
                     }
                 case PlayerDisconnectedEvent e:
                     {
-                        var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(world, playerId.Value);
+                        var playerId = world.FindPlayer(e.PlayerId);
+                        if (playerId != null) Leave(world, tick, playerId.Value);
                         break;
                     }
             }
         }
     }
 
-    private void Invite(World world, EntityId entityId, string targetName)
+    private void Invite(World world, Tick tick, EntityId entityId, string targetName)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -71,13 +68,13 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
 
         if (invitedId == null)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The player isn't connected.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player isn't connected.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (invitedId.Value == entityId)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You can't be invited.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You can't be invited.", ColorArgb = ChatColors.White });
             return;
         }
 
@@ -88,39 +85,39 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
 
         if (invitedTrade.Partner != null)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The player is already part of a trade.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player is already part of a trade.", ColorArgb = ChatColors.White });
             return;
         }
 
-        if (!string.IsNullOrEmpty(invitedTrade.Request))
+        if (invitedTrade.PendingInviterId.HasValue)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The player is analyzing an invitation of another trade.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player is analyzing an invitation of another trade.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (shop?.ShopId != null)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You can't start a trade while in the shop.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You can't start a trade while in the shop.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (invitedShop?.ShopId != null)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The player is in the shop.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player is in the shop.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (Math.Abs(pos.X - invitedPos.X) + Math.Abs(pos.Y - invitedPos.Y) != 1)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You need to be close to the player to start trade.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You need to be close to the player to start trade.", ColorArgb = ChatColors.White });
             return;
         }
 
-        invitedTrade.Request = appearance.Name;
+        invitedTrade.PendingInviterId = entityId;
         world.Dirty.Mark<TradeState>(invitedId.Value);
     }
 
-    private void Accept(World world, EntityId entityId)
+    private void Accept(World world, Tick tick, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -128,17 +125,17 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
         var trade = e.Get<TradeState>()!;
         var shop = e.Get<ShopState>();
 
-        var invitedId = world.FindPlayer(trade.Request);
+        var invitedId = trade.PendingInviterId;
 
         if (trade.Partner != null)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You are already part of a trade.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You are already part of a trade.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (invitedId == null)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "Who invited you is no longer available.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "Who invited you is no longer available.", ColorArgb = ChatColors.White });
             return;
         }
 
@@ -149,13 +146,13 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
 
         if (Math.Abs(pos.X - invitedPos.X) + Math.Abs(pos.Y - invitedPos.Y) != 1)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You need to be close to the player to accept the trade.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You need to be close to the player to accept the trade.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (invitedShop?.ShopId != null)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "Who invited you is in the shop.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "Who invited you is in the shop.", ColorArgb = ChatColors.White });
             return;
         }
 
@@ -164,10 +161,10 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
         var invitedTrade = invitedE.Get<TradeState>()!;
         invitedTrade.Partner = entityId;
         world.Dirty.Mark<TradeState>(invitedId.Value);
-        world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You have accepted " + invitedAppearance.Name + "'s trade request.", ColorArgb = Color.White.ToArgb() });
-        world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value.Value, Text = appearance.Name + " has accepted your trade request.", ColorArgb = Color.White.ToArgb() });
+        tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You have accepted " + invitedAppearance.Name + "'s trade request.", ColorArgb = ChatColors.White });
+        tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = appearance.Name + " has accepted your trade request.", ColorArgb = ChatColors.White });
 
-        trade.Request = string.Empty;
+        trade.PendingInviterId = null;
         trade.Offer = new TradeSlot[MaxInventory];
         invitedTrade.Offer = new TradeSlot[MaxInventory];
 
@@ -175,19 +172,19 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
         world.Dirty.Mark<TradeState>(invitedId.Value);
     }
 
-    private void Decline(World world, EntityId entityId)
+    private void Decline(World world, Tick tick, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
         var trade = e.Get<TradeState>()!;
 
-        var invitedId = world.FindPlayer(trade.Request);
-        if (invitedId != null) world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value.Value, Text = appearance.Name + " decline the trade.", ColorArgb = Color.White.ToArgb() });
-        trade.Request = string.Empty;
+        var invitedId = trade.PendingInviterId;
+        if (invitedId != null) tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = appearance.Name + " decline the trade.", ColorArgb = ChatColors.White });
+        trade.PendingInviterId = null;
         world.Dirty.Mark<TradeState>(entityId);
     }
 
-    private void Leave(World world, EntityId entityId)
+    private void Leave(World world, Tick tick, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var trade = e.Get<TradeState>();
@@ -202,7 +199,7 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
         world.Dirty.Mark<TradeState>(entityId);
     }
 
-    private void Offer(World world, EntityId entityId, short slot, short inventorySlot, short amount)
+    private void Offer(World world, Tick tick, EntityId entityId, short slot, short inventorySlot, short amount)
     {
         var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
@@ -226,7 +223,7 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
         if (trade.Partner.HasValue) world.Dirty.Mark<TradeState>(trade.Partner.Value);
     }
 
-    private void OfferState(World world, EntityId entityId, TradeStatus state)
+    private void OfferState(World world, Tick tick, EntityId entityId, TradeStatus state)
     {
         var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
@@ -244,19 +241,22 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
         switch (state)
         {
             case TradeStatus.Accepted:
-                if (trade.Offer.Count(x => x.SlotNum != 0) > invitedInv.TotalFree)
+                var invFree = CountFreeSlots(inv);
+                var invitedFree = CountFreeSlots(invitedInv);
+
+                if (trade.Offer.Count(x => x.SlotNum != 0) > invitedFree)
                 {
-                    world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value.Value, Text = invitedAppearance.Name + " don't have enough space in their inventory to do this trade.", ColorArgb = Color.Red.ToArgb() });
+                    tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = invitedAppearance.Name + " don't have enough space in their inventory to do this trade.", ColorArgb = ChatColors.Red });
                     break;
                 }
 
-                if (invitedTrade.Offer.Count(x => x.SlotNum != 0) > inv.TotalFree)
+                if (invitedTrade.Offer.Count(x => x.SlotNum != 0) > invFree)
                 {
-                    world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value.Value, Text = "You don't have enough space in your inventory to do this trade.", ColorArgb = Color.Red.ToArgb() });
+                    tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = "You don't have enough space in your inventory to do this trade.", ColorArgb = ChatColors.Red });
                     break;
                 }
 
-                world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value.Value, Text = "The offer was accepted.", ColorArgb = Color.Green.ToArgb() });
+                tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = "The offer was accepted.", ColorArgb = ChatColors.Green });
 
                 ItemSlot[] yourInventory = (ItemSlot[])inv.Slots.Clone(),
                     theirInventory = (ItemSlot[])invitedInv.Slots.Clone();
@@ -267,10 +267,10 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
                         var to = j == 0 ? entityId : invitedId.Value;
                         var toTrade = j == 0 ? trade : invitedTrade;
                         if (toTrade.Offer[i].SlotNum > 0)
-                            world.CurrentTick?.Events.Emit(new InventoryTakeItemEvent
+                            tick.Events.Emit(new ItemTakenEvent
                             {
-                                EntityId = to.Value,
-                                SlotIndex = toTrade.Offer[i].SlotNum,
+                                EntityId = to,
+                                SlotIndex = (byte)toTrade.Offer[i].SlotNum,
                                 Amount = toTrade.Offer[i].Amount
                             });
                     }
@@ -278,16 +278,16 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
                 for (byte i = 0; i < MaxInventory; i++)
                 {
                     if (trade.Offer[i].SlotNum > 0)
-                        world.CurrentTick?.Events.Emit(new InventoryGiveItemEvent
+                        tick.Events.Emit(new ItemGivenEvent
                         {
-                            EntityId = invitedId.Value.Value,
+                            EntityId = invitedId.Value,
                             ItemId = yourInventory[trade.Offer[i].SlotNum].ItemId,
                             Amount = trade.Offer[i].Amount
                         });
                     if (invitedTrade.Offer[i].SlotNum > 0)
-                        world.CurrentTick?.Events.Emit(new InventoryGiveItemEvent
+                        tick.Events.Emit(new ItemGivenEvent
                         {
-                            EntityId = entityId.Value,
+                            EntityId = entityId,
                             ItemId = theirInventory[invitedTrade.Offer[i].SlotNum].ItemId,
                             Amount = invitedTrade.Offer[i].Amount
                         });
@@ -303,12 +303,20 @@ public sealed class TradeSystem(DefinitionCatalog catalog) : ISimulationSystem
                 break;
 
             case TradeStatus.Declined:
-                world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value.Value, Text = "The offer was declined.", ColorArgb = Color.Red.ToArgb() });
+                tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = "The offer was declined.", ColorArgb = ChatColors.Red });
                 break;
 
             case TradeStatus.Waiting:
-                world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value.Value, Text = appearance.Name + " send you a offer.", ColorArgb = Color.White.ToArgb() });
+                tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = appearance.Name + " send you a offer.", ColorArgb = ChatColors.White });
                 break;
         }
+    }
+
+    private static byte CountFreeSlots(InventoryState inv)
+    {
+        byte count = 0;
+        for (var i = 0; i < inv.Slots.Length; i++)
+            if (inv.Slots[i].ItemId == Guid.Empty) count++;
+        return count;
     }
 }

@@ -80,7 +80,7 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
         packageSender.ToMap(pos.MapId, packet);
     }
 
-    public void RemoveGroundItem(Guid entityId)
+    public void RemoveGroundItem(EntityId entityId)
     {
         packageSender.ToMap(Guid.Empty, new MapItemsPacket());  // Placeholder: actual removal packet
     }

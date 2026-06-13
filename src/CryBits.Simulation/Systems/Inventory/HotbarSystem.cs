@@ -22,15 +22,16 @@ public sealed class HotbarSystem : ISimulationSystem
                     Change(world, swap.SourceEntityId, swap.SlotOld, swap.SlotNew);
                     break;
                 case HotbarUseIntent use:
-                    Use(world, use.SourceEntityId, use.Slot);
+                    Use(world, tick, use.SourceEntityId, use.Slot);
                     break;
             }
         }
 
-        foreach (var ev in tick.Events.Events)
+        var events = tick.Events.Events;
+        for (var i = 0; i < events.Count; i++)
         {
-            if (ev is InventorySwappedEvent swapped)
-                SyncInventorySwap(world, new EntityId(swapped.EntityId), swapped.SlotOld, swapped.SlotNew);
+            if (events[i] is InventorySwappedEvent swapped)
+                SyncInventorySwap(world, swapped.EntityId, swapped.SlotOld, swapped.SlotNew);
         }
     }
 
@@ -55,7 +56,7 @@ public sealed class HotbarSystem : ISimulationSystem
         world.Dirty.Mark<HotbarState>(entityId);
     }
 
-    private void Use(World world, EntityId entityId, short hotbarSlot)
+    private void Use(World world, Tick tick, EntityId entityId, short hotbarSlot)
     {
         var e = world.Entities.Get(entityId)!;
         var hotbar = e.Get<HotbarState>()!;
@@ -64,7 +65,7 @@ public sealed class HotbarSystem : ISimulationSystem
         {
             case SlotType.Item:
                 var invSlot = hotbar.Slots[hotbarSlot].Slot;
-                world.CurrentTick?.Events.Emit(new InventoryUseItemEvent { EntityId = entityId.Value, SlotIndex = invSlot });
+                tick.Events.Emit(new ItemUsedEvent { PlayerId = entityId, SlotIndex = invSlot, DirectUse = true });
                 break;
         }
     }
@@ -74,10 +75,19 @@ public sealed class HotbarSystem : ISimulationSystem
         var e = world.Entities.Get(entityId)!;
         var hotbar = e.Get<HotbarState>()!;
 
-        var hotbarSlot = hotbar.Find(SlotType.Item, slotOld);
-        if (hotbarSlot == null) return;
+        int? foundSlot = null;
+        for (var i = 0; i < hotbar.Slots.Length; i++)
+        {
+            if (hotbar.Slots[i].Type == SlotType.Item && hotbar.Slots[i].Slot == slotOld)
+            {
+                foundSlot = i;
+                break;
+            }
+        }
 
-        hotbarSlot.Slot = slotNew;
+        if (foundSlot == null) return;
+
+        hotbar.Slots[foundSlot.Value].Slot = slotNew;
         world.Dirty.Mark<HotbarState>(entityId);
     }
 }

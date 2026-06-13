@@ -1,5 +1,6 @@
 using CryBits.Client.Framework.Network;
 using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Characters;
 using CryBits.Network.Packets.Client;
 using System.Linq;
 
@@ -15,7 +16,7 @@ internal class AccountSender(PacketSender packetSender, DefinitionCatalog catalo
         {
             Name = name,
             ClassId = _catalog.Classes.ElementAt(@class).Value.Id.ToString(),
-            GenderMale = isMale,
+            Gender = isMale ? Gender.Male : Gender.Female,
             TextureNum = textureNum
         });
 

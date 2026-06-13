@@ -1,9 +1,9 @@
-using System;
+using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Events;
 
 public sealed record NpcAttackedEvent : SimEvent
 {
-    public Guid AttackerId { get; init; }
-    public Guid NpcInstanceId { get; init; }
+    public EntityId AttackerId { get; init; }
+    public EntityId NpcInstanceId { get; init; }
 }

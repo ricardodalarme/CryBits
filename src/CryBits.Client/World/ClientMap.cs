@@ -27,8 +27,7 @@ internal class ClientMap(Map data, World world)
 
     public bool TileBlocked(byte x, byte y, Direction direction)
     {
-        byte nextX = x, nextY = y;
-        direction.NextTile(ref nextX, ref nextY);
+        var (nextX, nextY) = direction.NextTile(x, y);
 
         if (Map.OutLimit(nextX, nextY)) return Data.LinkIds[(byte)direction] == Guid.Empty;
 

@@ -5,7 +5,7 @@ namespace CryBits.Network.Packets.Server;
 [Serializable]
 public struct PartyPacket : IServerPacket
 {
-    public Guid[] MemberIds;
+    public long[] MemberIds;
 }
 
 [Serializable]

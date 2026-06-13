@@ -2,11 +2,10 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
+using CryBits.Definitions.Utils;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
-
 using System;
-using System.Drawing;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
@@ -15,15 +14,14 @@ namespace CryBits.Simulation.Systems.Shops;
 
 public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
-    private readonly DefinitionCatalog _catalog = catalog;
     public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
         {
             switch (intent)
             {
-                case ShopBuyIntent b: Buy(world, b.SourceEntityId, b.Slot); break;
-                case ShopSellIntent s: Sell(world, s.SourceEntityId, s.InventorySlot, s.Amount); break;
+                case ShopBuyIntent b: Buy(world, tick, b.SourceEntityId, b.Slot); break;
+                case ShopSellIntent s: Sell(world, tick, s.SourceEntityId, s.InventorySlot, s.Amount); break;
                 case ShopCloseIntent c: Leave(world, c.SourceEntityId); break;
             }
         }
@@ -34,27 +32,27 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
             {
                 case PlayerStartedMovingEvent e:
                     {
-                        var playerId = world.FindPlayerByValue(e.PlayerId);
+                        var playerId = world.FindPlayer(e.PlayerId);
                         if (playerId != null) Leave(world, playerId.Value);
                         break;
                     }
                 case PlayerWarpedEvent e:
                     {
-                        var playerId = world.FindPlayerByValue(e.PlayerId);
+                        var playerId = world.FindPlayer(e.PlayerId);
                         if (playerId != null) Leave(world, playerId.Value);
                         break;
                     }
                 case NpcAttackedEvent e:
                     {
-                        var attackerId = world.FindPlayerByValue(e.AttackerId);
+                        var attackerId = world.FindPlayer(e.AttackerId);
                         var npcId = world.FindNpcInstance(e.NpcInstanceId);
                         if (attackerId == null || npcId == null) break;
                         var npcE = world.Entities.Get(npcId.Value)!;
                         var npcState = npcE.Get<NpcState>()!;
-                        var npcData = _catalog.Npcs.Get(npcState.NpcDefId);
+                        var npcData = catalog.Npcs.Get(npcState.NpcDefId);
                         if (npcData.Behaviour == Behaviour.ShopKeeper)
                         {
-                            var shop = _catalog.Shops.Get(npcData.ShopId);
+                            var shop = catalog.Shops.Get(npcData.ShopId);
                             if (shop != null) Open(world, attackerId.Value, shop);
                         }
                         break;
@@ -83,68 +81,81 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
         world.Dirty.Mark<ShopState>(entityId);
     }
 
-    private void Buy(World world, EntityId entityId, short shopSoldIndex)
+    private static byte CountFreeSlots(InventoryState inv)
+    {
+        byte count = 0;
+        for (var i = 0; i < inv.Slots.Length; i++)
+            if (inv.Slots[i].ItemId == Guid.Empty) count++;
+        return count;
+    }
+
+    private void Buy(World world, Tick tick, EntityId entityId, short shopSoldIndex)
     {
         var e = world.Entities.Get(entityId)!;
         var shopState = e.Get<ShopState>()!;
         var inv = e.Get<InventoryState>()!;
-        var catalog = DefinitionCatalog.Instance;
-
-        var shop = _catalog.Shops.Get(shopState.ShopId!.Value);
+        var shop = catalog.Shops.Get(shopState.ShopId!.Value);
         var shopSold = shop.Sold[shopSoldIndex];
 
         if (shop.CurrencyId == Guid.Empty) return;
 
-        var inventorySlot = inv.Find(shop.CurrencyId);
-
-        if (inventorySlot == null || inventorySlot.Amount < shopSold.Price)
+        int? currencySlot = null;
+        for (var i = 0; i < inv.Slots.Length; i++)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have enough money to buy the item.", ColorArgb = Color.Red.ToArgb() });
+            if (inv.Slots[i].ItemId == shop.CurrencyId)
+            {
+                currencySlot = i;
+                break;
+            }
+        }
+
+        if (currencySlot == null || inv.Slots[currencySlot.Value].Amount < shopSold.Price)
+        {
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You don't have enough money to buy the item.", ColorArgb = ChatColors.Red });
             return;
         }
 
-        if (inv.TotalFree == 0 && inventorySlot.Amount > shopSold.Price)
+        if (CountFreeSlots(inv) == 0 && inv.Slots[currencySlot.Value].Amount > shopSold.Price)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have space in your bag.", ColorArgb = Color.Red.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You don't have space in your bag.", ColorArgb = ChatColors.Red });
             return;
         }
 
-        var soldItem = _catalog.Items.Get(shopSold.ItemId);
+        var soldItem = catalog.Items.Get(shopSold.ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
-        var currencySlotIndex = Array.IndexOf(inv.Slots, inventorySlot);
-        world.CurrentTick?.Events.Emit(new InventoryTakeItemEvent { EntityId = entityId.Value, SlotIndex = currencySlotIndex, Amount = shopSold.Price });
-        world.CurrentTick?.Events.Emit(new InventoryGiveItemEvent { EntityId = entityId.Value, ItemId = shopSold.ItemId, Amount = shopSold.Amount });
-        world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You bought " + shopSold.Price + "x " + soldItemName + ".", ColorArgb = Color.Green.ToArgb() });
+        tick.Events.Emit(new ItemTakenEvent { EntityId = entityId, SlotIndex = (byte)currencySlot.Value, Amount = shopSold.Price });
+        tick.Events.Emit(new ItemGivenEvent { EntityId = entityId, ItemId = shopSold.ItemId, Amount = shopSold.Amount });
+        tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You bought " + shopSold.Price + "x " + soldItemName + ".", ColorArgb = ChatColors.Green });
     }
 
-    private void Sell(World world, EntityId entityId, byte inventorySlotIndex, short amount)
+    private void Sell(World world, Tick tick, EntityId entityId, byte inventorySlotIndex, short amount)
     {
         var e = world.Entities.Get(entityId)!;
         var shopState = e.Get<ShopState>()!;
         var inv = e.Get<InventoryState>()!;
 
-        var shop = _catalog.Shops.Get(shopState.ShopId!.Value);
+        var shop = catalog.Shops.Get(shopState.ShopId!.Value);
 
         amount = Math.Min(amount, inv.Slots[inventorySlotIndex].Amount);
         var buy = shop.FindBought(inv.Slots[inventorySlotIndex].ItemId);
 
         if (buy == null)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The store doesn't sell this item", ColorArgb = Color.Red.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The store doesn't buy this item", ColorArgb = ChatColors.Red });
             return;
         }
 
-        if (inv.TotalFree == 0 && inv.Slots[inventorySlotIndex].Amount > amount)
+        if (CountFreeSlots(inv) == 0 && inv.Slots[inventorySlotIndex].Amount > amount)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have space in your bag.", ColorArgb = Color.Red.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You don't have space in your bag.", ColorArgb = ChatColors.Red });
             return;
         }
 
-        var soldItem = _catalog.Items.Get(inv.Slots[inventorySlotIndex].ItemId);
+        var soldItem = catalog.Items.Get(inv.Slots[inventorySlotIndex].ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
-        var currencyItem = _catalog.Items.Get(shop.CurrencyId);
-        world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You sold " + soldItemName + "x " + amount + " for .", ColorArgb = Color.Green.ToArgb() });
-        world.CurrentTick?.Events.Emit(new InventoryTakeItemEvent { EntityId = entityId.Value, SlotIndex = inventorySlotIndex, Amount = amount });
-        world.CurrentTick?.Events.Emit(new InventoryGiveItemEvent { EntityId = entityId.Value, ItemId = shop.CurrencyId, Amount = (short)(buy.Price * amount) });
+
+        tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You sold " + amount + "x " + soldItemName + " for " + buy.Price * amount + ".", ColorArgb = ChatColors.Green });
+        tick.Events.Emit(new ItemTakenEvent { EntityId = entityId, SlotIndex = inventorySlotIndex, Amount = amount });
+        tick.Events.Emit(new ItemGivenEvent { EntityId = entityId, ItemId = shop.CurrencyId, Amount = (short)(buy.Price * amount) });
     }
 }

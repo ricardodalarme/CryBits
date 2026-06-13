@@ -1,3 +1,4 @@
+using CryBits.Definitions.Characters;
 using System;
 
 namespace CryBits.Network.Packets.Client;
@@ -7,7 +8,7 @@ public struct CreateCharacterPacket : IClientPacket
 {
     public string Name;
     public string ClassId;
-    public bool GenderMale;
+    public Gender Gender;
     public short TextureNum;
 }
 

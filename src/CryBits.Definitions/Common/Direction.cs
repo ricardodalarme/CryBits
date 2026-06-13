@@ -23,14 +23,15 @@ public static class DirectionExtensions
         };
     }
 
-    public static void NextTile(this Direction direction, ref byte x, ref byte y)
+    public static (byte X, byte Y) NextTile(this Direction direction, byte x, byte y)
     {
-        switch (direction)
+        return direction switch
         {
-            case Direction.Up: y--; break;
-            case Direction.Down: y++; break;
-            case Direction.Right: x++; break;
-            case Direction.Left: x--; break;
-        }
+            Direction.Up => (x, (byte)(y - 1)),
+            Direction.Down => (x, (byte)(y + 1)),
+            Direction.Right => ((byte)(x + 1), y),
+            Direction.Left => ((byte)(x - 1), y),
+            _ => (x, y)
+        };
     }
 }

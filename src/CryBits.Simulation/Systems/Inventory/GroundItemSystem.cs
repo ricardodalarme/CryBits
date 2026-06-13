@@ -1,14 +1,22 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
-using static CryBits.Simulation.SimulationConstants;
+using CryBits.Simulation.Spawners;
 
 namespace CryBits.Simulation.Systems.Inventory;
 
-public sealed class GroundItemSystem : ISimulationSystem
+public sealed class GroundItemSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
+        foreach (var ev in tick.Events.Events)
+        {
+            if (ev is LootDroppedEvent loot)
+                GroundItemSpawner.Spawn(world, catalog, loot.MapId, loot.X, loot.Y,
+                    loot.ItemId, loot.Amount, loot.DespawnTick);
+        }
+
         foreach (var map in world.Maps.Values)
         {
             if (!map.HasPlayers(world.Entities)) continue;
@@ -21,7 +29,7 @@ public sealed class GroundItemSystem : ISimulationSystem
 
                 if (tick.TickNumber >= groundItem.DespawnTick)
                 {
-                    world.CurrentTick?.Events.Emit(new GroundItemRemovedEvent { EntityId = map.GroundItemIds[i].Value, MapId = map.Id });
+                    tick.Events.Emit(new GroundItemRemovedEvent { EntityId = map.GroundItemIds[i], MapId = map.Id });
                     world.Entities.Destroy(map.GroundItemIds[i]);
                     map.GroundItemIds.RemoveAt(i);
                 }

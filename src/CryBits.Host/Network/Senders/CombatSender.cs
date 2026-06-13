@@ -1,4 +1,5 @@
 using CryBits.Network.Packets.Server;
+using CryBits.Simulation.State;
 using LiteNetLib;
 using System;
 
@@ -8,9 +9,9 @@ internal sealed class CombatSender(PackageSender packageSender)
 {
     public static CombatSender Instance { get; } = new(PackageSender.Instance);
 
-    public void Attack(Guid mapId, Guid attackerId, Guid? victimId = null)
+    public void Attack(Guid mapId, EntityId attackerId, EntityId? victimId = null)
     {
-        packageSender.ToMap(mapId, new CombatAttackPacket { AttackerId = attackerId, VictimId = victimId },
+        packageSender.ToMap(mapId, new CombatAttackPacket { AttackerId = attackerId.Value, VictimId = victimId?.Value },
             DeliveryMethod.ReliableUnordered);
     }
 }

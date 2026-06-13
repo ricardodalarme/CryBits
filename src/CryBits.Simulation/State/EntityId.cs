@@ -1,5 +1,3 @@
-using System;
-
 namespace CryBits.Simulation.State;
 
-public readonly record struct EntityId(Guid Value);
+public readonly record struct EntityId(long Value);

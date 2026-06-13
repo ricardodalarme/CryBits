@@ -60,15 +60,11 @@ internal static class Program
         foreach (var map in DefinitionCatalog.Instance.Maps.Values)
         {
             var mapState = new MapState(map.Id, map);
-            mapState.SpawnItems(world.Simulation.Entities, DefinitionCatalog.Instance);
+            mapState.SpawnItems(world.Simulation.Entities);
             world.Simulation.Maps.Add(map.Id, mapState);
 
             for (byte i = 0; i < map.Npc.Count; i++)
-            {
-                var entityId = NpcSpawner.Spawn(WorldHost.Current.Simulation, DefinitionCatalog.Instance, mapState.Id, i);
-                if (entityId.Value != Guid.Empty)
-                    mapState.NpcIds.Add(entityId);
-            }
+                NpcSpawner.Spawn(WorldHost.Current.Simulation, DefinitionCatalog.Instance, mapState.Id, i);
         }
 
         // Initialize network sockets.

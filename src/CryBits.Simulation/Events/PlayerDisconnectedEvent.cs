@@ -1,8 +1,8 @@
-using System;
+using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Events;
 
 public sealed record PlayerDisconnectedEvent : SimEvent
 {
-    public Guid PlayerId { get; init; }
+    public EntityId PlayerId { get; init; }
 }

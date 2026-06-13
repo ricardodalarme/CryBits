@@ -1,4 +1,5 @@
 using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Utils;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
@@ -9,11 +10,8 @@ using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.Spawners;
 using CryBits.Simulation.State;
 using System;
-using System.Drawing;
-using static CryBits.Definitions.Globals;
 using static CryBits.Simulation.SimulationConstants;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
@@ -26,296 +24,138 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         foreach (var intent in tick.Intents.All)
         {
             if (intent is AttackIntent atk)
-                Attack(world, atk.SourceEntityId);
-        }
-
-        foreach (var mapEntry in world.Maps)
-        {
-            var map = mapEntry.Value;
-            if (!map.HasPlayers(world.Entities)) continue;
-
-            foreach (var npcId in map.NpcIds)
-            {
-                var e = world.Entities.Get(npcId);
-                if (e == null) continue;
-                var npcState = e.Get<NpcState>();
-                if (npcState == null) continue;
-                if (!npcState.TargetId.HasValue) continue;
-                AttackNpc(world, npcId);
-            }
+                Attack(world, tick, atk);
         }
     }
 
-    private void Attack(World world, EntityId entityId)
+    private void Attack(World world, Tick tick, AttackIntent intent)
     {
-        var e = world.Entities.Get(entityId)!;
-        var pos = e.Get<Position>()!;
-        var combat = e.Get<CombatState>()!;
-        var trade = e.Get<TradeState>();
-        var shop = e.Get<ShopState>();
+        var attackerE = world.Entities.Get(intent.SourceEntityId);
+        if (attackerE == null) return;
+
+        var pos = attackerE.Get<Position>()!;
         var map = world.Maps.Get(pos.MapId)!;
+        if (map == null) return;
 
-        byte nextX = pos.X, nextY = pos.Y;
-        pos.Direction.NextTile(ref nextX, ref nextY);
+        if (attackerE.Get<TradeState>()?.Partner != null) return;
+        if (attackerE.Get<ShopState>()?.ShopId != null) return;
+        var cooldown = attackerE.Get<AttackCooldown>()!;
+        if (tick.TickNumber < cooldown.NextAllowedTick + AttackSpeedTicks) return;
 
-        if (trade?.Partner != null) return;
-        if (shop?.ShopId != null) return;
-        if (Environment.TickCount64 < combat.AttackTimer + AttackSpeed) return;
-        if (map.TileBlocked(pos.X, pos.Y, pos.Direction, world.Entities, false)) goto @continue;
-
-        var victim = map.HasPlayer(nextX, nextY, world.Entities);
-        if (victim.HasValue)
+        EntityId? victimId = intent.TargetId;
+        if (victimId == null)
         {
-            PlayerAttackPlayer(world, entityId, victim.Value);
-            return;
-        }
+            var (nextX, nextY) = pos.Direction.NextTile(pos.X, pos.Y);
+            if (map.TileBlocked(pos.X, pos.Y, pos.Direction, world.Entities, false))
+                {
+                    MissAttack(tick, intent.SourceEntityId, pos, cooldown);
+                    return;
+                }
 
-        victim = map.HasNpc(nextX, nextY, world.Entities);
-        if (victim.HasValue)
-        {
-            PlayerAttackNpc(world, entityId, victim.Value);
-            return;
-        }
+            victimId = map.HasPlayer(nextX, nextY, world.Entities)
+                    ?? map.HasNpc(nextX, nextY, world.Entities);
 
-    @continue:
-        world.CurrentTick?.Events.Emit(new CombatAttackEvent { AttackerId = entityId.Value, MapId = pos.MapId });
-        combat.AttackTimer = Environment.TickCount64;
-        world.Dirty.Mark<Position>(entityId);
-    }
-
-    private void PlayerAttackPlayer(World world, EntityId attackerId, EntityId victimId)
-    {
-        var attackerE = world.Entities.Get(attackerId)!;
-        var victimE = world.Entities.Get(victimId)!;
-        var attackerPos = attackerE.Get<Position>()!;
-        var victimCombat = victimE.Get<CombatState>()!;
-        var attackerCombat = attackerE.Get<CombatState>()!;
-        var attackerStats = attackerE.Get<StatBlock>()!;
-        var victimStats = victimE.Get<StatBlock>()!;
-        var victimVitals = victimE.Get<Vitals>()!;
-        var attackerEquip = attackerE.Get<EquipmentState>()!;
-
-        var map = world.Maps.Get(attackerPos.MapId)!;
-
-        if (victimCombat.GettingMap) return;
-        if (map.Data.Moral == (byte)Moral.Pacific)
-        {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = attackerId.Value, Text = "This is a peaceful area.", ColorArgb = Color.White.ToArgb() });
-            return;
-        }
-
-        attackerCombat.AttackTimer = Environment.TickCount64;
-        world.Dirty.Mark<Position>(attackerId);
-
-        var weaponDamage = attackerEquip.Slots[(byte)Equipment.Weapon] != Guid.Empty
-            ? catalog.Items.Get(attackerEquip.Slots[(byte)Equipment.Weapon])?.WeaponDamage ?? 0
-            : (short)0;
-        var attackerDamage = CombatFormulas.PlayerDamage(attackerStats.Attribute[(byte)Attribute.Strength], weaponDamage);
-        var victimDefense = CombatFormulas.PlayerDefense(victimStats.Attribute[(byte)Attribute.Resistance]);
-        var attackDamage = CombatFormulas.NetDamage(attackerDamage, victimDefense);
-        if (attackDamage > 0)
-        {
-            world.CurrentTick?.Events.Emit(new CombatAttackEvent { AttackerId = attackerId.Value, VictimId = victimId.Value, MapId = attackerPos.MapId });
-
-            if (attackDamage < victimVitals.Hp)
+            if (victimId == null)
             {
-                victimVitals.Hp -= attackDamage;
-                world.Dirty.Mark<Vitals>(victimId);
-            }
-            else
-            {
-                world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = true, SourceId = attackerId.Value, SourceIsPlayer = true });
-            }
-        }
-        else
-            world.CurrentTick?.Events.Emit(new CombatAttackEvent { AttackerId = attackerId.Value, MapId = attackerPos.MapId });
-    }
-
-    private void PlayerAttackNpc(World world, EntityId attackerId, EntityId victimId)
-    {
-        var attackerE = world.Entities.Get(attackerId)!;
-        var victimE = world.Entities.Get(victimId)!;
-        var attackerPos = attackerE.Get<Position>()!;
-        var attackerCombat = attackerE.Get<CombatState>()!;
-        var attackerStats = attackerE.Get<StatBlock>()!;
-        var attackerEquip = attackerE.Get<EquipmentState>()!;
-        var victimNpcState = victimE.Get<NpcState>()!;
-        var victimVitals = victimE.Get<Vitals>()!;
-
-        var npcData = catalog.Npcs.Get(victimNpcState.NpcDefId);
-        var map = world.Maps.Get(attackerPos.MapId)!;
-
-        if (victimNpcState.TargetId != attackerId && !string.IsNullOrEmpty(npcData.SayMsg))
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = attackerId.Value, Text = npcData.Name + ": " + npcData.SayMsg, ColorArgb = Color.White.ToArgb() });
-
-        switch (npcData.Behaviour)
-        {
-            case Behaviour.Friendly: return;
-            case Behaviour.ShopKeeper:
-                world.CurrentTick?.Events.Emit(new NpcAttackedEvent { AttackerId = attackerId.Value, NpcInstanceId = victimId.Value });
+                MissAttack(tick, intent.SourceEntityId, pos, cooldown);
                 return;
+            }
         }
 
-        victimNpcState.TargetId = attackerId;
-        world.Dirty.Mark<NpcState>(victimId);
-        attackerCombat.AttackTimer = Environment.TickCount64;
-        world.Dirty.Mark<Position>(attackerId);
+        var victimE = world.Entities.Get(victimId.Value);
+        if (victimE == null) return;
 
-        var weaponDamage = attackerEquip.Slots[(byte)Equipment.Weapon] != Guid.Empty
-            ? catalog.Items.Get(attackerEquip.Slots[(byte)Equipment.Weapon])?.WeaponDamage ?? 0
+        if (victimE.Has<PlayerTag>() && map.Data.Moral == (byte)Moral.Pacific)
+        {
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = intent.SourceEntityId, Text = "This is a peaceful area.", ColorArgb = ChatColors.White });
+            return;
+        }
+
+        if (victimE.Has<NpcTag>())
+        {
+            var victimNpcState = victimE.Get<NpcState>()!;
+            var victimData = catalog.Npcs.Get(victimNpcState.NpcDefId);
+            if (victimData != null)
+            {
+                if (victimData.Behaviour == Behaviour.Friendly) return;
+                if (victimData.Behaviour == Behaviour.ShopKeeper)
+                {
+                    tick.Events.Emit(new NpcAttackedEvent { AttackerId = intent.SourceEntityId, NpcInstanceId = victimId.Value });
+                    return;
+                }
+            }
+        }
+
+        DealDamage(world, tick, intent.SourceEntityId, victimId.Value, map, cooldown);
+    }
+
+    private void DealDamage(World world, Tick tick,
+        EntityId attackerId, EntityId victimId, MapState map, AttackCooldown cooldown)
+    {
+        var attackerE = world.Entities.Get(attackerId)!;
+        var victimE = world.Entities.Get(victimId)!;
+        var attackerPos = attackerE.Get<Position>()!;
+        var victimVitals = victimE.Get<Vitals>()!;
+        var attackerStats = attackerE.Get<StatBlock>()!;
+        var victimStats = victimE.Get<StatBlock>();
+
+        cooldown.NextAllowedTick = tick.TickNumber;
+
+        var weaponDamage = GetWeaponDamage(attackerE);
+        var attackerDamage = CombatFormulas.BaseDamage(attackerStats.Attribute[(byte)Attribute.Strength], weaponDamage);
+        var victimDefense = victimStats != null
+            ? CombatFormulas.BaseDefense(victimStats.Attribute[(byte)Attribute.Resistance])
             : (short)0;
-        var attackerDamage = CombatFormulas.PlayerDamage(attackerStats.Attribute[(byte)Attribute.Strength], weaponDamage);
-        var attackDamage = CombatFormulas.NetDamage(attackerDamage, npcData.Attribute[(byte)Attribute.Resistance]);
-        if (attackDamage > 0)
-        {
-            world.CurrentTick?.Events.Emit(new CombatAttackEvent { AttackerId = attackerId.Value, VictimId = victimId.Value, MapId = attackerPos.MapId });
+        var netDamage = CombatFormulas.NetDamage(attackerDamage, victimDefense);
 
-            if (attackDamage < victimVitals.Hp)
+        if (netDamage > 0)
+        {
+            tick.Events.Emit(new CombatAttackEvent
             {
-                victimVitals.Hp -= attackDamage;
+                AttackerId = attackerId,
+                VictimId = victimId,
+                MapId = attackerPos.MapId,
+                Hit = true
+            });
+
+            if (netDamage < victimVitals.Hp)
+            {
+                victimVitals.Hp -= netDamage;
                 world.Dirty.Mark<Vitals>(victimId);
             }
             else
             {
-                Died(world, victimId);
-                world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = false, SourceId = attackerId.Value, SourceIsPlayer = true, NpcDefId = victimNpcState.NpcDefId });
+                if (victimE.Has<PlayerTag>())
+                    tick.Events.Emit(new PlayerDiedEvent { EntityId = victimId, SourceId = attackerId });
+                else if (victimE.Has<NpcTag>())
+                {
+                    var npcState = victimE.Get<NpcState>()!;
+                    tick.Events.Emit(new NpcDiedEvent
+                    {
+                        EntityId = victimId,
+                        MapId = attackerPos.MapId,
+                        NpcDefId = npcState.NpcDefId,
+                        NpcIndex = npcState.Index,
+                        SourceId = attackerId
+                    });
+                }
             }
         }
         else
-            world.CurrentTick?.Events.Emit(new CombatAttackEvent { AttackerId = attackerId.Value, MapId = attackerPos.MapId });
+            tick.Events.Emit(new CombatAttackEvent { AttackerId = attackerId, VictimId = victimId, MapId = attackerPos.MapId, Hit = false });
     }
 
-    private void AttackNpc(World world, EntityId npcId)
+    private static void MissAttack(Tick tick, EntityId entityId, Position pos, AttackCooldown cooldown)
     {
-        var e = world.Entities.Get(npcId)!;
-        var npcState = e.Get<NpcState>()!;
-        var pos = e.Get<Position>()!;
-        var map = world.Maps.Get(pos.MapId)!;
-
-        byte nextX = pos.X, nextY = pos.Y;
-        pos.Direction.NextTile(ref nextX, ref nextY);
-
-        if (Environment.TickCount64 < npcState.AttackTimer + AttackSpeed) return;
-        if (map.TileBlocked(pos.X, pos.Y, pos.Direction, world.Entities, false)) return;
-
-        if (npcState.TargetId.HasValue)
-        {
-            var targetE = world.Entities.Get(npcState.TargetId.Value);
-            if (targetE != null)
-            {
-                if (targetE.Has<PlayerTag>())
-                    NpcAttackPlayer(world, npcId, npcState.TargetId.Value);
-                else if (targetE.Has<NpcTag>())
-                    NpcAttackNpc(world, npcId, npcState.TargetId.Value);
-            }
-        }
+        tick.Events.Emit(new CombatAttackEvent { AttackerId = entityId, MapId = pos.MapId, Hit = false });
+        cooldown.NextAllowedTick = tick.TickNumber;
     }
 
-    private void NpcAttackPlayer(World world, EntityId attackerId, EntityId victimId)
+    private short GetWeaponDamage(EntityState e)
     {
-        var attackerE = world.Entities.Get(attackerId)!;
-        var victimE = world.Entities.Get(victimId)!;
-        var attackerNpcState = attackerE.Get<NpcState>()!;
-        var attackerPos = attackerE.Get<Position>()!;
-        var victimCombat = victimE.Get<CombatState>()!;
-        var victimVitals = victimE.Get<Vitals>()!;
-        var victimStats = victimE.Get<StatBlock>()!;
-
-        var npcData = catalog.Npcs.Get(attackerNpcState.NpcDefId);
-
-        if (!victimE.Has<PlayerTag>()) return;
-        if (victimCombat.GettingMap) return;
-
-        attackerNpcState.AttackTimer = Environment.TickCount64;
-        world.Dirty.Mark<Position>(attackerId);
-
-        var attackDamage = CombatFormulas.NetDamage(npcData.Attribute[(byte)Attribute.Strength], CombatFormulas.PlayerDefense(victimStats.Attribute[(byte)Attribute.Resistance]));
-        if (attackDamage > 0)
-        {
-            world.CurrentTick?.Events.Emit(new CombatAttackEvent { AttackerId = attackerId.Value, VictimId = victimId.Value, MapId = attackerPos.MapId });
-
-            if (attackDamage < victimVitals.Hp)
-            {
-                victimVitals.Hp -= attackDamage;
-                world.Dirty.Mark<Vitals>(victimId);
-            }
-            else
-            {
-                attackerNpcState.TargetId = null;
-                world.Dirty.Mark<NpcState>(attackerId);
-                world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = true, SourceId = attackerId.Value, SourceIsPlayer = false });
-            }
-        }
-        else
-            world.CurrentTick?.Events.Emit(new CombatAttackEvent { AttackerId = attackerId.Value, MapId = attackerPos.MapId });
-    }
-
-    private void NpcAttackNpc(World world, EntityId attackerId, EntityId victimId)
-    {
-        var attackerE = world.Entities.Get(attackerId)!;
-        var victimE = world.Entities.Get(victimId)!;
-        var attackerNpcState = attackerE.Get<NpcState>()!;
-        var attackerPos = attackerE.Get<Position>()!;
-        var victimNpcState = victimE.Get<NpcState>()!;
-        var victimVitals = victimE.Get<Vitals>()!;
-
-        var attackerData = catalog.Npcs.Get(attackerNpcState.NpcDefId);
-        var victimData = catalog.Npcs.Get(victimNpcState.NpcDefId);
-
-        if (!victimE.Has<NpcTag>()) return;
-        attackerNpcState.AttackTimer = Environment.TickCount64;
-        world.Dirty.Mark<Position>(attackerId);
-        victimNpcState.TargetId = attackerId;
-        world.Dirty.Mark<NpcState>(victimId);
-
-        var attackDamage = CombatFormulas.NetDamage(
-            attackerData.Attribute[(byte)Attribute.Strength],
-            victimData.Attribute[(byte)Attribute.Resistance]);
-        if (attackDamage > 0)
-        {
-            world.CurrentTick?.Events.Emit(new CombatAttackEvent { AttackerId = attackerId.Value, VictimId = victimId.Value, MapId = attackerPos.MapId });
-
-            if (attackDamage < victimVitals.Hp)
-            {
-                victimVitals.Hp -= attackDamage;
-                world.Dirty.Mark<Vitals>(victimId);
-            }
-            else
-            {
-                attackerNpcState.TargetId = null;
-                world.Dirty.Mark<NpcState>(attackerId);
-                Died(world, victimId);
-                world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = false, SourceId = attackerId.Value, SourceIsPlayer = false, NpcDefId = victimNpcState.NpcDefId });
-            }
-        }
-        else
-            world.CurrentTick?.Events.Emit(new CombatAttackEvent { AttackerId = attackerId.Value, MapId = attackerPos.MapId });
-    }
-
-    private void Died(World world, EntityId npcId)
-    {
-        var e = world.Entities.Get(npcId)!;
-        var npcState = e.Get<NpcState>()!;
-        var pos = e.Get<Position>()!;
-        var npcData = catalog.Npcs.Get(npcState.NpcDefId);
-        var map = world.Maps.Get(pos.MapId)!;
-
-        for (byte i = 0; i < npcData.Drop.Count; i++)
-            if (npcData.Drop[i].ItemId != Guid.Empty)
-                if (Random.Shared.Next(1, 99) <= npcData.Drop[i].Chance)
-                    GroundItemSpawner.Spawn(world, catalog, pos.MapId, pos.X, pos.Y,
-                        npcData.Drop[i].ItemId, npcData.Drop[i].Amount,
-                        world.CurrentTick!.TickNumber + TicksPerSecond * 300);
-
-        world.CurrentTick?.Events.Emit(new NpcDiedEvent
-        {
-            EntityId = npcId.Value,
-            MapId = pos.MapId,
-            NpcDefId = npcState.NpcDefId,
-            NpcIndex = npcState.Index
-        });
-
-        world.Entities.Destroy(npcId);
-        map.NpcIds.Remove(npcId);
+        var equip = e.Get<EquipmentState>();
+        if (equip == null || equip.Slots[(byte)Equipment.Weapon] == Guid.Empty)
+            return 0;
+        return catalog.Items.Get(equip.Slots[(byte)Equipment.Weapon])?.WeaponDamage ?? 0;
     }
 }

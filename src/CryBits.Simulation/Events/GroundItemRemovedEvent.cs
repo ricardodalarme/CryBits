@@ -1,9 +1,10 @@
 using System;
+using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Events;
 
 public sealed record GroundItemRemovedEvent : SimEvent
 {
-    public Guid EntityId { get; init; }
+    public EntityId EntityId { get; init; }
     public Guid MapId { get; init; }
 }

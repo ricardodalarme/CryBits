@@ -21,7 +21,7 @@ internal class LocalPlayer(World world, Entity entity)
     public Entity Entity = entity;
 
     /// <summary>Network ID of the local player.</summary>
-    public Guid Id;
+    public long Id;
 
     /// <summary>Convenient accessor for the local player's name.</summary>
     public string GetName() =>

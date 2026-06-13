@@ -9,7 +9,7 @@ using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Simulation.Systems.Spawning;
 
-public sealed class RespawnSystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class NpcRespawnSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
     private readonly List<Entry> _pendingRespawns = [];
     private readonly record struct Entry(Guid MapId, byte NpcIndex, long RespawnTick);

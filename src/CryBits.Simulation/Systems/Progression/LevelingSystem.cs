@@ -26,27 +26,46 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
         {
             if (ev is XpAwardedEvent xpEvent)
             {
-                var playerId = world.FindPlayerByValue(xpEvent.EntityId);
+                var playerId = world.FindPlayer(xpEvent.EntityId);
                 if (playerId != null)
                     GiveExperience(world, playerId.Value, xpEvent.Amount);
             }
 
-            if (ev is not EntityDiedEvent died) continue;
-            if (!died.SourceId.HasValue || died.SourceIsPlayer != true) continue;
+            if (ev is PlayerDiedEvent playerDied)
+            {
+                if (playerDied.SourceId.HasValue)
+                {
+                    var killerId = world.FindPlayer(playerDied.SourceId.Value);
+                    if (killerId != null)
+                    {
+                        var victimId = world.FindPlayer(playerDied.EntityId);
+                        var xp = victimId != null
+                            ? world.Entities.Get(victimId.Value)!.Get<StatBlock>()!.Experience / 10
+                            : 0;
 
-            var killerId = world.FindPlayerByValue(died.SourceId.Value);
-            if (killerId == null) continue;
+                        if (xp > 0)
+                            GiveExperience(world, killerId.Value, xp);
+                    }
+                }
 
-            var xp = died.EntityIsPlayer
-                ? world.FindPlayerByValue(died.EntityId) is { } victimId
-                    ? world.Entities.Get(victimId)!.Get<StatBlock>()!.Experience / 10
-                    : 0
-                : died.NpcDefId is { } npcDefId
-                    ? catalog.Npcs.Get(npcDefId)!.Experience
-                    : 0;
+                var victimId2 = world.FindPlayer(playerDied.EntityId);
+                if (victimId2 != null)
+                {
+                    var victimStats = world.Entities.Get(victimId2.Value)!.Get<StatBlock>()!;
+                    victimStats.Experience /= 10;
+                    world.Dirty.Mark<StatBlock>(victimId2.Value);
+                }
+            }
 
-            if (xp > 0)
-                GiveExperience(world, killerId.Value, xp);
+            if (ev is NpcDiedEvent npcDied && npcDied.SourceId.HasValue)
+            {
+                var killerId = world.FindPlayer(npcDied.SourceId.Value);
+                if (killerId == null) continue;
+
+                var xp = catalog.Npcs.Get(npcDied.NpcDefId)?.Experience ?? 0;
+                if (xp > 0)
+                    GiveExperience(world, killerId.Value, xp);
+            }
         }
     }
 

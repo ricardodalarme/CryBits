@@ -5,10 +5,11 @@ namespace CryBits.Simulation.State;
 public sealed class EntityRegistry
 {
     private readonly Dictionary<EntityId, EntityState> _entities = [];
+    private long _nextId = 1;
 
     public EntityId Create()
     {
-        var id = new EntityId(System.Guid.NewGuid());
+        var id = new EntityId(_nextId++);
         _entities[id] = new EntityState(id);
         return id;
     }

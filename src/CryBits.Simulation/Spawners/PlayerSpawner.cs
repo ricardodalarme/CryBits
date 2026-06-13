@@ -16,7 +16,7 @@ namespace CryBits.Simulation.Spawners;
 public static class PlayerSpawner
 {
     public static EntityId Spawn(World world, DefinitionCatalog catalog, string name,
-        Class @class, bool genderMale, short textureNum)
+        Class @class, Gender gender, short textureNum)
     {
         var entityId = world.Entities.Create();
         var entity = world.Entities.Get(entityId)!;
@@ -40,8 +40,8 @@ public static class PlayerSpawner
         {
             Name = name,
             ClassId = @class.Id,
-            TextureNum = genderMale ? @class.TextureMale[textureNum] : @class.TextureFemale[textureNum],
-            Genre = genderMale
+            TextureNum = gender == Gender.Male ? @class.TextureMale[textureNum] : @class.TextureFemale[textureNum],
+            Gender = gender
         });
 
         entity.Set(new StatBlock { Level = 1, Attribute = (short[])@class.Attribute.Clone() });
@@ -59,7 +59,7 @@ public static class PlayerSpawner
             hotbar.Slots[i] = new HotbarSlot(SlotType.None, 0);
         entity.Set(hotbar);
 
-        entity.Set(new CombatState());
+        entity.Set(new AttackCooldown());
         entity.Set(new TradeState());
         entity.Set(new PartyState());
         entity.Set(new ShopState());

@@ -1,5 +1,4 @@
 using Arch.Core;
-using System;
 using System.Collections.Generic;
 
 namespace CryBits.Client.Worlds;
@@ -21,7 +20,7 @@ internal sealed class GameContext
     /// <summary>Tracks the local player entity and components.</summary>
     public LocalPlayer LocalPlayer { get; set; }
 
-    private readonly Dictionary<Guid, Entity> _entityById = [];
+    private readonly Dictionary<long, Entity> _entityById = [];
 
     internal GameContext()
     {
@@ -29,13 +28,13 @@ internal sealed class GameContext
     }
 
     /// <summary>Registers a network entity so it can be found by ID in O(1).</summary>
-    public void RegisterNetworkEntity(Guid id, Entity entity) => _entityById[id] = entity;
+    public void RegisterNetworkEntity(long id, Entity entity) => _entityById[id] = entity;
 
     /// <summary>Removes a network entity registration (call before World.Destroy).</summary>
-    public void UnregisterNetworkEntity(Guid id) => _entityById.Remove(id);
+    public void UnregisterNetworkEntity(long id) => _entityById.Remove(id);
 
     /// <summary>Returns the ECS entity with the given network ID, or Entity.Null if not found.</summary>
-    public Entity GetNetworkEntity(Guid id) => _entityById.TryGetValue(id, out var e) ? e : Entity.Null;
+    public Entity GetNetworkEntity(long id) => _entityById.TryGetValue(id, out var e) ? e : Entity.Null;
 
     /// <summary>
     /// Fully reset world state on disconnect: destroys all entities,

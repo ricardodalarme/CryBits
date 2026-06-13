@@ -3,4 +3,4 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Intents;
 
-public sealed record MoveIntent(EntityId SourceEntityId, Direction Direction, byte Movement) : Intent(SourceEntityId);
+public sealed record MoveIntent(EntityId SourceEntityId, Direction Direction, Movement Movement) : Intent(SourceEntityId);

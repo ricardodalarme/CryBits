@@ -3,14 +3,12 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
+using CryBits.Definitions.Utils;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
-using CryBits.Simulation.Spawners;
 using System;
 using static CryBits.Simulation.SimulationConstants;
-using System.Drawing;
-using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
@@ -18,8 +16,6 @@ namespace CryBits.Simulation.Systems.Inventory;
 
 public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSystem
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-
     public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
@@ -27,14 +23,14 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
             switch (intent)
             {
                 case CollectItemIntent collect:
-                    CollectItem(world, collect.SourceEntityId);
+                    CollectItem(world, tick, collect.SourceEntityId);
                     break;
                 case DropItemIntent drop:
                     {
                         var state = world.Entities.Get(drop.SourceEntityId);
                         var inv = state?.Get<InventoryState>();
                         if (inv != null && drop.SlotIndex >= 0 && drop.SlotIndex < inv.Slots.Length)
-                            DropItem(world, drop.SourceEntityId, inv.Slots[drop.SlotIndex], drop.Amount);
+                            DropItem(world, tick, drop.SourceEntityId, drop.SlotIndex, drop.Amount);
                         break;
                     }
                 case InventoryUseIntent use:
@@ -42,7 +38,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                         var state = world.Entities.Get(use.SourceEntityId);
                         var inv = state?.Get<InventoryState>();
                         if (inv != null && use.SlotIndex >= 0 && use.SlotIndex < inv.Slots.Length)
-                            UseItem(world, use.SourceEntityId, use.SlotIndex, inv.Slots[use.SlotIndex]);
+                            UseItem(world, tick, use.SourceEntityId, use.SlotIndex, inv.Slots[use.SlotIndex]);
                         break;
                     }
                 case InventorySwapIntent swap:
@@ -57,7 +53,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                         world.Dirty.Mark<InventoryState>(swap.SourceEntityId);
                         tick.Events.Emit(new InventorySwappedEvent
                         {
-                            EntityId = swap.SourceEntityId.Value,
+                            EntityId = swap.SourceEntityId,
                             SlotOld = swap.SlotOld,
                             SlotNew = swap.SlotNew
                         });
@@ -66,62 +62,57 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
             }
         }
 
-        foreach (var ev in tick.Events.Events)
+        var events = tick.Events.Events;
+        for (var i = 0; i < events.Count; i++)
         {
+            var ev = events[i];
             switch (ev)
             {
-                case InventoryUseItemEvent use:
+                case ItemUsedEvent use when use.DirectUse:
                     {
-                        var playerE = world.Entities.Get(new EntityId(use.EntityId));
+                        var playerE = world.Entities.Get(use.PlayerId);
                         var playerInv = playerE?.Get<InventoryState>();
                         if (playerInv != null && use.SlotIndex >= 0 && use.SlotIndex < playerInv.Slots.Length)
-                            UseItem(world, new EntityId(use.EntityId), use.SlotIndex, playerInv.Slots[use.SlotIndex]);
+                            UseItem(world, tick, use.PlayerId, use.SlotIndex, playerInv.Slots[use.SlotIndex]);
                         break;
                     }
-                case InventoryTakeItemEvent take:
+                case ItemTakenEvent take:
                     {
-                        var playerE = world.Entities.Get(new EntityId(take.EntityId));
+                        var playerE = world.Entities.Get(take.EntityId);
                         var playerInv = playerE?.Get<InventoryState>();
                         if (playerInv != null && take.SlotIndex >= 0 && take.SlotIndex < playerInv.Slots.Length)
-                            TakeItem(world, new EntityId(take.EntityId), playerInv.Slots[take.SlotIndex], take.Amount);
+                            TakeItem(world, take.EntityId, take.SlotIndex, take.Amount);
                         break;
                     }
-                case InventoryGiveItemEvent give:
+                case ItemGivenEvent give:
                     {
-                        var item = _catalog.Items.Get(give.ItemId);
+                        var item = catalog.Items.Get(give.ItemId);
                         if (item != null)
-                            GiveItem(world, new EntityId(give.EntityId), item, give.Amount);
-                        break;
-                    }
-                case ItemUsedEvent use:
-                    {
-                        var playerId = world.FindPlayerByValue(use.PlayerId);
-                        if (playerId == null) continue;
-                        var e = world.Entities.Get(playerId.Value)!;
-                        var inv = e.Get<InventoryState>()!;
-                        var item = _catalog.Items.Get(use.ItemId);
-                        if (item == null || item.Type != ItemType.Equipment) continue;
-                        var slot = inv.Slots[use.SlotIndex];
-                        if (slot.ItemId == Guid.Empty || slot.ItemId != use.ItemId) continue;
-                        TakeItem(world, playerId.Value, slot, 1);
+                            GiveItem(world, give.EntityId, item, give.Amount);
                         break;
                     }
                 case ItemEquippedEvent equip when equip.OldItemId.HasValue:
                     {
-                        var playerId = world.FindPlayerByValue(equip.PlayerId);
+                        var playerId = world.FindPlayer(equip.PlayerId);
                         if (playerId == null) continue;
                         var e = world.Entities.Get(playerId.Value)!;
                         var inv = e.Get<InventoryState>()!;
                         var pos = e.Get<Position>()!;
                         var map = world.Maps.Get(pos.MapId)!;
 
-                        var oldItem = _catalog.Items.Get(equip.OldItemId.Value);
+                        var oldItem = catalog.Items.Get(equip.OldItemId.Value);
                         if (oldItem == null) continue;
                         if (!GiveItem(world, playerId.Value, oldItem, 1))
                         {
-                        GroundItemSpawner.Spawn(world, _catalog, pos.MapId, pos.X, pos.Y,
-                                equip.OldItemId.Value, 1,
-                                world.CurrentTick!.TickNumber + TicksPerSecond * 300);
+                            tick.Events.Emit(new LootDroppedEvent
+                            {
+                                MapId = pos.MapId,
+                                X = pos.X,
+                                Y = pos.Y,
+                                ItemId = equip.OldItemId.Value,
+                                Amount = 1,
+                                DespawnTick = tick.TickNumber + GroundItemDespawnTicks
+                            });
                         }
                         break;
                     }
@@ -129,66 +120,72 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         }
     }
 
-    public bool GiveItem(World world, EntityId entityId, Item item, short amount)
+    private bool GiveItem(World world, EntityId entityId, Item item, short amount)
     {
         if (item == null) return false;
 
         var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
 
-        var slotItem = inv.Find(item.Id);
-        var slotEmpty = Array.Find(inv.Slots, x => x.ItemId == Guid.Empty);
-        var slotEmptyIndex = slotEmpty != null ? Array.IndexOf(inv.Slots, slotEmpty) : -1;
+        int? stackSlot = null;
+        int? emptySlot = null;
+        for (var i = 0; i < inv.Slots.Length; i++)
+        {
+            if (inv.Slots[i].ItemId == item.Id)
+                stackSlot = i;
+            if (inv.Slots[i].ItemId == Guid.Empty && emptySlot == null)
+                emptySlot = i;
+        }
 
-        if (slotEmptyIndex == -1) return false;
+        if (emptySlot == null) return false;
         if (amount == 0) amount = 1;
 
-        if (slotItem != null && item.Stackable)
-            slotItem.Amount += amount;
+        if (stackSlot != null && item.Stackable)
+            inv.Slots[stackSlot.Value].Amount += amount;
         else
         {
-            var emptySlot = inv.Slots[slotEmptyIndex];
-            emptySlot.ItemId = item.Id;
-            emptySlot.Amount = item.Stackable ? amount : (byte)1;
+            inv.Slots[emptySlot.Value].ItemId = item.Id;
+            inv.Slots[emptySlot.Value].Amount = item.Stackable ? amount : (byte)1;
         }
 
         world.Dirty.Mark<InventoryState>(entityId);
         return true;
     }
 
-    private void TakeItem(World world, EntityId entityId, ItemSlot slot, short amount)
+    private void TakeItem(World world, EntityId entityId, int slotIndex, short amount)
     {
         var e = world.Entities.Get(entityId)!;
         var hotbar = e.Get<HotbarState>();
         var inv = e.Get<InventoryState>()!;
 
-        if (slot == null) return;
         if (amount <= 0) amount = 1;
 
-        if (amount == slot.Amount)
+        if (amount == inv.Slots[slotIndex].Amount)
         {
-            var slotIndex = Array.IndexOf(inv.Slots, slot);
-            slot.ItemId = Guid.Empty;
-            slot.Amount = 0;
+            inv.Slots[slotIndex].ItemId = Guid.Empty;
+            inv.Slots[slotIndex].Amount = 0;
 
             if (hotbar != null)
             {
-                var hotbarSlot = hotbar.Find(SlotType.Item, (short)slotIndex);
-                if (hotbarSlot != null)
+                for (var h = 0; h < hotbar.Slots.Length; h++)
                 {
-                    hotbarSlot.Type = SlotType.None;
-                    hotbarSlot.Slot = 0;
-                    world.Dirty.Mark<HotbarState>(entityId);
+                    if (hotbar.Slots[h].Type == SlotType.Item && hotbar.Slots[h].Slot == slotIndex)
+                    {
+                        hotbar.Slots[h].Type = SlotType.None;
+                        hotbar.Slots[h].Slot = 0;
+                        world.Dirty.Mark<HotbarState>(entityId);
+                        break;
+                    }
                 }
             }
         }
         else
-            slot.Amount -= amount;
+            inv.Slots[slotIndex].Amount -= amount;
 
         world.Dirty.Mark<InventoryState>(entityId);
     }
 
-    private void DropItem(World world, EntityId entityId, ItemSlot slot, short amount)
+    private void DropItem(World world, Tick tick, EntityId entityId, int slotIndex, short amount)
     {
         var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
@@ -196,48 +193,54 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         var trade = e.Get<TradeState>();
         var map = world.Maps.Get(pos.MapId)!;
 
-        if (slot.ItemId == Guid.Empty) return;
-        var item = _catalog.Items.Get(slot.ItemId);
+        if (inv.Slots[slotIndex].ItemId == Guid.Empty) return;
+        var item = catalog.Items.Get(inv.Slots[slotIndex].ItemId);
         if (item == null || item.Bind == BindOn.Pickup) return;
         if (trade?.Partner != null) return;
 
-        if (amount > slot.Amount) amount = slot.Amount;
+        if (amount > inv.Slots[slotIndex].Amount) amount = inv.Slots[slotIndex].Amount;
 
-        GroundItemSpawner.Spawn(world, _catalog, pos.MapId, pos.X, pos.Y,
-            slot.ItemId, amount, world.CurrentTick!.TickNumber + TicksPerSecond * 300);
-        TakeItem(world, entityId, slot, amount);
+        tick.Events.Emit(new LootDroppedEvent
+        {
+            MapId = pos.MapId,
+            X = pos.X,
+            Y = pos.Y,
+            ItemId = inv.Slots[slotIndex].ItemId,
+            Amount = amount,
+            DespawnTick = tick.TickNumber + GroundItemDespawnTicks
+        });
+        TakeItem(world, entityId, slotIndex, amount);
     }
 
-    private void UseItem(World world, EntityId entityId, int slotIndex, ItemSlot slot)
+    private void UseItem(World world, Tick tick, EntityId entityId, int slotIndex, ItemSlot slot)
     {
         var e = world.Entities.Get(entityId)!;
         var stats = e.Get<StatBlock>()!;
         var vitals = e.Get<Vitals>()!;
         var appearance = e.Get<PlayerAppearance>()!;
         var trade = e.Get<TradeState>();
-        var catalog = DefinitionCatalog.Instance;
 
-        var item = _catalog.Items.Get(slot.ItemId);
+        var item = catalog.Items.Get(slot.ItemId);
         if (item == null) return;
         if (trade?.Partner != null) return;
 
         if (stats.Level < item.ReqLevel)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You do not have the level required to use this item.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You do not have the level required to use this item.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (item.ReqClassId.HasValue && appearance.ClassId != item.ReqClassId.Value)
         {
-            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You can not use this item.", ColorArgb = Color.White.ToArgb() });
+            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You can not use this item.", ColorArgb = ChatColors.White });
             return;
         }
 
         if (item.Type == ItemType.Equipment)
         {
-            world.CurrentTick?.Events.Emit(new ItemUsedEvent
+            tick.Events.Emit(new ItemUsedEvent
             {
-                PlayerId = entityId.Value,
+                PlayerId = entityId,
                 SlotIndex = slotIndex,
                 ItemId = item.Id
             });
@@ -245,7 +248,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         else if (item.Type == ItemType.Potion)
         {
             var hadEffect = false;
-            world.CurrentTick?.Events.Emit(new XpAwardedEvent { EntityId = entityId.Value, Amount = item.PotionExperience });
+            tick.Events.Emit(new XpAwardedEvent { EntityId = entityId, Amount = item.PotionExperience });
 
             for (byte i = 0; i < (byte)Vital.Count; i++)
             {
@@ -263,13 +266,13 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
             world.Dirty.Mark<Vitals>(entityId);
 
             if (vitals.Hp == 0)
-                world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = entityId.Value, EntityIsPlayer = true, SourceId = null, SourceIsPlayer = null });
+                tick.Events.Emit(new PlayerDiedEvent { EntityId = entityId });
 
-            if (item.PotionExperience > 0 || hadEffect) TakeItem(world, entityId, slot, 1);
+            if (item.PotionExperience > 0 || hadEffect) TakeItem(world, entityId, slotIndex, 1);
         }
     }
 
-    private void CollectItem(World world, EntityId entityId)
+    private void CollectItem(World world, Tick tick, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
@@ -280,12 +283,12 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
         var groundEntity = world.Entities.Get(groundEntityId.Value)!;
         var comp = groundEntity.Get<GroundItem>()!;
-        var item = _catalog.Items.Get(comp.ItemDefId);
+        var item = catalog.Items.Get(comp.ItemDefId);
         if (item == null) return;
 
         if (GiveItem(world, entityId, item, comp.Amount))
         {
-            world.CurrentTick?.Events.Emit(new GroundItemRemovedEvent { EntityId = groundEntityId.Value.Value, MapId = map.Id });
+            tick.Events.Emit(new GroundItemRemovedEvent { EntityId = groundEntityId.Value, MapId = map.Id });
             world.Entities.Destroy(groundEntityId.Value);
             map.GroundItemIds.Remove(groundEntityId.Value);
         }
