@@ -32,7 +32,7 @@ internal sealed class TradeSystem(
 
     internal void Invite(Player player, string targetName)
     {
-        var invited = Player.Find(targetName);
+        var invited = GameWorld.Current.FindPlayer(targetName);
 
         if (invited == null)
         {
@@ -82,7 +82,7 @@ internal sealed class TradeSystem(
 
     internal void Accept(Player player)
     {
-        var invited = Player.Find(player.TradeRequest);
+        var invited = GameWorld.Current.FindPlayer(player.TradeRequest);
 
         if (player.Trade != null)
         {
@@ -123,7 +123,7 @@ internal sealed class TradeSystem(
 
     internal void Decline(Player player)
     {
-        var invited = Player.Find(player.TradeRequest);
+        var invited = GameWorld.Current.FindPlayer(player.TradeRequest);
         if (invited != null) chatSender.Message(invited, player.Name + " decline the trade.", Color.White);
         player.TradeRequest = string.Empty;
     }

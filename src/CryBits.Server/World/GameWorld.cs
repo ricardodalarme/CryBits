@@ -36,6 +36,12 @@ internal sealed class GameWorld
     public Player? FindPlayer(Guid id) =>
         Sessions.Find(s => s.IsPlaying && s.Character!.Id == id)?.Character;
 
+    /// <summary>Finds a playing player by name.</summary>
+    /// <param name="name">Player name to search for.</param>
+    /// <returns>The Player instance if found; otherwise null.</returns>
+    public Player? FindPlayer(string name) =>
+        Sessions.Find(x => x.IsPlaying && x.Character!.Name.Equals(name))?.Character;
+
     /// <summary>Finds a live NPC instance by its unique identifier across all maps.</summary>
     public NpcInstance? FindNpcInstance(Guid id)
     {

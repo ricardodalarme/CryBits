@@ -95,10 +95,4 @@ internal class Player : Character
 
     /// <summary>Number of items currently offered in the active trade.</summary>
     public byte TotalTradeItems => (byte)TradeOffer.Count(x => x.SlotNum != 0);
-
-    /// <summary>Finds a playing player by name.</summary>
-    /// <param name="name">Player name to search for.</param>
-    /// <returns>The Player instance if found; otherwise null.</returns>
-    public static Player Find(string name) =>
-        GameWorld.Current.Sessions.Find(x => x.IsPlaying && x.Character!.Name.Equals(name))?.Character;
 }

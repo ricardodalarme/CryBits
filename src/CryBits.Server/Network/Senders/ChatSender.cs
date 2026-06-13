@@ -1,5 +1,6 @@
 using CryBits.Network.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.World;
 using System.Drawing;
 
 namespace CryBits.Server.Network.Senders;
@@ -27,7 +28,7 @@ internal sealed class ChatSender(PackageSender packageSender)
 
     public void MessagePrivate(Player player, string addresseeName, string text)
     {
-        var addressee = Player.Find(addresseeName);
+        var addressee = GameWorld.Current.FindPlayer(addresseeName);
 
         // Check if the addressee is connected.
         if (addressee == null)

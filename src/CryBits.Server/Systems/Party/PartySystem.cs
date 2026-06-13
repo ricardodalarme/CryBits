@@ -15,7 +15,7 @@ internal sealed class PartySystem(ChatSender chatSender, PartySender partySender
 
     internal void Invite(Player player, string targetName)
     {
-        var invited = Player.Find(targetName);
+        var invited = GameWorld.Current.FindPlayer(targetName);
 
         if (invited == null)
         {
@@ -53,7 +53,7 @@ internal sealed class PartySystem(ChatSender chatSender, PartySender partySender
 
     internal void Accept(Player player)
     {
-        var invitation = Player.Find(player.PartyRequest);
+        var invitation = GameWorld.Current.FindPlayer(player.PartyRequest);
 
         if (player.Party.Count != 0)
         {
@@ -90,7 +90,7 @@ internal sealed class PartySystem(ChatSender chatSender, PartySender partySender
 
     internal void Decline(Player player)
     {
-        var invitation = Player.Find(player.PartyRequest);
+        var invitation = GameWorld.Current.FindPlayer(player.PartyRequest);
         if (invitation != null) chatSender.Message(invitation, player.Name + " decline the party.", Color.White);
         player.PartyRequest = string.Empty;
     }
