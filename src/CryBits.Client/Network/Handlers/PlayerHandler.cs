@@ -12,7 +12,7 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Network;
 using CryBits.Network.Packets.Server;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using Entity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;

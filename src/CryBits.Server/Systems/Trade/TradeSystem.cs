@@ -10,7 +10,7 @@ using CryBits.Server.Systems.Inventory;
 using CryBits.Server.World;
 using System;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Trade;

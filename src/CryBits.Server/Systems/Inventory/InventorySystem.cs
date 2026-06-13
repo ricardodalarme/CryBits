@@ -11,7 +11,7 @@ using CryBits.Server.Systems.Progression;
 using CryBits.Server.World;
 using System;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Inventory;

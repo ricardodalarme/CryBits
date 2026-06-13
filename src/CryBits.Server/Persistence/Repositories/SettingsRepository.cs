@@ -1,7 +1,7 @@
 using CryBits.Persistence.Serialization;
 using System.IO;
 using System.Text.Json;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Server.Persistence.Repositories;
 

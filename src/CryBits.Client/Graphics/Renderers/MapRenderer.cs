@@ -5,7 +5,7 @@ using CryBits.Definitions.Maps;
 using SFML.Graphics;
 using SFML.System;
 using System.Collections.Generic;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics.Renderers;

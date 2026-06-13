@@ -6,7 +6,7 @@ using CryBits.Network.Packets.Server;
 using CryBits.Server.Entities;
 using LiteNetLib;
 using System;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Server.Network.Senders;
 

@@ -1,5 +1,5 @@
 using LiteNetLib;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Framework.Network;
 

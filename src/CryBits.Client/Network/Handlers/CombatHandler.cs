@@ -4,7 +4,7 @@ using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
 using CryBits.Network;
 using CryBits.Network.Packets.Server;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Network.Handlers;
 

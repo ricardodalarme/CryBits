@@ -18,7 +18,7 @@ using CryBits.Server.World;
 using System;
 using System.Drawing;
 using System.IO;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Server.Network.Handlers;
 

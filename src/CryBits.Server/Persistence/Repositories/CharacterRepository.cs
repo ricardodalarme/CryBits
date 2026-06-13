@@ -8,7 +8,7 @@ using CryBits.Server.Entities;
 using CryBits.Server.World;
 using System;
 using System.IO;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Server.Persistence.Repositories;

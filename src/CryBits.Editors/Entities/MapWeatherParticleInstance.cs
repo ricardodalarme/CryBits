@@ -1,3 +1,4 @@
+using CryBits.Definitions;
 using System;
 
 namespace CryBits.Editors.Entities;

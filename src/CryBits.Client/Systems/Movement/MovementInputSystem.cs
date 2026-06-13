@@ -5,7 +5,7 @@ using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using SFML.Window;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using Direction = CryBits.Definitions.Common.Direction;
 using MovementState = CryBits.Definitions.Common.Movement;
 

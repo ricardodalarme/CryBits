@@ -4,7 +4,7 @@ using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Party;

@@ -4,6 +4,7 @@ using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Definitions;
 using CryBits.Definitions.Npcs;
 using SFML.Graphics;
 using System;

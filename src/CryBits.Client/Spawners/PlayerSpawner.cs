@@ -8,6 +8,7 @@ using CryBits.Client.Components.Inventory;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Components.Player;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Definitions;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Items;
 using SFML.Graphics;

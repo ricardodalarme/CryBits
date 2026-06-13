@@ -10,7 +10,7 @@ using CryBits.Definitions.Slots;
 using SFML.Window;
 using System;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.UI.Game.Views;
 

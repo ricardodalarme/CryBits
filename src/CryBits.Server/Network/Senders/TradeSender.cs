@@ -1,7 +1,7 @@
 using CryBits.Definitions.Common;
 using CryBits.Network.Packets.Server;
 using CryBits.Server.Entities;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Server.Network.Senders;
 

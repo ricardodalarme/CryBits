@@ -4,7 +4,7 @@ using CryBits.Editors.Entities;
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Editors.Logic;
 

@@ -4,7 +4,7 @@ using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
 using CryBits.Definitions.Common;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Character;
 

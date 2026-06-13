@@ -2,7 +2,7 @@ using CryBits.Client.Graphics;
 using SFML.Graphics;
 using SFML.System;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Managers;
 

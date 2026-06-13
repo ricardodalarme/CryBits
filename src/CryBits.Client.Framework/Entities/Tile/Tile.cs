@@ -2,7 +2,7 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Utils;
 using System.Drawing;
 using System.Text.Json.Serialization;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Framework.Entities.Tile;
 

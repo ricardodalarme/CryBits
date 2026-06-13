@@ -5,7 +5,7 @@ using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using CryBits.Simulation.Formulas;
 using System;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Progression;

@@ -10,7 +10,7 @@ using CryBits.Server.World;
 using CryBits.Simulation.Formulas;
 using System;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Simulation.Core;
 

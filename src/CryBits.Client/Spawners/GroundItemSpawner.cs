@@ -4,7 +4,7 @@ using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Systems.Core;
 using CryBits.Definitions.Items;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Spawners;
 

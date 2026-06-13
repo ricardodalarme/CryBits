@@ -1,7 +1,7 @@
 using CryBits.Server.Network.Handlers;
 using CryBits.Server.World;
 using LiteNetLib;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Server.Network;
 

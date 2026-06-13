@@ -1,3 +1,4 @@
+using CryBits.Definitions;
 using CryBits.Definitions.Catalog;
 using CryBits.Server.Entities;
 using CryBits.Server.Logic;

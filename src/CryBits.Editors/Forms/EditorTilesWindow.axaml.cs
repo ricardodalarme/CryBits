@@ -15,7 +15,7 @@ using SFML.Graphics;
 using SFML.System;
 using System;
 using static CryBits.Editors.Logic.Utils;
-using G = CryBits.Globals;
+using G = CryBits.Definitions.Globals;
 using Point = System.Drawing.Point;
 
 namespace CryBits.Editors.Forms;

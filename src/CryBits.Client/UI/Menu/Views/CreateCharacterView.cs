@@ -6,7 +6,7 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using System.Drawing;
 using System.Linq;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.UI.Menu.Views;
 

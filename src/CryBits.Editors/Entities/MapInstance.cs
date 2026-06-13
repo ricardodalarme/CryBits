@@ -4,7 +4,7 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Maps;
 using CryBits.Editors.Forms;
 using System;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 
 namespace CryBits.Editors.Entities;

@@ -1,6 +1,6 @@
 using CryBits.Definitions.Common;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Editors.Logic;
 

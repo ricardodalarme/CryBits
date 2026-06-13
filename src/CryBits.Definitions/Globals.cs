@@ -1,4 +1,4 @@
-namespace CryBits;
+namespace CryBits.Definitions;
 
 public static class Globals
 {

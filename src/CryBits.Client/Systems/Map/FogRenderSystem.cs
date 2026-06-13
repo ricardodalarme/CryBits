@@ -4,7 +4,7 @@ using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Graphics;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Map;
 

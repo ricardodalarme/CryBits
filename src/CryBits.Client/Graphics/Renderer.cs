@@ -6,7 +6,7 @@ using SFML.System;
 using SFML.Window;
 using System.Drawing;
 using static CryBits.Client.Framework.Utils.TextUtils;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics;

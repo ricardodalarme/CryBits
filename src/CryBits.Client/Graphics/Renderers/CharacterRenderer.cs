@@ -1,7 +1,7 @@
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Common;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics.Renderers;

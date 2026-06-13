@@ -6,7 +6,7 @@ using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
 using System.IO;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using BcryptNet = BCrypt.Net.BCrypt;
 
 namespace CryBits.Server.Network.Handlers;

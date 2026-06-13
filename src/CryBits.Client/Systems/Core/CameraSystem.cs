@@ -6,7 +6,7 @@ using CryBits.Client.Worlds;
 using SFML.System;
 using System;
 using System.Drawing;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using MapData = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Client.Systems.Core;

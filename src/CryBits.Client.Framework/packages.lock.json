@@ -57,14 +57,6 @@
           "CSFML": "[3.0.0, 3.1.0)"
         }
       },
-      "crybits.core": {
-        "type": "Project",
-        "dependencies": {
-          "CryBits.Definitions": "[1.0.0, )",
-          "CryBits.Simulation": "[1.0.0, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
-        }
-      },
       "crybits.definitions": {
         "type": "Project",
         "dependencies": {

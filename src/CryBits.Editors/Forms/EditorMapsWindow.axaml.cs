@@ -8,6 +8,7 @@ using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Definitions;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;

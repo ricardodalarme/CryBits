@@ -11,7 +11,7 @@ using CryBits.Network;
 using CryBits.Network.Packets.Server;
 using System;
 using System.Collections.Generic;
-using static CryBits.Globals;
+using static CryBits.Definitions.Globals;
 using Direction = CryBits.Definitions.Common.Direction;
 using Movement = CryBits.Definitions.Common.Movement;
 
