@@ -1,6 +1,5 @@
 using CryBits.Server.Network;
 using CryBits.Server.Network.Senders;
-using CryBits.Server.Systems.Characters;
 using CryBits.Server.Systems.Combat;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.Systems.Movement;

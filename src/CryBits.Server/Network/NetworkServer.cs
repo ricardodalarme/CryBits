@@ -1,13 +1,13 @@
-using CryBits.Server.Systems.Characters;
+using CryBits.Server.Network.Handlers;
 using CryBits.Server.World;
 using LiteNetLib;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network;
 
-internal sealed class NetworkServer(CharacterSystem characterSystem)
+internal sealed class NetworkServer(AccountHandler accountHandler)
 {
-    public static NetworkServer Instance { get; } = new(CharacterSystem.Instance);
+    public static NetworkServer Instance { get; } = new(AccountHandler.Instance);
 
     public NetManager Device { get; private set; }
 
@@ -30,7 +30,7 @@ internal sealed class NetworkServer(CharacterSystem characterSystem)
         {
             var session = GameWorld.Current.Sessions.Find(x => x.Connection == peer);
             if (session == null) return;
-            if (session.Character != null) characterSystem.Leave(session.Character);
+            if (session.Character != null) accountHandler.Leave(session.Character);
             GameWorld.Current.Sessions.Remove(session);
         };
 
