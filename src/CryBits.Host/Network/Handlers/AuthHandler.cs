@@ -32,7 +32,7 @@ internal sealed class AuthHandler(
         AccountRepository.Instance);
 
     [PacketHandler]
-    internal void Connect(GameSession session, ConnectPacket packet)
+    internal void Connect(Session session, ConnectPacket packet)
     {
         var user = packet.Username.Trim();
         var password = packet.Password;
@@ -44,25 +44,25 @@ internal sealed class AuthHandler(
             return;
         }
 
-        if (WorldHost.Current.Sessions.Find(x => x.Username.Equals(user)) != null)
+        if (WorldHost.Current.Sessions.Find(x => x.Account?.Username.Equals(user) == true) != null)
         {
             authSender.Alert(session, "Someone already signed in to this account.");
             return;
         }
 
-        accountRepository.Read(session, user);
+        session.Account = accountRepository.Read(user);
 
-        if (!BcryptNet.Verify(password, session.PasswordHash))
+        if (!BcryptNet.Verify(password, session.Account.PasswordHash))
         {
             authSender.Alert(session, "Password is incorrect.");
             return;
         }
 
-        session.AccessLevel = Access.Administrator;
+        session.Account.AccessLevel = Access.Administrator;
 
         if (editor)
         {
-            if (session.AccessLevel < Access.Editor)
+            if (session.Account.AccessLevel < Access.Editor)
             {
                 authSender.Alert(session, "You're not allowed to do this.");
                 return;
@@ -78,11 +78,11 @@ internal sealed class AuthHandler(
         }
         else
         {
-            accountRepository.ReadCharacters(session);
+            accountRepository.ReadCharacters(session.Account);
             classSender.Classes(session);
             accountSender.Characters(session);
 
-            if (session.Characters.Count == 0)
+            if (session.Account.Characters.Count == 0)
             {
                 accountSender.CreateCharacter(session);
                 return;
@@ -93,7 +93,7 @@ internal sealed class AuthHandler(
     }
 
     [PacketHandler]
-    internal void Register(GameSession session, RegisterPacket packet)
+    internal void Register(Session session, RegisterPacket packet)
     {
         var user = packet.Username.Trim();
         var password = packet.Password;
@@ -118,10 +118,13 @@ internal sealed class AuthHandler(
             return;
         }
 
-        session.Username = user;
-        session.PasswordHash = BcryptNet.HashPassword(password);
+        session.Account = new Account
+        {
+            Username = user,
+            PasswordHash = BcryptNet.HashPassword(password)
+        };
 
-        accountRepository.Write(session);
+        accountRepository.Write(session.Account);
 
         classSender.Classes(session);
         accountSender.CreateCharacter(session);

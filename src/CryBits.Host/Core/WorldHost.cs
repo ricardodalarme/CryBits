@@ -34,8 +34,7 @@ internal sealed class WorldHost
     public DirtyTracking Dirty => Simulation.Dirty;
     public Tick? CurrentTick => Simulation.CurrentTick;
 
-    public List<GameSession> Sessions { get; } = [];
-    public SessionMap SessionMap { get; } = new();
+    public SessionManager Sessions { get; } = new();
 
     public EntityId? FindPlayer(string name) => Simulation.FindPlayer(name);
 
@@ -76,7 +75,7 @@ internal sealed class WorldHost
         {
             if (ev is ChatMessageEvent chat)
             {
-                var session = SessionMap.Get(new EntityId(chat.RecipientId));
+                var session = Sessions.Get(new EntityId(chat.RecipientId));
                 if (session != null)
                     ChatSender.SendMessage(session, chat.Text, chat.ColorArgb);
             }

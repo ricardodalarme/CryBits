@@ -3,6 +3,7 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.State;
 using System;
 using System.IO;
 using static CryBits.Definitions.Globals;
@@ -16,12 +17,12 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
     private readonly DefinitionCatalog _catalog = catalog;
     public static CharacterRepository Instance { get; } = new(DefinitionCatalog.Instance);
 
-    public void Read(GameSession session, string name)
+    public EntityId Read(Account account, string name)
     {
-        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", name) +
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.Username, "Characters", name) +
                                 ".dat");
 
-        if (!file.Directory.Exists) return;
+        if (!file.Directory.Exists) return default;
 
         var world = WorldHost.Current;
         var entityId = world.Entities.Create();
@@ -77,8 +78,7 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
         state.Set(new ShopState());
         state.Set(new PlayerTag());
 
-        world.SessionMap.Register(entityId, session);
-        session.Character = entityId;
+        return entityId;
     }
 
     public string ReadAllNames()
@@ -93,9 +93,8 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
         return data.ReadToEnd();
     }
 
-    public void Write(GameSession session)
+    public void Write(Account account, EntityId entityId)
     {
-        var entityId = session.Character!.Value;
         var state = WorldHost.Current.Entities.Get(entityId)!;
         var pos = state.Get<Position>()!;
         var appearance = state.Get<PlayerAppearance>()!;
@@ -106,7 +105,7 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
         var hotbar = state.Get<HotbarState>()!;
 
         var file = new FileInfo(
-            Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", appearance.Name) +
+            Path.Combine(Directories.Accounts.FullName, account.Username, "Characters", appearance.Name) +
             ".dat");
 
         if (!file.Directory.Exists) file.Directory.Create();

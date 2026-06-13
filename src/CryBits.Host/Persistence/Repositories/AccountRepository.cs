@@ -8,42 +8,45 @@ internal sealed class AccountRepository
 {
     public static AccountRepository Instance { get; } = new();
 
-    public void Read(GameSession session, string name)
+    public Account Read(string name)
     {
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, name, "Data") + ".dat");
 
         using var data = new BinaryReader(file.OpenRead());
-        session.Username = data.ReadString();
-        session.PasswordHash = data.ReadString();
-        session.AccessLevel = (Access)data.ReadByte();
+        return new Account
+        {
+            Username = data.ReadString(),
+            PasswordHash = data.ReadString(),
+            AccessLevel = (Access)data.ReadByte()
+        };
     }
 
-    public void ReadCharacters(GameSession session)
+    public void ReadCharacters(Account account)
     {
-        var directory = new DirectoryInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Characters"));
+        var directory = new DirectoryInfo(Path.Combine(Directories.Accounts.FullName, account.Username, "Characters"));
 
         if (!directory.Exists) directory.Create();
 
-        var file = directory.GetFiles();
-        session.Characters = [];
-        for (byte i = 0; i < file.Length; i++)
-            using (var data = new BinaryReader(file[i].OpenRead()))
-                session.Characters.Add(new GameSession.CharacterSlot
+        var files = directory.GetFiles();
+        account.Characters = [];
+        for (byte i = 0; i < files.Length; i++)
+            using (var data = new BinaryReader(files[i].OpenRead()))
+                account.Characters.Add(new Account.CharacterSlot
                 {
                     Name = data.ReadString(),
                     TextureNum = data.ReadInt16()
                 });
     }
 
-    public void Write(GameSession session)
+    public void Write(Account account)
     {
-        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Data") + ".dat");
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.Username, "Data") + ".dat");
 
         if (!file.Directory!.Exists) file.Directory.Create();
 
         using var data = new BinaryWriter(file.OpenWrite());
-        data.Write(session.Username);
-        data.Write(session.PasswordHash);
-        data.Write((byte)session.AccessLevel);
+        data.Write(account.Username);
+        data.Write(account.PasswordHash);
+        data.Write((byte)account.AccessLevel);
     }
 }

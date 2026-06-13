@@ -9,7 +9,7 @@ internal sealed class ClassSender(PackageSender packageSender, DefinitionCatalog
     private readonly DefinitionCatalog _catalog = catalog;
     public static ClassSender Instance { get; } = new(PackageSender.Instance, DefinitionCatalog.Instance);
 
-    public void Classes(GameSession session)
+    public void Classes(Session session)
     {
         packageSender.ToPlayer(session, new ClassesPacket { List = _catalog.Classes });
     }

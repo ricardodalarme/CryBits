@@ -7,14 +7,14 @@ internal sealed class AuthSender(PackageSender packageSender)
 {
     public static AuthSender Instance { get; } = new(PackageSender.Instance);
 
-    public void Alert(GameSession session, string message, bool disconnect = true)
+    public void Alert(Session session, string message, bool disconnect = true)
     {
         packageSender.ToPlayer(session, new AlertPacket { Message = message });
 
         if (disconnect) session.Connection.Disconnect();
     }
 
-    public void Connect(GameSession session)
+    public void Connect(Session session)
     {
         packageSender.ToPlayer(session, new ConnectPacket());
     }

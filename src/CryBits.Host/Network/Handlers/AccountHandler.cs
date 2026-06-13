@@ -54,7 +54,7 @@ internal sealed class AccountHandler(
         DefinitionCatalog.Instance);
 
     [PacketHandler]
-    internal void CreateCharacter(GameSession session, CreateCharacterPacket packet)
+    internal void CreateCharacter(Session session, CreateCharacterPacket packet)
     {
         var name = packet.Name.Trim();
 
@@ -110,7 +110,7 @@ internal sealed class AccountHandler(
         state.Set(new ShopState());
         state.Set(new PlayerTag());
 
-        world.SessionMap.Register(entityId, session);
+        world.Sessions.Register(entityId, session);
         session.Character = entityId;
 
         for (byte i = 0; i < (byte)@class.Item.Count; i++)
@@ -124,24 +124,26 @@ internal sealed class AccountHandler(
         }
 
         characterRepository.WriteName(name);
-        characterRepository.Write(session);
+        characterRepository.Write(session.Account!, entityId);
 
         Join(entityId);
     }
 
     [PacketHandler]
-    internal void CharacterUse(GameSession session, CharacterUsePacket packet)
+    internal void CharacterUse(Session session, CharacterUsePacket packet)
     {
-        if (packet.CharacterIndex < 0 || packet.CharacterIndex >= session.Characters.Count) return;
+        if (packet.CharacterIndex < 0 || packet.CharacterIndex >= session.Account!.Characters.Count) return;
 
-        characterRepository.Read(session, session.Characters[packet.CharacterIndex].Name);
-        Join(session.Character!.Value);
+        var entityId = characterRepository.Read(session.Account!, session.Account!.Characters[packet.CharacterIndex].Name);
+        session.Character = entityId;
+        WorldHost.Current.Sessions.Register(entityId, session);
+        Join(entityId);
     }
 
     [PacketHandler]
-    internal void CharacterCreate(GameSession session, CharacterCreatePacket packet)
+    internal void CharacterCreate(Session session, CharacterCreatePacket packet)
     {
-        if (session.Characters.Count == Config.MaxCharacters)
+        if (session.Account!.Characters.Count == Config.MaxCharacters)
         {
             authSender.Alert(session, "You can only have " + Config.MaxCharacters + " characters.", false);
             return;
@@ -152,32 +154,32 @@ internal sealed class AccountHandler(
     }
 
     [PacketHandler]
-    internal void CharacterDelete(GameSession session, CharacterDeletePacket packet)
+    internal void CharacterDelete(Session session, CharacterDeletePacket packet)
     {
-        if (packet.CharacterIndex < 0 || packet.CharacterIndex >= session.Characters.Count) return;
+        if (packet.CharacterIndex < 0 || packet.CharacterIndex >= session.Account!.Characters.Count) return;
 
-        var name = session.Characters[packet.CharacterIndex].Name;
+        var name = session.Account!.Characters[packet.CharacterIndex].Name;
         authSender.Alert(session, "The character '" + name + "' has been deleted.", false);
         characterRepository.WriteAllNames(characterRepository.ReadAllNames().Replace(":;" + name + ":", ":"));
-        session.Characters.RemoveAt(packet.CharacterIndex);
-        File.Delete(Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", name) + Directories.Format);
+        session.Account!.Characters.RemoveAt(packet.CharacterIndex);
+        File.Delete(Path.Combine(Directories.Accounts.FullName, session.Account!.Username, "Characters", name) + Directories.Format);
 
         accountSender.Characters(session);
-        AccountRepository.Instance.Write(session);
+        AccountRepository.Instance.Write(session.Account!);
     }
 
     internal void Leave(EntityId entityId)
     {
         var world = WorldHost.Current;
-        var session = world.SessionMap.Get(entityId)!;
+        var session = world.Sessions.Get(entityId)!;
         if (session == null) return;
 
-        characterRepository.Write(session);
+        characterRepository.Write(session.Account!, entityId);
         playerSender.PlayerLeave(entityId);
 
         world.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent { PlayerId = entityId.Value });
 
-        world.SessionMap.Unregister(entityId);
+        world.Sessions.Unregister(entityId);
         world.Entities.Destroy(entityId);
         session.Character = null;
     }
@@ -185,7 +187,7 @@ internal sealed class AccountHandler(
     private void Join(EntityId entityId)
     {
         var world = WorldHost.Current;
-        var session = world.SessionMap.Get(entityId)!;
+        var session = world.Sessions.Get(entityId)!;
         var state = world.Entities.Get(entityId)!;
         var pos = state.Get<Position>()!;
         var map = world.Maps.Get(pos.MapId);

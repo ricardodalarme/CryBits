@@ -14,7 +14,7 @@ internal sealed class PackageSender
 {
     public static PackageSender Instance { get; } = new();
 
-    public void ToPlayer(GameSession session, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
+    public void ToPlayer(Session session, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
@@ -23,7 +23,7 @@ internal sealed class PackageSender
 
     public void ToPlayer(EntityId entityId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
-        var session = WorldHost.Current.SessionMap.Get(entityId)!;
+        var session = WorldHost.Current.Sessions.Get(entityId)!;
         ToPlayer(session, packet, delivery);
     }
 

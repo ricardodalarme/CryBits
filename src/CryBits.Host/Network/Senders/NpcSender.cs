@@ -16,7 +16,7 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
     private readonly DefinitionCatalog _catalog = catalog;
     public static NpcSender Instance { get; } = new(PackageSender.Instance, DefinitionCatalog.Instance);
 
-    public void Npcs(GameSession session)
+    public void Npcs(Session session)
     {
         packageSender.ToPlayer(session, new NpcsPacket { List = _catalog.Npcs });
     }

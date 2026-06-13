@@ -151,7 +151,7 @@ internal static class Program
     {
         // Save character data for all connected players.
         foreach (var t in WorldHost.Current.Sessions.Where(t => t.IsPlaying))
-            CharacterRepository.Instance.Write(t);
+            CharacterRepository.Instance.Write(t.Account!, t.Character!.Value);
 
         // Stop network device.
         NetworkServer.Instance.Device.Stop();

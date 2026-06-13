@@ -24,7 +24,7 @@ internal sealed class NetworkServer(AccountHandler accountHandler)
                 request.Reject();
         };
 
-        listener.PeerConnectedEvent += peer => WorldHost.Current.Sessions.Add(new GameSession(peer));
+        listener.PeerConnectedEvent += peer => WorldHost.Current.Sessions.Add(new Session(peer));
 
         listener.PeerDisconnectedEvent += (peer, _) =>
         {

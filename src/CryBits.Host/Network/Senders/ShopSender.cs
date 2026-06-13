@@ -12,7 +12,7 @@ internal sealed class ShopSender(PackageSender packageSender, DefinitionCatalog 
     private readonly DefinitionCatalog _catalog = catalog;
     public static ShopSender Instance { get; } = new(PackageSender.Instance, DefinitionCatalog.Instance);
 
-    public void Shops(GameSession session)
+    public void Shops(Session session)
     {
         packageSender.ToPlayer(session, new ShopsPacket { List = _catalog.Shops });
     }

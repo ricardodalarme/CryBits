@@ -35,9 +35,9 @@ internal sealed class EditorHandler(
         DefinitionCatalog.Instance);
 
     [PacketHandler]
-    internal void WriteClasses(GameSession session, WriteClassesPacket packet)
+    internal void WriteClasses(Session session, WriteClassesPacket packet)
     {
-        if (session.AccessLevel < Access.Editor)
+        if (session.Account!.AccessLevel < Access.Editor)
         {
             authSender.Alert(session, "You aren't allowed to do this.");
             return;
@@ -51,9 +51,9 @@ internal sealed class EditorHandler(
     }
 
     [PacketHandler]
-    internal void WriteMaps(GameSession session, WriteMapsPacket packet)
+    internal void WriteMaps(Session session, WriteMapsPacket packet)
     {
-        if (session.AccessLevel < Access.Editor)
+        if (session.Account!.AccessLevel < Access.Editor)
         {
             authSender.Alert(session, "You aren't allowed to do this.");
             return;
@@ -83,9 +83,9 @@ internal sealed class EditorHandler(
     }
 
     [PacketHandler]
-    internal void WriteNpcs(GameSession session, WriteNpcsPacket packet)
+    internal void WriteNpcs(Session session, WriteNpcsPacket packet)
     {
-        if (session.AccessLevel < Access.Editor)
+        if (session.Account!.AccessLevel < Access.Editor)
         {
             authSender.Alert(session, "You aren't allowed to do this.");
             return;
@@ -99,9 +99,9 @@ internal sealed class EditorHandler(
     }
 
     [PacketHandler]
-    internal void WriteItems(GameSession session, WriteItemsPacket packet)
+    internal void WriteItems(Session session, WriteItemsPacket packet)
     {
-        if (session.AccessLevel < Access.Editor)
+        if (session.Account!.AccessLevel < Access.Editor)
         {
             authSender.Alert(session, "You aren't allowed to do this.");
             return;
@@ -115,9 +115,9 @@ internal sealed class EditorHandler(
     }
 
     [PacketHandler]
-    internal void WriteShops(GameSession session, WriteShopsPacket packet)
+    internal void WriteShops(Session session, WriteShopsPacket packet)
     {
-        if (session.AccessLevel < Access.Editor)
+        if (session.Account!.AccessLevel < Access.Editor)
         {
             authSender.Alert(session, "You aren't allowed to do this.");
             return;
@@ -131,13 +131,13 @@ internal sealed class EditorHandler(
     }
 
     [PacketHandler]
-    internal void RequestClasses(GameSession session, RequestClassesPacket _)
+    internal void RequestClasses(Session session, RequestClassesPacket _)
     {
         classSender.Classes(session);
     }
 
     [PacketHandler]
-    internal void RequestMap(GameSession session, RequestMapPacket packet)
+    internal void RequestMap(Session session, RequestMapPacket packet)
     {
         if (session.InEditor)
             mapSender.Map(session, _catalog.Maps.Get(packet.Id));
@@ -160,25 +160,25 @@ internal sealed class EditorHandler(
     }
 
     [PacketHandler]
-    internal void RequestMaps(GameSession session, RequestMapsPacket _)
+    internal void RequestMaps(Session session, RequestMapsPacket _)
     {
         mapSender.Maps(session);
     }
 
     [PacketHandler]
-    internal void RequestNpcs(GameSession session, RequestNpcsPacket _)
+    internal void RequestNpcs(Session session, RequestNpcsPacket _)
     {
         npcSender.Npcs(session);
     }
 
     [PacketHandler]
-    internal void RequestItems(GameSession session, RequestItemsPacket _)
+    internal void RequestItems(Session session, RequestItemsPacket _)
     {
         itemSender.Items(session);
     }
 
     [PacketHandler]
-    internal void RequestShops(GameSession session, RequestShopsPacket _)
+    internal void RequestShops(Session session, RequestShopsPacket _)
     {
         shopSender.Shops(session);
     }

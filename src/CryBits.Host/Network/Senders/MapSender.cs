@@ -16,12 +16,12 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
     private readonly DefinitionCatalog _catalog = catalog;
     public static MapSender Instance { get; } = new(PackageSender.Instance, DefinitionCatalog.Instance);
 
-    public void Map(GameSession session, Map map)
+    public void Map(Session session, Map map)
     {
         packageSender.ToPlayer(session, new MapPacket { Map = map });
     }
 
-    public void Maps(GameSession session)
+    public void Maps(Session session)
     {
         packageSender.ToPlayer(session, new MapsPacket { List = _catalog.Maps });
         foreach (var map in _catalog.Maps.Values) Map(session, map);

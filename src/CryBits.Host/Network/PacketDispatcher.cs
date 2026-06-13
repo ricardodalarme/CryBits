@@ -16,7 +16,7 @@ namespace CryBits.Host.Network;
 /// <see cref="PacketHandlerAttribute"/>.
 ///
 /// The packet type is inferred from the IClientPacket parameter of each handler:
-///   void Method(GameSession session, TPacket packet)
+///   void Method(Session session, TPacket packet)
 ///   void Method(EntityId   entityId, TPacket packet)
 ///
 /// On receive, BinaryFormatter already embeds full type info, so
@@ -24,7 +24,7 @@ namespace CryBits.Host.Network;
 /// </summary>
 internal static class PacketDispatcher
 {
-    private static readonly Dictionary<Type, Action<GameSession, IClientPacket>> _handlers = [];
+    private static readonly Dictionary<Type, Action<Session, IClientPacket>> _handlers = [];
 
     internal static int Count => _handlers.Count;
 
@@ -58,7 +58,7 @@ internal static class PacketDispatcher
         }
     }
 
-    internal static void Dispatch(GameSession session, NetPacketReader data)
+    internal static void Dispatch(Session session, NetPacketReader data)
     {
         var packet = (IClientPacket)data.ReadObject();
 
@@ -66,22 +66,22 @@ internal static class PacketDispatcher
             handler(session, packet);
     }
 
-    private static Action<GameSession, IClientPacket> BuildInstanceHandler(MethodInfo method, object instance)
+    private static Action<Session, IClientPacket> BuildInstanceHandler(MethodInfo method, object instance)
     {
-        var sessionParam = Expression.Parameter(typeof(GameSession), "session");
+        var sessionParam = Expression.Parameter(typeof(Session), "session");
         var packetParam = Expression.Parameter(typeof(IClientPacket), "packet");
         var instanceExpr = Expression.Constant(instance);
 
         var methodParams = method.GetParameters();
         var firstParamType = methodParams[0].ParameterType;
 
-        // GameSession-based handler
-        if (firstParamType == typeof(GameSession))
+        // Session-based handler
+        if (firstParamType == typeof(Session))
         {
             var call = Expression.Call(instanceExpr, method, sessionParam,
                 Expression.Convert(packetParam, methodParams[1].ParameterType));
 
-            return Expression.Lambda<Action<GameSession, IClientPacket>>(
+            return Expression.Lambda<Action<Session, IClientPacket>>(
                 call, sessionParam, packetParam).Compile();
         }
 
@@ -89,7 +89,7 @@ internal static class PacketDispatcher
         if (firstParamType == typeof(EntityId))
         {
             var entityIdVar = Expression.Variable(typeof(EntityId), "entityId");
-            var characterProp = Expression.Property(sessionParam, nameof(GameSession.Character));
+            var characterProp = Expression.Property(sessionParam, nameof(Session.Character));
             var hasValue = Expression.Property(characterProp, "HasValue");
             var value = Expression.Property(characterProp, "Value");
             var assign = Expression.Assign(entityIdVar, value);
@@ -100,12 +100,12 @@ internal static class PacketDispatcher
             var block = Expression.Block([entityIdVar], assign, call);
             var body = Expression.IfThen(hasValue, block);
 
-            return Expression.Lambda<Action<GameSession, IClientPacket>>(
+            return Expression.Lambda<Action<Session, IClientPacket>>(
                 body, sessionParam, packetParam).Compile();
         }
 
         throw new InvalidOperationException(
             $"Handler '{method.DeclaringType?.Name}.{method.Name}' has an unsupported first parameter type " +
-            $"'{firstParamType.Name}'. Expected GameSession or EntityId.");
+            $"'{firstParamType.Name}'. Expected Session or EntityId.");
     }
 }
