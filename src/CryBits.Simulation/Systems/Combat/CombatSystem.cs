@@ -5,16 +5,17 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.Entities;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
 using CryBits.Simulation.Intents;
+using CryBits.Simulation.Spawners;
 using CryBits.Simulation.State;
 using System;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
+using static CryBits.Simulation.SimulationConstants;
 using Attribute = CryBits.Definitions.Characters.Attribute;
-using CryBits.Simulation.Core;
 
 namespace CryBits.Simulation.Systems.Combat;
 
@@ -305,9 +306,9 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         for (byte i = 0; i < npcData.Drop.Count; i++)
             if (npcData.Drop[i].ItemId != Guid.Empty)
                 if (Random.Shared.Next(1, 99) <= npcData.Drop[i].Chance)
-                    map.GroundItems.Add(new GroundItem(npcData.Drop[i].ItemId, npcData.Drop[i].Amount, pos.X, pos.Y));
-
-        world.CurrentTick?.Events.Emit(new MapGroundItemsChangedEvent { MapId = map.Id });
+                    GroundItemSpawner.Spawn(world, catalog, pos.MapId, pos.X, pos.Y,
+                        npcData.Drop[i].ItemId, npcData.Drop[i].Amount,
+                        world.CurrentTick!.TickNumber + TicksPerSecond * 300);
 
         npcState.Alive = false;
         npcState.TargetId = null;

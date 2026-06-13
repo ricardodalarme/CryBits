@@ -34,6 +34,8 @@ internal sealed class ReplicationService(
                 playerSender.PlayerHotbar(entityId);
             else if (componentType == typeof(NpcState))
                 ReplicateNpcState(world, entityId, entity);
+            else if (componentType == typeof(GroundItem))
+                mapSender.MapGroundItem(entityId);
         }
 
         // 2. Replicate tick events
@@ -42,8 +44,8 @@ internal sealed class ReplicationService(
             if (ev is CombatAttackEvent attack)
                 combatSender.Attack(attack.MapId, attack.AttackerId, attack.VictimId);
 
-            if (ev is MapGroundItemsChangedEvent items)
-                ReplicateMapItemsChanged(world, items);
+            if (ev is GroundItemRemovedEvent removed)
+                mapSender.RemoveGroundItem(removed.EntityId);
 
             if (ev is PlayerWarpedEvent warp && warp.NeedsMapData)
                 ReplicatePlayerWarp(world, warp);
@@ -92,18 +94,6 @@ internal sealed class ReplicationService(
             npcSender.MapNpc(entityId);
         else
             npcSender.MapNpcDied(entityId);
-    }
-
-    private void ReplicateMapItemsChanged(World world, MapGroundItemsChangedEvent items)
-    {
-        foreach (var map in world.Maps.Values)
-        {
-            if (map.Id == items.MapId)
-            {
-                mapSender.MapItems(map);
-                break;
-            }
-        }
     }
 
     private void ReplicatePlayerWarp(World world, PlayerWarpedEvent warp)

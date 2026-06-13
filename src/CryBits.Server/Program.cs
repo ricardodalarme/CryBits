@@ -60,7 +60,7 @@ internal static class Program
         foreach (var map in DefinitionCatalog.Instance.Maps.Values)
         {
             var mapState = new MapState(map.Id, map);
-            mapState.SpawnItems();
+            mapState.SpawnItems(world.Simulation.Entities, DefinitionCatalog.Instance);
             world.Simulation.Maps.Add(map.Id, mapState);
 
             for (byte i = 0; i < map.Npc.Count; i++)

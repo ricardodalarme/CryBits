@@ -357,7 +357,7 @@ internal sealed class SeedCommand : IConsoleCommand
         foreach (var mapDef in _catalog.Maps.Values)
         {
             var mapState = new MapState(mapDef.Id, mapDef);
-            mapState.SpawnItems();
+            mapState.SpawnItems(WorldHost.Current.Entities, DefinitionCatalog.Instance);
             WorldHost.Current.Simulation.Maps.Add(mapDef.Id, mapState);
 
             for (byte i = 0; i < mapDef.Npc.Count; i++)

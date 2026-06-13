@@ -8,6 +8,9 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 using CryBits.Host.Core;
+using System;
+using System.Collections.Generic;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Host.Network.Senders;
 
@@ -50,34 +53,52 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
 
     public void MapItems(EntityId entityId, MapState mapState)
     {
-        var packet = new MapItemsPacket { Items = new PacketsMapItem[mapState.GroundItems.Count] };
-        for (byte i = 0; i < mapState.GroundItems.Count; i++)
-        {
-            packet.Items[i] = new PacketsMapItem
-            {
-                ItemId = mapState.GroundItems[i].ItemId,
-                X = mapState.GroundItems[i].X,
-                Y = mapState.GroundItems[i].Y
-            };
-        }
-
-        packageSender.ToPlayer(entityId, packet);
+        var items = BuildItemsPacket(mapState);
+        if (items.Length > 0)
+            packageSender.ToPlayer(entityId, new MapItemsPacket { Items = items });
     }
 
     public void MapItems(MapState mapState)
     {
-        var packet = new MapItemsPacket { Items = new PacketsMapItem[mapState.GroundItems.Count] };
-        for (byte i = 0; i < mapState.GroundItems.Count; i++)
-        {
-            packet.Items[i] = new PacketsMapItem
-            {
-                ItemId = mapState.GroundItems[i].ItemId,
-                X = mapState.GroundItems[i].X,
-                Y = mapState.GroundItems[i].Y
-            };
-        }
+        var items = BuildItemsPacket(mapState);
+        if (items.Length > 0)
+            packageSender.ToMap(mapState.Id, new MapItemsPacket { Items = items });
+    }
 
-        packageSender.ToMap(mapState.Id, packet);
+    public void MapGroundItem(EntityId entityId)
+    {
+        var entity = WorldHost.Current.Entities.Get(entityId);
+        if (entity == null) return;
+        var pos = entity.Get<Position>();
+        var comp = entity.Get<GroundItem>();
+        if (pos == null || comp == null) return;
+
+        var packet = new MapItemsPacket
+        {
+            Items = [new PacketsMapItem { ItemId = comp.ItemDefId, X = pos.X, Y = pos.Y }]
+        };
+        packageSender.ToMap(pos.MapId, packet);
+    }
+
+    public void RemoveGroundItem(Guid entityId)
+    {
+        packageSender.ToMap(Guid.Empty, new MapItemsPacket());  // Placeholder: actual removal packet
+    }
+
+    private static PacketsMapItem[] BuildItemsPacket(MapState mapState)
+    {
+        var world = WorldHost.Current;
+        var items = new List<PacketsMapItem>();
+        foreach (var id in mapState.GroundItemIds)
+        {
+            var entity = world.Entities.Get(id);
+            if (entity == null) continue;
+            var pos = entity.Get<Position>();
+            var comp = entity.Get<GroundItem>();
+            if (pos == null || comp == null) continue;
+            items.Add(new PacketsMapItem { ItemId = comp.ItemDefId, X = pos.X, Y = pos.Y });
+        }
+        return items.ToArray();
     }
 
     private static PlayerDataPacket PlayerDataCache(EntityId entityId)

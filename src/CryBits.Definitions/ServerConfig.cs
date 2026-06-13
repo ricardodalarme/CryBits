@@ -12,7 +12,6 @@ public sealed class ServerConfig
     public byte MaxPlayers { get; set; } = 15;
     public byte MaxCharacters { get; set; } = 3;
     public byte MaxPartyMembers { get; set; } = 3;
-    public byte MaxMapItems { get; set; } = 100;
     public byte NumPoints { get; set; } = 3;
     public byte MaxNameLength { get; set; } = 12;
     public byte MinNameLength { get; set; } = 3;

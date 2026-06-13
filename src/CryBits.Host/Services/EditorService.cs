@@ -64,7 +64,7 @@ internal sealed class EditorService(
 
         foreach (var tempMap in WorldHost.Current.Maps.Values)
         {
-            tempMap.SpawnItems();
+            tempMap.SpawnItems(WorldHost.Current.Entities, _catalog);
 
             foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
             {

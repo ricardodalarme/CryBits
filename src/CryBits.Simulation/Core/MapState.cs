@@ -1,7 +1,8 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.Entities;
+using CryBits.Simulation.Spawners;
 using CryBits.Simulation.State;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ public sealed class MapState
     public Guid Id { get; }
     public Map Data { get; }
     public List<EntityId> NpcIds { get; } = [];
-    public List<GroundItem> GroundItems { get; } = [];
+    public List<EntityId> GroundItemIds { get; } = [];
 
     public MapState(Guid id, Map data)
     {
@@ -63,21 +64,38 @@ public sealed class MapState
         return false;
     }
 
-    public GroundItem? HasItem(byte x, byte y)
+    public EntityId? FindGroundItemEntity(EntityRegistry entities, byte x, byte y)
     {
-        for (var i = GroundItems.Count - 1; i >= 0; i--)
-            if (GroundItems[i].X == x && GroundItems[i].Y == y)
-                return GroundItems[i];
+        foreach (var entityId in GroundItemIds)
+        {
+            var entityState = entities.Get(entityId);
+            if (entityState == null) continue;
+            var pos = entityState.Get<Position>();
+            if (pos == null) continue;
+            if (pos.X == x && pos.Y == y)
+                return entityId;
+        }
         return null;
     }
 
-    public void SpawnItems()
+    public void SpawnItems(EntityRegistry entities, DefinitionCatalog catalog)
     {
         for (byte x = 0; x < Map.Width; x++)
             for (byte y = 0; y < Map.Height; y++)
                 if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
-                    GroundItems.Add(new GroundItem(new Guid(Data.Attribute[x, y].Data1),
-                        Data.Attribute[x, y].Data2, x, y));
+                {
+                    var entityId = entities.Create();
+                    var entity = entities.Get(entityId)!;
+                    entity.Set(new Position { MapId = Id, X = x, Y = y });
+                    entity.Set(new GroundItem
+                    {
+                        ItemDefId = new Guid(Data.Attribute[x, y].Data1),
+                        Amount = Data.Attribute[x, y].Data2,
+                        DespawnTick = -1
+                    });
+                    entity.Set(new GroundItemTag());
+                    GroundItemIds.Add(entityId);
+                }
     }
 
     public bool TileBlocked(byte x, byte y, Direction direction, EntityRegistry entities, bool countEntities = true)

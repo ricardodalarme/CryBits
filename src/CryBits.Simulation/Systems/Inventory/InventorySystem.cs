@@ -4,12 +4,13 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
+using CryBits.Simulation.Spawners;
 using System;
+using static CryBits.Simulation.SimulationConstants;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
-using CryBits.Simulation.Core;
-using CryBits.Simulation.Entities;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
@@ -118,9 +119,9 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                         if (oldItem == null) continue;
                         if (!GiveItem(world, playerId.Value, oldItem, 1))
                         {
-                            if (map.GroundItems.Count == Config.MaxMapItems) continue;
-                            map.GroundItems.Add(new GroundItem(equip.OldItemId.Value, 1,
-                                pos.X, pos.Y));
+                        GroundItemSpawner.Spawn(world, _catalog, pos.MapId, pos.X, pos.Y,
+                                equip.OldItemId.Value, 1,
+                                world.CurrentTick!.TickNumber + TicksPerSecond * 300);
                         }
                         break;
                     }
@@ -195,7 +196,6 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         var trade = e.Get<TradeState>();
         var map = world.Maps.Get(pos.MapId)!;
 
-        if (map.GroundItems.Count == Config.MaxMapItems) return;
         if (slot.ItemId == Guid.Empty) return;
         var item = _catalog.Items.Get(slot.ItemId);
         if (item == null || item.Bind == BindOn.Pickup) return;
@@ -203,7 +203,8 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
         if (amount > slot.Amount) amount = slot.Amount;
 
-        map.GroundItems.Add(new GroundItem(slot.ItemId, amount, pos.X, pos.Y));
+        GroundItemSpawner.Spawn(world, _catalog, pos.MapId, pos.X, pos.Y,
+            slot.ItemId, amount, world.CurrentTick!.TickNumber + TicksPerSecond * 300);
         TakeItem(world, entityId, slot, amount);
     }
 
@@ -274,15 +275,19 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         var pos = e.Get<Position>()!;
         var map = world.Maps.Get(pos.MapId)!;
 
-        var mapItem = map.HasItem(pos.X, pos.Y);
-        if (mapItem == null) return;
+        var groundEntityId = map.FindGroundItemEntity(world.Entities, pos.X, pos.Y);
+        if (groundEntityId == null) return;
 
-        var item = _catalog.Items.Get(mapItem.ItemId);
+        var groundEntity = world.Entities.Get(groundEntityId.Value)!;
+        var comp = groundEntity.Get<GroundItem>()!;
+        var item = _catalog.Items.Get(comp.ItemDefId);
         if (item == null) return;
 
-        if (GiveItem(world, entityId, item, mapItem.Amount))
+        if (GiveItem(world, entityId, item, comp.Amount))
         {
-            map.GroundItems.Remove(mapItem);
+            world.CurrentTick?.Events.Emit(new GroundItemRemovedEvent { EntityId = groundEntityId.Value.Value, MapId = map.Id });
+            world.Entities.Destroy(groundEntityId.Value);
+            map.GroundItemIds.Remove(groundEntityId.Value);
         }
     }
 }
