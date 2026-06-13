@@ -5,6 +5,7 @@ using CryBits.Server.World;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Party;
@@ -146,6 +147,17 @@ internal sealed class PartySystem : ISimulationSystem
 
     public void Execute(GameWorld world, Tick tick)
     {
+        foreach (var intent in tick.Intents.All)
+        {
+            switch (intent)
+            {
+                case PartyInviteIntent i: Invite(i.SourceEntityId, i.PlayerName); break;
+                case PartyAcceptIntent a: Accept(a.SourceEntityId); break;
+                case PartyDeclineIntent d: Decline(d.SourceEntityId); break;
+                case PartyLeaveIntent l: Leave(l.SourceEntityId); break;
+            }
+        }
+
         foreach (var ev in tick.Events.Events)
         {
             if (ev is not PlayerDisconnectedEvent e) continue;

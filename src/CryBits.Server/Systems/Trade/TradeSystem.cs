@@ -12,6 +12,7 @@ using System;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Trade;
@@ -273,6 +274,19 @@ internal sealed class TradeSystem(
 
     public void Execute(GameWorld world, Tick tick)
     {
+        foreach (var intent in tick.Intents.All)
+        {
+            switch (intent)
+            {
+                case TradeInviteIntent i: Invite(i.SourceEntityId, i.PlayerName); break;
+                case TradeAcceptIntent a: Accept(a.SourceEntityId); break;
+                case TradeDeclineIntent d: Decline(d.SourceEntityId); break;
+                case TradeLeaveIntent l: Leave(l.SourceEntityId); break;
+                case TradeOfferIntent o: Offer(o.SourceEntityId, o.OfferSlot, o.InventorySlot, o.Amount); break;
+                case TradeOfferStateIntent s: OfferState(s.SourceEntityId, s.State); break;
+            }
+        }
+
         foreach (var ev in tick.Events.Events)
         {
             switch (ev)

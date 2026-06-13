@@ -1,11 +1,14 @@
 using CryBits.Definitions.Items;
+using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Intents;
 using CryBits.Server.World;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Inventory;
 
-internal sealed class HotbarSystem(InventorySystem inventorySystem)
+internal sealed class HotbarSystem(InventorySystem inventorySystem) : ISimulationSystem
 {
     public static HotbarSystem Instance { get; } = new(InventorySystem.Instance);
 
@@ -60,5 +63,24 @@ internal sealed class HotbarSystem(InventorySystem inventorySystem)
 
         hotbarSlot.Slot = slotNew;
         GameWorld.Current.Dirty.Mark<HotbarState>(entityId);
+    }
+
+    public void Execute(GameWorld world, Tick tick)
+    {
+        foreach (var intent in tick.Intents.All)
+        {
+            switch (intent)
+            {
+                case HotbarAddIntent add:
+                    Add(add.SourceEntityId, add.HotbarSlot, add.Type, add.Slot);
+                    break;
+                case HotbarSwapIntent swap:
+                    Change(swap.SourceEntityId, swap.SlotOld, swap.SlotNew);
+                    break;
+                case HotbarUseIntent use:
+                    Use(use.SourceEntityId, use.Slot);
+                    break;
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ using System.Drawing;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Entities;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Inventory;
@@ -186,6 +187,45 @@ internal sealed class InventorySystem(
 
     public void Execute(GameWorld world, Tick tick)
     {
+        foreach (var intent in tick.Intents.All)
+        {
+            switch (intent)
+            {
+                case CollectItemIntent collect:
+                    CollectItem(collect.SourceEntityId);
+                    break;
+                case DropItemIntent drop:
+                    {
+                        var state = world.Entities.Get(drop.SourceEntityId);
+                        var inv = state?.Get<InventoryState>();
+                        if (inv != null && drop.SlotIndex >= 0 && drop.SlotIndex < inv.Slots.Length)
+                            DropItem(drop.SourceEntityId, inv.Slots[drop.SlotIndex], drop.Amount);
+                        break;
+                    }
+                case InventoryUseIntent use:
+                    {
+                        var state = world.Entities.Get(use.SourceEntityId);
+                        var inv = state?.Get<InventoryState>();
+                        if (inv != null && use.SlotIndex >= 0 && use.SlotIndex < inv.Slots.Length)
+                            UseItem(use.SourceEntityId, use.SlotIndex, inv.Slots[use.SlotIndex]);
+                        break;
+                    }
+                case InventorySwapIntent swap:
+                    {
+                        var state = world.Entities.Get(swap.SourceEntityId);
+                        var inv = state?.Get<InventoryState>();
+                        var trade = state?.Get<TradeState>();
+                        if (inv == null || inv.Slots[swap.SlotOld].ItemId == Guid.Empty) break;
+                        if (swap.SlotOld == swap.SlotNew) break;
+                        if (trade?.Partner != null) break;
+                        (inv.Slots[swap.SlotOld], inv.Slots[swap.SlotNew]) = (inv.Slots[swap.SlotNew], inv.Slots[swap.SlotOld]);
+                        world.Dirty.Mark<InventoryState>(swap.SourceEntityId);
+                        HotbarSystem.Instance.SyncInventorySwap(swap.SourceEntityId, swap.SlotOld, swap.SlotNew);
+                        break;
+                    }
+            }
+        }
+
         foreach (var ev in tick.Events.Events)
         {
             switch (ev)

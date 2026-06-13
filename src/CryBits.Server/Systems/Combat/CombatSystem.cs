@@ -16,6 +16,7 @@ using static CryBits.Definitions.Globals;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Entities;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Combat;
@@ -306,6 +307,12 @@ internal sealed class CombatSystem(
 
     public void Execute(GameWorld world, Tick tick)
     {
+        foreach (var intent in tick.Intents.All)
+        {
+            if (intent is AttackIntent atk)
+                Attack(atk.SourceEntityId);
+        }
+
         foreach (var mapEntry in world.Maps)
         {
             var map = mapEntry.Value;

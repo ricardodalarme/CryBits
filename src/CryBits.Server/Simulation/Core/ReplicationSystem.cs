@@ -1,8 +1,10 @@
+using CryBits.Definitions.Common;
 using CryBits.Server.Network.Senders;
 using CryBits.Simulation.Components;
 using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Simulation.Core;
@@ -15,6 +17,20 @@ internal sealed class ReplicationSystem(
 {
     public void Execute(GameWorld world, Tick tick)
     {
+        // 0. Process chat intents (pure network routing, not gameplay)
+        foreach (var intent in tick.Intents.All)
+        {
+            if (intent is ChatMessageIntent chat)
+            {
+                switch (chat.Type)
+                {
+                    case Message.Map: chatSender.MessageMap(chat.SourceEntityId, chat.Text); break;
+                    case Message.Global: chatSender.MessageGlobal(chat.SourceEntityId, chat.Text); break;
+                    case Message.Private: chatSender.MessagePrivate(chat.SourceEntityId, chat.Addressee, chat.Text); break;
+                }
+            }
+        }
+
         // 1. Replicate component changes via dirty tracking
         foreach (var (entityId, componentType) in world.Dirty.All)
         {

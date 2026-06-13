@@ -4,6 +4,7 @@ using CryBits.Server.Simulation.Core;
 using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
+using CryBits.Simulation.Intents;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ internal sealed class Loop(NetworkServer networkServer, TickPipeline pipeline)
         {
             try
             {
-                var tick = new Tick(Environment.TickCount64, new EventBuffer());
+                var tick = new Tick(Environment.TickCount64, new IntentBuffer(), new EventBuffer());
                 GameWorld.Current.CurrentTick = tick;
 
                 // Handle incoming network data — handlers call systems which emit events.

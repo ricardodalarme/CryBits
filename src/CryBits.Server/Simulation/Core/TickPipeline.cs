@@ -47,6 +47,7 @@ internal sealed class TickPipeline
         pipeline.AddSystem(GroundItemSystem.Instance);
         pipeline.AddSystem(EquipmentSystem.Instance);
         pipeline.AddSystem(InventorySystem.Instance);
+        pipeline.AddSystem(HotbarSystem.Instance);
         pipeline.AddSystem(TradeSystem.Instance);
         pipeline.AddSystem(ShopSystem.Instance);
         pipeline.AddSystem(PartySystem.Instance);

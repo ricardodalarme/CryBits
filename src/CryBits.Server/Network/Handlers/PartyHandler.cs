@@ -1,35 +1,36 @@
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
-using CryBits.Server.Systems.Party;
+using CryBits.Server.World;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Network.Handlers;
 
-internal sealed class PartyHandler(PartySystem partySystem)
+internal sealed class PartyHandler()
 {
-    public static PartyHandler Instance { get; } = new(PartySystem.Instance);
+    public static PartyHandler Instance { get; } = new();
 
     [PacketHandler]
     internal void PartyInvite(EntityId entityId, PartyInvitePacket packet)
     {
-        partySystem.Invite(entityId, packet.PlayerName);
+        GameWorld.Current.CurrentTick?.Intents.Enqueue(new PartyInviteIntent(entityId, packet.PlayerName));
     }
 
     [PacketHandler]
     internal void PartyAccept(EntityId entityId, PartyAcceptPacket _)
     {
-        partySystem.Accept(entityId);
+        GameWorld.Current.CurrentTick?.Intents.Enqueue(new PartyAcceptIntent(entityId));
     }
 
     [PacketHandler]
     internal void PartyDecline(EntityId entityId, PartyDeclinePacket _)
     {
-        partySystem.Decline(entityId);
+        GameWorld.Current.CurrentTick?.Intents.Enqueue(new PartyDeclineIntent(entityId));
     }
 
     [PacketHandler]
     internal void PartyLeave(EntityId entityId, PartyLeavePacket _)
     {
-        partySystem.Leave(entityId);
+        GameWorld.Current.CurrentTick?.Intents.Enqueue(new PartyLeaveIntent(entityId));
     }
 }

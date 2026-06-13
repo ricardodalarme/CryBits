@@ -6,6 +6,7 @@ using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
+using CryBits.Simulation.Intents;
 using CryBits.Server.World;
 using System;
 using CryBits.Simulation.Core;
@@ -124,5 +125,15 @@ internal sealed class MovementSystem(
         world.Dirty.Mark<Position>(entityId);
     }
 
-    public void Execute(GameWorld world, Tick tick) { }
+    public void Execute(GameWorld world, Tick tick)
+    {
+        foreach (var intent in tick.Intents.All)
+        {
+            if (intent is MoveIntent move)
+            {
+                ChangeDirection(move.SourceEntityId, move.Direction);
+                Move(move.SourceEntityId, move.Movement);
+            }
+        }
+    }
 }

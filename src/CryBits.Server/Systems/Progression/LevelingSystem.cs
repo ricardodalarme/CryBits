@@ -9,6 +9,7 @@ using System;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 using Attribute = CryBits.Definitions.Characters.Attribute;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Progression;
@@ -111,6 +112,12 @@ internal sealed class LevelingSystem : ISimulationSystem
 
     public void Execute(GameWorld world, Tick tick)
     {
+        foreach (var intent in tick.Intents.All)
+        {
+            if (intent is AddPointIntent add)
+                AddPoint(add.SourceEntityId, add.AttributeNum);
+        }
+
         foreach (var ev in tick.Events.Events)
         {
             if (ev is not EntityDiedEvent died) continue;

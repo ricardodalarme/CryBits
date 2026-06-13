@@ -10,6 +10,7 @@ using CryBits.Server.World;
 using System;
 using System.Drawing;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Shops;
@@ -109,6 +110,16 @@ internal sealed class ShopSystem(
 
     public void Execute(GameWorld world, Tick tick)
     {
+        foreach (var intent in tick.Intents.All)
+        {
+            switch (intent)
+            {
+                case ShopBuyIntent b: Buy(b.SourceEntityId, b.Slot); break;
+                case ShopSellIntent s: Sell(s.SourceEntityId, s.InventorySlot, s.Amount); break;
+                case ShopCloseIntent c: Leave(c.SourceEntityId); break;
+            }
+        }
+
         foreach (var ev in tick.Events.Events)
         {
             switch (ev)

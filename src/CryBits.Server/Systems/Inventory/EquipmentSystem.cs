@@ -9,6 +9,7 @@ using CryBits.Server.World;
 using System;
 using System.Linq;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Inventory;
@@ -75,6 +76,12 @@ internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSy
 
     public void Execute(GameWorld world, Tick tick)
     {
+        foreach (var intent in tick.Intents.All)
+        {
+            if (intent is EquipmentRemoveIntent remove)
+                Unequip(remove.SourceEntityId, remove.Slot);
+        }
+
         foreach (var ev in tick.Events.Events.ToArray())
         {
             if (ev is not ItemUsedEvent use) continue;
