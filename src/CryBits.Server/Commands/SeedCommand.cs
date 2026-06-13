@@ -19,6 +19,7 @@ using NpcDef = CryBits.Definitions.Npcs.Npc;
 using NpcDropDef = CryBits.Definitions.Npcs.NpcDrop;
 using ShopDef = CryBits.Definitions.Shops.Shop;
 using ShopItemDef = CryBits.Definitions.Shops.ShopItem;
+using CryBits.Simulation.Spawners;
 
 namespace CryBits.Server.Commands;
 
@@ -361,43 +362,9 @@ internal sealed class SeedCommand : IConsoleCommand
 
             for (byte i = 0; i < mapDef.Npc.Count; i++)
             {
-                var npcData = DefinitionCatalog.Instance.Npcs.Get(mapDef.Npc[i].NpcId);
-                if (npcData == null) continue;
-
-                var entityId = WorldHost.Current.Entities.Create();
-                var entityState = WorldHost.Current.Entities.Get(entityId)!;
-
-                entityState.Set(new NpcState
-                {
-                    Index = i,
-                    NpcDefId = mapDef.Npc[i].NpcId,
-                    Alive = false,
-                    TargetId = null,
-                    SpawnTimer = 0,
-                    AttackTimer = 0
-                });
-
-                entityState.Set(new Position
-                {
-                    X = mapDef.Npc[i].X,
-                    Y = mapDef.Npc[i].Y,
-                    Direction = Direction.Down,
-                    MapId = mapState.Id
-                });
-
-                entityState.Set(new Vitals
-                {
-                    Hp = npcData.Vital[(byte)Vital.Hp],
-                    Mp = npcData.Vital[(byte)Vital.Mp],
-                    MaxHp = npcData.Vital[(byte)Vital.Hp],
-                    MaxMp = npcData.Vital[(byte)Vital.Mp]
-                });
-
-                entityState.Set(new CombatState());
-                entityState.Set(new NpcTag());
-
-                mapState.NpcIds.Add(entityId);
-                NpcBootstrapper.Spawn(WorldHost.Current.Simulation, entityId);
+                var entityId = NpcSpawner.Spawn(WorldHost.Current.Simulation, DefinitionCatalog.Instance, mapState.Id, i);
+                if (entityId.Value != Guid.Empty)
+                    mapState.NpcIds.Add(entityId);
             }
         }
 

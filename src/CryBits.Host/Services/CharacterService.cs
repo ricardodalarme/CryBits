@@ -10,15 +10,14 @@ using CryBits.Host.Network.Senders;
 using CryBits.Host.Persistence;
 using CryBits.Host.Persistence.Repositories;
 using CryBits.Simulation.Components;
-
 using CryBits.Simulation.Events;
-using CryBits.Simulation.Formulas;
 using System;
 using System.Drawing;
 using System.IO;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.State;
 using CryBits.Host.Core;
+using CryBits.Simulation.Spawners;
 
 namespace CryBits.Host.Services;
 
@@ -77,33 +76,10 @@ internal sealed class CharacterService(
         var world = WorldHost.Current;
         var @class = catalog.Classes.Get(new Guid(packet.ClassId));
 
-        var entityId = world.Entities.Create();
+        var entityId = PlayerSpawner.Spawn(WorldHost.Current.Simulation, catalog, name, @class, packet.GenderMale, packet.TextureNum);
         var state = world.Entities.Get(entityId)!;
-
-        var maxHp = VitalFormulas.MaxVital(Vital.Hp, @class.Vital[(byte)Vital.Hp], @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality], @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence], 1);
-        var maxMp = VitalFormulas.MaxVital(Vital.Mp, @class.Vital[(byte)Vital.Mp], @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality], @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence], 1);
-
-        state.Set(new Position { MapId = @class.SpawnMapId, X = @class.SpawnX, Y = @class.SpawnY, Direction = (Direction)@class.SpawnDirection });
-        state.Set(new PlayerAppearance { Name = name, ClassId = @class.Id, TextureNum = packet.GenderMale ? @class.TextureMale[packet.TextureNum] : @class.TextureFemale[packet.TextureNum], Genre = packet.GenderMale });
-        state.Set(new StatBlock { Level = 1, Attribute = (short[])@class.Attribute.Clone() });
-        state.Set(new Vitals { Hp = maxHp, Mp = maxMp, MaxHp = maxHp, MaxMp = maxMp });
-
-        var inv = new InventoryState();
-        for (byte i = 0; i < MaxInventory; i++) inv.Slots[i] = new ItemSlot(Guid.Empty, 0);
-        state.Set(inv);
-
-        var equip = new EquipmentState();
-        state.Set(equip);
-
-        var hotbar = new HotbarState();
-        for (byte i = 0; i < MaxHotbar; i++) hotbar.Slots[i] = new HotbarSlot(SlotType.None, 0);
-        state.Set(hotbar);
-
-        state.Set(new CombatState());
-        state.Set(new TradeState());
-        state.Set(new PartyState());
-        state.Set(new ShopState());
-        state.Set(new PlayerTag());
+        var inv = state.Get<InventoryState>()!;
+        var equip = state.Get<EquipmentState>()!;
 
         world.Sessions.Register(entityId, session);
         session.Character = entityId;

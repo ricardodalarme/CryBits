@@ -42,7 +42,7 @@ internal sealed class WorldHost
         Current = this;
 
         var movementSystem = new MovementSystem();
-        var npcBrainSystem = new NpcBrainSystem(DefinitionCatalog.Instance);
+        var npcBrainSystem = new NpcBrainSystem();
         var combatSystem = new CombatSystem(DefinitionCatalog.Instance);
         var levelingSystem = new LevelingSystem(DefinitionCatalog.Instance);
         var deathSystem = new DeathSystem(DefinitionCatalog.Instance);
