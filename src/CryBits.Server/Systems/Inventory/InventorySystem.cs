@@ -13,6 +13,7 @@ using System;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Entities;
 
 namespace CryBits.Server.Systems.Inventory;
 
@@ -87,7 +88,7 @@ internal sealed class InventorySystem(
 
         if (amount > slot.Amount) amount = slot.Amount;
 
-        player.MapInstance.Item.Add(new MapItemInstance(slot.ItemId, amount, player.X, player.Y));
+        player.MapInstance.Item.Add(new GroundItem(slot.ItemId, amount, player.X, player.Y));
         mapSender.MapItems(player.MapInstance);
         TakeItem(player, slot, amount);
     }
@@ -181,7 +182,7 @@ internal sealed class InventorySystem(
                         if (!GiveItem(player, oldItem, 1))
                         {
                             if (player.MapInstance.Item.Count == Config.MaxMapItems) continue;
-                            player.MapInstance.Item.Add(new MapItemInstance(equip.OldItemId.Value, 1,
+                            player.MapInstance.Item.Add(new GroundItem(equip.OldItemId.Value, 1,
                                 player.X, player.Y));
                             mapSender.MapItems(player.MapInstance);
                             playerSender.PlayerInventory(player);

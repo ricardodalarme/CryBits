@@ -1,9 +1,9 @@
 using CryBits.Definitions.Slots;
 using System;
 
-namespace CryBits.Server.Entities;
+namespace CryBits.Simulation.Entities;
 
-internal class MapItemInstance(Guid itemId, short amount, byte x, byte y)
+public class GroundItem(Guid itemId, short amount, byte x, byte y)
     : ItemSlot(itemId, amount)
 {
     public byte X = x;

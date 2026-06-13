@@ -4,6 +4,7 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Server.Systems.Npc;
 using CryBits.Server.World;
+using CryBits.Simulation.Entities;
 using System;
 using System.Collections.Generic;
 namespace CryBits.Server.Entities;
@@ -13,7 +14,7 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
     // Map data and runtime caches.
     public readonly Map Data = map;
     public NpcInstance[] Npc = [];
-    public List<MapItemInstance> Item = [];
+    public List<GroundItem> Item = [];
 
     public NpcInstance HasNpc(byte x, byte y)
     {
@@ -48,7 +49,7 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
         return false;
     }
 
-    public MapItemInstance HasItem(byte x, byte y)
+    public GroundItem HasItem(byte x, byte y)
     {
         // Return item at the given coordinates if present.
         for (var i = Item.Count - 1; i >= 0; i--)
@@ -65,7 +66,7 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
             for (byte y = 0; y < Map.Height; y++)
                 if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
                     // Add map item.
-                    Item.Add(new MapItemInstance(new Guid(Data.Attribute[x, y].Data1),
+                    Item.Add(new GroundItem(new Guid(Data.Attribute[x, y].Data1),
                         Data.Attribute[x, y].Data2, x, y));
     }
 
