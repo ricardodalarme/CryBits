@@ -41,8 +41,8 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
                 ? world.FindPlayerByValue(died.EntityId) is { } victimId
                     ? world.Entities.Get(victimId)!.Get<StatBlock>()!.Experience / 10
                     : 0
-                : world.FindNpcInstance(died.EntityId) is { } npcId
-                    ? catalog.Npcs.Get(world.Entities.Get(npcId)!.Get<NpcState>()!.NpcDefId)!.Experience
+                : died.NpcDefId is { } npcDefId
+                    ? catalog.Npcs.Get(npcDefId)!.Experience
                     : 0;
 
             if (xp > 0)

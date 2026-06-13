@@ -47,6 +47,9 @@ internal sealed class ReplicationService(
             if (ev is GroundItemRemovedEvent removed)
                 mapSender.RemoveGroundItem(removed.EntityId);
 
+            if (ev is NpcDiedEvent died)
+                npcSender.MapNpcDied(died.MapId, new EntityId(died.EntityId));
+
             if (ev is PlayerWarpedEvent warp && warp.NeedsMapData)
                 ReplicatePlayerWarp(world, warp);
         }
@@ -90,10 +93,7 @@ internal sealed class ReplicationService(
         var npcState = entity.Get<NpcState>();
         if (npcState == null) return;
 
-        if (npcState.Alive)
-            npcSender.MapNpc(entityId);
-        else
-            npcSender.MapNpcDied(entityId);
+        npcSender.MapNpc(entityId);
     }
 
     private void ReplicatePlayerWarp(World world, PlayerWarpedEvent warp)

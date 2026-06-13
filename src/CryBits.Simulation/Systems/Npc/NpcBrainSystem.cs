@@ -23,7 +23,7 @@ public sealed class NpcBrainSystem : ISimulationSystem
                 var e = world.Entities.Get(npcId);
                 if (e == null) continue;
                 var npcState = e.Get<NpcState>();
-                if (npcState == null || !npcState.Alive) continue;
+                if (npcState == null) continue;
                 TickAlive(world, npcId, tick);
             }
         }

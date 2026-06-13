@@ -39,7 +39,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
                 var e = world.Entities.Get(npcId);
                 if (e == null) continue;
                 var npcState = e.Get<NpcState>();
-                if (npcState == null || !npcState.Alive) continue;
+                if (npcState == null) continue;
                 if (!npcState.TargetId.HasValue) continue;
                 AttackNpc(world, npcId);
             }
@@ -178,7 +178,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
             else
             {
                 Died(world, victimId);
-                world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = false, SourceId = attackerId.Value, SourceIsPlayer = true });
+                world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = false, SourceId = attackerId.Value, SourceIsPlayer = true, NpcDefId = victimNpcState.NpcDefId });
             }
         }
         else
@@ -195,7 +195,6 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         byte nextX = pos.X, nextY = pos.Y;
         pos.Direction.NextTile(ref nextX, ref nextY);
 
-        if (!npcState.Alive) return;
         if (Environment.TickCount64 < npcState.AttackTimer + AttackSpeed) return;
         if (map.TileBlocked(pos.X, pos.Y, pos.Direction, world.Entities, false)) return;
 
@@ -264,8 +263,6 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         var victimData = catalog.Npcs.Get(victimNpcState.NpcDefId);
 
         if (!victimE.Has<NpcTag>()) return;
-        if (!victimNpcState.Alive) return;
-
         attackerNpcState.AttackTimer = Environment.TickCount64;
         world.Dirty.Mark<Position>(attackerId);
         victimNpcState.TargetId = attackerId;
@@ -288,7 +285,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
                 attackerNpcState.TargetId = null;
                 world.Dirty.Mark<NpcState>(attackerId);
                 Died(world, victimId);
-                world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = false, SourceId = attackerId.Value, SourceIsPlayer = false });
+                world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = false, SourceId = attackerId.Value, SourceIsPlayer = false, NpcDefId = victimNpcState.NpcDefId });
             }
         }
         else
@@ -310,9 +307,15 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
                         npcData.Drop[i].ItemId, npcData.Drop[i].Amount,
                         world.CurrentTick!.TickNumber + TicksPerSecond * 300);
 
-        npcState.Alive = false;
-        npcState.TargetId = null;
-        npcState.SpawnTimer = world.CurrentTick!.TickNumber;
-        world.Dirty.Mark<NpcState>(npcId);
+        world.CurrentTick?.Events.Emit(new NpcDiedEvent
+        {
+            EntityId = npcId.Value,
+            MapId = pos.MapId,
+            NpcDefId = npcState.NpcDefId,
+            NpcIndex = npcState.Index
+        });
+
+        world.Entities.Destroy(npcId);
+        map.NpcIds.Remove(npcId);
     }
 }

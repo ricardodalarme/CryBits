@@ -7,6 +7,7 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using LiteNetLib;
 using CryBits.Simulation.State;
+using System;
 using CryBits.Host.Core;
 
 namespace CryBits.Host.Network.Senders;
@@ -103,10 +104,9 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
         packageSender.ToMap(pos.MapId, packet, DeliveryMethod.ReliableSequenced);
     }
 
-    public void MapNpcDied(EntityId entityId)
+    public void MapNpcDied(Guid mapId, EntityId entityId)
     {
-        var pos = WorldHost.Current.Entities.Get(entityId)!.Get<Position>()!;
-        packageSender.ToMap(pos.MapId, new MapNpcDiedPacket { InstanceId = entityId.Value },
+        packageSender.ToMap(mapId, new MapNpcDiedPacket { InstanceId = entityId.Value },
             DeliveryMethod.ReliableUnordered);
     }
 }

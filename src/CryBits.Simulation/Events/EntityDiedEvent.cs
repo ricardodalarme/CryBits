@@ -8,4 +8,5 @@ public sealed record EntityDiedEvent : SimEvent
     public bool EntityIsPlayer { get; init; }
     public Guid? SourceId { get; init; }
     public bool? SourceIsPlayer { get; init; }
+    public Guid? NpcDefId { get; init; }
 }

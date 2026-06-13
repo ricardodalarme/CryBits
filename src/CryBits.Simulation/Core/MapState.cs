@@ -29,7 +29,7 @@ public sealed class MapState
             var entityState = entities.Get(npcId);
             if (entityState == null) continue;
             var npcState = entityState.Get<NpcState>();
-            if (npcState == null || !npcState.Alive) continue;
+            if (npcState == null) continue;
             var pos = entityState.Get<Position>();
             if (pos == null) continue;
             if (pos.X == x && pos.Y == y)

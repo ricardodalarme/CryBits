@@ -67,7 +67,7 @@ internal sealed class WorldHost
         Pipeline.AddSystem(tradeSystem);
         Pipeline.AddSystem(shopSystem);
         Pipeline.AddSystem(new PartySystem());
-        Pipeline.AddSystem(new SpawnSystem(DefinitionCatalog.Instance));
+        Pipeline.AddSystem(new RespawnSystem(DefinitionCatalog.Instance));
         Pipeline.AddSystem(new ReplicationService(
             PlayerSender.Instance, NpcSender.Instance,
             MapSender.Instance, CombatSender.Instance));

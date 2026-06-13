@@ -37,7 +37,7 @@ public static class NpcTargeting
                 {
                     var targetNpcState = targetE.Get<NpcState>();
                     var targetPos = targetE.Get<Position>()!;
-                    if (targetNpcState == null || !targetNpcState.Alive || targetPos.MapId != pos.MapId)
+                    if (targetNpcState == null || targetPos.MapId != pos.MapId)
                         npcState.TargetId = null;
                 }
             }
@@ -101,7 +101,7 @@ public static class NpcTargeting
             var otherE = world.Entities.Get(otherNpcId);
             if (otherE == null) continue;
             var otherNpcState = otherE.Get<NpcState>();
-            if (otherNpcState == null || !otherNpcState.Alive) continue;
+            if (otherNpcState == null) continue;
             var otherPos = otherE.Get<Position>();
             if (otherPos == null) continue;
             var otherData = DefinitionCatalog.Instance.Npcs.Get(otherNpcState.NpcDefId);

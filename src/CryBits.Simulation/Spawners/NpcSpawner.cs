@@ -30,9 +30,7 @@ public static class NpcSpawner
         {
             Index = npcIndex,
             NpcDefId = npcSpawn.NpcId,
-            Alive = true,
             TargetId = null,
-            SpawnTimer = 0,
             AttackTimer = 0
         });
 

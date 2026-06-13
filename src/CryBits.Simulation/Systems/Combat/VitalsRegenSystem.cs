@@ -52,7 +52,7 @@ public sealed class VitalsRegenSystem(DefinitionCatalog catalog) : ISimulationSy
                 var e = world.Entities.Get(npcId);
                 if (e == null) continue;
                 var npcState = e.Get<NpcState>();
-                if (npcState == null || !npcState.Alive) continue;
+                if (npcState == null) continue;
                 var vitals = e.Get<Vitals>()!;
                 var npcData = catalog.Npcs.Get(npcState.NpcDefId);
 
