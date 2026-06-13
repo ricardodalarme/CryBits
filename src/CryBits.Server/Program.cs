@@ -12,7 +12,6 @@ using CryBits.Host.Scheduling;
 using CryBits.Server.Commands;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using CryBits.Host.Systems.Npc;
 using System;
 using System.Linq;
 using System.Threading;
@@ -105,7 +104,7 @@ internal static class Program
                 entityState.Set(new NpcTag());
 
                 mapState.NpcIds.Add(entityId);
-                NpcBrainSystem.Instance.Spawn(WorldHost.Current.Simulation, entityId);
+                NpcBootstrapper.Spawn(WorldHost.Current.Simulation, entityId);
             }
         }
 

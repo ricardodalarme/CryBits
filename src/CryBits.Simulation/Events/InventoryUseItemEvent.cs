@@ -2,8 +2,8 @@ using System;
 
 namespace CryBits.Simulation.Events;
 
-public sealed record XpAwardedEvent : SimEvent
+public sealed record InventoryUseItemEvent : SimEvent
 {
     public Guid EntityId { get; init; }
-    public int Amount { get; init; }
+    public int SlotIndex { get; init; }
 }

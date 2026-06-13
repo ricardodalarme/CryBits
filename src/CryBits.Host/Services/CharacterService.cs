@@ -10,8 +10,7 @@ using CryBits.Host.Network.Senders;
 using CryBits.Host.Persistence;
 using CryBits.Host.Persistence.Repositories;
 using CryBits.Simulation.Components;
-using CryBits.Host.Systems.Inventory;
-using CryBits.Host.Systems.Movement;
+
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
 using System;
@@ -34,8 +33,6 @@ internal sealed class CharacterService(
     AccountSender accountSender,
     ClassSender classSender,
     ChatSender chatSender,
-    MovementSystem movementSystem,
-    InventorySystem inventorySystem,
     DefinitionCatalog catalog)
 {
     public static CharacterService Instance { get; } = new(
@@ -49,8 +46,6 @@ internal sealed class CharacterService(
         AccountSender.Instance,
         ClassSender.Instance,
         ChatSender.Instance,
-        MovementSystem.Instance,
-        InventorySystem.Instance,
         DefinitionCatalog.Instance);
 
     [PacketHandler]
@@ -113,15 +108,22 @@ internal sealed class CharacterService(
         world.Sessions.Register(entityId, session);
         session.Character = entityId;
 
+        byte slotIndex = 0;
         for (byte i = 0; i < (byte)@class.Item.Count; i++)
         {
             var item = catalog.Items.Get(@class.Item[i].ItemId);
             if (item == null) continue;
             if (item.Type == ItemType.Equipment && equip.Slots[(byte)item.EquipType] == Guid.Empty)
                 equip.Slots[(byte)item.EquipType] = item.Id;
-            else
-                inventorySystem.GiveItem(WorldHost.Current.Simulation, entityId, item, @class.Item[i].Amount);
+            else if (slotIndex < MaxInventory)
+            {
+                inv.Slots[slotIndex].ItemId = item.Id;
+                inv.Slots[slotIndex].Amount = item.Stackable ? @class.Item[i].Amount : (byte)1;
+                slotIndex++;
+            }
         }
+
+        world.Dirty.Mark<InventoryState>(entityId);
 
         characterRepository.WriteName(name);
         characterRepository.Write(session.Account!, entityId);
@@ -203,7 +205,13 @@ internal sealed class CharacterService(
         playerSender.PlayerInventory(entityId);
         playerSender.PlayerHotbar(entityId);
 
-        movementSystem.Warp(WorldHost.Current.Simulation, entityId, pos.MapId, pos.X, pos.Y, true);
+        WorldHost.Current.CurrentTick?.Events.Emit(new PlayerRespawnEvent
+        {
+            PlayerId = entityId.Value,
+            MapId = pos.MapId,
+            X = pos.X,
+            Y = pos.Y
+        });
 
         playerSender.JoinGame(entityId);
         chatSender.Message(entityId, Config.WelcomeMessage, Color.Blue);

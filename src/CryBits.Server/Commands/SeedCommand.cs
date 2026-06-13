@@ -10,7 +10,6 @@ using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Slots;
 using CryBits.Persistence.Stores;
 using CryBits.Host.Core;
-using CryBits.Host.Systems.Npc;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using System;
@@ -398,7 +397,7 @@ internal sealed class SeedCommand : IConsoleCommand
                 entityState.Set(new NpcTag());
 
                 mapState.NpcIds.Add(entityId);
-                NpcBrainSystem.Instance.Spawn(WorldHost.Current.Simulation, entityId);
+                NpcBootstrapper.Spawn(WorldHost.Current.Simulation, entityId);
             }
         }
 
