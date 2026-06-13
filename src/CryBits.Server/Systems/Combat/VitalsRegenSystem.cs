@@ -1,14 +1,11 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Formulas;
 using System;
-using System.Linq;
 using Attribute = CryBits.Definitions.Characters.Attribute;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Combat;
 
@@ -18,17 +15,16 @@ internal sealed class VitalsRegenSystem : ISimulationSystem
 
     private long _lastRegenTick;
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         if (Environment.TickCount64 <= _lastRegenTick + 5000) return;
         _lastRegenTick = Environment.TickCount64;
 
-        foreach (var session in world.Sessions.Where(a => a.IsPlaying))
+        foreach (var state in world.Entities.All)
         {
-            if (session.Character is not { } playerId) continue;
-            var e = world.Entities.Get(playerId)!;
-            var vitals = e.Get<Vitals>()!;
-            var stats = e.Get<StatBlock>()!;
+            if (!state.Has<PlayerTag>()) continue;
+            var vitals = state.Get<Vitals>()!;
+            var stats = state.Get<StatBlock>()!;
 
             for (byte v = 0; v < (byte)Vital.Count; v++)
             {
@@ -45,7 +41,7 @@ internal sealed class VitalsRegenSystem : ISimulationSystem
                 if (current > max) current = max;
                 if (v == 0) vitals.Hp = current; else vitals.Mp = current;
 
-                world.Dirty.Mark<Vitals>(playerId);
+                world.Dirty.Mark<Vitals>(state.Id);
             }
         }
 

@@ -4,25 +4,23 @@ using CryBits.Definitions.Npcs;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
+using CryBits.Simulation.State;
 using System;
 using System.Drawing;
-using CryBits.Simulation.State;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Npc;
 
 internal static class NpcTargeting
 {
-    internal static void UpdateTarget(EntityId npcId, Tick tick)
+    internal static void UpdateTarget(World world, EntityId npcId, Tick tick)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
         var npcData = DefinitionCatalog.Instance.Npcs.Get(npcState.NpcDefId);
 
         if (npcData.Behaviour == Behaviour.AttackOnSight && !npcState.TargetId.HasValue)
-            ScanForTarget(npcId, tick);
+            ScanForTarget(world, npcId, tick);
 
         if (npcState.TargetId.HasValue)
         {
@@ -32,8 +30,7 @@ internal static class NpcTargeting
                 if (targetE.Has<PlayerTag>())
                 {
                     var targetPos = targetE.Get<Position>()!;
-                    var session = world.SessionMap.Get(npcState.TargetId.Value);
-                    if (session == null || !session.IsPlaying || targetPos.MapId != pos.MapId)
+                    if (targetPos.MapId != pos.MapId)
                         npcState.TargetId = null;
                 }
                 else if (targetE.Has<NpcTag>())
@@ -63,9 +60,8 @@ internal static class NpcTargeting
         }
     }
 
-    private static void ScanForTarget(EntityId npcId, Tick tick)
+    private static void ScanForTarget(World world, EntityId npcId, Tick tick)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
@@ -74,25 +70,22 @@ internal static class NpcTargeting
 
         short distance;
 
-        foreach (var session in world.Sessions)
+        foreach (var state in world.Entities.All)
         {
-            if (!session.IsPlaying) continue;
-            if (session.Character is not { } targetPlayerId) continue;
-            var targetE = world.Entities.Get(targetPlayerId);
-            if (targetE == null) continue;
-            var targetPos = targetE.Get<Position>();
+            if (!state.Has<PlayerTag>()) continue;
+            var targetPos = state.Get<Position>();
             if (targetPos == null || targetPos.MapId != pos.MapId) continue;
 
             distance = (short)Math.Sqrt(Math.Pow(pos.X - targetPos.X, 2) +
                                         Math.Pow(pos.Y - targetPos.Y, 2));
             if (distance <= npcData.Sight)
             {
-                npcState.TargetId = targetPlayerId;
+                npcState.TargetId = state.Id;
                 world.Dirty.Mark<NpcState>(npcId);
                 if (!string.IsNullOrEmpty(npcData.SayMsg))
                     tick.Events.Emit(new ChatMessageEvent
                     {
-                        RecipientId = targetPlayerId.Value,
+                        RecipientId = state.Id.Value,
                         Text = npcData.Name + ": " + npcData.SayMsg,
                         ColorArgb = Color.White.ToArgb()
                     });

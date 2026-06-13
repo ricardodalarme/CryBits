@@ -1,11 +1,9 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Server.Systems.Npc;
 using CryBits.Simulation.Core;
 using System;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Spawning;
 
@@ -13,7 +11,7 @@ internal sealed class SpawnSystem : ISimulationSystem
 {
     public static SpawnSystem Instance { get; } = new();
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         foreach (var map in world.Maps.Values)
         {
@@ -27,7 +25,7 @@ internal sealed class SpawnSystem : ISimulationSystem
                 if (npcState == null || npcState.Alive) continue;
                 var npcData = DefinitionCatalog.Instance.Npcs.Get(npcState.NpcDefId);
                 if (Environment.TickCount64 > npcState.SpawnTimer + npcData.SpawnTime * 1000)
-                    NpcBrainSystem.Instance.Spawn(npcId);
+                    NpcBrainSystem.Instance.Spawn(world, npcId);
             }
         }
     }

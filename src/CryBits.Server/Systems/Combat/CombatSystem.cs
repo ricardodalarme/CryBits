@@ -5,7 +5,6 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Server.Network.Senders;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
@@ -17,7 +16,6 @@ using CryBits.Simulation.Core;
 using CryBits.Simulation.Entities;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Combat;
 
@@ -27,9 +25,8 @@ internal sealed class CombatSystem(
     public static CombatSystem Instance { get; } = new(
         CombatSender.Instance);
 
-    internal void Attack(EntityId entityId)
+    internal void Attack(World world, EntityId entityId)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
         var combat = e.Get<CombatState>()!;
@@ -48,14 +45,14 @@ internal sealed class CombatSystem(
         var victim = map.HasPlayer(nextX, nextY, world.Entities);
         if (victim.HasValue)
         {
-            PlayerAttackPlayer(entityId, victim.Value);
+            PlayerAttackPlayer(world, entityId, victim.Value);
             return;
         }
 
         victim = map.HasNpc(nextX, nextY, world.Entities);
         if (victim.HasValue)
         {
-            PlayerAttackNpc(entityId, victim.Value);
+            PlayerAttackNpc(world, entityId, victim.Value);
             return;
         }
 
@@ -65,9 +62,8 @@ internal sealed class CombatSystem(
         world.Dirty.Mark<Position>(entityId);
     }
 
-    private void PlayerAttackPlayer(EntityId attackerId, EntityId victimId)
+    private void PlayerAttackPlayer(World world, EntityId attackerId, EntityId victimId)
     {
-        var world = GameWorld.Current;
         var attackerE = world.Entities.Get(attackerId)!;
         var victimE = world.Entities.Get(victimId)!;
         var attackerPos = attackerE.Get<Position>()!;
@@ -115,9 +111,8 @@ internal sealed class CombatSystem(
             combatSender.Attack(attackerPos.MapId, attackerId.Value);
     }
 
-    private void PlayerAttackNpc(EntityId attackerId, EntityId victimId)
+    private void PlayerAttackNpc(World world, EntityId attackerId, EntityId victimId)
     {
-        var world = GameWorld.Current;
         var attackerE = world.Entities.Get(attackerId)!;
         var victimE = world.Entities.Get(victimId)!;
         var attackerPos = attackerE.Get<Position>()!;
@@ -162,7 +157,7 @@ internal sealed class CombatSystem(
             }
             else
             {
-                Died(victimId);
+                Died(world, victimId);
                 world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = false, SourceId = attackerId.Value, SourceIsPlayer = true });
             }
         }
@@ -170,9 +165,8 @@ internal sealed class CombatSystem(
             combatSender.Attack(attackerPos.MapId, attackerId.Value);
     }
 
-    internal void AttackNpc(EntityId npcId)
+    internal void AttackNpc(World world, EntityId npcId)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
@@ -191,16 +185,15 @@ internal sealed class CombatSystem(
             if (targetE != null)
             {
                 if (targetE.Has<PlayerTag>())
-                    NpcAttackPlayer(npcId, npcState.TargetId.Value);
+                    NpcAttackPlayer(world, npcId, npcState.TargetId.Value);
                 else if (targetE.Has<NpcTag>())
-                    NpcAttackNpc(npcId, npcState.TargetId.Value);
+                    NpcAttackNpc(world, npcId, npcState.TargetId.Value);
             }
         }
     }
 
-    private void NpcAttackPlayer(EntityId attackerId, EntityId victimId)
+    private void NpcAttackPlayer(World world, EntityId attackerId, EntityId victimId)
     {
-        var world = GameWorld.Current;
         var attackerE = world.Entities.Get(attackerId)!;
         var victimE = world.Entities.Get(victimId)!;
         var attackerNpcState = attackerE.Get<NpcState>()!;
@@ -238,9 +231,8 @@ internal sealed class CombatSystem(
             combatSender.Attack(attackerPos.MapId, attackerId.Value);
     }
 
-    private void NpcAttackNpc(EntityId attackerId, EntityId victimId)
+    private void NpcAttackNpc(World world, EntityId attackerId, EntityId victimId)
     {
-        var world = GameWorld.Current;
         var attackerE = world.Entities.Get(attackerId)!;
         var victimE = world.Entities.Get(victimId)!;
         var attackerNpcState = attackerE.Get<NpcState>()!;
@@ -275,7 +267,7 @@ internal sealed class CombatSystem(
             {
                 attackerNpcState.TargetId = null;
                 world.Dirty.Mark<NpcState>(attackerId);
-                Died(victimId);
+                Died(world, victimId);
                 world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = false, SourceId = attackerId.Value, SourceIsPlayer = false });
             }
         }
@@ -283,9 +275,8 @@ internal sealed class CombatSystem(
             combatSender.Attack(attackerPos.MapId, attackerId.Value);
     }
 
-    internal void Died(EntityId npcId)
+    internal void Died(World world, EntityId npcId)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
@@ -295,7 +286,7 @@ internal sealed class CombatSystem(
         for (byte i = 0; i < npcData.Drop.Count; i++)
             if (npcData.Drop[i].ItemId != Guid.Empty)
                 if (Random.Shared.Next(1, 99) <= npcData.Drop[i].Chance)
-                    map.Item.Add(new GroundItem(npcData.Drop[i].ItemId, npcData.Drop[i].Amount, pos.X, pos.Y));
+                    map.GroundItems.Add(new GroundItem(npcData.Drop[i].ItemId, npcData.Drop[i].Amount, pos.X, pos.Y));
 
         MapSender.Instance.MapItems(map);
 
@@ -305,12 +296,12 @@ internal sealed class CombatSystem(
         world.Dirty.Mark<NpcState>(npcId);
     }
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
         {
             if (intent is AttackIntent atk)
-                Attack(atk.SourceEntityId);
+                Attack(world, atk.SourceEntityId);
         }
 
         foreach (var mapEntry in world.Maps)
@@ -325,7 +316,7 @@ internal sealed class CombatSystem(
                 var npcState = e.Get<NpcState>();
                 if (npcState == null || !npcState.Alive) continue;
                 if (!npcState.TargetId.HasValue) continue;
-                AttackNpc(npcId);
+                AttackNpc(world, npcId);
             }
         }
     }

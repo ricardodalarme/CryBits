@@ -79,7 +79,7 @@ internal sealed class AccountHandler(
             return;
         }
 
-        var world = GameWorld.Current;
+        var world = WorldHost.Current;
         var @class = catalog.Classes.Get(new Guid(packet.ClassId));
 
         var entityId = world.Entities.Create();
@@ -120,7 +120,7 @@ internal sealed class AccountHandler(
             if (item.Type == ItemType.Equipment && equip.Slots[(byte)item.EquipType] == Guid.Empty)
                 equip.Slots[(byte)item.EquipType] = item.Id;
             else
-                inventorySystem.GiveItem(entityId, item, @class.Item[i].Amount);
+                inventorySystem.GiveItem(WorldHost.Current.Simulation, entityId, item, @class.Item[i].Amount);
         }
 
         characterRepository.WriteName(name);
@@ -168,7 +168,7 @@ internal sealed class AccountHandler(
 
     internal void Leave(EntityId entityId)
     {
-        var world = GameWorld.Current;
+        var world = WorldHost.Current;
         var session = world.SessionMap.Get(entityId)!;
         if (session == null) return;
 
@@ -184,24 +184,24 @@ internal sealed class AccountHandler(
 
     private void Join(EntityId entityId)
     {
-        var world = GameWorld.Current;
+        var world = WorldHost.Current;
         var session = world.SessionMap.Get(entityId)!;
         var state = world.Entities.Get(entityId)!;
         var pos = state.Get<Position>()!;
-        var mapInstance = world.Maps.Get(pos.MapId);
-        if (mapInstance == null) return;
+        var map = world.Maps.Get(pos.MapId);
+        if (map == null) return;
 
         playerSender.Join(entityId);
         itemSender.Items(session);
         npcSender.Npcs(session);
         shopSender.Shops(session);
-        mapSender.Map(session, mapInstance.Data);
+        mapSender.Map(session, map.Data);
         mapSender.MapPlayers(entityId);
         playerSender.PlayerExperience(entityId);
         playerSender.PlayerInventory(entityId);
         playerSender.PlayerHotbar(entityId);
 
-        movementSystem.Warp(entityId, mapInstance, pos.X, pos.Y, true);
+        movementSystem.Warp(WorldHost.Current.Simulation, entityId, pos.MapId, pos.X, pos.Y, true);
 
         playerSender.JoinGame(entityId);
         chatSender.Message(entityId, Config.WelcomeMessage, Color.Blue);

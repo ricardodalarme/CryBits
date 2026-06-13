@@ -3,7 +3,6 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Slots;
 using System.Linq;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Inventory;
@@ -13,7 +12,6 @@ using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Trade;
 
@@ -26,9 +24,8 @@ internal sealed class TradeSystem(
         InventorySystem.Instance,
         DefinitionCatalog.Instance);
 
-    internal void Invite(EntityId entityId, string targetName)
+    internal void Invite(World world, EntityId entityId, string targetName)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
         var pos = e.Get<Position>()!;
@@ -88,9 +85,8 @@ internal sealed class TradeSystem(
         world.Dirty.Mark<TradeState>(invitedId.Value);
     }
 
-    internal void Accept(EntityId entityId)
+    internal void Accept(World world, EntityId entityId)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
         var pos = e.Get<Position>()!;
@@ -144,9 +140,8 @@ internal sealed class TradeSystem(
         world.Dirty.Mark<TradeState>(invitedId.Value);
     }
 
-    internal void Decline(EntityId entityId)
+    internal void Decline(World world, EntityId entityId)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
         var trade = e.Get<TradeState>()!;
@@ -157,9 +152,8 @@ internal sealed class TradeSystem(
         world.Dirty.Mark<TradeState>(entityId);
     }
 
-    public void Leave(EntityId entityId)
+    public void Leave(World world, EntityId entityId)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var trade = e.Get<TradeState>();
         if (trade == null || trade.Partner == null) return;
@@ -173,9 +167,8 @@ internal sealed class TradeSystem(
         world.Dirty.Mark<TradeState>(entityId);
     }
 
-    internal void Offer(EntityId entityId, short slot, short inventorySlot, short amount)
+    internal void Offer(World world, EntityId entityId, short slot, short inventorySlot, short amount)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
         var trade = e.Get<TradeState>()!;
@@ -198,9 +191,8 @@ internal sealed class TradeSystem(
         if (trade.Partner.HasValue) world.Dirty.Mark<TradeState>(trade.Partner.Value);
     }
 
-    internal void OfferState(EntityId entityId, TradeStatus state)
+    internal void OfferState(World world, EntityId entityId, TradeStatus state)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
         var trade = e.Get<TradeState>()!;
@@ -240,16 +232,16 @@ internal sealed class TradeSystem(
                     {
                         var toInv = to == entityId ? inv : invitedInv;
                         var toTrade = to == entityId ? trade : invitedTrade;
-                        inventorySystem.TakeItem(to, toInv.Slots[toTrade.Offer[i].SlotNum], toTrade.Offer[i].Amount);
+                        inventorySystem.TakeItem(world, to, toInv.Slots[toTrade.Offer[i].SlotNum], toTrade.Offer[i].Amount);
                     }
 
                 for (byte i = 0; i < MaxInventory; i++)
                 {
                     if (trade.Offer[i].SlotNum > 0)
-                        inventorySystem.GiveItem(invitedId.Value, _catalog.Items.Get(yourInventory[trade.Offer[i].SlotNum].ItemId),
+                        inventorySystem.GiveItem(world, invitedId.Value, _catalog.Items.Get(yourInventory[trade.Offer[i].SlotNum].ItemId),
                             trade.Offer[i].Amount);
                     if (invitedTrade.Offer[i].SlotNum > 0)
-                        inventorySystem.GiveItem(entityId, _catalog.Items.Get(theirInventory[invitedTrade.Offer[i].SlotNum].ItemId),
+                        inventorySystem.GiveItem(world, entityId, _catalog.Items.Get(theirInventory[invitedTrade.Offer[i].SlotNum].ItemId),
                             invitedTrade.Offer[i].Amount);
                 }
 
@@ -272,18 +264,18 @@ internal sealed class TradeSystem(
         }
     }
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
         {
             switch (intent)
             {
-                case TradeInviteIntent i: Invite(i.SourceEntityId, i.PlayerName); break;
-                case TradeAcceptIntent a: Accept(a.SourceEntityId); break;
-                case TradeDeclineIntent d: Decline(d.SourceEntityId); break;
-                case TradeLeaveIntent l: Leave(l.SourceEntityId); break;
-                case TradeOfferIntent o: Offer(o.SourceEntityId, o.OfferSlot, o.InventorySlot, o.Amount); break;
-                case TradeOfferStateIntent s: OfferState(s.SourceEntityId, s.State); break;
+                case TradeInviteIntent i: Invite(world, i.SourceEntityId, i.PlayerName); break;
+                case TradeAcceptIntent a: Accept(world, a.SourceEntityId); break;
+                case TradeDeclineIntent d: Decline(world, d.SourceEntityId); break;
+                case TradeLeaveIntent l: Leave(world, l.SourceEntityId); break;
+                case TradeOfferIntent o: Offer(world, o.SourceEntityId, o.OfferSlot, o.InventorySlot, o.Amount); break;
+                case TradeOfferStateIntent s: OfferState(world, s.SourceEntityId, s.State); break;
             }
         }
 
@@ -294,19 +286,19 @@ internal sealed class TradeSystem(
                 case PlayerStartedMovingEvent e:
                     {
                         var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(playerId.Value);
+                        if (playerId != null) Leave(world, playerId.Value);
                         break;
                     }
                 case PlayerWarpedEvent e:
                     {
                         var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(playerId.Value);
+                        if (playerId != null) Leave(world, playerId.Value);
                         break;
                     }
                 case PlayerDisconnectedEvent e:
                     {
                         var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(playerId.Value);
+                        if (playerId != null) Leave(world, playerId.Value);
                         break;
                     }
             }

@@ -23,7 +23,7 @@ internal sealed class PackageSender
 
     public void ToPlayer(EntityId entityId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
-        var session = GameWorld.Current.SessionMap.Get(entityId)!;
+        var session = WorldHost.Current.SessionMap.Get(entityId)!;
         ToPlayer(session, packet, delivery);
     }
 
@@ -32,7 +32,7 @@ internal sealed class PackageSender
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying))
+        foreach (var t in WorldHost.Current.Sessions.Where(t => t.IsPlaying))
             t.Connection.Send(data, delivery);
     }
 
@@ -41,7 +41,7 @@ internal sealed class PackageSender
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying && t.Character.HasValue && !t.Character.Value.Equals(entityId)))
+        foreach (var t in WorldHost.Current.Sessions.Where(t => t.IsPlaying && t.Character.HasValue && !t.Character.Value.Equals(entityId)))
             t.Connection.Send(data, delivery);
     }
 
@@ -50,7 +50,7 @@ internal sealed class PackageSender
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        var world = GameWorld.Current;
+        var world = WorldHost.Current;
         foreach (var t in world.Sessions.Where(t => t.IsPlaying && t.Character.HasValue))
         {
             var entity = world.Entities.Get(t.Character.Value);
@@ -65,7 +65,7 @@ internal sealed class PackageSender
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        var world = GameWorld.Current;
+        var world = WorldHost.Current;
         foreach (var t in world.Sessions.Where(t => t.IsPlaying && t.Character.HasValue))
         {
             var cid = t.Character.Value;

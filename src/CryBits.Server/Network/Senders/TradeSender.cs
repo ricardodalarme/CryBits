@@ -28,10 +28,10 @@ internal sealed class TradeSender(PackageSender packageSender)
 
     public void TradeOffer(EntityId entityId, bool own = true)
     {
-        var entity = GameWorld.Current.Entities.Get(entityId)!;
+        var entity = WorldHost.Current.Entities.Get(entityId)!;
         var trade = entity.Get<TradeState>()!;
         var toId = own ? entityId : trade.Partner!.Value;
-        var toEntity = GameWorld.Current.Entities.Get(toId)!;
+        var toEntity = WorldHost.Current.Entities.Get(toId)!;
         var toInv = toEntity.Get<InventoryState>()!;
         var toTrade = toEntity.Get<TradeState>()!;
         var packet = new TradeOfferPacket

@@ -2,13 +2,17 @@ using CommandLine;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Classes;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Slots;
 using CryBits.Persistence.Stores;
 using CryBits.Server.Core;
-using CryBits.Server.Entities;
+using CryBits.Server.Systems.Npc;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using System;
 using System.IO;
 using Attribute = CryBits.Definitions.Characters.Attribute;
@@ -349,9 +353,54 @@ internal sealed class SeedCommand : IConsoleCommand
         store.SaveAll(_catalog.Classes.Values);
 
         // Rebuild live GameWorld.Maps so the running server uses the new map IDs.
-        GameWorld.Current.Maps.Clear();
+        WorldHost.Current.Maps.Clear();
         foreach (var mapDef in _catalog.Maps.Values)
-            MapInstance.Create(mapDef, true, GameWorld.Current.Entities);
+        {
+            var mapState = new MapState(mapDef.Id, mapDef);
+            mapState.SpawnItems();
+            WorldHost.Current.Simulation.Maps.Add(mapDef.Id, mapState);
+
+            for (byte i = 0; i < mapDef.Npc.Count; i++)
+            {
+                var npcData = DefinitionCatalog.Instance.Npcs.Get(mapDef.Npc[i].NpcId);
+                if (npcData == null) continue;
+
+                var entityId = WorldHost.Current.Entities.Create();
+                var entityState = WorldHost.Current.Entities.Get(entityId)!;
+
+                entityState.Set(new NpcState
+                {
+                    Index = i,
+                    NpcDefId = mapDef.Npc[i].NpcId,
+                    Alive = false,
+                    TargetId = null,
+                    SpawnTimer = 0,
+                    AttackTimer = 0
+                });
+
+                entityState.Set(new Position
+                {
+                    X = mapDef.Npc[i].X,
+                    Y = mapDef.Npc[i].Y,
+                    Direction = Direction.Down,
+                    MapId = mapState.Id
+                });
+
+                entityState.Set(new Vitals
+                {
+                    Hp = npcData.Vital[(byte)Vital.Hp],
+                    Mp = npcData.Vital[(byte)Vital.Mp],
+                    MaxHp = npcData.Vital[(byte)Vital.Hp],
+                    MaxMp = npcData.Vital[(byte)Vital.Mp]
+                });
+
+                entityState.Set(new CombatState());
+                entityState.Set(new NpcTag());
+
+                mapState.NpcIds.Add(entityId);
+                NpcBrainSystem.Instance.Spawn(WorldHost.Current.Simulation, entityId);
+            }
+        }
 
         Console.WriteLine("[Seed] All data written to disk. Done.");
     }

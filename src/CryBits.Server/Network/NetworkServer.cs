@@ -24,19 +24,19 @@ internal sealed class NetworkServer(AccountHandler accountHandler)
                 request.Reject();
         };
 
-        listener.PeerConnectedEvent += peer => GameWorld.Current.Sessions.Add(new GameSession(peer));
+        listener.PeerConnectedEvent += peer => WorldHost.Current.Sessions.Add(new GameSession(peer));
 
         listener.PeerDisconnectedEvent += (peer, _) =>
         {
-            var session = GameWorld.Current.Sessions.Find(x => x.Connection == peer);
+            var session = WorldHost.Current.Sessions.Find(x => x.Connection == peer);
             if (session == null) return;
             if (session.Character is { } characterId) accountHandler.Leave(characterId);
-            GameWorld.Current.Sessions.Remove(session);
+            WorldHost.Current.Sessions.Remove(session);
         };
 
         listener.NetworkReceiveEvent += (peer, reader, _, _) =>
         {
-            var session = GameWorld.Current.Sessions.Find(x => x.Connection == peer);
+            var session = WorldHost.Current.Sessions.Find(x => x.Connection == peer);
             PacketDispatcher.Dispatch(session, reader);
             reader.Recycle();
         };

@@ -22,22 +22,22 @@ internal sealed class ChatSender(PackageSender packageSender)
 
     public void MessageMap(EntityId entityId, string text)
     {
-        var appearance = GameWorld.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
-        var pos = GameWorld.Current.Entities.Get(entityId)!.Get<Position>()!;
+        var appearance = WorldHost.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        var pos = WorldHost.Current.Entities.Get(entityId)!.Get<Position>()!;
         var message = "[Map] " + appearance.Name + ": " + text;
         packageSender.ToMap(pos.MapId, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
     }
 
     public void MessageGlobal(EntityId entityId, string text)
     {
-        var appearance = GameWorld.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        var appearance = WorldHost.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
         var message = "[Global] " + appearance.Name + ": " + text;
         packageSender.ToAll(new MessagePacket { Text = message, ColorArgb = Color.Yellow.ToArgb() });
     }
 
     public void MessagePrivate(EntityId entityId, string addresseeName, string text)
     {
-        var addressee = GameWorld.Current.FindPlayer(addresseeName);
+        var addressee = WorldHost.Current.FindPlayer(addresseeName);
 
         // Check if the addressee is connected.
         if (addressee == null)
@@ -47,7 +47,7 @@ internal sealed class ChatSender(PackageSender packageSender)
         }
 
         // Send private messages.
-        var appearance = GameWorld.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        var appearance = WorldHost.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
         Message(entityId, "[To] " + addresseeName + ": " + text, Color.Pink);
         Message(addressee.Value, "[From] " + appearance.Name + ": " + text, Color.Pink);
     }

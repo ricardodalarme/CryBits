@@ -1,6 +1,4 @@
-using CryBits.Server.Core;
 using CryBits.Server.Network.Senders;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Core;
 using System;
 
@@ -12,7 +10,7 @@ internal sealed class GroundItemSystem(MapSender mapSender) : ISimulationSystem
 
     private long _timer;
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         if (Environment.TickCount64 <= _timer + 300000) return;
         _timer = Environment.TickCount64;
@@ -21,7 +19,7 @@ internal sealed class GroundItemSystem(MapSender mapSender) : ISimulationSystem
         {
             if (!map.HasPlayers(world.Entities)) continue;
 
-            map.Item = [];
+            map.GroundItems.Clear();
             map.SpawnItems();
             mapSender.MapItems(map);
         }

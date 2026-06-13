@@ -4,8 +4,8 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Network.Packets.Server;
-using CryBits.Server.Entities;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 using CryBits.Server.Core;
 
@@ -34,55 +34,55 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
 
     public void MapPlayers(EntityId entityId)
     {
-        var pos = GameWorld.Current.Entities.Get(entityId)!.Get<Position>()!;
-        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
+        var pos = WorldHost.Current.Entities.Get(entityId)!.Get<Position>()!;
+        for (var i = 0; i < WorldHost.Current.Sessions.Count; i++)
         {
-            var session = GameWorld.Current.Sessions[i];
+            var session = WorldHost.Current.Sessions[i];
             if (!session.IsPlaying) continue;
             if (session.Character is not { } otherId) continue;
             if (otherId.Equals(entityId)) continue;
-            var otherPos = GameWorld.Current.Entities.Get(otherId)?.Get<Position>();
+            var otherPos = WorldHost.Current.Entities.Get(otherId)?.Get<Position>();
             if (otherPos?.MapId == pos.MapId)
                 packageSender.ToPlayer(entityId, PlayerDataCache(otherId));
         }
         packageSender.ToMap(pos.MapId, PlayerDataCache(entityId));
     }
 
-    public void MapItems(EntityId entityId, MapInstance mapInstance)
+    public void MapItems(EntityId entityId, MapState mapState)
     {
-        var packet = new MapItemsPacket { Items = new PacketsMapItem[mapInstance.Item.Count] };
-        for (byte i = 0; i < mapInstance.Item.Count; i++)
+        var packet = new MapItemsPacket { Items = new PacketsMapItem[mapState.GroundItems.Count] };
+        for (byte i = 0; i < mapState.GroundItems.Count; i++)
         {
             packet.Items[i] = new PacketsMapItem
             {
-                ItemId = mapInstance.Item[i].ItemId,
-                X = mapInstance.Item[i].X,
-                Y = mapInstance.Item[i].Y
+                ItemId = mapState.GroundItems[i].ItemId,
+                X = mapState.GroundItems[i].X,
+                Y = mapState.GroundItems[i].Y
             };
         }
 
         packageSender.ToPlayer(entityId, packet);
     }
 
-    public void MapItems(MapInstance mapInstance)
+    public void MapItems(MapState mapState)
     {
-        var packet = new MapItemsPacket { Items = new PacketsMapItem[mapInstance.Item.Count] };
-        for (byte i = 0; i < mapInstance.Item.Count; i++)
+        var packet = new MapItemsPacket { Items = new PacketsMapItem[mapState.GroundItems.Count] };
+        for (byte i = 0; i < mapState.GroundItems.Count; i++)
         {
             packet.Items[i] = new PacketsMapItem
             {
-                ItemId = mapInstance.Item[i].ItemId,
-                X = mapInstance.Item[i].X,
-                Y = mapInstance.Item[i].Y
+                ItemId = mapState.GroundItems[i].ItemId,
+                X = mapState.GroundItems[i].X,
+                Y = mapState.GroundItems[i].Y
             };
         }
 
-        packageSender.ToMap(mapInstance.Id, packet);
+        packageSender.ToMap(mapState.Id, packet);
     }
 
     private static PlayerDataPacket PlayerDataCache(EntityId entityId)
     {
-        var entity = GameWorld.Current.Entities.Get(entityId)!;
+        var entity = WorldHost.Current.Entities.Get(entityId)!;
         var appearance = entity.Get<PlayerAppearance>()!;
         var pos = entity.Get<Position>()!;
         var vitals = entity.Get<Vitals>()!;

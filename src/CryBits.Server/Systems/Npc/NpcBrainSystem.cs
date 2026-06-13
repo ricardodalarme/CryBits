@@ -5,12 +5,10 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Server.Network;
 using CryBits.Server.Network.Senders;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using System;
 using CryBits.Simulation.State;
-using CryBits.Server.Core;
+using System;
 
 namespace CryBits.Server.Systems.Npc;
 
@@ -24,7 +22,7 @@ internal sealed class NpcBrainSystem(
 
     private long _lastTick;
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         if (Environment.TickCount64 <= _lastTick + 500) return;
         _lastTick = Environment.TickCount64;
@@ -39,20 +37,19 @@ internal sealed class NpcBrainSystem(
                 if (e == null) continue;
                 var npcState = e.Get<NpcState>();
                 if (npcState == null || !npcState.Alive) continue;
-                TickAlive(npcId, tick);
+                TickAlive(world, npcId, tick);
             }
         }
     }
 
-    private void TickAlive(EntityId npcId, Tick tick)
+    private void TickAlive(World world, EntityId npcId, Tick tick)
     {
-        NpcTargeting.UpdateTarget(npcId, tick);
-        NpcMovement.TickMovement(npcId, tick);
+        NpcTargeting.UpdateTarget(world, npcId, tick);
+        NpcMovement.TickMovement(world, npcId, tick);
     }
 
-    internal void Spawn(EntityId npcId)
+    internal void Spawn(World world, EntityId npcId)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
@@ -61,7 +58,7 @@ internal sealed class NpcBrainSystem(
 
         if (npcSpawn.Spawn)
         {
-            SpawnAt(npcId, npcSpawn.X, npcSpawn.Y);
+            SpawnAt(world, npcId, npcSpawn.X, npcSpawn.Y);
             return;
         }
 
@@ -76,7 +73,7 @@ internal sealed class NpcBrainSystem(
 
             if (!map.Data.TileBlocked(x, y))
             {
-                SpawnAt(npcId, x, y);
+                SpawnAt(world, npcId, x, y);
                 return;
             }
         }
@@ -89,14 +86,13 @@ internal sealed class NpcBrainSystem(
                         map.Data.Attribute[x, y].Zone != npcSpawn.Zone)
                         continue;
 
-                    SpawnAt(npcId, x, y);
+                    SpawnAt(world, npcId, x, y);
                     return;
                 }
     }
 
-    private void SpawnAt(EntityId npcId, byte x, byte y, Direction direction = 0)
+    private void SpawnAt(World world, EntityId npcId, byte x, byte y, Direction direction = 0)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;

@@ -2,7 +2,6 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using Attribute = CryBits.Definitions.Characters.Attribute;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using System;
@@ -10,7 +9,6 @@ using System.Linq;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Inventory;
 
@@ -19,9 +17,9 @@ internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSy
     private readonly DefinitionCatalog _catalog = catalog;
     public static EquipmentSystem Instance { get; } = new(DefinitionCatalog.Instance);
 
-    public void Equip(EntityId entityId, Item item)
+    public void Equip(World world, EntityId entityId, Item item)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var equip = e.Get<EquipmentState>()!;
         var stats = e.Get<StatBlock>()!;
 
@@ -35,7 +33,7 @@ internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSy
             for (byte i = 0; i < (byte)Attribute.Count; i++)
                 stats.Attribute[i] -= oldItem.EquipAttribute[i];
 
-        GameWorld.Current.CurrentTick?.Events.Emit(new ItemEquippedEvent
+        world.CurrentTick?.Events.Emit(new ItemEquippedEvent
         {
             PlayerId = entityId.Value,
             EquipSlot = item.EquipType,
@@ -43,13 +41,13 @@ internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSy
             OldItemId = oldItem?.Id
         });
 
-        GameWorld.Current.Dirty.Mark<EquipmentState>(entityId);
-        GameWorld.Current.Dirty.Mark<StatBlock>(entityId);
+        world.Dirty.Mark<EquipmentState>(entityId);
+        world.Dirty.Mark<StatBlock>(entityId);
     }
 
-    public void Unequip(EntityId entityId, byte equipSlot)
+    public void Unequip(World world, EntityId entityId, byte equipSlot)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var equip = e.Get<EquipmentState>()!;
         var stats = e.Get<StatBlock>()!;
 
@@ -62,7 +60,7 @@ internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSy
             stats.Attribute[i] -= oldItem.EquipAttribute[i];
         equip.Slots[equipSlot] = Guid.Empty;
 
-        GameWorld.Current.CurrentTick?.Events.Emit(new ItemEquippedEvent
+        world.CurrentTick?.Events.Emit(new ItemEquippedEvent
         {
             PlayerId = entityId.Value,
             EquipSlot = equipSlot,
@@ -70,16 +68,16 @@ internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSy
             OldItemId = oldItem.Id
         });
 
-        GameWorld.Current.Dirty.Mark<EquipmentState>(entityId);
-        GameWorld.Current.Dirty.Mark<StatBlock>(entityId);
+        world.Dirty.Mark<EquipmentState>(entityId);
+        world.Dirty.Mark<StatBlock>(entityId);
     }
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
         {
             if (intent is EquipmentRemoveIntent remove)
-                Unequip(remove.SourceEntityId, remove.Slot);
+                Unequip(world, remove.SourceEntityId, remove.Slot);
         }
 
         foreach (var ev in tick.Events.Events.ToArray())
@@ -89,7 +87,7 @@ internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSy
             if (playerId == null) continue;
             var item = _catalog.Items.Get(use.ItemId);
             if (item == null || item.Type != ItemType.Equipment) continue;
-            Equip(playerId.Value, item);
+            Equip(world, playerId.Value, item);
         }
     }
 }

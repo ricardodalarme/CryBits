@@ -21,7 +21,7 @@ internal sealed class ChatHandler()
             if (message[i] < 32 && message[i] > 126)
                 return;
 
-        GameWorld.Current.CurrentTick?.Intents.Enqueue(
+        WorldHost.Current.CurrentTick?.Intents.Enqueue(
             new ChatMessageIntent(entityId, message, (Message)packet.Type, packet.Addressee));
     }
 }

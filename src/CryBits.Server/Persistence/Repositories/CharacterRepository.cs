@@ -23,7 +23,7 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
 
         if (!file.Directory.Exists) return;
 
-        var world = GameWorld.Current;
+        var world = WorldHost.Current;
         var entityId = world.Entities.Create();
         var state = world.Entities.Get(entityId)!;
 
@@ -96,7 +96,7 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
     public void Write(GameSession session)
     {
         var entityId = session.Character!.Value;
-        var state = GameWorld.Current.Entities.Get(entityId)!;
+        var state = WorldHost.Current.Entities.Get(entityId)!;
         var pos = state.Get<Position>()!;
         var appearance = state.Get<PlayerAppearance>()!;
         var stats = state.Get<StatBlock>()!;

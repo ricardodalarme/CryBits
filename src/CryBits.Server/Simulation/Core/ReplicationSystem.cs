@@ -1,36 +1,18 @@
-using CryBits.Definitions.Common;
 using CryBits.Server.Network.Senders;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
-using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Simulation.Core;
 
 internal sealed class ReplicationSystem(
     PlayerSender playerSender,
     NpcSender npcSender,
-    MapSender mapSender,
-    ChatSender chatSender) : ISimulationSystem
+    MapSender mapSender) : ISimulationSystem
 {
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
-        // 0. Process chat intents (pure network routing, not gameplay)
-        foreach (var intent in tick.Intents.All)
-        {
-            if (intent is ChatMessageIntent chat)
-            {
-                switch (chat.Type)
-                {
-                    case Message.Map: chatSender.MessageMap(chat.SourceEntityId, chat.Text); break;
-                    case Message.Global: chatSender.MessageGlobal(chat.SourceEntityId, chat.Text); break;
-                    case Message.Private: chatSender.MessagePrivate(chat.SourceEntityId, chat.Addressee, chat.Text); break;
-                }
-            }
-        }
-
         // 1. Replicate component changes via dirty tracking
         foreach (var (entityId, componentType) in world.Dirty.All)
         {
@@ -56,28 +38,14 @@ internal sealed class ReplicationSystem(
         // 2. Replicate tick events
         foreach (var ev in tick.Events.Events)
         {
-            switch (ev)
-            {
-                case ChatMessageEvent chat:
-                    {
-                        var session = world.SessionMap.Get(new EntityId(chat.RecipientId));
-                        if (session != null)
-                            chatSender.SendMessage(session, chat.Text, chat.ColorArgb);
-                        break;
-                    }
-                case EntityDiedEvent died:
-                    {
-                        if (died.EntityIsPlayer)
-                            ReplicateEntityDied(world, died);
-                        break;
-                    }
-            }
+            if (ev is EntityDiedEvent died && died.EntityIsPlayer)
+                ReplicateEntityDied(world, died);
         }
 
         world.Dirty.Clear();
     }
 
-    private void ReplicatePosition(GameWorld world, EntityId entityId, Position pos)
+    private void ReplicatePosition(World world, EntityId entityId, Position pos)
     {
         var entity = world.Entities.Get(entityId);
         if (entity == null) return;
@@ -95,7 +63,7 @@ internal sealed class ReplicationSystem(
         }
     }
 
-    private void ReplicateVitals(GameWorld world, EntityId entityId, EntityState entity)
+    private void ReplicateVitals(World world, EntityId entityId, EntityState entity)
     {
         if (entity.Has<PlayerTag>())
             playerSender.PlayerVitals(entityId);
@@ -103,7 +71,7 @@ internal sealed class ReplicationSystem(
             npcSender.MapNpcVitals(entityId);
     }
 
-    private void ReplicateStats(GameWorld world, EntityId entityId, EntityState entity)
+    private void ReplicateStats(World world, EntityId entityId, EntityState entity)
     {
         if (!entity.Has<PlayerTag>()) return;
         playerSender.PlayerExperience(entityId);
@@ -112,7 +80,7 @@ internal sealed class ReplicationSystem(
             mapSender.MapPlayers(entityId);
     }
 
-    private void ReplicateNpcState(GameWorld world, EntityId entityId, EntityState entity)
+    private void ReplicateNpcState(World world, EntityId entityId, EntityState entity)
     {
         var npcState = entity.Get<NpcState>();
         if (npcState == null) return;
@@ -121,7 +89,7 @@ internal sealed class ReplicationSystem(
             npcSender.MapNpcDied(entityId);
     }
 
-    private void ReplicateEntityDied(GameWorld world, EntityDiedEvent died)
+    private void ReplicateEntityDied(World world, EntityDiedEvent died)
     {
         var playerId = world.FindPlayerByValue(died.EntityId);
         if (playerId == null) return;

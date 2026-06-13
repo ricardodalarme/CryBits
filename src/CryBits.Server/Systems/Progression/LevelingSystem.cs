@@ -1,6 +1,5 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
@@ -10,7 +9,6 @@ using CryBits.Simulation.Core;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Progression;
 
@@ -18,37 +16,37 @@ internal sealed class LevelingSystem : ISimulationSystem
 {
     public static LevelingSystem Instance { get; } = new();
 
-    internal void AddPoint(EntityId entityId, byte attributeNum)
+    internal void AddPoint(World world, EntityId entityId, byte attributeNum)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var stats = e.Get<StatBlock>()!;
 
         if (stats.Points <= 0) return;
 
         stats.Attribute[attributeNum]++;
         stats.Points--;
-        GameWorld.Current.Dirty.Mark<StatBlock>(entityId);
+        world.Dirty.Mark<StatBlock>(entityId);
     }
 
-    public void GiveExperience(EntityId entityId, int value)
+    public void GiveExperience(World world, EntityId entityId, int value)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var stats = e.Get<StatBlock>()!;
         var party = e.Get<PartyState>();
 
         if (party?.Members.Count > 0 && value > 0)
-            PartySplitXp(entityId, value);
+            PartySplitXp(world, entityId, value);
         else
             stats.Experience += value;
 
         if (stats.Experience < 0) stats.Experience = 0;
 
-        CheckLevelUp(entityId);
+        CheckLevelUp(world, entityId);
     }
 
-    private void CheckLevelUp(EntityId entityId)
+    private void CheckLevelUp(World world, EntityId entityId)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var stats = e.Get<StatBlock>()!;
 
         byte numLevel = 0;
@@ -71,12 +69,11 @@ internal sealed class LevelingSystem : ISimulationSystem
             expNeeded = LevelingFormulas.ExperienceNeeded(stats.Level, totalAttr, stats.Points);
         }
 
-        GameWorld.Current.Dirty.Mark<StatBlock>(entityId);
+        world.Dirty.Mark<StatBlock>(entityId);
     }
 
-    private void PartySplitXp(EntityId entityId, int value)
+    private void PartySplitXp(World world, EntityId entityId, int value)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var stats = e.Get<StatBlock>()!;
         var party = e.Get<PartyState>()!;
@@ -101,21 +98,21 @@ internal sealed class LevelingSystem : ISimulationSystem
             var givenExperience = (int)(value / 2 * diff[i]);
             experienceSum += givenExperience;
 
-            GiveExperience(party.Members[i], givenExperience);
-            GameWorld.Current.Dirty.Mark<StatBlock>(party.Members[i]);
+            GiveExperience(world, party.Members[i], givenExperience);
+            world.Dirty.Mark<StatBlock>(party.Members[i]);
         }
 
         stats.Experience += value - experienceSum;
-        CheckLevelUp(entityId);
-        GameWorld.Current.Dirty.Mark<StatBlock>(entityId);
+        CheckLevelUp(world, entityId);
+        world.Dirty.Mark<StatBlock>(entityId);
     }
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
         {
             if (intent is AddPointIntent add)
-                AddPoint(add.SourceEntityId, add.AttributeNum);
+                AddPoint(world, add.SourceEntityId, add.AttributeNum);
         }
 
         foreach (var ev in tick.Events.Events)
@@ -135,7 +132,7 @@ internal sealed class LevelingSystem : ISimulationSystem
                     : 0;
 
             if (xp > 0)
-                GiveExperience(killerId.Value, xp);
+                GiveExperience(world, killerId.Value, xp);
         }
     }
 }

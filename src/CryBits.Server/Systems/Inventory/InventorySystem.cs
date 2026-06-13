@@ -3,7 +3,6 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Progression;
@@ -14,7 +13,6 @@ using CryBits.Simulation.Core;
 using CryBits.Simulation.Entities;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Inventory;
 
@@ -27,11 +25,11 @@ internal sealed class InventorySystem(
         LevelingSystem.Instance,
         DefinitionCatalog.Instance);
 
-    public bool GiveItem(EntityId entityId, Item item, short amount)
+    public bool GiveItem(World world, EntityId entityId, Item item, short amount)
     {
         if (item == null) return false;
 
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
 
         var slotItem = inv.Find(item.Id);
@@ -50,13 +48,13 @@ internal sealed class InventorySystem(
             emptySlot.Amount = item.Stackable ? amount : (byte)1;
         }
 
-        GameWorld.Current.Dirty.Mark<InventoryState>(entityId);
+        world.Dirty.Mark<InventoryState>(entityId);
         return true;
     }
 
-    public void TakeItem(EntityId entityId, ItemSlot slot, short amount)
+    public void TakeItem(World world, EntityId entityId, ItemSlot slot, short amount)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var hotbar = e.Get<HotbarState>();
         var inv = e.Get<InventoryState>()!;
 
@@ -76,25 +74,25 @@ internal sealed class InventorySystem(
                 {
                     hotbarSlot.Type = SlotType.None;
                     hotbarSlot.Slot = 0;
-                    GameWorld.Current.Dirty.Mark<HotbarState>(entityId);
+                    world.Dirty.Mark<HotbarState>(entityId);
                 }
             }
         }
         else
             slot.Amount -= amount;
 
-        GameWorld.Current.Dirty.Mark<InventoryState>(entityId);
+        world.Dirty.Mark<InventoryState>(entityId);
     }
 
-    public void DropItem(EntityId entityId, ItemSlot slot, short amount)
+    public void DropItem(World world, EntityId entityId, ItemSlot slot, short amount)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
         var pos = e.Get<Position>()!;
         var trade = e.Get<TradeState>();
-        var map = GameWorld.Current.Maps.Get(pos.MapId)!;
+        var map = world.Maps.Get(pos.MapId)!;
 
-        if (map.Item.Count == Config.MaxMapItems) return;
+        if (map.GroundItems.Count == Config.MaxMapItems) return;
         if (slot.ItemId == Guid.Empty) return;
         var item = _catalog.Items.Get(slot.ItemId);
         if (item == null || item.Bind == BindOn.Pickup) return;
@@ -102,13 +100,13 @@ internal sealed class InventorySystem(
 
         if (amount > slot.Amount) amount = slot.Amount;
 
-        map.Item.Add(new GroundItem(slot.ItemId, amount, pos.X, pos.Y));
-        TakeItem(entityId, slot, amount);
+        map.GroundItems.Add(new GroundItem(slot.ItemId, amount, pos.X, pos.Y));
+        TakeItem(world, entityId, slot, amount);
     }
 
-    public void UseItem(EntityId entityId, int slotIndex, ItemSlot slot)
+    public void UseItem(World world, EntityId entityId, int slotIndex, ItemSlot slot)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var stats = e.Get<StatBlock>()!;
         var vitals = e.Get<Vitals>()!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -121,19 +119,19 @@ internal sealed class InventorySystem(
 
         if (stats.Level < item.ReqLevel)
         {
-            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You do not have the level required to use this item.", ColorArgb = Color.White.ToArgb() });
+            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You do not have the level required to use this item.", ColorArgb = Color.White.ToArgb() });
             return;
         }
 
         if (item.ReqClassId.HasValue && appearance.ClassId != item.ReqClassId.Value)
         {
-            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You can not use this item.", ColorArgb = Color.White.ToArgb() });
+            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You can not use this item.", ColorArgb = Color.White.ToArgb() });
             return;
         }
 
         if (item.Type == ItemType.Equipment)
         {
-            GameWorld.Current.CurrentTick?.Events.Emit(new ItemUsedEvent
+            world.CurrentTick?.Events.Emit(new ItemUsedEvent
             {
                 PlayerId = entityId.Value,
                 SlotIndex = slotIndex,
@@ -143,7 +141,7 @@ internal sealed class InventorySystem(
         else if (item.Type == ItemType.Potion)
         {
             var hadEffect = false;
-            levelingSystem.GiveExperience(entityId, item.PotionExperience);
+            levelingSystem.GiveExperience(world, entityId, item.PotionExperience);
 
             for (byte i = 0; i < (byte)Vital.Count; i++)
             {
@@ -158,20 +156,20 @@ internal sealed class InventorySystem(
                 if (i == 0) vitals.Hp = current; else vitals.Mp = current;
             }
 
-            GameWorld.Current.Dirty.Mark<Vitals>(entityId);
+            world.Dirty.Mark<Vitals>(entityId);
 
             if (vitals.Hp == 0)
-                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = entityId.Value, EntityIsPlayer = true, SourceId = null, SourceIsPlayer = null });
+                world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = entityId.Value, EntityIsPlayer = true, SourceId = null, SourceIsPlayer = null });
 
-            if (item.PotionExperience > 0 || hadEffect) TakeItem(entityId, slot, 1);
+            if (item.PotionExperience > 0 || hadEffect) TakeItem(world, entityId, slot, 1);
         }
     }
 
-    public void CollectItem(EntityId entityId)
+    public void CollectItem(World world, EntityId entityId)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
-        var map = GameWorld.Current.Maps.Get(pos.MapId)!;
+        var map = world.Maps.Get(pos.MapId)!;
 
         var mapItem = map.HasItem(pos.X, pos.Y);
         if (mapItem == null) return;
@@ -179,27 +177,27 @@ internal sealed class InventorySystem(
         var item = _catalog.Items.Get(mapItem.ItemId);
         if (item == null) return;
 
-        if (GiveItem(entityId, item, mapItem.Amount))
+        if (GiveItem(world, entityId, item, mapItem.Amount))
         {
-            map.Item.Remove(mapItem);
+            map.GroundItems.Remove(mapItem);
         }
     }
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
         {
             switch (intent)
             {
                 case CollectItemIntent collect:
-                    CollectItem(collect.SourceEntityId);
+                    CollectItem(world, collect.SourceEntityId);
                     break;
                 case DropItemIntent drop:
                     {
                         var state = world.Entities.Get(drop.SourceEntityId);
                         var inv = state?.Get<InventoryState>();
                         if (inv != null && drop.SlotIndex >= 0 && drop.SlotIndex < inv.Slots.Length)
-                            DropItem(drop.SourceEntityId, inv.Slots[drop.SlotIndex], drop.Amount);
+                            DropItem(world, drop.SourceEntityId, inv.Slots[drop.SlotIndex], drop.Amount);
                         break;
                     }
                 case InventoryUseIntent use:
@@ -207,7 +205,7 @@ internal sealed class InventorySystem(
                         var state = world.Entities.Get(use.SourceEntityId);
                         var inv = state?.Get<InventoryState>();
                         if (inv != null && use.SlotIndex >= 0 && use.SlotIndex < inv.Slots.Length)
-                            UseItem(use.SourceEntityId, use.SlotIndex, inv.Slots[use.SlotIndex]);
+                            UseItem(world, use.SourceEntityId, use.SlotIndex, inv.Slots[use.SlotIndex]);
                         break;
                     }
                 case InventorySwapIntent swap:
@@ -220,7 +218,7 @@ internal sealed class InventorySystem(
                         if (trade?.Partner != null) break;
                         (inv.Slots[swap.SlotOld], inv.Slots[swap.SlotNew]) = (inv.Slots[swap.SlotNew], inv.Slots[swap.SlotOld]);
                         world.Dirty.Mark<InventoryState>(swap.SourceEntityId);
-                        HotbarSystem.Instance.SyncInventorySwap(swap.SourceEntityId, swap.SlotOld, swap.SlotNew);
+                        HotbarSystem.Instance.SyncInventorySwap(world, swap.SourceEntityId, swap.SlotOld, swap.SlotNew);
                         break;
                     }
             }
@@ -240,7 +238,7 @@ internal sealed class InventorySystem(
                         if (item == null || item.Type != ItemType.Equipment) continue;
                         var slot = inv.Slots[use.SlotIndex];
                         if (slot.ItemId == Guid.Empty || slot.ItemId != use.ItemId) continue;
-                        TakeItem(playerId.Value, slot, 1);
+                        TakeItem(world, playerId.Value, slot, 1);
                         break;
                     }
                 case ItemEquippedEvent equip when equip.OldItemId.HasValue:
@@ -254,10 +252,10 @@ internal sealed class InventorySystem(
 
                         var oldItem = _catalog.Items.Get(equip.OldItemId.Value);
                         if (oldItem == null) continue;
-                        if (!GiveItem(playerId.Value, oldItem, 1))
+                        if (!GiveItem(world, playerId.Value, oldItem, 1))
                         {
-                            if (map.Item.Count == Config.MaxMapItems) continue;
-                            map.Item.Add(new GroundItem(equip.OldItemId.Value, 1,
+                            if (map.GroundItems.Count == Config.MaxMapItems) continue;
+                            map.GroundItems.Add(new GroundItem(equip.OldItemId.Value, 1,
                                 pos.X, pos.Y));
                         }
                         break;

@@ -18,7 +18,7 @@ internal sealed class DefineAccessCommand : IConsoleCommand
 
     public void Execute()
     {
-        var session = GameWorld.Current.Sessions.Find(x => x.Username.Equals(PlayerName, StringComparison.OrdinalIgnoreCase));
+        var session = WorldHost.Current.Sessions.Find(x => x.Username.Equals(PlayerName, StringComparison.OrdinalIgnoreCase));
         if (session == null)
         {
             Console.WriteLine("This player is either offline or doesn't exist.");

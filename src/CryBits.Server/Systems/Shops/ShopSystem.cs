@@ -2,7 +2,6 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Inventory;
@@ -11,7 +10,6 @@ using System.Drawing;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Shops;
 
@@ -24,29 +22,29 @@ internal sealed class ShopSystem(
         InventorySystem.Instance,
         DefinitionCatalog.Instance);
 
-    public void Open(EntityId entityId, Shop shop)
+    public void Open(World world, EntityId entityId, Shop shop)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var shopState = e.Get<ShopState>()!;
 
         shopState.ShopId = shop.Id;
-        GameWorld.Current.Dirty.Mark<ShopState>(entityId);
+        world.Dirty.Mark<ShopState>(entityId);
     }
 
-    public void Leave(EntityId entityId)
+    public void Leave(World world, EntityId entityId)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var shopState = e.Get<ShopState>()!;
 
         if (shopState.ShopId == null) return;
 
         shopState.ShopId = null;
-        GameWorld.Current.Dirty.Mark<ShopState>(entityId);
+        world.Dirty.Mark<ShopState>(entityId);
     }
 
-    internal void Buy(EntityId entityId, short shopSoldIndex)
+    internal void Buy(World world, EntityId entityId, short shopSoldIndex)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var shopState = e.Get<ShopState>()!;
         var inv = e.Get<InventoryState>()!;
         var catalog = DefinitionCatalog.Instance;
@@ -60,26 +58,26 @@ internal sealed class ShopSystem(
 
         if (inventorySlot == null || inventorySlot.Amount < shopSold.Price)
         {
-            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have enough money to buy the item.", ColorArgb = Color.Red.ToArgb() });
+            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have enough money to buy the item.", ColorArgb = Color.Red.ToArgb() });
             return;
         }
 
         if (inv.TotalFree == 0 && inventorySlot.Amount > shopSold.Price)
         {
-            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have space in your bag.", ColorArgb = Color.Red.ToArgb() });
+            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have space in your bag.", ColorArgb = Color.Red.ToArgb() });
             return;
         }
 
         var soldItem = _catalog.Items.Get(shopSold.ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
-        inventorySystem.TakeItem(entityId, inventorySlot, shopSold.Price);
-        inventorySystem.GiveItem(entityId, soldItem, shopSold.Amount);
-        GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You bought " + shopSold.Price + "x " + soldItemName + ".", ColorArgb = Color.Green.ToArgb() });
+        inventorySystem.TakeItem(world, entityId, inventorySlot, shopSold.Price);
+        inventorySystem.GiveItem(world, entityId, soldItem, shopSold.Amount);
+        world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You bought " + shopSold.Price + "x " + soldItemName + ".", ColorArgb = Color.Green.ToArgb() });
     }
 
-    internal void Sell(EntityId entityId, byte inventorySlotIndex, short amount)
+    internal void Sell(World world, EntityId entityId, byte inventorySlotIndex, short amount)
     {
-        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId)!;
         var shopState = e.Get<ShopState>()!;
         var inv = e.Get<InventoryState>()!;
 
@@ -90,33 +88,33 @@ internal sealed class ShopSystem(
 
         if (buy == null)
         {
-            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The store doesn't sell this item", ColorArgb = Color.Red.ToArgb() });
+            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The store doesn't sell this item", ColorArgb = Color.Red.ToArgb() });
             return;
         }
 
         if (inv.TotalFree == 0 && inv.Slots[inventorySlotIndex].Amount > amount)
         {
-            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have space in your bag.", ColorArgb = Color.Red.ToArgb() });
+            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have space in your bag.", ColorArgb = Color.Red.ToArgb() });
             return;
         }
 
         var soldItem = _catalog.Items.Get(inv.Slots[inventorySlotIndex].ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
         var currencyItem = _catalog.Items.Get(shop.CurrencyId);
-        GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You sold " + soldItemName + "x " + amount + " for .", ColorArgb = Color.Green.ToArgb() });
-        inventorySystem.TakeItem(entityId, inv.Slots[inventorySlotIndex], amount);
-        inventorySystem.GiveItem(entityId, currencyItem, (short)(buy.Price * amount));
+        world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You sold " + soldItemName + "x " + amount + " for .", ColorArgb = Color.Green.ToArgb() });
+        inventorySystem.TakeItem(world, entityId, inv.Slots[inventorySlotIndex], amount);
+        inventorySystem.GiveItem(world, entityId, currencyItem, (short)(buy.Price * amount));
     }
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
         {
             switch (intent)
             {
-                case ShopBuyIntent b: Buy(b.SourceEntityId, b.Slot); break;
-                case ShopSellIntent s: Sell(s.SourceEntityId, s.InventorySlot, s.Amount); break;
-                case ShopCloseIntent c: Leave(c.SourceEntityId); break;
+                case ShopBuyIntent b: Buy(world, b.SourceEntityId, b.Slot); break;
+                case ShopSellIntent s: Sell(world, s.SourceEntityId, s.InventorySlot, s.Amount); break;
+                case ShopCloseIntent c: Leave(world, c.SourceEntityId); break;
             }
         }
 
@@ -127,13 +125,13 @@ internal sealed class ShopSystem(
                 case PlayerStartedMovingEvent e:
                     {
                         var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(playerId.Value);
+                        if (playerId != null) Leave(world, playerId.Value);
                         break;
                     }
                 case PlayerWarpedEvent e:
                     {
                         var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(playerId.Value);
+                        if (playerId != null) Leave(world, playerId.Value);
                         break;
                     }
                 case NpcAttackedEvent e:
@@ -147,7 +145,7 @@ internal sealed class ShopSystem(
                         if (npcData.Behaviour == Behaviour.ShopKeeper)
                         {
                             var shop = _catalog.Shops.Get(npcData.ShopId);
-                            if (shop != null) Open(attackerId.Value, shop);
+                            if (shop != null) Open(world, attackerId.Value, shop);
                         }
                         break;
                     }

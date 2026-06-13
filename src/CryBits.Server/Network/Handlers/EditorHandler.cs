@@ -68,7 +68,7 @@ internal sealed class EditorHandler(
         _catalog.Classes = packet.Classes;
         contentStore.SaveAll(_catalog.Classes.Values);
 
-        foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
+        foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
             classSender.Classes(t);
     }
 
@@ -84,11 +84,11 @@ internal sealed class EditorHandler(
         _catalog.Maps = packet.Maps;
         contentStore.SaveAll(_catalog.Maps.Values);
 
-        foreach (var tempMap in GameWorld.Current.Maps.Values)
+        foreach (var tempMap in WorldHost.Current.Maps.Values)
         {
             tempMap.SpawnItems();
 
-            foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
+            foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
             {
                 if (t.InEditor)
                 {
@@ -96,7 +96,7 @@ internal sealed class EditorHandler(
                 }
                 else if (t.Character.HasValue)
                 {
-                    var otherPos = GameWorld.Current.Entities.Get(t.Character.Value)?.Get<Position>();
+                    var otherPos = WorldHost.Current.Entities.Get(t.Character.Value)?.Get<Position>();
                     if (otherPos?.MapId == tempMap.Id)
                         mapSender.Map(t, tempMap.Data);
                 }
@@ -116,7 +116,7 @@ internal sealed class EditorHandler(
         _catalog.Npcs = packet.Npcs;
         contentStore.SaveAll(_catalog.Npcs.Values);
 
-        foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
+        foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
             npcSender.Npcs(t);
     }
 
@@ -132,7 +132,7 @@ internal sealed class EditorHandler(
         _catalog.Items = packet.Items;
         contentStore.SaveAll(_catalog.Items.Values);
 
-        foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
+        foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
             itemSender.Items(t);
     }
 
@@ -148,7 +148,7 @@ internal sealed class EditorHandler(
         _catalog.Shops = packet.Shops;
         contentStore.SaveAll(_catalog.Shops.Values);
 
-        foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
+        foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
             shopSender.Shops(t);
     }
 
@@ -172,7 +172,7 @@ internal sealed class EditorHandler(
         else
         {
             var entityId = session.Character!.Value;
-            var world = GameWorld.Current;
+            var world = WorldHost.Current;
             var state = world.Entities.Get(entityId)!;
             var pos = state.Get<Position>()!;
             var combat = state.Get<CombatState>()!;

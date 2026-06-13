@@ -1,21 +1,24 @@
 using CryBits.Server.Commands;
 using CryBits.Server.Core;
 using CryBits.Server.Network;
+using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
+using CryBits.Simulation.State;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CryBits.Server.Logic;
 
-internal sealed class Loop(NetworkServer networkServer, TickPipeline pipeline)
+internal sealed class Loop(NetworkServer networkServer, TickPipeline pipeline, ChatSender chatSender)
 {
     public static Loop Instance { get; } = new(
         NetworkServer.Instance,
-        TickPipeline.CreateDefault());
+        TickPipeline.CreateDefault(),
+        ChatSender.Instance);
 
     // Target simulation rate: 20 ticks per second (50ms per tick)
     private const int TicksPerSecond = 20;
@@ -34,15 +37,26 @@ internal sealed class Loop(NetworkServer networkServer, TickPipeline pipeline)
             try
             {
                 var tick = new Tick(Environment.TickCount64, new IntentBuffer(), new EventBuffer());
-                GameWorld.Current.CurrentTick = tick;
+                WorldHost.Current.CurrentTick = tick;
 
                 // Handle incoming network data — handlers call systems which emit events.
                 networkServer.HandleData();
 
                 // Run pipeline — systems react to events emitted during handler processing.
-                pipeline.Execute(GameWorld.Current, tick);
+                pipeline.Execute(WorldHost.Current.Simulation, tick);
 
-                GameWorld.Current.CurrentTick = null;
+                // Route chat messages (server-side transport concern, not gameplay)
+                foreach (var ev in tick.Events.Events)
+                {
+                    if (ev is ChatMessageEvent chat)
+                    {
+                        var session = WorldHost.Current.SessionMap.Get(new EntityId(chat.RecipientId));
+                        if (session != null)
+                            chatSender.SendMessage(session, chat.Text, chat.ColorArgb);
+                    }
+                }
+
+                WorldHost.Current.CurrentTick = null;
 
                 // Compute CPS.
                 if (_cpsTimer < Environment.TickCount64)

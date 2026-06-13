@@ -1,4 +1,3 @@
-using CryBits.Server.Core;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Systems.Combat;
 using CryBits.Server.Systems.Inventory;
@@ -29,7 +28,7 @@ internal sealed class TickPipeline
         return this;
     }
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         foreach (var system in _systems)
             system.Execute(world, tick);
@@ -54,7 +53,7 @@ internal sealed class TickPipeline
         pipeline.AddSystem(SpawnSystem.Instance);
         pipeline.AddSystem(new ReplicationSystem(
             PlayerSender.Instance, NpcSender.Instance,
-            MapSender.Instance, ChatSender.Instance));
+            MapSender.Instance));
         return pipeline;
     }
 }

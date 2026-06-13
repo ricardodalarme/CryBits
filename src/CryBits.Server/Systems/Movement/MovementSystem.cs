@@ -1,16 +1,13 @@
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
-using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
-using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
 using System;
-using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
-using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Movement;
 
@@ -22,9 +19,8 @@ internal sealed class MovementSystem(
         MapSender.Instance,
         NpcSender.Instance);
 
-    public void ChangeDirection(EntityId entityId, Direction direction)
+    public void ChangeDirection(World world, EntityId entityId, Direction direction)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
         var combat = e.Get<CombatState>()!;
@@ -36,9 +32,8 @@ internal sealed class MovementSystem(
         world.Dirty.Mark<Position>(entityId);
     }
 
-    public void Move(EntityId entityId, byte movement)
+    public void Move(World world, EntityId entityId, byte movement)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
         var combat = e.Get<CombatState>()!;
@@ -61,16 +56,16 @@ internal sealed class MovementSystem(
                 switch (pos.Direction)
                 {
                     case Direction.Up:
-                        Warp(entityId, link, oldX, Map.Height - 1);
+                        Warp(world, entityId, link.Id, oldX, Map.Height - 1);
                         return;
                     case Direction.Down:
-                        Warp(entityId, link, oldX, 0);
+                        Warp(world, entityId, link.Id, oldX, 0);
                         return;
                     case Direction.Right:
-                        Warp(entityId, link, 0, oldY);
+                        Warp(world, entityId, link.Id, 0, oldY);
                         return;
                     case Direction.Left:
-                        Warp(entityId, link, Map.Width - 1, oldY);
+                        Warp(world, entityId, link.Id, Map.Width - 1, oldY);
                         return;
                 }
             else
@@ -89,50 +84,49 @@ internal sealed class MovementSystem(
         if ((TileAttribute)tile.Type == TileAttribute.Warp)
         {
             if (tile.Data4 > 0) pos.Direction = (Direction)tile.Data4 - 1;
-            Warp(entityId, world.Maps.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
+            Warp(world, entityId, new Guid(tile.Data1), (byte)tile.Data2, (byte)tile.Data3);
         }
         else if (oldX != pos.X || oldY != pos.Y)
             world.Dirty.Mark<Position>(entityId);
     }
 
-    public void Warp(EntityId entityId, MapInstance mapInstance, byte x, byte y, bool needUpdate = false)
+    public void Warp(World world, EntityId entityId, Guid mapId, byte x, byte y, bool needUpdate = false)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
         var combat = e.Get<CombatState>()!;
 
         var oldMapId = pos.MapId;
 
-        if (mapInstance == null) return;
+        if (!world.Maps.TryGetValue(mapId, out var map)) return;
         if (x >= Map.Width) x = Map.Width - 1;
         if (y >= Map.Height) y = Map.Height - 1;
 
-        pos.MapId = mapInstance.Id;
+        pos.MapId = map.Id;
         pos.X = x;
         pos.Y = y;
 
-        world.CurrentTick?.Events.Emit(new PlayerWarpedEvent { PlayerId = entityId.Value, OldMapId = oldMapId, NewMapId = mapInstance.Id });
+        world.CurrentTick?.Events.Emit(new PlayerWarpedEvent { PlayerId = entityId.Value, OldMapId = oldMapId, NewMapId = map.Id });
 
-        if (oldMapId != mapInstance.Id || needUpdate)
+        if (oldMapId != map.Id || needUpdate)
         {
             combat.GettingMap = true;
-            mapSender.MapRevision(entityId, mapInstance.Data);
-            mapSender.MapItems(entityId, mapInstance);
-            npcSender.MapNpcs(entityId, mapInstance);
+            mapSender.MapRevision(entityId, map.Data);
+            mapSender.MapItems(entityId, map);
+            npcSender.MapNpcs(entityId, map);
         }
 
         world.Dirty.Mark<Position>(entityId);
     }
 
-    public void Execute(GameWorld world, Tick tick)
+    public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
         {
             if (intent is MoveIntent move)
             {
-                ChangeDirection(move.SourceEntityId, move.Direction);
-                Move(move.SourceEntityId, move.Movement);
+                ChangeDirection(world, move.SourceEntityId, move.Direction);
+                Move(world, move.SourceEntityId, move.Movement);
             }
         }
     }

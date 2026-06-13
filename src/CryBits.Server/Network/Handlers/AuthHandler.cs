@@ -46,7 +46,7 @@ internal sealed class AuthHandler(
             return;
         }
 
-        if (GameWorld.Current.Sessions.Find(x => x.Username.Equals(user)) != null)
+        if (WorldHost.Current.Sessions.Find(x => x.Username.Equals(user)) != null)
         {
             authSender.Alert(session, "Someone already signed in to this account.");
             return;

@@ -6,17 +6,15 @@ using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using System;
 using CryBits.Simulation.State;
-using CryBits.Server.Core;
+using System;
 
 namespace CryBits.Server.Systems.Npc;
 
 internal static class NpcMovement
 {
-    internal static void TickMovement(EntityId npcId, Tick tick)
+    internal static void TickMovement(World world, EntityId npcId, Tick tick)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
@@ -76,13 +74,13 @@ internal static class NpcMovement
             if (Random.Shared.Next(0, 2) == 0)
             {
                 for (byte d = 0; d < (byte)Direction.Count; d++)
-                    if (!moved && canMove[d] && Move(npcId, (Direction)d))
+                    if (!moved && canMove[d] && Move(world, npcId, (Direction)d))
                         moved = true;
             }
             else
             {
                 for (short d = (byte)Direction.Count - 1; d >= 0; d--)
-                    if (!moved && canMove[d] && Move(npcId, (Direction)d))
+                    if (!moved && canMove[d] && Move(world, npcId, (Direction)d))
                         moved = true;
             }
         }
@@ -91,7 +89,7 @@ internal static class NpcMovement
             if (Random.Shared.Next(0, 3) == 0 && !moved)
             {
                 if (npcData.Movement == MovementStyle.MoveRandomly)
-                    Move(npcId, (Direction)Random.Shared.Next(0, 4), 1, true);
+                    Move(world, npcId, (Direction)Random.Shared.Next(0, 4), 1, true);
                 else if (npcData.Movement == MovementStyle.TurnRandomly)
                 {
                     pos.Direction = (Direction)Random.Shared.Next(0, 4);
@@ -100,9 +98,8 @@ internal static class NpcMovement
             }
     }
 
-    internal static bool Move(EntityId npcId, Direction direction, byte movement = 1, bool checkZone = false)
+    internal static bool Move(World world, EntityId npcId, Direction direction, byte movement = 1, bool checkZone = false)
     {
-        var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;

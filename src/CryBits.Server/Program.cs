@@ -1,12 +1,17 @@
 using CryBits.Definitions;
 using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Characters;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Core;
-using CryBits.Server.Entities;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using CryBits.Server.Network.Handlers;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
+using CryBits.Server.Systems.Npc;
 using System;
 using System.Linq;
 using System.Threading;
@@ -50,11 +55,58 @@ internal static class Program
 
         // Create world
         Console.WriteLine("Creating world.");
-        _ = new GameWorld();
+        _ = new WorldHost();
 
         // Create temporary maps.
         Console.WriteLine("Creating map instances.");
-        foreach (var map in DefinitionCatalog.Instance.Maps.Values) MapInstance.Create(map, true, GameWorld.Current.Entities);
+        var world = WorldHost.Current;
+        foreach (var map in DefinitionCatalog.Instance.Maps.Values)
+        {
+            var mapState = new MapState(map.Id, map);
+            mapState.SpawnItems();
+            world.Simulation.Maps.Add(map.Id, mapState);
+
+            for (byte i = 0; i < map.Npc.Count; i++)
+            {
+                var npcData = DefinitionCatalog.Instance.Npcs.Get(map.Npc[i].NpcId);
+                if (npcData == null) continue;
+
+                var entityId = world.Entities.Create();
+                var entityState = world.Entities.Get(entityId)!;
+
+                entityState.Set(new NpcState
+                {
+                    Index = i,
+                    NpcDefId = map.Npc[i].NpcId,
+                    Alive = false,
+                    TargetId = null,
+                    SpawnTimer = 0,
+                    AttackTimer = 0
+                });
+
+                entityState.Set(new Position
+                {
+                    X = map.Npc[i].X,
+                    Y = map.Npc[i].Y,
+                    Direction = Direction.Down,
+                    MapId = mapState.Id
+                });
+
+                entityState.Set(new Vitals
+                {
+                    Hp = npcData.Vital[(byte)Vital.Hp],
+                    Mp = npcData.Vital[(byte)Vital.Mp],
+                    MaxHp = npcData.Vital[(byte)Vital.Hp],
+                    MaxMp = npcData.Vital[(byte)Vital.Mp]
+                });
+
+                entityState.Set(new CombatState());
+                entityState.Set(new NpcTag());
+
+                mapState.NpcIds.Add(entityId);
+                NpcBrainSystem.Instance.Spawn(WorldHost.Current.Simulation, entityId);
+            }
+        }
 
         // Initialize network sockets.
         NetworkServer.Instance.Init();
@@ -92,7 +144,7 @@ internal static class Program
     private static void PerformShutdown()
     {
         // Save character data for all connected players.
-        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying))
+        foreach (var t in WorldHost.Current.Sessions.Where(t => t.IsPlaying))
             CharacterRepository.Instance.Write(t);
 
         // Stop network device.
