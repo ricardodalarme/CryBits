@@ -1,5 +1,4 @@
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
@@ -7,8 +6,7 @@ using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using CryBits.Simulation.Formulas;
@@ -18,6 +16,7 @@ using static CryBits.Definitions.Globals;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Entities;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Combat;
 

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace CryBits.Server.Simulation.State;
+namespace CryBits.Simulation.State;
 
-internal sealed class DirtyTracking
+public sealed class DirtyTracking
 {
     private readonly HashSet<(EntityId, Type)> _dirty = [];
 

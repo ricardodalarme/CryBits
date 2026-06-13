@@ -1,8 +1,6 @@
-using CryBits.Definitions.Characters;
+namespace CryBits.Simulation.Components;
 
-namespace CryBits.Server.Simulation.State.Components;
-
-internal sealed class StatBlock
+public sealed class StatBlock
 {
     public short Level { get; set; }
     public int Experience { get; set; }

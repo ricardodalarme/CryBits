@@ -1,9 +1,9 @@
 using CryBits.Definitions.Common;
 using System;
 
-namespace CryBits.Server.Simulation.State.Components;
+namespace CryBits.Simulation.Components;
 
-internal sealed class Position
+public sealed class Position
 {
     public Guid MapId { get; set; }
     public byte X { get; set; }

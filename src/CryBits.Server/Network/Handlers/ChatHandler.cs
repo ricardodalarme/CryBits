@@ -2,7 +2,7 @@ using CryBits.Definitions.Common;
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
 using CryBits.Server.Network.Senders;
-using CryBits.Server.Simulation.State;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Network.Handlers;
 

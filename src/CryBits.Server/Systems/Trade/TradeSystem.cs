@@ -2,11 +2,9 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Slots;
-using CryBits.Server.Entities;
 using System.Linq;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.World;
@@ -14,6 +12,7 @@ using System;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Trade;
 

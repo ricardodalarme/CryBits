@@ -1,8 +1,9 @@
+using CryBits.Simulation.State;
 using System.Collections.Generic;
 
-namespace CryBits.Server.Simulation.State.Components;
+namespace CryBits.Simulation.Components;
 
-internal sealed class PartyState
+public sealed class PartyState
 {
     public List<EntityId> Members { get; set; } = [];
     public string Request { get; set; } = string.Empty;

@@ -4,12 +4,12 @@ using CryBits.Definitions.Maps;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using System;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Movement;
 

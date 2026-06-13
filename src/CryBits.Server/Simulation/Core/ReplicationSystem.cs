@@ -1,16 +1,9 @@
-using CryBits.Definitions.Characters;
-using CryBits.Definitions.Common;
-using CryBits.Definitions.Items;
-using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
-using System;
-using System.Drawing;
-using static CryBits.Definitions.Globals;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Simulation.Core;
 

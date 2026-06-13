@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace CryBits.Server.Simulation.State;
+namespace CryBits.Simulation.State;
 
-internal sealed class EntityRegistry
+public sealed class EntityRegistry
 {
     private readonly Dictionary<EntityId, EntityState> _entities = [];
 

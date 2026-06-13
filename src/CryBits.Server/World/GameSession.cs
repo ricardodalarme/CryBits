@@ -1,5 +1,5 @@
 using CryBits.Definitions.Common;
-using CryBits.Server.Simulation.State;
+using CryBits.Simulation.State;
 using LiteNetLib;
 using System.Collections.Generic;
 

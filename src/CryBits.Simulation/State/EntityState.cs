@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace CryBits.Server.Simulation.State;
+namespace CryBits.Simulation.State;
 
-internal sealed class EntityState(EntityId id)
+public sealed class EntityState(EntityId id)
 {
     public EntityId Id { get; } = id;
     private readonly Dictionary<Type, object> _components = [];

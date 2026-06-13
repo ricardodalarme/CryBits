@@ -1,12 +1,12 @@
 using CryBits.Network;
 using CryBits.Network.Packets.Server;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.World;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using System;
 using System.Linq;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Network;
 

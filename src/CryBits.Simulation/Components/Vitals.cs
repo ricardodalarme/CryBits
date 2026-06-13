@@ -1,6 +1,6 @@
-namespace CryBits.Server.Simulation.State.Components;
+namespace CryBits.Simulation.Components;
 
-internal sealed class Vitals
+public sealed class Vitals
 {
     public short Hp { get; set; }
     public short Mp { get; set; }

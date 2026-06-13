@@ -9,8 +9,7 @@ using CryBits.Network.Packets.Client;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.Systems.Movement;
 using CryBits.Server.World;
@@ -20,6 +19,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using static CryBits.Definitions.Globals;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Network.Handlers;
 

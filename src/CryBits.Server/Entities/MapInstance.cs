@@ -3,13 +3,13 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.Systems.Npc;
 using CryBits.Server.World;
 using CryBits.Simulation.Entities;
 using System;
 using System.Collections.Generic;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Entities;
 

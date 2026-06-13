@@ -1,9 +1,7 @@
 using CryBits.Definitions.Items;
-using CryBits.Definitions.Slots;
-using CryBits.Server.Entities;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.World;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Inventory;
 

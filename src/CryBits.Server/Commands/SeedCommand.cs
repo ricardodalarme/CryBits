@@ -8,7 +8,6 @@ using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Slots;
 using CryBits.Persistence.Stores;
 using CryBits.Server.Entities;
-using CryBits.Server.Simulation.State;
 using CryBits.Server.World;
 using System;
 using System.IO;

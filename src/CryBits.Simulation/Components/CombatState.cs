@@ -1,6 +1,6 @@
-namespace CryBits.Server.Simulation.State.Components;
+namespace CryBits.Simulation.Components;
 
-internal sealed class CombatState
+public sealed class CombatState
 {
     public long AttackTimer { get; set; }
     public bool GettingMap { get; set; }

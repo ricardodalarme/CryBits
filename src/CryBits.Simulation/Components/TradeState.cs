@@ -1,8 +1,9 @@
 using CryBits.Definitions.Slots;
+using CryBits.Simulation.State;
 
-namespace CryBits.Server.Simulation.State.Components;
+namespace CryBits.Simulation.Components;
 
-internal sealed class TradeState
+public sealed class TradeState
 {
     public EntityId? Partner { get; set; }
     public string Request { get; set; } = string.Empty;

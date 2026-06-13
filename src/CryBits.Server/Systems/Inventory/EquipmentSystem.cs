@@ -1,17 +1,15 @@
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
-using CryBits.Server.Entities;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using System;
 using System.Linq;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Inventory;
 

@@ -1,8 +1,9 @@
+using CryBits.Simulation.State;
 using System;
 
-namespace CryBits.Server.Simulation.State.Components;
+namespace CryBits.Simulation.Components;
 
-internal sealed class NpcState
+public sealed class NpcState
 {
     public byte Index { get; set; }
     public Guid NpcDefId { get; set; }

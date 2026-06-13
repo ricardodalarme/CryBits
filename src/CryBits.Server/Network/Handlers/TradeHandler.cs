@@ -1,8 +1,8 @@
 using CryBits.Definitions.Common;
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
-using CryBits.Server.Simulation.State;
 using CryBits.Server.Systems.Trade;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Network.Handlers;
 

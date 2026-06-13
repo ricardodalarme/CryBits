@@ -3,14 +3,14 @@ using CryBits.Definitions.Items;
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
 using CryBits.Server.Network.Senders;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.Systems.Combat;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.Systems.Movement;
 using CryBits.Server.Systems.Progression;
 using CryBits.Server.World;
 using System;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Network.Handlers;
 

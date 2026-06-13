@@ -1,10 +1,8 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.World;
 using System;
 using System.IO;

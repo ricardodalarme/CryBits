@@ -1,4 +1,4 @@
-using CryBits.Server.Simulation.State;
+using CryBits.Simulation.State;
 using System.Collections.Generic;
 
 namespace CryBits.Server.World;

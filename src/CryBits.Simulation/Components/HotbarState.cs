@@ -3,9 +3,9 @@ using CryBits.Definitions.Slots;
 using System.Linq;
 using static CryBits.Definitions.Globals;
 
-namespace CryBits.Server.Simulation.State.Components;
+namespace CryBits.Simulation.Components;
 
-internal sealed class HotbarState
+public sealed class HotbarState
 {
     public HotbarSlot[] Slots { get; set; } = new HotbarSlot[MaxHotbar];
 

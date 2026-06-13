@@ -3,9 +3,9 @@ using System;
 using System.Linq;
 using static CryBits.Definitions.Globals;
 
-namespace CryBits.Server.Simulation.State.Components;
+namespace CryBits.Simulation.Components;
 
-internal sealed class InventoryState
+public sealed class InventoryState
 {
     public ItemSlot[] Slots { get; set; } = new ItemSlot[MaxInventory];
 

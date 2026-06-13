@@ -1,8 +1,8 @@
 using CryBits.Network.Packets.Server;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.World;
 using System.Drawing;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Network.Senders;
 

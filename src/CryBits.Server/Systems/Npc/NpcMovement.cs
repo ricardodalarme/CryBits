@@ -4,11 +4,11 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using System;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Npc;
 

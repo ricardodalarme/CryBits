@@ -1,13 +1,13 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Npcs;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using System;
 using System.Drawing;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Npc;
 

@@ -1,8 +1,7 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Server.Systems.Npc;
 using CryBits.Server.World;
 using CryBits.Simulation.Core;

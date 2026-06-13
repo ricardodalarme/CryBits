@@ -1,12 +1,9 @@
-using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Npcs;
 using CryBits.Server.Entities;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CryBits.Server.World;
 

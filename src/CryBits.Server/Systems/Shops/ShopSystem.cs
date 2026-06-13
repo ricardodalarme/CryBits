@@ -2,16 +2,15 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
-using CryBits.Server.Entities;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.State;
-using CryBits.Server.Simulation.State.Components;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.World;
 using System;
 using System.Drawing;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 
 namespace CryBits.Server.Systems.Shops;
 
