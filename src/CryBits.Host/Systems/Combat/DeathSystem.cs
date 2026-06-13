@@ -4,16 +4,15 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
-using CryBits.Host.Systems.Movement;
-using System.Linq;
 using CryBits.Simulation.Core;
+using System.Linq;
 
 namespace CryBits.Host.Systems.Combat;
 
 internal sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
     private readonly DefinitionCatalog _catalog = catalog;
-    public static DeathSystem Instance { get; } = new(DefinitionCatalog.Instance);
+
 
     public void Execute(World world, Tick tick)
     {
@@ -42,10 +41,13 @@ internal sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
             world.Dirty.Mark<StatBlock>(playerId.Value);
 
             pos.Direction = (Direction)playerClass.SpawnDirection;
-            MovementSystem.Instance.Warp(world, playerId.Value,
-                playerClass.SpawnMapId,
-                playerClass.SpawnX,
-                playerClass.SpawnY);
+            tick.Events.Emit(new PlayerRespawnEvent
+            {
+                PlayerId = playerId.Value.Value,
+                MapId = playerClass.SpawnMapId,
+                X = playerClass.SpawnX,
+                Y = playerClass.SpawnY
+            });
         }
     }
 }

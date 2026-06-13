@@ -98,7 +98,7 @@ internal static class NpcMovement
             }
     }
 
-    internal static bool Move(World world, EntityId npcId, Direction direction, byte movement = 1, bool checkZone = false)
+    private static bool Move(World world, EntityId npcId, Direction direction, byte movement = 1, bool checkZone = false)
     {
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;

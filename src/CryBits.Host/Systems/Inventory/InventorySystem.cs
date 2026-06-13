@@ -25,7 +25,94 @@ internal sealed class InventorySystem(
         LevelingSystem.Instance,
         DefinitionCatalog.Instance);
 
-    public bool GiveItem(World world, EntityId entityId, Item item, short amount)
+
+    public void Execute(World world, Tick tick)
+    {
+        foreach (var intent in tick.Intents.All)
+        {
+            switch (intent)
+            {
+                case CollectItemIntent collect:
+                    CollectItem(world, collect.SourceEntityId);
+                    break;
+                case DropItemIntent drop:
+                    {
+                        var state = world.Entities.Get(drop.SourceEntityId);
+                        var inv = state?.Get<InventoryState>();
+                        if (inv != null && drop.SlotIndex >= 0 && drop.SlotIndex < inv.Slots.Length)
+                            DropItem(world, drop.SourceEntityId, inv.Slots[drop.SlotIndex], drop.Amount);
+                        break;
+                    }
+                case InventoryUseIntent use:
+                    {
+                        var state = world.Entities.Get(use.SourceEntityId);
+                        var inv = state?.Get<InventoryState>();
+                        if (inv != null && use.SlotIndex >= 0 && use.SlotIndex < inv.Slots.Length)
+                            UseItem(world, use.SourceEntityId, use.SlotIndex, inv.Slots[use.SlotIndex]);
+                        break;
+                    }
+                case InventorySwapIntent swap:
+                    {
+                        var state = world.Entities.Get(swap.SourceEntityId);
+                        var inv = state?.Get<InventoryState>();
+                        var trade = state?.Get<TradeState>();
+                        if (inv == null || inv.Slots[swap.SlotOld].ItemId == Guid.Empty) break;
+                        if (swap.SlotOld == swap.SlotNew) break;
+                        if (trade?.Partner != null) break;
+                        (inv.Slots[swap.SlotOld], inv.Slots[swap.SlotNew]) = (inv.Slots[swap.SlotNew], inv.Slots[swap.SlotOld]);
+                        world.Dirty.Mark<InventoryState>(swap.SourceEntityId);
+                        tick.Events.Emit(new InventorySwappedEvent
+                        {
+                            EntityId = swap.SourceEntityId.Value,
+                            SlotOld = swap.SlotOld,
+                            SlotNew = swap.SlotNew
+                        });
+                        break;
+                    }
+            }
+        }
+
+        foreach (var ev in tick.Events.Events)
+        {
+            switch (ev)
+            {
+                case ItemUsedEvent use:
+                    {
+                        var playerId = world.FindPlayerByValue(use.PlayerId);
+                        if (playerId == null) continue;
+                        var e = world.Entities.Get(playerId.Value)!;
+                        var inv = e.Get<InventoryState>()!;
+                        var item = _catalog.Items.Get(use.ItemId);
+                        if (item == null || item.Type != ItemType.Equipment) continue;
+                        var slot = inv.Slots[use.SlotIndex];
+                        if (slot.ItemId == Guid.Empty || slot.ItemId != use.ItemId) continue;
+                        TakeItem(world, playerId.Value, slot, 1);
+                        break;
+                    }
+                case ItemEquippedEvent equip when equip.OldItemId.HasValue:
+                    {
+                        var playerId = world.FindPlayerByValue(equip.PlayerId);
+                        if (playerId == null) continue;
+                        var e = world.Entities.Get(playerId.Value)!;
+                        var inv = e.Get<InventoryState>()!;
+                        var pos = e.Get<Position>()!;
+                        var map = world.Maps.Get(pos.MapId)!;
+
+                        var oldItem = _catalog.Items.Get(equip.OldItemId.Value);
+                        if (oldItem == null) continue;
+                        if (!GiveItem(world, playerId.Value, oldItem, 1))
+                        {
+                            if (map.GroundItems.Count == Config.MaxMapItems) continue;
+                            map.GroundItems.Add(new GroundItem(equip.OldItemId.Value, 1,
+                                pos.X, pos.Y));
+                        }
+                        break;
+                    }
+            }
+        }
+    }
+
+    internal bool GiveItem(World world, EntityId entityId, Item item, short amount)
     {
         if (item == null) return false;
 
@@ -52,7 +139,7 @@ internal sealed class InventorySystem(
         return true;
     }
 
-    public void TakeItem(World world, EntityId entityId, ItemSlot slot, short amount)
+    internal void TakeItem(World world, EntityId entityId, ItemSlot slot, short amount)
     {
         var e = world.Entities.Get(entityId)!;
         var hotbar = e.Get<HotbarState>();
@@ -84,7 +171,7 @@ internal sealed class InventorySystem(
         world.Dirty.Mark<InventoryState>(entityId);
     }
 
-    public void DropItem(World world, EntityId entityId, ItemSlot slot, short amount)
+    internal void DropItem(World world, EntityId entityId, ItemSlot slot, short amount)
     {
         var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
@@ -104,7 +191,7 @@ internal sealed class InventorySystem(
         TakeItem(world, entityId, slot, amount);
     }
 
-    public void UseItem(World world, EntityId entityId, int slotIndex, ItemSlot slot)
+    internal void UseItem(World world, EntityId entityId, int slotIndex, ItemSlot slot)
     {
         var e = world.Entities.Get(entityId)!;
         var stats = e.Get<StatBlock>()!;
@@ -165,7 +252,7 @@ internal sealed class InventorySystem(
         }
     }
 
-    public void CollectItem(World world, EntityId entityId)
+    internal void CollectItem(World world, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
@@ -180,87 +267,6 @@ internal sealed class InventorySystem(
         if (GiveItem(world, entityId, item, mapItem.Amount))
         {
             map.GroundItems.Remove(mapItem);
-        }
-    }
-
-    public void Execute(World world, Tick tick)
-    {
-        foreach (var intent in tick.Intents.All)
-        {
-            switch (intent)
-            {
-                case CollectItemIntent collect:
-                    CollectItem(world, collect.SourceEntityId);
-                    break;
-                case DropItemIntent drop:
-                    {
-                        var state = world.Entities.Get(drop.SourceEntityId);
-                        var inv = state?.Get<InventoryState>();
-                        if (inv != null && drop.SlotIndex >= 0 && drop.SlotIndex < inv.Slots.Length)
-                            DropItem(world, drop.SourceEntityId, inv.Slots[drop.SlotIndex], drop.Amount);
-                        break;
-                    }
-                case InventoryUseIntent use:
-                    {
-                        var state = world.Entities.Get(use.SourceEntityId);
-                        var inv = state?.Get<InventoryState>();
-                        if (inv != null && use.SlotIndex >= 0 && use.SlotIndex < inv.Slots.Length)
-                            UseItem(world, use.SourceEntityId, use.SlotIndex, inv.Slots[use.SlotIndex]);
-                        break;
-                    }
-                case InventorySwapIntent swap:
-                    {
-                        var state = world.Entities.Get(swap.SourceEntityId);
-                        var inv = state?.Get<InventoryState>();
-                        var trade = state?.Get<TradeState>();
-                        if (inv == null || inv.Slots[swap.SlotOld].ItemId == Guid.Empty) break;
-                        if (swap.SlotOld == swap.SlotNew) break;
-                        if (trade?.Partner != null) break;
-                        (inv.Slots[swap.SlotOld], inv.Slots[swap.SlotNew]) = (inv.Slots[swap.SlotNew], inv.Slots[swap.SlotOld]);
-                        world.Dirty.Mark<InventoryState>(swap.SourceEntityId);
-                        HotbarSystem.Instance.SyncInventorySwap(world, swap.SourceEntityId, swap.SlotOld, swap.SlotNew);
-                        break;
-                    }
-            }
-        }
-
-        foreach (var ev in tick.Events.Events)
-        {
-            switch (ev)
-            {
-                case ItemUsedEvent use:
-                    {
-                        var playerId = world.FindPlayerByValue(use.PlayerId);
-                        if (playerId == null) continue;
-                        var e = world.Entities.Get(playerId.Value)!;
-                        var inv = e.Get<InventoryState>()!;
-                        var item = _catalog.Items.Get(use.ItemId);
-                        if (item == null || item.Type != ItemType.Equipment) continue;
-                        var slot = inv.Slots[use.SlotIndex];
-                        if (slot.ItemId == Guid.Empty || slot.ItemId != use.ItemId) continue;
-                        TakeItem(world, playerId.Value, slot, 1);
-                        break;
-                    }
-                case ItemEquippedEvent equip when equip.OldItemId.HasValue:
-                    {
-                        var playerId = world.FindPlayerByValue(equip.PlayerId);
-                        if (playerId == null) continue;
-                        var e = world.Entities.Get(playerId.Value)!;
-                        var inv = e.Get<InventoryState>()!;
-                        var pos = e.Get<Position>()!;
-                        var map = world.Maps.Get(pos.MapId)!;
-
-                        var oldItem = _catalog.Items.Get(equip.OldItemId.Value);
-                        if (oldItem == null) continue;
-                        if (!GiveItem(world, playerId.Value, oldItem, 1))
-                        {
-                            if (map.GroundItems.Count == Config.MaxMapItems) continue;
-                            map.GroundItems.Add(new GroundItem(equip.OldItemId.Value, 1,
-                                pos.X, pos.Y));
-                        }
-                        break;
-                    }
-            }
         }
     }
 }

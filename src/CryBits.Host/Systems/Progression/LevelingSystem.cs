@@ -16,7 +16,36 @@ internal sealed class LevelingSystem : ISimulationSystem
 {
     public static LevelingSystem Instance { get; } = new();
 
-    internal void AddPoint(World world, EntityId entityId, byte attributeNum)
+    public void Execute(World world, Tick tick)
+    {
+        foreach (var intent in tick.Intents.All)
+        {
+            if (intent is AddPointIntent add)
+                AddPoint(world, add.SourceEntityId, add.AttributeNum);
+        }
+
+        foreach (var ev in tick.Events.Events)
+        {
+            if (ev is not EntityDiedEvent died) continue;
+            if (!died.SourceId.HasValue || died.SourceIsPlayer != true) continue;
+
+            var killerId = world.FindPlayerByValue(died.SourceId.Value);
+            if (killerId == null) continue;
+
+            var xp = died.EntityIsPlayer
+                ? world.FindPlayerByValue(died.EntityId) is { } victimId
+                    ? world.Entities.Get(victimId)!.Get<StatBlock>()!.Experience / 10
+                    : 0
+                : world.FindNpcInstance(died.EntityId) is { } npcId
+                    ? DefinitionCatalog.Instance.Npcs.Get(world.Entities.Get(npcId)!.Get<NpcState>()!.NpcDefId)!.Experience
+                    : 0;
+
+            if (xp > 0)
+                GiveExperience(world, killerId.Value, xp);
+        }
+    }
+
+    private void AddPoint(World world, EntityId entityId, byte attributeNum)
     {
         var e = world.Entities.Get(entityId)!;
         var stats = e.Get<StatBlock>()!;
@@ -28,7 +57,7 @@ internal sealed class LevelingSystem : ISimulationSystem
         world.Dirty.Mark<StatBlock>(entityId);
     }
 
-    public void GiveExperience(World world, EntityId entityId, int value)
+    internal void GiveExperience(World world, EntityId entityId, int value)
     {
         var e = world.Entities.Get(entityId)!;
         var stats = e.Get<StatBlock>()!;
@@ -105,34 +134,5 @@ internal sealed class LevelingSystem : ISimulationSystem
         stats.Experience += value - experienceSum;
         CheckLevelUp(world, entityId);
         world.Dirty.Mark<StatBlock>(entityId);
-    }
-
-    public void Execute(World world, Tick tick)
-    {
-        foreach (var intent in tick.Intents.All)
-        {
-            if (intent is AddPointIntent add)
-                AddPoint(world, add.SourceEntityId, add.AttributeNum);
-        }
-
-        foreach (var ev in tick.Events.Events)
-        {
-            if (ev is not EntityDiedEvent died) continue;
-            if (!died.SourceId.HasValue || died.SourceIsPlayer != true) continue;
-
-            var killerId = world.FindPlayerByValue(died.SourceId.Value);
-            if (killerId == null) continue;
-
-            var xp = died.EntityIsPlayer
-                ? world.FindPlayerByValue(died.EntityId) is { } victimId
-                    ? world.Entities.Get(victimId)!.Get<StatBlock>()!.Experience / 10
-                    : 0
-                : world.FindNpcInstance(died.EntityId) is { } npcId
-                    ? DefinitionCatalog.Instance.Npcs.Get(world.Entities.Get(npcId)!.Get<NpcState>()!.NpcDefId)!.Experience
-                    : 0;
-
-            if (xp > 0)
-                GiveExperience(world, killerId.Value, xp);
-        }
     }
 }

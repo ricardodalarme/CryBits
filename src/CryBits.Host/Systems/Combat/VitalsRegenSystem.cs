@@ -11,7 +11,7 @@ namespace CryBits.Host.Systems.Combat;
 
 internal sealed class VitalsRegenSystem : ISimulationSystem
 {
-    public static VitalsRegenSystem Instance { get; } = new();
+
 
     private long _lastRegenTick;
 

@@ -22,10 +22,7 @@ namespace CryBits.Host.Systems.Combat;
 internal sealed class CombatSystem(
     CombatSender combatSender) : ISimulationSystem
 {
-    public static CombatSystem Instance { get; } = new(
-        CombatSender.Instance);
-
-    internal void Attack(World world, EntityId entityId)
+    private void Attack(World world, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
@@ -165,7 +162,7 @@ internal sealed class CombatSystem(
             combatSender.Attack(attackerPos.MapId, attackerId.Value);
     }
 
-    internal void AttackNpc(World world, EntityId npcId)
+    private void AttackNpc(World world, EntityId npcId)
     {
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;
@@ -275,7 +272,7 @@ internal sealed class CombatSystem(
             combatSender.Attack(attackerPos.MapId, attackerId.Value);
     }
 
-    internal void Died(World world, EntityId npcId)
+    private void Died(World world, EntityId npcId)
     {
         var e = world.Entities.Get(npcId)!;
         var npcState = e.Get<NpcState>()!;

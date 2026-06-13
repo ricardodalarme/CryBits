@@ -15,9 +15,26 @@ namespace CryBits.Host.Systems.Inventory;
 internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
     private readonly DefinitionCatalog _catalog = catalog;
-    public static EquipmentSystem Instance { get; } = new(DefinitionCatalog.Instance);
+    public void Execute(World world, Tick tick)
+    {
+        foreach (var intent in tick.Intents.All)
+        {
+            if (intent is EquipmentRemoveIntent remove)
+                Unequip(world, remove.SourceEntityId, remove.Slot);
+        }
 
-    public void Equip(World world, EntityId entityId, Item item)
+        foreach (var ev in tick.Events.Events.ToArray())
+        {
+            if (ev is not ItemUsedEvent use) continue;
+            var playerId = world.FindPlayerByValue(use.PlayerId);
+            if (playerId == null) continue;
+            var item = _catalog.Items.Get(use.ItemId);
+            if (item == null || item.Type != ItemType.Equipment) continue;
+            Equip(world, playerId.Value, item);
+        }
+    }
+
+    private void Equip(World world, EntityId entityId, Item item)
     {
         var e = world.Entities.Get(entityId)!;
         var equip = e.Get<EquipmentState>()!;
@@ -45,7 +62,7 @@ internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSy
         world.Dirty.Mark<StatBlock>(entityId);
     }
 
-    public void Unequip(World world, EntityId entityId, byte equipSlot)
+    private void Unequip(World world, EntityId entityId, byte equipSlot)
     {
         var e = world.Entities.Get(entityId)!;
         var equip = e.Get<EquipmentState>()!;
@@ -70,24 +87,5 @@ internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSy
 
         world.Dirty.Mark<EquipmentState>(entityId);
         world.Dirty.Mark<StatBlock>(entityId);
-    }
-
-    public void Execute(World world, Tick tick)
-    {
-        foreach (var intent in tick.Intents.All)
-        {
-            if (intent is EquipmentRemoveIntent remove)
-                Unequip(world, remove.SourceEntityId, remove.Slot);
-        }
-
-        foreach (var ev in tick.Events.Events.ToArray())
-        {
-            if (ev is not ItemUsedEvent use) continue;
-            var playerId = world.FindPlayerByValue(use.PlayerId);
-            if (playerId == null) continue;
-            var item = _catalog.Items.Get(use.ItemId);
-            if (item == null || item.Type != ItemType.Equipment) continue;
-            Equip(world, playerId.Value, item);
-        }
     }
 }

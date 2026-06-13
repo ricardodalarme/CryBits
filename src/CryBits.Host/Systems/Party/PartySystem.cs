@@ -10,9 +10,30 @@ namespace CryBits.Host.Systems.Party;
 
 internal sealed class PartySystem : ISimulationSystem
 {
-    public static PartySystem Instance { get; } = new();
 
-    internal void Invite(World world, EntityId entityId, string targetName)
+
+    public void Execute(World world, Tick tick)
+    {
+        foreach (var intent in tick.Intents.All)
+        {
+            switch (intent)
+            {
+                case PartyInviteIntent i: Invite(world, i.SourceEntityId, i.PlayerName); break;
+                case PartyAcceptIntent a: Accept(world, a.SourceEntityId); break;
+                case PartyDeclineIntent d: Decline(world, d.SourceEntityId); break;
+                case PartyLeaveIntent l: Leave(world, l.SourceEntityId); break;
+            }
+        }
+
+        foreach (var ev in tick.Events.Events)
+        {
+            if (ev is not PlayerDisconnectedEvent e) continue;
+            var playerId = world.FindPlayerByValue(e.PlayerId);
+            if (playerId != null) Leave(world, playerId.Value);
+        }
+    }
+
+    private void Invite(World world, EntityId entityId, string targetName)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -56,7 +77,7 @@ internal sealed class PartySystem : ISimulationSystem
         invitedParty.Request = appearance.Name;
     }
 
-    internal void Accept(World world, EntityId entityId)
+    private void Accept(World world, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -107,7 +128,7 @@ internal sealed class PartySystem : ISimulationSystem
         for (byte i = 0; i < party.Members.Count; i++) world.Dirty.Mark<PartyState>(party.Members[i]);
     }
 
-    internal void Decline(World world, EntityId entityId)
+    private void Decline(World world, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -118,7 +139,7 @@ internal sealed class PartySystem : ISimulationSystem
         party.Request = string.Empty;
     }
 
-    public void Leave(World world, EntityId entityId)
+    private void Leave(World world, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var party = e.Get<PartyState>()!;
@@ -137,26 +158,5 @@ internal sealed class PartySystem : ISimulationSystem
 
         party.Members.Clear();
         world.Dirty.Mark<PartyState>(entityId);
-    }
-
-    public void Execute(World world, Tick tick)
-    {
-        foreach (var intent in tick.Intents.All)
-        {
-            switch (intent)
-            {
-                case PartyInviteIntent i: Invite(world, i.SourceEntityId, i.PlayerName); break;
-                case PartyAcceptIntent a: Accept(world, a.SourceEntityId); break;
-                case PartyDeclineIntent d: Decline(world, d.SourceEntityId); break;
-                case PartyLeaveIntent l: Leave(world, l.SourceEntityId); break;
-            }
-        }
-
-        foreach (var ev in tick.Events.Events)
-        {
-            if (ev is not PlayerDisconnectedEvent e) continue;
-            var playerId = world.FindPlayerByValue(e.PlayerId);
-            if (playerId != null) Leave(world, playerId.Value);
-        }
     }
 }

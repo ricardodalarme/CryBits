@@ -6,8 +6,6 @@ namespace CryBits.Host.Systems.Inventory;
 
 internal sealed class GroundItemSystem(MapSender mapSender) : ISimulationSystem
 {
-    public static GroundItemSystem Instance { get; } = new(MapSender.Instance);
-
     private long _lastCleanTick;
 
     public void Execute(World world, Tick tick)

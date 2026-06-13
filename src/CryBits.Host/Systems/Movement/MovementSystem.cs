@@ -6,8 +6,9 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
-using System;
 using CryBits.Simulation.State;
+using System;
+using System.Linq;
 
 namespace CryBits.Host.Systems.Movement;
 
@@ -19,7 +20,25 @@ internal sealed class MovementSystem(
         MapSender.Instance,
         NpcSender.Instance);
 
-    public void ChangeDirection(World world, EntityId entityId, Direction direction)
+    public void Execute(World world, Tick tick)
+    {
+        foreach (var intent in tick.Intents.All)
+        {
+            if (intent is MoveIntent move)
+            {
+                ChangeDirection(world, move.SourceEntityId, move.Direction);
+                Move(world, move.SourceEntityId, move.Movement);
+            }
+        }
+
+        foreach (var ev in tick.Events.Events.ToArray())
+        {
+            if (ev is PlayerRespawnEvent respawn)
+                Warp(world, new EntityId(respawn.PlayerId), respawn.MapId, respawn.X, respawn.Y);
+        }
+    }
+
+    private void ChangeDirection(World world, EntityId entityId, Direction direction)
     {
         var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
@@ -32,7 +51,7 @@ internal sealed class MovementSystem(
         world.Dirty.Mark<Position>(entityId);
     }
 
-    public void Move(World world, EntityId entityId, byte movement)
+    private void Move(World world, EntityId entityId, byte movement)
     {
         var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
@@ -90,7 +109,7 @@ internal sealed class MovementSystem(
             world.Dirty.Mark<Position>(entityId);
     }
 
-    public void Warp(World world, EntityId entityId, Guid mapId, byte x, byte y, bool needUpdate = false)
+    internal void Warp(World world, EntityId entityId, Guid mapId, byte x, byte y, bool needUpdate = false)
     {
         var e = world.Entities.Get(entityId)!;
         var pos = e.Get<Position>()!;
@@ -117,17 +136,5 @@ internal sealed class MovementSystem(
         }
 
         world.Dirty.Mark<Position>(entityId);
-    }
-
-    public void Execute(World world, Tick tick)
-    {
-        foreach (var intent in tick.Intents.All)
-        {
-            if (intent is MoveIntent move)
-            {
-                ChangeDirection(world, move.SourceEntityId, move.Direction);
-                Move(world, move.SourceEntityId, move.Movement);
-            }
-        }
     }
 }

@@ -20,11 +20,48 @@ internal sealed class TradeSystem(
     DefinitionCatalog catalog) : ISimulationSystem
 {
     private readonly DefinitionCatalog _catalog = catalog;
-    public static TradeSystem Instance { get; } = new(
-        InventorySystem.Instance,
-        DefinitionCatalog.Instance);
+    public void Execute(World world, Tick tick)
+    {
+        foreach (var intent in tick.Intents.All)
+        {
+            switch (intent)
+            {
+                case TradeInviteIntent i: Invite(world, i.SourceEntityId, i.PlayerName); break;
+                case TradeAcceptIntent a: Accept(world, a.SourceEntityId); break;
+                case TradeDeclineIntent d: Decline(world, d.SourceEntityId); break;
+                case TradeLeaveIntent l: Leave(world, l.SourceEntityId); break;
+                case TradeOfferIntent o: Offer(world, o.SourceEntityId, o.OfferSlot, o.InventorySlot, o.Amount); break;
+                case TradeOfferStateIntent s: OfferState(world, s.SourceEntityId, s.State); break;
+            }
+        }
 
-    internal void Invite(World world, EntityId entityId, string targetName)
+        foreach (var ev in tick.Events.Events)
+        {
+            switch (ev)
+            {
+                case PlayerStartedMovingEvent e:
+                    {
+                        var playerId = world.FindPlayerByValue(e.PlayerId);
+                        if (playerId != null) Leave(world, playerId.Value);
+                        break;
+                    }
+                case PlayerWarpedEvent e:
+                    {
+                        var playerId = world.FindPlayerByValue(e.PlayerId);
+                        if (playerId != null) Leave(world, playerId.Value);
+                        break;
+                    }
+                case PlayerDisconnectedEvent e:
+                    {
+                        var playerId = world.FindPlayerByValue(e.PlayerId);
+                        if (playerId != null) Leave(world, playerId.Value);
+                        break;
+                    }
+            }
+        }
+    }
+
+    private void Invite(World world, EntityId entityId, string targetName)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -85,7 +122,7 @@ internal sealed class TradeSystem(
         world.Dirty.Mark<TradeState>(invitedId.Value);
     }
 
-    internal void Accept(World world, EntityId entityId)
+    private void Accept(World world, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -140,7 +177,7 @@ internal sealed class TradeSystem(
         world.Dirty.Mark<TradeState>(invitedId.Value);
     }
 
-    internal void Decline(World world, EntityId entityId)
+    private void Decline(World world, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -152,7 +189,7 @@ internal sealed class TradeSystem(
         world.Dirty.Mark<TradeState>(entityId);
     }
 
-    public void Leave(World world, EntityId entityId)
+    private void Leave(World world, EntityId entityId)
     {
         var e = world.Entities.Get(entityId)!;
         var trade = e.Get<TradeState>();
@@ -167,7 +204,7 @@ internal sealed class TradeSystem(
         world.Dirty.Mark<TradeState>(entityId);
     }
 
-    internal void Offer(World world, EntityId entityId, short slot, short inventorySlot, short amount)
+    private void Offer(World world, EntityId entityId, short slot, short inventorySlot, short amount)
     {
         var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
@@ -191,7 +228,7 @@ internal sealed class TradeSystem(
         if (trade.Partner.HasValue) world.Dirty.Mark<TradeState>(trade.Partner.Value);
     }
 
-    internal void OfferState(World world, EntityId entityId, TradeStatus state)
+    private void OfferState(World world, EntityId entityId, TradeStatus state)
     {
         var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
@@ -261,47 +298,6 @@ internal sealed class TradeSystem(
             case TradeStatus.Waiting:
                 world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value.Value, Text = appearance.Name + " send you a offer.", ColorArgb = Color.White.ToArgb() });
                 break;
-        }
-    }
-
-    public void Execute(World world, Tick tick)
-    {
-        foreach (var intent in tick.Intents.All)
-        {
-            switch (intent)
-            {
-                case TradeInviteIntent i: Invite(world, i.SourceEntityId, i.PlayerName); break;
-                case TradeAcceptIntent a: Accept(world, a.SourceEntityId); break;
-                case TradeDeclineIntent d: Decline(world, d.SourceEntityId); break;
-                case TradeLeaveIntent l: Leave(world, l.SourceEntityId); break;
-                case TradeOfferIntent o: Offer(world, o.SourceEntityId, o.OfferSlot, o.InventorySlot, o.Amount); break;
-                case TradeOfferStateIntent s: OfferState(world, s.SourceEntityId, s.State); break;
-            }
-        }
-
-        foreach (var ev in tick.Events.Events)
-        {
-            switch (ev)
-            {
-                case PlayerStartedMovingEvent e:
-                    {
-                        var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(world, playerId.Value);
-                        break;
-                    }
-                case PlayerWarpedEvent e:
-                    {
-                        var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(world, playerId.Value);
-                        break;
-                    }
-                case PlayerDisconnectedEvent e:
-                    {
-                        var playerId = world.FindPlayerByValue(e.PlayerId);
-                        if (playerId != null) Leave(world, playerId.Value);
-                        break;
-                    }
-            }
         }
     }
 }

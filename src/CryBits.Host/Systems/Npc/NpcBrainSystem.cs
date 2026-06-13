@@ -7,8 +7,10 @@ using CryBits.Host.Network;
 using CryBits.Host.Network.Senders;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
 using CryBits.Simulation.State;
 using System;
+using System.Linq;
 using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Host.Systems.Npc;
@@ -25,6 +27,12 @@ internal sealed class NpcBrainSystem(
 
     public void Execute(World world, Tick tick)
     {
+        foreach (var ev in tick.Events.Events.ToArray())
+        {
+            if (ev is NpcRespawnEvent respawn)
+                Spawn(world, new EntityId(respawn.NpcInstanceId));
+        }
+
         if (tick.TickNumber - _lastTick < TicksPerSecond / 2) return;
         _lastTick = tick.TickNumber;
 

@@ -1,6 +1,16 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Host.Network;
 using CryBits.Host.Network.Senders;
 using CryBits.Host.Simulation.Core;
+using CryBits.Host.Systems.Combat;
+using CryBits.Host.Systems.Inventory;
+using CryBits.Host.Systems.Movement;
+using CryBits.Host.Systems.Npc;
+using CryBits.Host.Systems.Party;
+using CryBits.Host.Systems.Progression;
+using CryBits.Host.Systems.Shops;
+using CryBits.Host.Systems.Spawning;
+using CryBits.Host.Systems.Trade;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
@@ -16,7 +26,7 @@ internal sealed class WorldHost
 
     public World Simulation { get; } = new();
     public NetworkServer NetworkServer { get; } = NetworkServer.Instance;
-    public TickPipeline Pipeline { get; } = TickPipeline.CreateDefault();
+    public TickPipeline Pipeline { get; }
     public ChatSender ChatSender { get; } = ChatSender.Instance;
 
     public Dictionary<Guid, MapState> Maps => Simulation.Maps;
@@ -29,7 +39,29 @@ internal sealed class WorldHost
 
     public EntityId? FindPlayer(string name) => Simulation.FindPlayer(name);
 
-    public WorldHost() => Current = this;
+    public WorldHost()
+    {
+        Current = this;
+
+        Pipeline = new TickPipeline();
+        Pipeline.AddSystem(new VitalsRegenSystem());
+        Pipeline.AddSystem(MovementSystem.Instance);
+        Pipeline.AddSystem(NpcBrainSystem.Instance);
+        Pipeline.AddSystem(new CombatSystem(CombatSender.Instance));
+        Pipeline.AddSystem(LevelingSystem.Instance);
+        Pipeline.AddSystem(new DeathSystem(DefinitionCatalog.Instance));
+        Pipeline.AddSystem(new GroundItemSystem(MapSender.Instance));
+        Pipeline.AddSystem(new EquipmentSystem(DefinitionCatalog.Instance));
+        Pipeline.AddSystem(InventorySystem.Instance);
+        Pipeline.AddSystem(new HotbarSystem(InventorySystem.Instance));
+        Pipeline.AddSystem(new TradeSystem(InventorySystem.Instance, DefinitionCatalog.Instance));
+        Pipeline.AddSystem(new ShopSystem(InventorySystem.Instance, DefinitionCatalog.Instance));
+        Pipeline.AddSystem(new PartySystem());
+        Pipeline.AddSystem(new SpawnSystem());
+        Pipeline.AddSystem(new ReplicationSystem(
+            PlayerSender.Instance, NpcSender.Instance,
+            MapSender.Instance));
+    }
 
     public void Tick()
     {
