@@ -10,6 +10,7 @@ using CryBits.Server.Systems.Inventory;
 using CryBits.Server.World;
 using System;
 using System.Drawing;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Shops;
 
@@ -100,29 +101,29 @@ internal sealed class ShopSystem(
             switch (ev)
             {
                 case PlayerStartedMovingEvent e:
-                {
-                    var player = world.FindPlayer(e.PlayerId);
-                    if (player != null) Leave(player);
-                    break;
-                }
-                case PlayerWarpedEvent e:
-                {
-                    var player = world.FindPlayer(e.PlayerId);
-                    if (player != null) Leave(player);
-                    break;
-                }
-                case NpcAttackedEvent e:
-                {
-                    var attacker = world.FindPlayer(e.AttackerId);
-                    var npc = world.FindNpcInstance(e.NpcInstanceId);
-                    if (attacker == null || npc == null) break;
-                    if (npc.Data.Behaviour == Behaviour.ShopKeeper)
                     {
-                        var shop = _catalog.Shops.Get(npc.Data.ShopId);
-                        if (shop != null) Open(attacker, shop);
+                        var player = world.FindPlayer(e.PlayerId);
+                        if (player != null) Leave(player);
+                        break;
                     }
-                    break;
-                }
+                case PlayerWarpedEvent e:
+                    {
+                        var player = world.FindPlayer(e.PlayerId);
+                        if (player != null) Leave(player);
+                        break;
+                    }
+                case NpcAttackedEvent e:
+                    {
+                        var attacker = world.FindPlayer(e.AttackerId);
+                        var npc = world.FindNpcInstance(e.NpcInstanceId);
+                        if (attacker == null || npc == null) break;
+                        if (npc.Data.Behaviour == Behaviour.ShopKeeper)
+                        {
+                            var shop = _catalog.Shops.Get(npc.Data.ShopId);
+                            if (shop != null) Open(attacker, shop);
+                        }
+                        break;
+                    }
             }
         }
     }

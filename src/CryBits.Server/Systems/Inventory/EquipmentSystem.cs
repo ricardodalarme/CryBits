@@ -8,6 +8,7 @@ using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using System.Linq;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Inventory;
 

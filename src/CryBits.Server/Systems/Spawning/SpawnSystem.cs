@@ -1,6 +1,7 @@
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Systems.Npc;
 using CryBits.Server.World;
+using CryBits.Simulation.Core;
 using System;
 
 namespace CryBits.Server.Systems.Spawning;

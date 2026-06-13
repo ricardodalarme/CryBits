@@ -11,6 +11,7 @@ using CryBits.Server.World;
 using System;
 using System.Drawing;
 using static CryBits.Globals;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Trade;
 
@@ -226,23 +227,23 @@ internal sealed class TradeSystem(
             switch (ev)
             {
                 case PlayerStartedMovingEvent e:
-                {
-                    var player = world.FindPlayer(e.PlayerId);
-                    if (player != null) Leave(player);
-                    break;
-                }
+                    {
+                        var player = world.FindPlayer(e.PlayerId);
+                        if (player != null) Leave(player);
+                        break;
+                    }
                 case PlayerWarpedEvent e:
-                {
-                    var player = world.FindPlayer(e.PlayerId);
-                    if (player != null) Leave(player);
-                    break;
-                }
+                    {
+                        var player = world.FindPlayer(e.PlayerId);
+                        if (player != null) Leave(player);
+                        break;
+                    }
                 case PlayerDisconnectedEvent e:
-                {
-                    var player = world.FindPlayer(e.PlayerId);
-                    if (player != null) Leave(player);
-                    break;
-                }
+                    {
+                        var player = world.FindPlayer(e.PlayerId);
+                        if (player != null) Leave(player);
+                        break;
+                    }
             }
         }
     }

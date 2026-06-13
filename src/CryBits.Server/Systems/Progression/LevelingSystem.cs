@@ -6,6 +6,7 @@ using CryBits.Server.World;
 using CryBits.Simulation.Formulas;
 using System;
 using static CryBits.Globals;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Progression;
 

@@ -1,7 +1,7 @@
 using CryBits.Simulation.Events;
 
-namespace CryBits.Server.Simulation.Core;
+namespace CryBits.Simulation.Core;
 
-internal sealed record Tick(
+public sealed record Tick(
     long TickNumber,
     EventBuffer Events);

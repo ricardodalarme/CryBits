@@ -12,6 +12,7 @@ using System;
 using System.Drawing;
 using static CryBits.Globals;
 using Attribute = CryBits.Definitions.Characters.Attribute;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Combat;
 

@@ -12,6 +12,7 @@ using CryBits.Server.World;
 using System;
 using System.Drawing;
 using static CryBits.Globals;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Inventory;
 
@@ -161,32 +162,32 @@ internal sealed class InventorySystem(
             switch (ev)
             {
                 case ItemUsedEvent use:
-                {
-                    var player = world.FindPlayer(use.PlayerId);
-                    if (player == null) continue;
-                    var item = _catalog.Items.Get(use.ItemId);
-                    if (item == null || item.Type != ItemType.Equipment) continue;
-                    var slot = player.Inventory[use.SlotIndex];
-                    if (slot.ItemId == Guid.Empty || slot.ItemId != use.ItemId) continue;
-                    TakeItem(player, slot, 1);
-                    break;
-                }
-                case ItemEquippedEvent equip when equip.OldItemId.HasValue:
-                {
-                    var player = world.FindPlayer(equip.PlayerId);
-                    if (player == null) continue;
-                    var oldItem = _catalog.Items.Get(equip.OldItemId.Value);
-                    if (oldItem == null) continue;
-                    if (!GiveItem(player, oldItem, 1))
                     {
-                        if (player.MapInstance.Item.Count == Config.MaxMapItems) continue;
-                        player.MapInstance.Item.Add(new MapItemInstance(equip.OldItemId.Value, 1,
-                            player.X, player.Y));
-                        mapSender.MapItems(player.MapInstance);
-                        playerSender.PlayerInventory(player);
+                        var player = world.FindPlayer(use.PlayerId);
+                        if (player == null) continue;
+                        var item = _catalog.Items.Get(use.ItemId);
+                        if (item == null || item.Type != ItemType.Equipment) continue;
+                        var slot = player.Inventory[use.SlotIndex];
+                        if (slot.ItemId == Guid.Empty || slot.ItemId != use.ItemId) continue;
+                        TakeItem(player, slot, 1);
+                        break;
                     }
-                    break;
-                }
+                case ItemEquippedEvent equip when equip.OldItemId.HasValue:
+                    {
+                        var player = world.FindPlayer(equip.PlayerId);
+                        if (player == null) continue;
+                        var oldItem = _catalog.Items.Get(equip.OldItemId.Value);
+                        if (oldItem == null) continue;
+                        if (!GiveItem(player, oldItem, 1))
+                        {
+                            if (player.MapInstance.Item.Count == Config.MaxMapItems) continue;
+                            player.MapInstance.Item.Add(new MapItemInstance(equip.OldItemId.Value, 1,
+                                player.X, player.Y));
+                            mapSender.MapItems(player.MapInstance);
+                            playerSender.PlayerInventory(player);
+                        }
+                        break;
+                    }
             }
         }
     }
