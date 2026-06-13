@@ -19,7 +19,6 @@ internal sealed class AuthHandler(
     ClassSender classSender,
     NpcSender npcSender,
     AccountSender accountSender,
-    SettingsSender settingsSender,
     AccountRepository accountRepository)
 {
     public static AuthHandler Instance { get; } = new(
@@ -30,7 +29,6 @@ internal sealed class AuthHandler(
         ClassSender.Instance,
         NpcSender.Instance,
         AccountSender.Instance,
-        SettingsSender.Instance,
         AccountRepository.Instance);
 
     [PacketHandler]
@@ -71,7 +69,6 @@ internal sealed class AuthHandler(
             }
 
             session.InEditor = true;
-            settingsSender.ServerData(session);
             mapSender.Maps(session);
             itemSender.Items(session);
             shopSender.Shops(session);

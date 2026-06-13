@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace CryBits.Network.Packets.Server;
 
-[Serializable] public struct ServerDataPacket : IServerPacket { public ServerConfig Config; }
 [Serializable]
 public struct ClassesPacket : IServerPacket
 {

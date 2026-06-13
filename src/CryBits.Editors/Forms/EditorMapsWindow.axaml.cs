@@ -601,8 +601,6 @@ internal partial class EditorMapsWindow : Window
     private void butEditors_Classes_Click(object? sender, RoutedEventArgs e) =>
         EditorClassesWindow.Open(this);
 
-    private void butEditors_Data_Click(object? sender, RoutedEventArgs e) => EditorDataWindow.Open(this);
-
     private void butEditors_Interface_Click(object? sender, RoutedEventArgs e) =>
         EditorInterfaceWindow.Open(this);
 

@@ -5,12 +5,10 @@ using CryBits.Network;
 using CryBits.Network.Packets.Client;
 using CryBits.Persistence.Stores;
 using CryBits.Host.Network.Senders;
-using CryBits.Host.Persistence.Repositories;
 using CryBits.Simulation.Components;
 using System;
 using System.IO;
 using System.Linq;
-using static CryBits.Definitions.Globals;
 using CryBits.Host.Core;
 
 namespace CryBits.Host.Network.Handlers;
@@ -22,8 +20,6 @@ internal sealed class EditorHandler(
     ItemSender itemSender,
     NpcSender npcSender,
     ShopSender shopSender,
-    SettingsSender settingsSender,
-    SettingsRepository settingsRepository,
     FileContentStore contentStore,
     DefinitionCatalog catalog)
 {
@@ -35,26 +31,8 @@ internal sealed class EditorHandler(
         ItemSender.Instance,
         NpcSender.Instance,
         ShopSender.Instance,
-        SettingsSender.Instance,
-        SettingsRepository.Instance,
         new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data"))),
         DefinitionCatalog.Instance);
-
-    [PacketHandler]
-    internal void WriteSettings(GameSession session, WriteSettingsPacket packet)
-    {
-        if (session.AccessLevel < Access.Editor)
-        {
-            authSender.Alert(session, "You aren't allowed to do this.");
-            return;
-        }
-
-        // Apply received settings.
-        Config = packet.Config;
-
-        // Persist settings.
-        settingsRepository.Write();
-    }
 
     [PacketHandler]
     internal void WriteClasses(GameSession session, WriteClassesPacket packet)
@@ -150,12 +128,6 @@ internal sealed class EditorHandler(
 
         foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
             shopSender.Shops(t);
-    }
-
-    [PacketHandler]
-    internal void RequestSetting(GameSession session, RequestSettingPacket _)
-    {
-        settingsSender.ServerData(session);
     }
 
     [PacketHandler]
