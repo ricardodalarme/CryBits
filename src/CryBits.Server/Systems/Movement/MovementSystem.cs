@@ -7,10 +7,10 @@ using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
-using CryBits.Server.World;
 using System;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Movement;
 

@@ -1,7 +1,7 @@
 using CryBits.Simulation.State;
 using System.Collections.Generic;
 
-namespace CryBits.Server.World;
+namespace CryBits.Server.Core;
 
 internal sealed class SessionMap
 {

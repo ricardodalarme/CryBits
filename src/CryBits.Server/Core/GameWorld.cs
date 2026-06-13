@@ -5,7 +5,7 @@ using CryBits.Simulation.State;
 using System;
 using System.Collections.Generic;
 
-namespace CryBits.Server.World;
+namespace CryBits.Server.Core;
 
 /// <summary>
 /// Single container for all live server-side game state.

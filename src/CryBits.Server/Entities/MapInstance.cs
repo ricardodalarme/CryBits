@@ -5,11 +5,11 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
 using CryBits.Server.Systems.Npc;
-using CryBits.Server.World;
 using CryBits.Simulation.Entities;
 using System;
 using System.Collections.Generic;
 using CryBits.Simulation.State;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Entities;
 

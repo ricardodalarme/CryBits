@@ -1,11 +1,11 @@
 using CryBits.Definitions.Common;
 using CryBits.Server.Network.Senders;
 using CryBits.Simulation.Components;
-using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Simulation.Core;
 

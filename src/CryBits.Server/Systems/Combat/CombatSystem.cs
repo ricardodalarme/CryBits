@@ -8,7 +8,6 @@ using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
-using CryBits.Server.World;
 using CryBits.Simulation.Formulas;
 using System;
 using System.Drawing;
@@ -18,6 +17,7 @@ using CryBits.Simulation.Core;
 using CryBits.Simulation.Entities;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Combat;
 

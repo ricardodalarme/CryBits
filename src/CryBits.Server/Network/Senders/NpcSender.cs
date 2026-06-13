@@ -5,9 +5,9 @@ using CryBits.Definitions.Common;
 using CryBits.Network.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Simulation.Components;
-using CryBits.Server.World;
 using LiteNetLib;
 using CryBits.Simulation.State;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Network.Senders;
 

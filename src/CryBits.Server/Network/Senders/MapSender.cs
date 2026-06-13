@@ -6,8 +6,8 @@ using CryBits.Definitions.Maps;
 using CryBits.Network.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Simulation.Components;
-using CryBits.Server.World;
 using CryBits.Simulation.State;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Network.Senders;
 

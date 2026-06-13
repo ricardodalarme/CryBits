@@ -1,6 +1,6 @@
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
-using CryBits.Server.World;
+using CryBits.Server.Core;
 using CryBits.Simulation.State;
 using LiteNetLib;
 using System;

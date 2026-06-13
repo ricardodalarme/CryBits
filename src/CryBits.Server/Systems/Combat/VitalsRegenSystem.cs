@@ -3,12 +3,12 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
-using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Formulas;
 using System;
 using System.Linq;
 using Attribute = CryBits.Definitions.Characters.Attribute;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Combat;
 

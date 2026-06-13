@@ -6,9 +6,9 @@ using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Movement;
-using CryBits.Server.World;
 using System.Linq;
 using CryBits.Simulation.Core;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Combat;
 

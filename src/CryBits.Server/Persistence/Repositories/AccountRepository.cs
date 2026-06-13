@@ -1,5 +1,5 @@
 using CryBits.Definitions.Common;
-using CryBits.Server.World;
+using CryBits.Server.Core;
 using System.IO;
 
 namespace CryBits.Server.Persistence.Repositories;

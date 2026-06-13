@@ -3,11 +3,11 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Simulation.Components;
-using CryBits.Server.World;
 using System;
 using System.IO;
 using static CryBits.Definitions.Globals;
 using Attribute = CryBits.Definitions.Characters.Attribute;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Persistence.Repositories;
 

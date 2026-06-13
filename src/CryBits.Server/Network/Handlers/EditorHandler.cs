@@ -7,11 +7,11 @@ using CryBits.Persistence.Stores;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Simulation.Components;
-using CryBits.Server.World;
 using System;
 using System.IO;
 using System.Linq;
 using static CryBits.Definitions.Globals;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Network.Handlers;
 

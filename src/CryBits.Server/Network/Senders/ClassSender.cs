@@ -1,6 +1,6 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Network.Packets.Server;
-using CryBits.Server.World;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Network.Senders;
 

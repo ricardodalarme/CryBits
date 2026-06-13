@@ -2,9 +2,9 @@ using CryBits.Definitions.Items;
 using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
-using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Inventory;
 

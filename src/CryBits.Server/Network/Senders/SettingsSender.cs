@@ -1,5 +1,5 @@
 using CryBits.Network.Packets.Server;
-using CryBits.Server.World;
+using CryBits.Server.Core;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Server.Network.Senders;

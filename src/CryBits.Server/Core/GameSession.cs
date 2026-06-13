@@ -3,7 +3,7 @@ using CryBits.Simulation.State;
 using LiteNetLib;
 using System.Collections.Generic;
 
-namespace CryBits.Server.World;
+namespace CryBits.Server.Core;
 
 /// <summary>
 /// Represents a single connected client session: the network peer, authentication

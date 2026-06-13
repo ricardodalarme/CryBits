@@ -12,7 +12,6 @@ using CryBits.Server.Persistence.Repositories;
 using CryBits.Simulation.Components;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.Systems.Movement;
-using CryBits.Server.World;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
 using System;
@@ -20,6 +19,7 @@ using System.Drawing;
 using System.IO;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.State;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Network.Handlers;
 

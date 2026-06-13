@@ -3,9 +3,9 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Simulation.Core;
 using CryBits.Simulation.Components;
 using CryBits.Server.Systems.Npc;
-using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using System;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Systems.Spawning;
 

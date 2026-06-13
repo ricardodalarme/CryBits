@@ -1,3 +1,4 @@
+using CryBits.Server.Core;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Systems.Combat;
 using CryBits.Server.Systems.Inventory;
@@ -8,7 +9,6 @@ using CryBits.Server.Systems.Progression;
 using CryBits.Server.Systems.Shops;
 using CryBits.Server.Systems.Spawning;
 using CryBits.Server.Systems.Trade;
-using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using System.Collections.Generic;
 

@@ -1,7 +1,7 @@
 using CryBits.Definitions.Common;
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
-using CryBits.Server.World;
+using CryBits.Server.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 

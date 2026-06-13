@@ -2,7 +2,7 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Shops;
 using CryBits.Network.Packets.Server;
-using CryBits.Server.World;
+using CryBits.Server.Core;
 using CryBits.Simulation.State;
 
 namespace CryBits.Server.Network.Senders;

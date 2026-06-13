@@ -1,9 +1,9 @@
 using CryBits.Definitions.Common;
 using CryBits.Network.Packets.Server;
 using CryBits.Simulation.Components;
-using CryBits.Server.World;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.State;
+using CryBits.Server.Core;
 
 namespace CryBits.Server.Network.Senders;
 
