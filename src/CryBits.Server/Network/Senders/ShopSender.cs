@@ -2,7 +2,7 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Shops;
 using CryBits.Network.Packets.Server;
-using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
 using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
@@ -17,8 +17,8 @@ internal sealed class ShopSender(PackageSender packageSender, DefinitionCatalog 
         packageSender.ToPlayer(session, new ShopsPacket { List = _catalog.Shops });
     }
 
-    public void ShopOpen(Player player, Shop shop)
+    public void ShopOpen(EntityId entityId, Shop shop)
     {
-        packageSender.ToPlayer(player, new ShopOpenPacket { Id = shop.GetId() });
+        packageSender.ToPlayer(entityId, new ShopOpenPacket { Id = shop.GetId() });
     }
 }

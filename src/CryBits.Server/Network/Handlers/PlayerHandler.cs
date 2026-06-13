@@ -2,12 +2,14 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Items;
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
-using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.Systems.Combat;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.Systems.Movement;
 using CryBits.Server.Systems.Progression;
+using CryBits.Server.World;
 using System;
 
 namespace CryBits.Server.Network.Handlers;
@@ -31,81 +33,95 @@ internal sealed class PlayerHandler(
         PlayerSender.Instance);
 
     [PacketHandler]
-    internal void PlayerMove(Player player, PlayerMovePacket packet)
+    internal void PlayerMove(EntityId entityId, PlayerMovePacket packet)
     {
-        movementSystem.ChangeDirection(player, (Direction)packet.Direction);
-        movementSystem.Move(player, packet.Movement);
+        movementSystem.ChangeDirection(entityId, (Direction)packet.Direction);
+        movementSystem.Move(entityId, packet.Movement);
     }
 
     [PacketHandler]
-    internal void PlayerAttack(Player player, PlayerAttackPacket _)
+    internal void PlayerAttack(EntityId entityId, PlayerAttackPacket _)
     {
-        combatSystem.Attack(player);
+        combatSystem.Attack(entityId);
     }
 
     [PacketHandler]
-    internal void AddPoint(Player player, AddPointPacket packet)
+    internal void AddPoint(EntityId entityId, AddPointPacket packet)
     {
-        levelingSystem.AddPoint(player, packet.Attribute);
+        levelingSystem.AddPoint(entityId, packet.Attribute);
     }
 
     [PacketHandler]
-    internal void CollectItem(Player player, CollectItemPacket _)
+    internal void CollectItem(EntityId entityId, CollectItemPacket _)
     {
-        inventorySystem.CollectItem(player);
+        inventorySystem.CollectItem(entityId);
     }
 
     [PacketHandler]
-    internal void DropItem(Player player, DropItemPacket packet)
+    internal void DropItem(EntityId entityId, DropItemPacket packet)
     {
         var slot = packet.Slot;
         var amount = packet.Amount;
-        if (slot != -1) inventorySystem.DropItem(player, player.Inventory[slot], amount);
+        if (slot != -1)
+        {
+            var world = GameWorld.Current;
+            var state = world.Entities.Get(entityId)!;
+            var inventory = state.Get<InventoryState>()!;
+            inventorySystem.DropItem(entityId, inventory.Slots[slot], amount);
+        }
     }
 
     [PacketHandler]
-    internal void InventoryChange(Player player, InventoryChangePacket packet)
+    internal void InventoryChange(EntityId entityId, InventoryChangePacket packet)
     {
         short slotOld = packet.OldSlot, slotNew = packet.NewSlot;
 
+        var world = GameWorld.Current;
+        var state = world.Entities.Get(entityId)!;
+        var inventory = state.Get<InventoryState>()!;
+        var trade = state.Get<TradeState>();
+
         // Early exits.
-        if (player.Inventory[slotOld].ItemId == Guid.Empty) return;
+        if (inventory.Slots[slotOld].ItemId == Guid.Empty) return;
         if (slotOld == slotNew) return;
-        if (player.Trade != null) return;
+        if (trade?.Partner != null) return;
 
         // Swap inventory slots.
-        (player.Inventory[slotOld], player.Inventory[slotNew]) = (player.Inventory[slotNew], player.Inventory[slotOld]);
-        playerSender.PlayerInventory(player);
-        hotbarSystem.SyncInventorySwap(player, slotOld, slotNew);
+        (inventory.Slots[slotOld], inventory.Slots[slotNew]) = (inventory.Slots[slotNew], inventory.Slots[slotOld]);
+        playerSender.PlayerInventory(entityId);
+        hotbarSystem.SyncInventorySwap(entityId, slotOld, slotNew);
     }
 
     [PacketHandler]
-    internal void InventoryUse(Player player, InventoryUsePacket packet)
+    internal void InventoryUse(EntityId entityId, InventoryUsePacket packet)
     {
-        inventorySystem.UseItem(player, packet.Slot, player.Inventory[packet.Slot]);
+        var world = GameWorld.Current;
+        var state = world.Entities.Get(entityId)!;
+        var inventory = state.Get<InventoryState>()!;
+        inventorySystem.UseItem(entityId, packet.Slot, inventory.Slots[packet.Slot]);
     }
 
     [PacketHandler]
-    internal void EquipmentRemove(Player player, EquipmentRemovePacket packet)
+    internal void EquipmentRemove(EntityId entityId, EquipmentRemovePacket packet)
     {
-        equipmentSystem.Unequip(player, packet.Slot);
+        equipmentSystem.Unequip(entityId, packet.Slot);
     }
 
     [PacketHandler]
-    internal void HotbarAdd(Player player, HotbarAddPacket packet)
+    internal void HotbarAdd(EntityId entityId, HotbarAddPacket packet)
     {
-        hotbarSystem.Add(player, packet.HotbarSlot, (SlotType)packet.Type, packet.Slot);
+        hotbarSystem.Add(entityId, packet.HotbarSlot, (SlotType)packet.Type, packet.Slot);
     }
 
     [PacketHandler]
-    internal void HotbarChange(Player player, HotbarChangePacket packet)
+    internal void HotbarChange(EntityId entityId, HotbarChangePacket packet)
     {
-        hotbarSystem.Change(player, packet.OldSlot, packet.NewSlot);
+        hotbarSystem.Change(entityId, packet.OldSlot, packet.NewSlot);
     }
 
     [PacketHandler]
-    internal void HotbarUse(Player player, HotbarUsePacket packet)
+    internal void HotbarUse(EntityId entityId, HotbarUsePacket packet)
     {
-        hotbarSystem.Use(player, packet.Slot);
+        hotbarSystem.Use(entityId, packet.Slot);
     }
 }

@@ -1,10 +1,16 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.World;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Formulas;
 using System;
 using System.Linq;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Server.Systems.Combat;
 
@@ -21,32 +27,57 @@ internal sealed class VitalsRegenSystem(PlayerSender playerSender, NpcSender npc
 
         foreach (var session in world.Sessions.Where(a => a.IsPlaying))
         {
-            var player = session.Character!;
+            if (session.Character is not { } playerId) continue;
+            var e = world.Entities.Get(playerId)!;
+            var vitals = e.Get<Vitals>()!;
+            var stats = e.Get<StatBlock>()!;
+
             for (byte v = 0; v < (byte)Vital.Count; v++)
             {
-                if (player.Vital[v] >= player.MaxVital(v)) continue;
+                var current = v == 0 ? vitals.Hp : vitals.Mp;
+                var max = v == 0 ? vitals.MaxHp : vitals.MaxMp;
+                if (current >= max) continue;
 
-                player.Vital[v] += player.Regeneration(v);
-                if (player.Vital[v] > player.MaxVital(v)) player.Vital[v] = player.MaxVital(v);
+                var regen = VitalFormulas.PlayerRegeneration(
+                    (Vital)v,
+                    max,
+                    stats.Attribute[(byte)Attribute.Vitality],
+                    stats.Attribute[(byte)Attribute.Intelligence]);
+                current += regen;
+                if (current > max) current = max;
+                if (v == 0) vitals.Hp = current; else vitals.Mp = current;
 
-                playerSender.PlayerVitals(player);
+                playerSender.PlayerVitals(playerId);
             }
         }
 
         foreach (var map in world.Maps.Values)
         {
-            foreach (var npc in map.Npc)
+            foreach (var npcId in map.NpcIds)
             {
-                if (!npc.Alive) continue;
+                var e = world.Entities.Get(npcId);
+                if (e == null) continue;
+                var npcState = e.Get<NpcState>();
+                if (npcState == null || !npcState.Alive) continue;
+                var vitals = e.Get<Vitals>()!;
+                var npcData = DefinitionCatalog.Instance.Npcs.Get(npcState.NpcDefId);
 
                 for (byte v = 0; v < (byte)Vital.Count; v++)
                 {
-                    if (npc.Vital[v] >= npc.Data.Vital[v]) continue;
+                    var current = v == 0 ? vitals.Hp : vitals.Mp;
+                    var max = npcData.Vital[v];
+                    if (current >= max) continue;
 
-                    npc.Vital[v] += npc.Regeneration(v);
-                    if (npc.Vital[v] > npc.Data.Vital[v]) npc.Vital[v] = npc.Data.Vital[v];
+                    var regen = VitalFormulas.NpcRegeneration(
+                        (Vital)v,
+                        npcData.Vital[v],
+                        npcData.Attribute[(byte)Attribute.Vitality],
+                        npcData.Attribute[(byte)Attribute.Intelligence]);
+                    current += regen;
+                    if (current > max) current = max;
+                    if (v == 0) vitals.Hp = current; else vitals.Mp = current;
 
-                    npcSender.MapNpcVitals(npc);
+                    npcSender.MapNpcVitals(npcId);
                 }
             }
         }

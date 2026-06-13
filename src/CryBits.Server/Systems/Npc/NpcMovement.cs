@@ -1,35 +1,53 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
-using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
+using CryBits.Server.World;
 using System;
 
 namespace CryBits.Server.Systems.Npc;
 
 internal static class NpcMovement
 {
-    internal static void TickMovement(NpcInstance npc, NpcSender npcSender, ChatSender chatSender)
+    internal static void TickMovement(EntityId npcId, NpcSender npcSender, ChatSender chatSender)
     {
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(npcId)!;
+        var npcState = e.Get<NpcState>()!;
+        var pos = e.Get<Position>()!;
+        var vitals = e.Get<Vitals>()!;
+        var npcData = DefinitionCatalog.Instance.Npcs.Get(npcState.NpcDefId);
+        var map = world.Maps.Get(pos.MapId)!;
+
         var canMove = new bool[(byte)Direction.Count];
         var moved = false;
         var move = false;
         byte targetX = 0, targetY = 0;
 
-        if (npc.Target != null)
+        if (npcState.TargetId.HasValue)
         {
-            targetX = npc.Target.X;
-            targetY = npc.Target.Y;
-            move = true;
+            var targetE = world.Entities.Get(npcState.TargetId.Value);
+            if (targetE != null)
+            {
+                var targetPos = targetE.Get<Position>()!;
+                targetX = targetPos.X;
+                targetY = targetPos.Y;
+                move = true;
+            }
         }
-        else if (npc.MapInstance.Data.Npc[npc.Index].Zone > 0 &&
-                 npc.MapInstance.Data.Attribute[npc.X, npc.Y].Zone != npc.MapInstance.Data.Npc[npc.Index].Zone)
+
+        if (!npcState.TargetId.HasValue && map.Data.Npc[npcState.Index].Zone > 0 &&
+            map.Data.Attribute[pos.X, pos.Y].Zone != map.Data.Npc[npcState.Index].Zone)
         {
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
-                    if (npc.MapInstance.Data.Attribute[x, y].Zone == npc.MapInstance.Data.Npc[npc.Index].Zone &&
-                        !npc.MapInstance.Data.TileBlocked(x, y))
+                    if (map.Data.Attribute[x, y].Zone == map.Data.Npc[npcState.Index].Zone &&
+                        !map.Data.TileBlocked(x, y))
                     {
                         targetX = x;
                         targetY = y;
@@ -40,63 +58,69 @@ internal static class NpcMovement
 
         if (move)
         {
-            if (npc.Vital[(byte)Vital.Hp] > npc.Data.Vital[(byte)Vital.Hp] * (npc.Data.FleeHealth / 100.0))
+            if (vitals.Hp > npcData.Vital[(byte)Vital.Hp] * (npcData.FleeHealth / 100.0))
             {
-                canMove[(byte)Direction.Up] = npc.Y > targetY;
-                canMove[(byte)Direction.Down] = npc.Y < targetY;
-                canMove[(byte)Direction.Left] = npc.X > targetX;
-                canMove[(byte)Direction.Right] = npc.X < targetX;
+                canMove[(byte)Direction.Up] = pos.Y > targetY;
+                canMove[(byte)Direction.Down] = pos.Y < targetY;
+                canMove[(byte)Direction.Left] = pos.X > targetX;
+                canMove[(byte)Direction.Right] = pos.X < targetX;
             }
             else
             {
-                canMove[(byte)Direction.Up] = npc.Y < targetY;
-                canMove[(byte)Direction.Down] = npc.Y > targetY;
-                canMove[(byte)Direction.Left] = npc.X < targetX;
-                canMove[(byte)Direction.Right] = npc.X > targetX;
+                canMove[(byte)Direction.Up] = pos.Y < targetY;
+                canMove[(byte)Direction.Down] = pos.Y > targetY;
+                canMove[(byte)Direction.Left] = pos.X < targetX;
+                canMove[(byte)Direction.Right] = pos.X > targetX;
             }
 
             if (Random.Shared.Next(0, 2) == 0)
             {
                 for (byte d = 0; d < (byte)Direction.Count; d++)
-                    if (!moved && canMove[d] && Move(npc, npcSender, (Direction)d))
+                    if (!moved && canMove[d] && Move(npcId, npcSender, (Direction)d))
                         moved = true;
             }
             else
             {
                 for (short d = (byte)Direction.Count - 1; d >= 0; d--)
-                    if (!moved && canMove[d] && Move(npc, npcSender, (Direction)d))
+                    if (!moved && canMove[d] && Move(npcId, npcSender, (Direction)d))
                         moved = true;
             }
         }
 
-        if (npc.Data.Behaviour == (byte)Behaviour.Friendly || npc.Target == null)
+        if (npcData.Behaviour == (byte)Behaviour.Friendly || !npcState.TargetId.HasValue)
             if (Random.Shared.Next(0, 3) == 0 && !moved)
             {
-                if (npc.Data.Movement == MovementStyle.MoveRandomly)
-                    Move(npc, npcSender, (Direction)Random.Shared.Next(0, 4), 1, true);
-                else if (npc.Data.Movement == MovementStyle.TurnRandomly)
+                if (npcData.Movement == MovementStyle.MoveRandomly)
+                    Move(npcId, npcSender, (Direction)Random.Shared.Next(0, 4), 1, true);
+                else if (npcData.Movement == MovementStyle.TurnRandomly)
                 {
-                    npc.Direction = (Direction)Random.Shared.Next(0, 4);
-                    npcSender.MapNpcDirection(npc);
+                    pos.Direction = (Direction)Random.Shared.Next(0, 4);
+                    npcSender.MapNpcDirection(npcId);
                 }
             }
     }
 
-    internal static bool Move(NpcInstance npc, NpcSender npcSender, Direction direction, byte movement = 1, bool checkZone = false)
+    internal static bool Move(EntityId npcId, NpcSender npcSender, Direction direction, byte movement = 1, bool checkZone = false)
     {
-        byte nextX = npc.X, nextY = npc.Y;
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(npcId)!;
+        var npcState = e.Get<NpcState>()!;
+        var pos = e.Get<Position>()!;
+        var map = world.Maps.Get(pos.MapId)!;
 
-        npc.Direction = direction;
-        npcSender.MapNpcDirection(npc);
+        byte nextX = pos.X, nextY = pos.Y;
+
+        pos.Direction = direction;
+        npcSender.MapNpcDirection(npcId);
         direction.NextTile(ref nextX, ref nextY);
 
         if (Map.OutLimit(nextX, nextY)) return false;
-        if (npc.MapInstance.TileBlocked(npc.X, npc.Y, direction)) return false;
-        if (checkZone && npc.MapInstance.Data.Attribute[nextX, nextY].Zone != npc.MapInstance.Data.Npc[npc.Index].Zone) return false;
+        if (map.TileBlocked(pos.X, pos.Y, direction, world.Entities)) return false;
+        if (checkZone && map.Data.Attribute[nextX, nextY].Zone != map.Data.Npc[npcState.Index].Zone) return false;
 
-        npc.X = nextX;
-        npc.Y = nextY;
-        npcSender.MapNpcMovement(npc, movement);
+        pos.X = nextX;
+        pos.Y = nextY;
+        npcSender.MapNpcMovement(npcId, movement);
         return true;
     }
 }

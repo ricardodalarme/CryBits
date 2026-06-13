@@ -4,10 +4,13 @@ using CryBits.Definitions.Maps;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using System;
 using CryBits.Simulation.Core;
+
 namespace CryBits.Server.Systems.Movement;
 
 internal sealed class MovementSystem(
@@ -20,99 +23,115 @@ internal sealed class MovementSystem(
         NpcSender.Instance,
         MapSender.Instance);
 
-    public void ChangeDirection(Player player, Direction direction)
+    public void ChangeDirection(EntityId entityId, Direction direction)
     {
-        if (direction is < Direction.Up or > Direction.Right) return;
-        if (player.GettingMap) return;
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(entityId)!;
+        var pos = e.Get<Position>()!;
+        var combat = e.Get<CombatState>()!;
 
-        player.Direction = direction;
-        playerSender.PlayerDirection(player);
+        if (direction is < Direction.Up or > Direction.Right) return;
+        if (combat.GettingMap) return;
+
+        pos.Direction = direction;
+        playerSender.PlayerDirection(entityId);
     }
 
-    public void Move(Player player, byte movement)
+    public void Move(EntityId entityId, byte movement)
     {
-        byte nextX = player.X, nextY = player.Y;
-        byte oldX = player.X, oldY = player.Y;
-        var link = GameWorld.Current.Maps.Get(player.MapInstance.Data.LinkIds[(byte)player.Direction]);
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(entityId)!;
+        var pos = e.Get<Position>()!;
+        var combat = e.Get<CombatState>()!;
+        var map = world.Maps.Get(pos.MapId)!;
+
+        byte nextX = pos.X, nextY = pos.Y;
+        byte oldX = pos.X, oldY = pos.Y;
+        var link = world.Maps.Get(map.Data.LinkIds[(byte)pos.Direction]);
         var secondMovement = false;
 
         if (movement is < 1 or > 2) return;
-        if (player.GettingMap) return;
+        if (combat.GettingMap) return;
 
-        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerStartedMovingEvent { PlayerId = player.Id });
+        world.CurrentTick?.Events.Emit(new PlayerStartedMovingEvent { PlayerId = entityId.Value });
 
-        player.Direction.NextTile(ref nextX, ref nextY);
+        pos.Direction.NextTile(ref nextX, ref nextY);
 
         if (Map.OutLimit(nextX, nextY))
         {
             if (link != null)
-                switch (player.Direction)
+                switch (pos.Direction)
                 {
                     case Direction.Up:
-                        Warp(player, link, oldX, Map.Height - 1);
+                        Warp(entityId, link, oldX, Map.Height - 1);
                         return;
                     case Direction.Down:
-                        Warp(player, link, oldX, 0);
+                        Warp(entityId, link, oldX, 0);
                         return;
                     case Direction.Right:
-                        Warp(player, link, 0, oldY);
+                        Warp(entityId, link, 0, oldY);
                         return;
                     case Direction.Left:
-                        Warp(player, link, Map.Width - 1, oldY);
+                        Warp(entityId, link, Map.Width - 1, oldY);
                         return;
                 }
             else
             {
-                playerSender.PlayerPosition(player);
+                playerSender.PlayerPosition(entityId);
                 return;
             }
         }
-        else if (!player.MapInstance.TileBlocked(oldX, oldY, player.Direction))
+        else if (!map.TileBlocked(oldX, oldY, pos.Direction, world.Entities))
         {
-            player.X = nextX;
-            player.Y = nextY;
+            pos.X = nextX;
+            pos.Y = nextY;
         }
 
-        var tile = player.MapInstance.Data.Attribute[nextX, nextY];
+        var tile = map.Data.Attribute[nextX, nextY];
         switch ((TileAttribute)tile.Type)
         {
             case TileAttribute.Warp:
-                if (tile.Data4 > 0) player.Direction = (Direction)tile.Data4 - 1;
-                Warp(player, GameWorld.Current.Maps.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
+                if (tile.Data4 > 0) pos.Direction = (Direction)tile.Data4 - 1;
+                Warp(entityId, world.Maps.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
                 secondMovement = true;
                 break;
         }
 
-        if (!secondMovement && (oldX != player.X || oldY != player.Y))
-            playerSender.PlayerMove(player, movement);
+        if (!secondMovement && (oldX != pos.X || oldY != pos.Y))
+            playerSender.PlayerMove(entityId, movement);
         else
-            playerSender.PlayerPosition(player);
+            playerSender.PlayerPosition(entityId);
     }
 
-    public void Warp(Player player, MapInstance mapInstance, byte x, byte y, bool needUpdate = false)
+    public void Warp(EntityId entityId, MapInstance mapInstance, byte x, byte y, bool needUpdate = false)
     {
-        var oldMap = player.MapInstance;
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(entityId)!;
+        var pos = e.Get<Position>()!;
+        var combat = e.Get<CombatState>()!;
+
+        var oldMapId = pos.MapId;
 
         if (mapInstance == null) return;
         if (x >= Map.Width) x = Map.Width - 1;
         if (y >= Map.Height) y = Map.Height - 1;
 
-        player.MapInstance = mapInstance;
-        player.X = x;
-        player.Y = y;
+        pos.MapId = mapInstance.Id;
+        pos.X = x;
+        pos.Y = y;
 
-        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerWarpedEvent { PlayerId = player.Id, OldMapId = oldMap.Id, NewMapId = mapInstance.Id });
+        world.CurrentTick?.Events.Emit(new PlayerWarpedEvent { PlayerId = entityId.Value, OldMapId = oldMapId, NewMapId = mapInstance.Id });
 
-        if (oldMap != mapInstance || needUpdate)
+        if (oldMapId != mapInstance.Id || needUpdate)
         {
-            playerSender.PlayerLeaveMap(player, oldMap.Id);
-            player.GettingMap = true;
-            mapSender.MapRevision(player, mapInstance.Data);
-            mapSender.MapItems(player, mapInstance);
-            npcSender.MapNpcs(player, mapInstance);
+            playerSender.PlayerLeaveMap(entityId, oldMapId);
+            combat.GettingMap = true;
+            mapSender.MapRevision(entityId, mapInstance.Data);
+            mapSender.MapItems(entityId, mapInstance);
+            npcSender.MapNpcs(entityId, mapInstance);
         }
         else
-            playerSender.PlayerPosition(player);
+            playerSender.PlayerPosition(entityId);
     }
 
     public void Execute(GameWorld world, Tick tick) { }

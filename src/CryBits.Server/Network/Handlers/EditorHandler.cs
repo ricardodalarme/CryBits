@@ -6,6 +6,8 @@ using CryBits.Network.Packets.Client;
 using CryBits.Persistence.Stores;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence.Repositories;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.World;
 using System;
 using System.IO;
@@ -87,8 +89,19 @@ internal sealed class EditorHandler(
         {
             tempMap.SpawnItems();
 
-            foreach (var t in GameWorld.Current.Sessions.Where(t => t != session).Where(t => t.Character?.MapInstance == tempMap || t.InEditor))
-                mapSender.Map(t, tempMap.Data);
+            foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
+            {
+                if (t.InEditor)
+                {
+                    mapSender.Map(t, tempMap.Data);
+                }
+                else if (t.Character.HasValue)
+                {
+                    var otherPos = GameWorld.Current.Entities.Get(t.Character.Value)?.Get<Position>();
+                    if (otherPos?.MapId == tempMap.Id)
+                        mapSender.Map(t, tempMap.Data);
+                }
+            }
         }
     }
 
@@ -159,14 +172,19 @@ internal sealed class EditorHandler(
             mapSender.Map(session, _catalog.Maps.Get(packet.Id));
         else
         {
-            var player = session.Character;
+            var entityId = session.Character!.Value;
+            var world = GameWorld.Current;
+            var state = world.Entities.Get(entityId)!;
+            var pos = state.Get<Position>()!;
+            var combat = state.Get<CombatState>()!;
+            var mapInstance = world.Maps[pos.MapId];
 
-            if (packet.SendMap) mapSender.Map(player.Session, player.MapInstance.Data);
+            if (packet.SendMap) mapSender.Map(session, mapInstance.Data);
 
-            mapSender.MapPlayers(player);
+            mapSender.MapPlayers(entityId);
 
-            player.GettingMap = false;
-            PlayerSender.Instance.JoinMap(player);
+            combat.GettingMap = false;
+            PlayerSender.Instance.JoinMap(entityId);
         }
     }
 

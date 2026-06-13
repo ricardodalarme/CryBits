@@ -1,9 +1,11 @@
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Network.Packets.Server;
-using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
+using CryBits.Server.World;
+using CryBits.Simulation.Formulas;
 using LiteNetLib;
 using System;
 using static CryBits.Definitions.Globals;
@@ -14,116 +16,131 @@ internal sealed class PlayerSender(PackageSender packageSender)
 {
     public static PlayerSender Instance { get; } = new(PackageSender.Instance);
 
-    public void Join(Player player)
+    public void Join(EntityId entityId)
     {
-        packageSender.ToPlayer(player, new JoinPacket { PlayerId = player.Id });
+        packageSender.ToPlayer(entityId, new JoinPacket { PlayerId = entityId.Value });
     }
 
-    public void JoinGame(Player player)
+    public void JoinGame(EntityId entityId)
     {
-        packageSender.ToPlayer(player, new JoinGamePacket());
+        packageSender.ToPlayer(entityId, new JoinGamePacket());
     }
 
-    public void JoinMap(Player player)
+    public void JoinMap(EntityId entityId)
     {
-        packageSender.ToPlayer(player, new JoinMapPacket());
+        packageSender.ToPlayer(entityId, new JoinMapPacket());
     }
 
-    public void PlayerLeaveMap(Player player, Guid mapId)
+    public void PlayerLeaveMap(EntityId entityId, Guid mapId)
     {
-        packageSender.ToMapBut(mapId, player, new PlayerLeavePacket { NetworkId = player.Id },
+        packageSender.ToMapBut(mapId, entityId, new PlayerLeavePacket { NetworkId = entityId.Value },
             DeliveryMethod.ReliableUnordered);
     }
 
-    public void PlayerPosition(Player player)
+    public void PlayerPosition(EntityId entityId)
     {
-        packageSender.ToMap(player.MapInstance.Id,
+        var pos = GameWorld.Current.Entities.Get(entityId)!.Get<Position>()!;
+        packageSender.ToMap(pos.MapId,
             new PlayerPositionPacket
-            { NetworkId = player.Id, X = player.X, Y = player.Y, Direction = (byte)player.Direction },
+            { NetworkId = entityId.Value, X = pos.X, Y = pos.Y, Direction = (byte)pos.Direction },
             DeliveryMethod.Sequenced);
     }
 
-    public void PlayerVitals(Player player)
+    public void PlayerVitals(EntityId entityId)
     {
+        var entity = GameWorld.Current.Entities.Get(entityId)!;
+        var vitals = entity.Get<Vitals>()!;
+        var pos = entity.Get<Position>()!;
         var packet = new PlayerVitalsPacket
-        { NetworkId = player.Id, Vital = new short[(byte)Vital.Count], MaxVital = new short[(byte)Vital.Count] };
+        { NetworkId = entityId.Value, Vital = new short[(byte)Vital.Count], MaxVital = new short[(byte)Vital.Count] };
         for (byte i = 0; i < (byte)Vital.Count; i++)
         {
-            packet.Vital[i] = player.Vital[i];
-            packet.MaxVital[i] = player.MaxVital(i);
+            packet.Vital[i] = i == 0 ? vitals.Hp : vitals.Mp;
+            packet.MaxVital[i] = i == 0 ? vitals.MaxHp : vitals.MaxMp;
         }
 
-        packageSender.ToMap(player.MapInstance.Id, packet, DeliveryMethod.ReliableSequenced);
+        packageSender.ToMap(pos.MapId, packet, DeliveryMethod.ReliableSequenced);
     }
 
-    public void PlayerLeave(Player player)
+    public void PlayerLeave(EntityId entityId)
     {
-        packageSender.ToAllBut(player, new PlayerLeavePacket { NetworkId = player.Id },
+        packageSender.ToAllBut(entityId, new PlayerLeavePacket { NetworkId = entityId.Value },
             DeliveryMethod.ReliableUnordered);
     }
 
-    public void PlayerMove(Player player, byte movement)
+    public void PlayerMove(EntityId entityId, byte movement)
     {
+        var pos = GameWorld.Current.Entities.Get(entityId)!.Get<Position>()!;
         var speed = movement == (byte)Movement.Moving
             ? RunSpeedPixelsPerSecond
             : WalkSpeedPixelsPerSecond;
 
-        packageSender.ToMapBut(player.MapInstance.Id, player,
+        packageSender.ToMapBut(pos.MapId, entityId,
             new PlayerMovePacket
             {
-                NetworkId = player.Id,
-                X = player.X,
-                Y = player.Y,
-                Direction = (byte)player.Direction,
+                NetworkId = entityId.Value,
+                X = pos.X,
+                Y = pos.Y,
+                Direction = (byte)pos.Direction,
                 Movement = movement,
                 Speed = speed
             }, DeliveryMethod.Sequenced);
     }
 
-    public void PlayerDirection(Player player)
+    public void PlayerDirection(EntityId entityId)
     {
-        packageSender.ToMapBut(player.MapInstance.Id, player,
-            new PlayerDirectionPacket { NetworkId = player.Id, Direction = (byte)player.Direction },
+        var pos = GameWorld.Current.Entities.Get(entityId)!.Get<Position>()!;
+        packageSender.ToMapBut(pos.MapId, entityId,
+            new PlayerDirectionPacket { NetworkId = entityId.Value, Direction = (byte)pos.Direction },
             DeliveryMethod.Sequenced);
     }
 
-    public void PlayerExperience(Player player)
+    public void PlayerExperience(EntityId entityId)
     {
-        packageSender.ToPlayer(player,
+        var stats = GameWorld.Current.Entities.Get(entityId)!.Get<StatBlock>()!;
+        short total = 0;
+        for (byte i = 0; i < (byte)CryBits.Definitions.Characters.Attribute.Count; i++) total += stats.Attribute[i];
+        var expNeeded = LevelingFormulas.ExperienceNeeded(stats.Level, total, stats.Points);
+        packageSender.ToPlayer(entityId,
             new PlayerExperiencePacket
-            { Experience = player.Experience, ExpNeeded = player.ExpNeeded, Points = player.Points });
+            { Experience = stats.Experience, ExpNeeded = expNeeded, Points = stats.Points });
     }
 
-    public void PlayerEquipments(Player player)
+    public void PlayerEquipments(EntityId entityId)
     {
+        var entity = GameWorld.Current.Entities.Get(entityId)!;
+        var equip = entity.Get<EquipmentState>()!;
+        var pos = entity.Get<Position>()!;
         var packet = new PlayerEquipmentsPacket
-        { NetworkId = player.Id, Equipments = new Guid[(byte)Equipment.Count] };
-        for (byte i = 0; i < (byte)Equipment.Count; i++) packet.Equipments[i] = player.Equipment[i].GetId();
-        packageSender.ToMap(player.MapInstance.Id, packet, DeliveryMethod.ReliableUnordered);
+        { NetworkId = entityId.Value, Equipments = new Guid[(byte)Equipment.Count] };
+        for (byte i = 0; i < (byte)Equipment.Count; i++) packet.Equipments[i] = equip.Slots[i];
+        packageSender.ToMap(pos.MapId, packet, DeliveryMethod.ReliableUnordered);
     }
 
-    public void PlayerInventory(Player player)
+    public void PlayerInventory(EntityId entityId)
     {
+        var inv = GameWorld.Current.Entities.Get(entityId)!.Get<InventoryState>()!;
         var packet = new PlayerInventoryPacket
         { ItemIds = new Guid[MaxInventory], Amounts = new short[MaxInventory] };
         for (byte i = 0; i < MaxInventory; i++)
         {
-            packet.ItemIds[i] = player.Inventory[i].ItemId;
-            packet.Amounts[i] = player.Inventory[i].Amount;
+            packet.ItemIds[i] = inv.Slots[i].ItemId;
+            packet.Amounts[i] = inv.Slots[i].Amount;
         }
 
-        packageSender.ToPlayer(player, packet);
+        packageSender.ToPlayer(entityId, packet);
     }
 
-    public void PlayerHotbar(Player player)
+    public void PlayerHotbar(EntityId entityId)
     {
+        var hotbar = GameWorld.Current.Entities.Get(entityId)!.Get<HotbarState>()!;
         var packet = new PlayerHotbarPacket { Types = new byte[MaxHotbar], Slots = new byte[MaxHotbar] };
         for (byte i = 0; i < MaxHotbar; i++)
         {
-            packet.Types[i] = (byte)player.Hotbar[i].Type;
-            packet.Slots[i] = (byte)player.Hotbar[i].Slot;
+            packet.Types[i] = (byte)hotbar.Slots[i].Type;
+            packet.Slots[i] = (byte)hotbar.Slots[i].Slot;
         }
 
-        packageSender.ToPlayer(player, packet);
+        packageSender.ToPlayer(entityId, packet);
     }
 }

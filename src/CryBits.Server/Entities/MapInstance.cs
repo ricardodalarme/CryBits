@@ -1,105 +1,148 @@
 using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.Systems.Npc;
 using CryBits.Server.World;
 using CryBits.Simulation.Entities;
 using System;
 using System.Collections.Generic;
+
 namespace CryBits.Server.Entities;
 
 internal class MapInstance(Guid id, Map map) : Entity(id)
 {
-    // Map data and runtime caches.
     public readonly Map Data = map;
-    public NpcInstance[] Npc = [];
+    public List<EntityId> NpcIds = [];
     public List<GroundItem> Item = [];
 
-    public NpcInstance HasNpc(byte x, byte y)
+    public EntityId? HasNpc(byte x, byte y, EntityRegistry entities)
     {
-        // Return NPC at the given coordinates if present
-        for (byte i = 0; i < Npc.Length; i++)
-            if (Npc[i].Alive)
-                if (Npc[i].X == x && Npc[i].Y == y)
-                    return Npc[i];
-
+        foreach (var npcId in NpcIds)
+        {
+            var entityState = entities.Get(npcId);
+            if (entityState == null) continue;
+            var npcState = entityState.Get<NpcState>();
+            if (npcState == null || !npcState.Alive) continue;
+            var pos = entityState.Get<Position>();
+            if (pos == null) continue;
+            if (pos.X == x && pos.Y == y)
+                return npcId;
+        }
         return null;
     }
 
-    public Player HasPlayer(byte x, byte y)
+    public EntityId? HasPlayer(byte x, byte y, EntityRegistry entities)
     {
-        // Return player at the given coordinates if present
         foreach (var session in GameWorld.Current.Sessions)
-            if (session.IsPlaying)
-                if ((session.Character!.X, session.Character.Y, session.Character.MapInstance) == (x, y, this))
-                    return session.Character;
-
+        {
+            if (!session.IsPlaying) continue;
+            if (session.Character is not { } characterId) continue;
+            var entityState = entities.Get(characterId);
+            if (entityState == null) continue;
+            var pos = entityState.Get<Position>();
+            if (pos == null) continue;
+            if (pos.X == x && pos.Y == y && pos.MapId == Id)
+                return characterId;
+        }
         return null;
     }
 
-    public bool HasPlayers()
+    public bool HasPlayers(EntityRegistry entities)
     {
-        // Return true if any player is on this map.
         foreach (var session in GameWorld.Current.Sessions)
-            if (session.IsPlaying)
-                if (session.Character!.MapInstance == this)
-                    return true;
-
+        {
+            if (!session.IsPlaying) continue;
+            if (session.Character is not { } characterId) continue;
+            var entityState = entities.Get(characterId);
+            if (entityState == null) continue;
+            var pos = entityState.Get<Position>();
+            if (pos == null) continue;
+            if (pos.MapId == Id)
+                return true;
+        }
         return false;
     }
 
     public GroundItem HasItem(byte x, byte y)
     {
-        // Return item at the given coordinates if present.
         for (var i = Item.Count - 1; i >= 0; i--)
             if (Item[i].X == x && Item[i].Y == y)
                 return Item[i];
-
         return null;
     }
 
     public void SpawnItems()
     {
-        // Scan map attributes and spawn static map items.
         for (byte x = 0; x < Map.Width; x++)
             for (byte y = 0; y < Map.Height; y++)
                 if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
-                    // Add map item.
                     Item.Add(new GroundItem(new Guid(Data.Attribute[x, y].Data1),
                         Data.Attribute[x, y].Data2, x, y));
     }
 
-    public bool TileBlocked(byte x, byte y, Direction direction, bool countEntities = true)
+    public bool TileBlocked(byte x, byte y, Direction direction, EntityRegistry entities, bool countEntities = true)
     {
         byte nextX = x, nextY = y;
-
-        // Compute next tile coordinates.
         direction.NextTile(ref nextX, ref nextY);
 
-        // Check if the next tile is blocked by map data, attributes or entities.
         if (Data.TileBlocked(nextX, nextY)) return true;
         if (Data.Attribute[nextX, nextY].Block[(byte)direction.Reverse()]) return true;
         if (Data.Attribute[x, y].Block[(byte)direction]) return true;
-        if (countEntities && (HasPlayer(nextX, nextY) != null || HasNpc(nextX, nextY) != null)) return true;
+        if (countEntities && (HasPlayer(nextX, nextY, entities) != null || HasNpc(nextX, nextY, entities) != null)) return true;
         return false;
     }
 
-    public static void Create(Map map, bool isOriginal)
+    public static void Create(Map map, bool isOriginal, EntityRegistry entities)
     {
         var id = isOriginal ? map.Id : Guid.NewGuid();
         var tempMap = new MapInstance(id, map);
         GameWorld.Current.Maps.Add(id, tempMap);
 
-        // Initialize NPCs for the map.
-        tempMap.Npc = new NpcInstance[map.Npc.Count];
-        for (byte i = 0; i < tempMap.Npc.Length; i++)
+        for (byte i = 0; i < map.Npc.Count; i++)
         {
-            tempMap.Npc[i] = new NpcInstance(i, tempMap, DefinitionCatalog.Instance.Npcs.Get(map.Npc[i].NpcId));
-            NpcBrainSystem.Instance.Spawn(tempMap.Npc[i]);
+            var npcData = DefinitionCatalog.Instance.Npcs.Get(map.Npc[i].NpcId);
+            if (npcData == null) continue;
+
+            var entityId = entities.Create();
+            var entityState = entities.Get(entityId)!;
+
+            entityState.Set(new NpcState
+            {
+                Index = i,
+                NpcDefId = map.Npc[i].NpcId,
+                Alive = false,
+                TargetId = null,
+                SpawnTimer = 0,
+                AttackTimer = 0
+            });
+
+            entityState.Set(new Position
+            {
+                X = map.Npc[i].X,
+                Y = map.Npc[i].Y,
+                Direction = Direction.Down,
+                MapId = tempMap.Id
+            });
+
+            entityState.Set(new Vitals
+            {
+                Hp = npcData.Vital[(byte)Vital.Hp],
+                Mp = npcData.Vital[(byte)Vital.Mp],
+                MaxHp = npcData.Vital[(byte)Vital.Hp],
+                MaxMp = npcData.Vital[(byte)Vital.Mp]
+            });
+
+            entityState.Set(new CombatState());
+            entityState.Set(new NpcTag());
+
+            tempMap.NpcIds.Add(entityId);
+            NpcBrainSystem.Instance.Spawn(entityId);
         }
 
-        // Spawn map items.
         tempMap.SpawnItems();
     }
 }

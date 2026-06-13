@@ -30,7 +30,7 @@ internal sealed class NetworkServer(AccountHandler accountHandler)
         {
             var session = GameWorld.Current.Sessions.Find(x => x.Connection == peer);
             if (session == null) return;
-            if (session.Character != null) accountHandler.Leave(session.Character);
+            if (session.Character is { } characterId) accountHandler.Leave(characterId);
             GameWorld.Current.Sessions.Remove(session);
         };
 

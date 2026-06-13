@@ -19,7 +19,7 @@ internal sealed class GroundItemSystem(MapSender mapSender) : ISimulationSystem
 
         foreach (var map in world.Maps.Values)
         {
-            if (!map.HasPlayers()) continue;
+            if (!map.HasPlayers(world.Entities)) continue;
 
             map.Item = [];
             map.SpawnItems();

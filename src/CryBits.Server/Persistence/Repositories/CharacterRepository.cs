@@ -1,10 +1,10 @@
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
-using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.World;
 using System;
 using System.IO;
@@ -23,99 +23,133 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", name) +
                                 ".dat");
 
-        // Return if the character file directory doesn't exist.
         if (!file.Directory.Exists) return;
 
-        // Read character data and populate Player instance.
+        var world = GameWorld.Current;
+        var entityId = world.Entities.Create();
+        var state = world.Entities.Get(entityId)!;
+
         using var data = new BinaryReader(file.OpenRead());
-        session.Character = new Player(session);
-        session.Character.Name = data.ReadString();
-        session.Character.TextureNum = data.ReadInt16();
-        session.Character.Level = data.ReadInt16();
-        session.Character.Class = _catalog.Classes.Get(new Guid(data.ReadString()));
-        session.Character.Genre = data.ReadBoolean();
-        session.Character.Experience = data.ReadInt32();
-        session.Character.Points = data.ReadByte();
-        session.Character.MapInstance = GameWorld.Current.Maps.Get(new Guid(data.ReadString()));
-        session.Character.X = data.ReadByte();
-        session.Character.Y = data.ReadByte();
-        session.Character.Direction = (Direction)data.ReadByte();
-        for (byte n = 0; n < (byte)Vital.Count; n++) session.Character.Vital[n] = data.ReadInt16();
-        for (byte n = 0; n < (byte)Attribute.Count; n++) session.Character.Attribute[n] = data.ReadInt16();
+
+        var appearance = new PlayerAppearance { Name = data.ReadString() };
+        appearance.TextureNum = data.ReadInt16();
+
+        var stats = new StatBlock();
+        stats.Level = data.ReadInt16();
+        appearance.ClassId = new Guid(data.ReadString());
+        appearance.Genre = data.ReadBoolean();
+        stats.Experience = data.ReadInt32();
+        stats.Points = data.ReadByte();
+
+        var pos = new Position { MapId = new Guid(data.ReadString()) };
+        pos.X = data.ReadByte();
+        pos.Y = data.ReadByte();
+        pos.Direction = (Direction)data.ReadByte();
+
+        var vitals = new Vitals();
+        vitals.Hp = data.ReadInt16();
+        vitals.Mp = data.ReadInt16();
+
+        for (byte n = 0; n < (byte)Attribute.Count; n++) stats.Attribute[n] = data.ReadInt16();
+
+        var inv = new InventoryState();
         for (byte n = 0; n < MaxInventory; n++)
         {
-            session.Character.Inventory[n].ItemId = new Guid(data.ReadString());
-            session.Character.Inventory[n].Amount = data.ReadInt16();
+            inv.Slots[n] = new ItemSlot(new Guid(data.ReadString()), data.ReadInt16());
         }
 
+        var equip = new EquipmentState();
         for (byte n = 0; n < (byte)Equipment.Count; n++)
-            session.Character.Equipment[n] = _catalog.Items.Get(new Guid(data.ReadString()));
+            equip.Slots[n] = new Guid(data.ReadString());
+
+        var hotbar = new HotbarState();
         for (byte n = 0; n < MaxHotbar; n++)
-            session.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
+            hotbar.Slots[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
+
+        state.Set(pos);
+        state.Set(appearance);
+        state.Set(stats);
+        state.Set(vitals);
+        state.Set(inv);
+        state.Set(equip);
+        state.Set(hotbar);
+        state.Set(new CombatState());
+        state.Set(new TradeState());
+        state.Set(new PartyState());
+        state.Set(new ShopState());
+        state.Set(new PlayerTag());
+
+        world.SessionMap.Register(entityId, session);
+        session.Character = entityId;
     }
 
     public string ReadAllNames()
     {
-        // Create the characters names file if it doesn't exist.
         if (!Directories.Characters.Exists)
         {
             WriteAllNames(string.Empty);
             return string.Empty;
         }
 
-        // Return all registered character names.
         using var data = new StreamReader(Directories.Characters.FullName);
         return data.ReadToEnd();
     }
 
     public void Write(GameSession session)
     {
+        var entityId = session.Character!.Value;
+        var state = GameWorld.Current.Entities.Get(entityId)!;
+        var pos = state.Get<Position>()!;
+        var appearance = state.Get<PlayerAppearance>()!;
+        var stats = state.Get<StatBlock>()!;
+        var vitals = state.Get<Vitals>()!;
+        var inv = state.Get<InventoryState>()!;
+        var equip = state.Get<EquipmentState>()!;
+        var hotbar = state.Get<HotbarState>()!;
+
         var file = new FileInfo(
-            Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", session.Character!.Name) +
+            Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", appearance.Name) +
             ".dat");
 
-        // Ensure character directory exists.
         if (!file.Directory.Exists) file.Directory.Create();
 
-        // Save character data to file.
         using var data = new BinaryWriter(file.OpenWrite());
-        data.Write(session.Character!.Name);
-        data.Write(session.Character.TextureNum);
-        data.Write(session.Character.Level);
-        data.Write(session.Character.Class.GetId().ToString());
-        data.Write(session.Character.Genre);
-        data.Write(session.Character.Experience);
-        data.Write(session.Character.Points);
-        data.Write(session.Character.MapInstance.GetId().ToString());
-        data.Write(session.Character.X);
-        data.Write(session.Character.Y);
-        data.Write((byte)session.Character.Direction);
-        for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(session.Character.Vital[n]);
-        for (byte n = 0; n < (byte)Attribute.Count; n++) data.Write(session.Character.Attribute[n]);
+        data.Write(appearance.Name);
+        data.Write(appearance.TextureNum);
+        data.Write(stats.Level);
+        data.Write(appearance.ClassId.ToString());
+        data.Write(appearance.Genre);
+        data.Write(stats.Experience);
+        data.Write(stats.Points);
+        data.Write(pos.MapId.ToString());
+        data.Write(pos.X);
+        data.Write(pos.Y);
+        data.Write((byte)pos.Direction);
+        data.Write(vitals.Hp);
+        data.Write(vitals.Mp);
+        for (byte n = 0; n < (byte)Attribute.Count; n++) data.Write(stats.Attribute[n]);
         for (byte n = 0; n < MaxInventory; n++)
         {
-            data.Write(session.Character.Inventory[n].ItemId.ToString());
-            data.Write(session.Character.Inventory[n].Amount);
+            data.Write(inv.Slots[n].ItemId.ToString());
+            data.Write(inv.Slots[n].Amount);
         }
 
-        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(session.Character.Equipment[n].GetId().ToString());
+        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(equip.Slots[n].ToString());
         for (byte n = 0; n < MaxHotbar; n++)
         {
-            data.Write((byte)session.Character.Hotbar[n].Type);
-            data.Write(session.Character.Hotbar[n].Slot);
+            data.Write((byte)hotbar.Slots[n].Type);
+            data.Write(hotbar.Slots[n].Slot);
         }
     }
 
     public void WriteName(string name)
     {
-        // Append a character name to names file.
         using var data = new StreamWriter(Directories.Characters.FullName, true);
         data.Write(";" + name + ":");
     }
 
     public void WriteAllNames(string charactersName)
     {
-        // Overwrite names file with the provided list.
         using var data = new StreamWriter(Directories.Characters.FullName);
         data.Write(charactersName);
     }

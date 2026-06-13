@@ -1,7 +1,7 @@
 using CryBits.Definitions.Common;
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
-using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
 using CryBits.Server.Systems.Trade;
 
 namespace CryBits.Server.Network.Handlers;
@@ -11,38 +11,38 @@ internal sealed class TradeHandler(TradeSystem tradeSystem)
     public static TradeHandler Instance { get; } = new(TradeSystem.Instance);
 
     [PacketHandler]
-    internal void TradeInvite(Player player, TradeInvitePacket packet)
+    internal void TradeInvite(EntityId entityId, TradeInvitePacket packet)
     {
-        tradeSystem.Invite(player, packet.PlayerName);
+        tradeSystem.Invite(entityId, packet.PlayerName);
     }
 
     [PacketHandler]
-    internal void TradeAccept(Player player, TradeAcceptPacket _)
+    internal void TradeAccept(EntityId entityId, TradeAcceptPacket _)
     {
-        tradeSystem.Accept(player);
+        tradeSystem.Accept(entityId);
     }
 
     [PacketHandler]
-    internal void TradeDecline(Player player, TradeDeclinePacket _)
+    internal void TradeDecline(EntityId entityId, TradeDeclinePacket _)
     {
-        tradeSystem.Decline(player);
+        tradeSystem.Decline(entityId);
     }
 
     [PacketHandler]
-    internal void TradeLeave(Player player, TradeLeavePacket _)
+    internal void TradeLeave(EntityId entityId, TradeLeavePacket _)
     {
-        tradeSystem.Leave(player);
+        tradeSystem.Leave(entityId);
     }
 
     [PacketHandler]
-    internal void TradeOffer(Player player, TradeOfferPacket packet)
+    internal void TradeOffer(EntityId entityId, TradeOfferPacket packet)
     {
-        tradeSystem.Offer(player, packet.Slot, packet.InventorySlot, packet.Amount);
+        tradeSystem.Offer(entityId, packet.Slot, packet.InventorySlot, packet.Amount);
     }
 
     [PacketHandler]
-    internal void TradeOfferState(Player player, TradeOfferStatePacket packet)
+    internal void TradeOfferState(EntityId entityId, TradeOfferStatePacket packet)
     {
-        tradeSystem.OfferState(player, (TradeStatus)packet.State);
+        tradeSystem.OfferState(entityId, (TradeStatus)packet.State);
     }
 }

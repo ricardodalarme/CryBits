@@ -4,9 +4,13 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.World;
+using System;
 using System.Linq;
 using CryBits.Simulation.Core;
 
@@ -17,48 +21,57 @@ internal sealed class EquipmentSystem(PlayerSender playerSender, DefinitionCatal
     private readonly DefinitionCatalog _catalog = catalog;
     public static EquipmentSystem Instance { get; } = new(PlayerSender.Instance, DefinitionCatalog.Instance);
 
-    public void Equip(Player player, Item item)
+    public void Equip(EntityId entityId, Item item)
     {
-        var oldItem = player.Equipment[item.EquipType];
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var equip = e.Get<EquipmentState>()!;
+        var stats = e.Get<StatBlock>()!;
 
-        player.Equipment[item.EquipType] = item;
+        var oldItemId = equip.Slots[item.EquipType];
+        var oldItem = oldItemId != Guid.Empty ? _catalog.Items.Get(oldItemId) : null;
+
+        equip.Slots[item.EquipType] = item.Id;
         for (byte i = 0; i < (byte)Attribute.Count; i++)
-            player.Attribute[i] += item.EquipAttribute[i];
+            stats.Attribute[i] += item.EquipAttribute[i];
         if (oldItem != null)
             for (byte i = 0; i < (byte)Attribute.Count; i++)
-                player.Attribute[i] -= oldItem.EquipAttribute[i];
+                stats.Attribute[i] -= oldItem.EquipAttribute[i];
 
         GameWorld.Current.CurrentTick?.Events.Emit(new ItemEquippedEvent
         {
-            PlayerId = player.Id,
+            PlayerId = entityId.Value,
             EquipSlot = item.EquipType,
             ItemId = item.Id,
             OldItemId = oldItem?.Id
         });
 
-        playerSender.PlayerEquipments(player);
+        playerSender.PlayerEquipments(entityId);
     }
 
-    public void Unequip(Player player, byte equipSlot)
+    public void Unequip(EntityId entityId, byte equipSlot)
     {
-        if (player.Equipment[equipSlot] == null) return;
-        if (player.Equipment[equipSlot].Bind == BindOn.Equip) return;
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var equip = e.Get<EquipmentState>()!;
+        var stats = e.Get<StatBlock>()!;
 
-        var oldItem = player.Equipment[equipSlot];
+        var oldItemId = equip.Slots[equipSlot];
+        if (oldItemId == Guid.Empty) return;
+        var oldItem = _catalog.Items.Get(oldItemId);
+        if (oldItem?.Bind == BindOn.Equip) return;
 
         for (byte i = 0; i < (byte)Attribute.Count; i++)
-            player.Attribute[i] -= oldItem.EquipAttribute[i];
-        player.Equipment[equipSlot] = null;
+            stats.Attribute[i] -= oldItem.EquipAttribute[i];
+        equip.Slots[equipSlot] = Guid.Empty;
 
         GameWorld.Current.CurrentTick?.Events.Emit(new ItemEquippedEvent
         {
-            PlayerId = player.Id,
+            PlayerId = entityId.Value,
             EquipSlot = equipSlot,
             ItemId = null,
             OldItemId = oldItem.Id
         });
 
-        playerSender.PlayerEquipments(player);
+        playerSender.PlayerEquipments(entityId);
     }
 
     public void Execute(GameWorld world, Tick tick)
@@ -66,11 +79,11 @@ internal sealed class EquipmentSystem(PlayerSender playerSender, DefinitionCatal
         foreach (var ev in tick.Events.Events.ToArray())
         {
             if (ev is not ItemUsedEvent use) continue;
-            var player = world.FindPlayer(use.PlayerId);
-            if (player == null) continue;
+            var playerId = world.FindPlayerByValue(use.PlayerId);
+            if (playerId == null) continue;
             var item = _catalog.Items.Get(use.ItemId);
             if (item == null || item.Type != ItemType.Equipment) continue;
-            Equip(player, item);
+            Equip(playerId.Value, item);
         }
     }
 }

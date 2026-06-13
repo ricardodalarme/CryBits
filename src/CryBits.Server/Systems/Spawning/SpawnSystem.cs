@@ -1,4 +1,8 @@
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.Systems.Npc;
 using CryBits.Server.World;
 using CryBits.Simulation.Core;
@@ -6,10 +10,6 @@ using System;
 
 namespace CryBits.Server.Systems.Spawning;
 
-/// <summary>
-/// Tick-driven system that handles NPC respawning.
-/// Iterates all maps and spawns dead NPCs whose spawn timer has elapsed.
-/// </summary>
 internal sealed class SpawnSystem : ISimulationSystem
 {
     public static SpawnSystem Instance { get; } = new();
@@ -18,13 +18,17 @@ internal sealed class SpawnSystem : ISimulationSystem
     {
         foreach (var map in world.Maps.Values)
         {
-            if (!map.HasPlayers()) continue;
+            if (!map.HasPlayers(world.Entities)) continue;
 
-            foreach (var npc in map.Npc)
+            foreach (var npcId in map.NpcIds)
             {
-                if (npc.Alive) continue;
-                if (Environment.TickCount64 > npc.SpawnTimer + npc.Data.SpawnTime * 1000)
-                    NpcBrainSystem.Instance.Spawn(npc);
+                var e = world.Entities.Get(npcId);
+                if (e == null) continue;
+                var npcState = e.Get<NpcState>();
+                if (npcState == null || npcState.Alive) continue;
+                var npcData = DefinitionCatalog.Instance.Npcs.Get(npcState.NpcDefId);
+                if (Environment.TickCount64 > npcState.SpawnTimer + npcData.SpawnTime * 1000)
+                    NpcBrainSystem.Instance.Spawn(npcId);
             }
         }
     }

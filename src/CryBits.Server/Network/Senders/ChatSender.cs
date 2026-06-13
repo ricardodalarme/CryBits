@@ -1,5 +1,6 @@
 using CryBits.Network.Packets.Server;
-using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.World;
 using System.Drawing;
 
@@ -9,36 +10,40 @@ internal sealed class ChatSender(PackageSender packageSender)
 {
     public static ChatSender Instance { get; } = new(PackageSender.Instance);
 
-    public void Message(Player player, string text, Color color)
+    public void Message(EntityId entityId, string text, Color color)
     {
-        packageSender.ToPlayer(player, new MessagePacket { Text = text, ColorArgb = color.ToArgb() });
+        packageSender.ToPlayer(entityId, new MessagePacket { Text = text, ColorArgb = color.ToArgb() });
     }
 
-    public void MessageMap(Player player, string text)
+    public void MessageMap(EntityId entityId, string text)
     {
-        var message = "[Map] " + player.Name + ": " + text;
-        packageSender.ToMap(player.MapInstance.Id, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
+        var appearance = GameWorld.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        var pos = GameWorld.Current.Entities.Get(entityId)!.Get<Position>()!;
+        var message = "[Map] " + appearance.Name + ": " + text;
+        packageSender.ToMap(pos.MapId, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
     }
 
-    public void MessageGlobal(Player player, string text)
+    public void MessageGlobal(EntityId entityId, string text)
     {
-        var message = "[Global] " + player.Name + ": " + text;
+        var appearance = GameWorld.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        var message = "[Global] " + appearance.Name + ": " + text;
         packageSender.ToAll(new MessagePacket { Text = message, ColorArgb = Color.Yellow.ToArgb() });
     }
 
-    public void MessagePrivate(Player player, string addresseeName, string text)
+    public void MessagePrivate(EntityId entityId, string addresseeName, string text)
     {
         var addressee = GameWorld.Current.FindPlayer(addresseeName);
 
         // Check if the addressee is connected.
         if (addressee == null)
         {
-            Message(player, addresseeName + " is currently offline.", Color.Blue);
+            Message(entityId, addresseeName + " is currently offline.", Color.Blue);
             return;
         }
 
         // Send private messages.
-        Message(player, "[To] " + addresseeName + ": " + text, Color.Pink);
-        Message(addressee, "[From] " + player.Name + ": " + text, Color.Pink);
+        var appearance = GameWorld.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        Message(entityId, "[To] " + addresseeName + ": " + text, Color.Pink);
+        Message(addressee.Value, "[From] " + appearance.Name + ": " + text, Color.Pink);
     }
 }

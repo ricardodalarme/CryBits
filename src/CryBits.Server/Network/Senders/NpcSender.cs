@@ -2,9 +2,10 @@ using CryBits.Definitions;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Network.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.World;
 using LiteNetLib;
 
@@ -20,76 +21,92 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
         packageSender.ToPlayer(session, new NpcsPacket { List = _catalog.Npcs });
     }
 
-    public void MapNpcs(Player player, MapInstance mapInstance)
+    public void MapNpcs(EntityId entityId, MapInstance mapInstance)
     {
-        var packet = new MapNpcsPacket { Npcs = new PacketsMapNpc[mapInstance.Npc.Length] };
-        for (byte i = 0; i < mapInstance.Npc.Length; i++)
+        var entities = GameWorld.Current.Entities;
+        var packet = new MapNpcsPacket { Npcs = new PacketsMapNpc[mapInstance.NpcIds.Count] };
+        for (byte i = 0; i < mapInstance.NpcIds.Count; i++)
         {
+            var npcId = mapInstance.NpcIds[i];
+            var npcState = entities.Get(npcId)!.Get<NpcState>()!;
+            var pos = entities.Get(npcId)!.Get<Position>()!;
+            var vitals = entities.Get(npcId)!.Get<Vitals>()!;
             packet.Npcs[i] = new PacketsMapNpc
             {
-                InstanceId = mapInstance.Npc[i].Id,
-                NpcId = mapInstance.Npc[i].Data.GetId(),
-                X = mapInstance.Npc[i].X,
-                Y = mapInstance.Npc[i].Y,
-                Direction = (byte)mapInstance.Npc[i].Direction,
+                InstanceId = npcId.Value,
+                NpcId = npcState.NpcDefId,
+                X = pos.X,
+                Y = pos.Y,
+                Direction = (byte)pos.Direction,
                 Vital = new short[(byte)Vital.Count]
             };
-            for (byte n = 0; n < (byte)Vital.Count; n++) packet.Npcs[i].Vital[n] = mapInstance.Npc[i].Vital[n];
+            for (byte n = 0; n < (byte)Vital.Count; n++) packet.Npcs[i].Vital[n] = n == 0 ? vitals.Hp : vitals.Mp;
         }
 
-        packageSender.ToPlayer(player, packet);
+        packageSender.ToPlayer(entityId, packet);
     }
 
-    public void MapNpc(NpcInstance npcInstance)
+    public void MapNpc(EntityId entityId)
     {
+        var entity = GameWorld.Current.Entities.Get(entityId)!;
+        var npcState = entity.Get<NpcState>()!;
+        var pos = entity.Get<Position>()!;
+        var vitals = entity.Get<Vitals>()!;
         var packet = new MapNpcPacket
         {
-            InstanceId = npcInstance.Id,
-            NpcId = npcInstance.Data.GetId(),
-            X = npcInstance.X,
-            Y = npcInstance.Y,
-            Direction = (byte)npcInstance.Direction,
+            InstanceId = entityId.Value,
+            NpcId = npcState.NpcDefId,
+            X = pos.X,
+            Y = pos.Y,
+            Direction = (byte)pos.Direction,
             Vital = new short[(byte)Vital.Count]
         };
-        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
-        packageSender.ToMap(npcInstance.MapInstance.Id, packet, DeliveryMethod.ReliableUnordered);
+        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = n == 0 ? vitals.Hp : vitals.Mp;
+        packageSender.ToMap(pos.MapId, packet, DeliveryMethod.ReliableUnordered);
     }
 
-    public void MapNpcMovement(NpcInstance npcInstance, byte movement)
+    public void MapNpcMovement(EntityId entityId, byte movement)
     {
+        var entity = GameWorld.Current.Entities.Get(entityId)!;
+        var pos = entity.Get<Position>()!;
         var speed = movement == (byte)Movement.Moving
             ? Globals.RunSpeedPixelsPerSecond
             : Globals.WalkSpeedPixelsPerSecond;
 
-        packageSender.ToMap(npcInstance.MapInstance.Id,
+        packageSender.ToMap(pos.MapId,
             new MapNpcMovementPacket
             {
-                InstanceId = npcInstance.Id,
-                X = npcInstance.X,
-                Y = npcInstance.Y,
-                Direction = (byte)npcInstance.Direction,
+                InstanceId = entityId.Value,
+                X = pos.X,
+                Y = pos.Y,
+                Direction = (byte)pos.Direction,
                 Movement = movement,
                 Speed = speed
             }, DeliveryMethod.Sequenced);
     }
 
-    public void MapNpcDirection(NpcInstance npcInstance)
+    public void MapNpcDirection(EntityId entityId)
     {
-        packageSender.ToMap(npcInstance.MapInstance.Id,
-            new MapNpcDirectionPacket { InstanceId = npcInstance.Id, Direction = (byte)npcInstance.Direction },
+        var pos = GameWorld.Current.Entities.Get(entityId)!.Get<Position>()!;
+        packageSender.ToMap(pos.MapId,
+            new MapNpcDirectionPacket { InstanceId = entityId.Value, Direction = (byte)pos.Direction },
             DeliveryMethod.Sequenced);
     }
 
-    public void MapNpcVitals(NpcInstance npcInstance)
+    public void MapNpcVitals(EntityId entityId)
     {
-        var packet = new MapNpcVitalsPacket { InstanceId = npcInstance.Id, Vital = new short[(byte)Vital.Count] };
-        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
-        packageSender.ToMap(npcInstance.MapInstance.Id, packet, DeliveryMethod.ReliableSequenced);
+        var entity = GameWorld.Current.Entities.Get(entityId)!;
+        var vitals = entity.Get<Vitals>()!;
+        var pos = entity.Get<Position>()!;
+        var packet = new MapNpcVitalsPacket { InstanceId = entityId.Value, Vital = new short[(byte)Vital.Count] };
+        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = n == 0 ? vitals.Hp : vitals.Mp;
+        packageSender.ToMap(pos.MapId, packet, DeliveryMethod.ReliableSequenced);
     }
 
-    public void MapNpcDied(NpcInstance npcInstance)
+    public void MapNpcDied(EntityId entityId)
     {
-        packageSender.ToMap(npcInstance.MapInstance.Id, new MapNpcDiedPacket { InstanceId = npcInstance.Id },
+        var pos = GameWorld.Current.Entities.Get(entityId)!.Get<Position>()!;
+        packageSender.ToMap(pos.MapId, new MapNpcDiedPacket { InstanceId = entityId.Value },
             DeliveryMethod.ReliableUnordered);
     }
 }

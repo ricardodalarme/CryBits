@@ -1,20 +1,21 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
-using CryBits.Definitions.Classes;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
-using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
-using CryBits.Simulation.Events;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.Systems.Movement;
 using CryBits.Server.World;
+using CryBits.Simulation.Events;
+using CryBits.Simulation.Formulas;
 using System;
 using System.Drawing;
 using System.IO;
@@ -78,37 +79,54 @@ internal sealed class AccountHandler(
             return;
         }
 
-        Class @class;
-        session.Character = new Player(session);
-        session.Character.Name = name;
-        session.Character.Level = 1;
-        session.Character.Class = @class = catalog.Classes.Get(new Guid(packet.ClassId));
-        session.Character.Genre = packet.GenderMale;
-        session.Character.TextureNum = session.Character.Genre
-            ? @class.TextureMale[packet.TextureNum]
-            : @class.TextureFemale[packet.TextureNum];
-        session.Character.Attribute = @class.Attribute;
-        session.Character.MapInstance = GameWorld.Current.Maps.Get(@class.SpawnMapId);
-        session.Character.Direction = (Direction)@class.SpawnDirection;
-        session.Character.X = @class.SpawnX;
-        session.Character.Y = @class.SpawnY;
-        for (byte i = 0; i < (byte)Vital.Count; i++) session.Character.Vital[i] = session.Character.MaxVital(i);
+        var world = GameWorld.Current;
+        var @class = catalog.Classes.Get(new Guid(packet.ClassId));
+
+        var entityId = world.Entities.Create();
+        var state = world.Entities.Get(entityId)!;
+
+        var maxHp = VitalFormulas.MaxVital(Vital.Hp, @class.Vital[(byte)Vital.Hp], @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality], @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence], 1);
+        var maxMp = VitalFormulas.MaxVital(Vital.Mp, @class.Vital[(byte)Vital.Mp], @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality], @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence], 1);
+
+        state.Set(new Position { MapId = @class.SpawnMapId, X = @class.SpawnX, Y = @class.SpawnY, Direction = (Direction)@class.SpawnDirection });
+        state.Set(new PlayerAppearance { Name = name, ClassId = @class.Id, TextureNum = packet.GenderMale ? @class.TextureMale[packet.TextureNum] : @class.TextureFemale[packet.TextureNum], Genre = packet.GenderMale });
+        state.Set(new StatBlock { Level = 1, Attribute = (short[])@class.Attribute.Clone() });
+        state.Set(new Vitals { Hp = maxHp, Mp = maxMp, MaxHp = maxHp, MaxMp = maxMp });
+
+        var inv = new InventoryState();
+        for (byte i = 0; i < MaxInventory; i++) inv.Slots[i] = new ItemSlot(Guid.Empty, 0);
+        state.Set(inv);
+
+        var equip = new EquipmentState();
+        state.Set(equip);
+
+        var hotbar = new HotbarState();
+        for (byte i = 0; i < MaxHotbar; i++) hotbar.Slots[i] = new HotbarSlot(SlotType.None, 0);
+        state.Set(hotbar);
+
+        state.Set(new CombatState());
+        state.Set(new TradeState());
+        state.Set(new PartyState());
+        state.Set(new ShopState());
+        state.Set(new PlayerTag());
+
+        world.SessionMap.Register(entityId, session);
+        session.Character = entityId;
+
         for (byte i = 0; i < (byte)@class.Item.Count; i++)
         {
             var item = catalog.Items.Get(@class.Item[i].ItemId);
             if (item == null) continue;
-            if (item.Type == ItemType.Equipment &&
-                session.Character.Equipment[item.EquipType] == null)
-                session.Character.Equipment[item.EquipType] = item;
+            if (item.Type == ItemType.Equipment && equip.Slots[(byte)item.EquipType] == Guid.Empty)
+                equip.Slots[(byte)item.EquipType] = item.Id;
             else
-                inventorySystem.GiveItem(session.Character, item, @class.Item[i].Amount);
+                inventorySystem.GiveItem(entityId, item, @class.Item[i].Amount);
         }
-        for (byte i = 0; i < MaxHotbar; i++) session.Character.Hotbar[i] = new HotbarSlot(SlotType.None, 0);
 
         characterRepository.WriteName(name);
         characterRepository.Write(session);
 
-        Join(session.Character);
+        Join(entityId);
     }
 
     [PacketHandler]
@@ -117,7 +135,7 @@ internal sealed class AccountHandler(
         if (packet.CharacterIndex < 0 || packet.CharacterIndex >= session.Characters.Count) return;
 
         characterRepository.Read(session, session.Characters[packet.CharacterIndex].Name);
-        Join(session.Character);
+        Join(session.Character!.Value);
     }
 
     [PacketHandler]
@@ -148,31 +166,44 @@ internal sealed class AccountHandler(
         AccountRepository.Instance.Write(session);
     }
 
-    internal void Leave(Player player)
+    internal void Leave(EntityId entityId)
     {
-        characterRepository.Write(player.Session);
-        playerSender.PlayerLeave(player);
+        var world = GameWorld.Current;
+        var session = world.SessionMap.Get(entityId)!;
+        if (session == null) return;
 
-        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent { PlayerId = player.Id });
+        characterRepository.Write(session);
+        playerSender.PlayerLeave(entityId);
+
+        world.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent { PlayerId = entityId.Value });
+
+        world.SessionMap.Unregister(entityId);
+        world.Entities.Destroy(entityId);
+        session.Character = null;
     }
 
-    private void Join(Player player)
+    private void Join(EntityId entityId)
     {
-        player.Session.Characters = [];
+        var world = GameWorld.Current;
+        var session = world.SessionMap.Get(entityId)!;
+        var state = world.Entities.Get(entityId)!;
+        var pos = state.Get<Position>()!;
+        var mapInstance = world.Maps.Get(pos.MapId);
+        if (mapInstance == null) return;
 
-        playerSender.Join(player);
-        itemSender.Items(player.Session);
-        npcSender.Npcs(player.Session);
-        shopSender.Shops(player.Session);
-        mapSender.Map(player.Session, player.MapInstance.Data);
-        mapSender.MapPlayers(player);
-        playerSender.PlayerExperience(player);
-        playerSender.PlayerInventory(player);
-        playerSender.PlayerHotbar(player);
+        playerSender.Join(entityId);
+        itemSender.Items(session);
+        npcSender.Npcs(session);
+        shopSender.Shops(session);
+        mapSender.Map(session, mapInstance.Data);
+        mapSender.MapPlayers(entityId);
+        playerSender.PlayerExperience(entityId);
+        playerSender.PlayerInventory(entityId);
+        playerSender.PlayerHotbar(entityId);
 
-        movementSystem.Warp(player, player.MapInstance, player.X, player.Y, true);
+        movementSystem.Warp(entityId, mapInstance, pos.X, pos.Y, true);
 
-        playerSender.JoinGame(player);
-        chatSender.Message(player, Config.WelcomeMessage, Color.Blue);
+        playerSender.JoinGame(entityId);
+        chatSender.Message(entityId, Config.WelcomeMessage, Color.Blue);
     }
 }

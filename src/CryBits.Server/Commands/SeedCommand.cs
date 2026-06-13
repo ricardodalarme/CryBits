@@ -8,6 +8,7 @@ using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Slots;
 using CryBits.Persistence.Stores;
 using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
 using CryBits.Server.World;
 using System;
 using System.IO;
@@ -351,7 +352,7 @@ internal sealed class SeedCommand : IConsoleCommand
         // Rebuild live GameWorld.Maps so the running server uses the new map IDs.
         GameWorld.Current.Maps.Clear();
         foreach (var mapDef in _catalog.Maps.Values)
-            MapInstance.Create(mapDef, true);
+            MapInstance.Create(mapDef, true, GameWorld.Current.Entities);
 
         Console.WriteLine("[Seed] All data written to disk. Done.");
     }

@@ -1,14 +1,16 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
-using CryBits.Server.Entities;
 using CryBits.Server.Network;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.World;
 using CryBits.Simulation.Core;
 using System;
-
 
 namespace CryBits.Server.Systems.Npc;
 
@@ -31,27 +33,37 @@ internal sealed class NpcBrainSystem(
 
         foreach (var map in world.Maps.Values)
         {
-            if (!map.HasPlayers()) continue;
+            if (!map.HasPlayers(world.Entities)) continue;
 
-            foreach (var npc in map.Npc)
+            foreach (var npcId in map.NpcIds)
             {
-                if (!npc.Alive) continue;
-                TickAlive(npc);
+                var e = world.Entities.Get(npcId);
+                if (e == null) continue;
+                var npcState = e.Get<NpcState>();
+                if (npcState == null || !npcState.Alive) continue;
+                TickAlive(npcId);
             }
         }
     }
 
-    private void TickAlive(NpcInstance npc)
+    private void TickAlive(EntityId npcId)
     {
-        NpcTargeting.UpdateTarget(npc, chatSender);
-        NpcMovement.TickMovement(npc, npcSender, chatSender);
+        NpcTargeting.UpdateTarget(npcId, chatSender);
+        NpcMovement.TickMovement(npcId, npcSender, chatSender);
     }
 
-    internal void Spawn(NpcInstance npcInstance)
+    internal void Spawn(EntityId npcId)
     {
-        if (npcInstance.MapInstance.Data.Npc[npcInstance.Index].Spawn)
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(npcId)!;
+        var npcState = e.Get<NpcState>()!;
+        var pos = e.Get<Position>()!;
+        var map = world.Maps.Get(pos.MapId)!;
+        var npcSpawn = map.Data.Npc[npcState.Index];
+
+        if (npcSpawn.Spawn)
         {
-            SpawnAt(npcInstance, npcInstance.MapInstance.Data.Npc[npcInstance.Index].X, npcInstance.MapInstance.Data.Npc[npcInstance.Index].Y);
+            SpawnAt(npcId, npcSpawn.X, npcSpawn.Y);
             return;
         }
 
@@ -60,37 +72,46 @@ internal sealed class NpcBrainSystem(
             var x = (byte)Random.Shared.Next(0, Map.Width - 1);
             var y = (byte)Random.Shared.Next(0, Map.Height - 1);
 
-            if (npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone > 0 &&
-                npcInstance.MapInstance.Data.Attribute[x, y].Zone != npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone)
+            if (npcSpawn.Zone > 0 &&
+                map.Data.Attribute[x, y].Zone != npcSpawn.Zone)
                 continue;
 
-            if (!npcInstance.MapInstance.Data.TileBlocked(x, y))
+            if (!map.Data.TileBlocked(x, y))
             {
-                SpawnAt(npcInstance, x, y);
+                SpawnAt(npcId, x, y);
                 return;
             }
         }
 
         for (byte x = 0; x < Map.Width; x++)
             for (byte y = 0; y < Map.Height; y++)
-                if (!npcInstance.MapInstance.Data.TileBlocked(x, y))
+                if (!map.Data.TileBlocked(x, y))
                 {
-                    if (npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone > 0 &&
-                        npcInstance.MapInstance.Data.Attribute[x, y].Zone != npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone)
+                    if (npcSpawn.Zone > 0 &&
+                        map.Data.Attribute[x, y].Zone != npcSpawn.Zone)
                         continue;
 
-                    SpawnAt(npcInstance, x, y);
+                    SpawnAt(npcId, x, y);
                     return;
                 }
     }
 
-    private void SpawnAt(NpcInstance npcInstance, byte x, byte y, Direction direction = 0)
+    private void SpawnAt(EntityId npcId, byte x, byte y, Direction direction = 0)
     {
-        npcInstance.Alive = true;
-        npcInstance.X = x;
-        npcInstance.Y = y;
-        npcInstance.Direction = direction;
-        for (byte i = 0; i < (byte)Vital.Count; i++) npcInstance.Vital[i] = npcInstance.Data.Vital[i];
-        if (networkServer.Device != null) npcSender.MapNpc(npcInstance.MapInstance.Npc[npcInstance.Index]);
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(npcId)!;
+        var npcState = e.Get<NpcState>()!;
+        var pos = e.Get<Position>()!;
+        var vitals = e.Get<Vitals>()!;
+        var npcData = DefinitionCatalog.Instance.Npcs.Get(npcState.NpcDefId);
+
+        npcState.Alive = true;
+        pos.X = x;
+        pos.Y = y;
+        pos.Direction = direction;
+        vitals.Hp = npcData.Vital[(byte)Vital.Hp];
+        vitals.Mp = npcData.Vital[(byte)Vital.Mp];
+
+        if (networkServer.Device != null) npcSender.MapNpc(npcId);
     }
 }

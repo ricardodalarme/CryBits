@@ -1,6 +1,6 @@
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
-using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
 using CryBits.Server.World;
 using LiteNetLib;
 using System;
@@ -17,7 +17,7 @@ namespace CryBits.Server.Network;
 ///
 /// The packet type is inferred from the IClientPacket parameter of each handler:
 ///   void Method(GameSession session, TPacket packet)
-///   void Method(Player      player,  TPacket packet)
+///   void Method(EntityId   entityId, TPacket packet)
 ///
 /// On receive, BinaryFormatter already embeds full type info, so
 /// packet.GetType() is used as the lookup key — no byte prefix needed.
@@ -85,23 +85,27 @@ internal static class PacketDispatcher
                 call, sessionParam, packetParam).Compile();
         }
 
-        // Player-based handler (null-guarded)
-        var playerVar = Expression.Variable(typeof(Player), "player");
-        var assign = Expression.Assign(
-            playerVar,
-            Expression.Property(sessionParam, nameof(GameSession.Character)));
+        // EntityId-based handler (null-guarded via Nullable<T>.HasValue)
+        if (firstParamType == typeof(EntityId))
+        {
+            var entityIdVar = Expression.Variable(typeof(EntityId), "entityId");
+            var characterProp = Expression.Property(sessionParam, nameof(GameSession.Character));
+            var hasValue = Expression.Property(characterProp, "HasValue");
+            var value = Expression.Property(characterProp, "Value");
+            var assign = Expression.Assign(entityIdVar, value);
 
-        var callExpr = Expression.Call(instanceExpr, method, playerVar,
-            Expression.Convert(packetParam, methodParams[1].ParameterType));
+            var call = Expression.Call(instanceExpr, method, entityIdVar,
+                Expression.Convert(packetParam, methodParams[1].ParameterType));
 
-        var body = Expression.Block(
-            variables: [playerVar],
-            assign,
-            Expression.IfThen(
-                Expression.NotEqual(playerVar, Expression.Constant(null, typeof(Player))),
-                callExpr));
+            var block = Expression.Block([entityIdVar], assign, call);
+            var body = Expression.IfThen(hasValue, block);
 
-        return Expression.Lambda<Action<GameSession, IClientPacket>>(
-            body, sessionParam, packetParam).Compile();
+            return Expression.Lambda<Action<GameSession, IClientPacket>>(
+                body, sessionParam, packetParam).Compile();
+        }
+
+        throw new InvalidOperationException(
+            $"Handler '{method.DeclaringType?.Name}.{method.Name}' has an unsupported first parameter type " +
+            $"'{firstParamType.Name}'. Expected GameSession or EntityId.");
     }
 }

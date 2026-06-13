@@ -1,12 +1,17 @@
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using CryBits.Simulation.Formulas;
 using System;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Server.Systems.Progression;
 
@@ -14,73 +19,98 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
 {
     public static LevelingSystem Instance { get; } = new(PlayerSender.Instance, MapSender.Instance);
 
-    internal void AddPoint(Player player, byte attributeNum)
+    internal void AddPoint(EntityId entityId, byte attributeNum)
     {
-        if (player.Points <= 0) return;
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var stats = e.Get<StatBlock>()!;
 
-        player.Attribute[attributeNum]++;
-        player.Points--;
-        playerSender.PlayerExperience(player);
-        mapSender.MapPlayers(player);
+        if (stats.Points <= 0) return;
+
+        stats.Attribute[attributeNum]++;
+        stats.Points--;
+        playerSender.PlayerExperience(entityId);
+        mapSender.MapPlayers(entityId);
     }
 
-    public void GiveExperience(Player player, int value)
+    public void GiveExperience(EntityId entityId, int value)
     {
-        if (player.Party.Count > 0 && value > 0)
-            PartySplitXp(player, value);
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var stats = e.Get<StatBlock>()!;
+        var party = e.Get<PartyState>();
+
+        if (party?.Members.Count > 0 && value > 0)
+            PartySplitXp(entityId, value);
         else
-            player.Experience += value;
+            stats.Experience += value;
 
-        if (player.Experience < 0) player.Experience = 0;
+        if (stats.Experience < 0) stats.Experience = 0;
 
-        CheckLevelUp(player);
+        CheckLevelUp(entityId);
     }
 
-    private void CheckLevelUp(Player player)
+    private void CheckLevelUp(EntityId entityId)
     {
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var stats = e.Get<StatBlock>()!;
+
         byte numLevel = 0;
 
-        while (player.Experience >= player.ExpNeeded)
+        short totalAttr = 0;
+        for (byte i = 0; i < (byte)Attribute.Count; i++) totalAttr += stats.Attribute[i];
+        var expNeeded = LevelingFormulas.ExperienceNeeded(stats.Level, totalAttr, stats.Points);
+
+        while (stats.Experience >= expNeeded)
         {
             numLevel++;
-            var expRest = player.Experience - player.ExpNeeded;
+            var expRest = stats.Experience - expNeeded;
 
-            player.Level++;
-            player.Points += Config.NumPoints;
-            player.Experience = expRest;
+            stats.Level++;
+            stats.Points += Config.NumPoints;
+            stats.Experience = expRest;
+
+            totalAttr = 0;
+            for (byte i = 0; i < (byte)Attribute.Count; i++) totalAttr += stats.Attribute[i];
+            expNeeded = LevelingFormulas.ExperienceNeeded(stats.Level, totalAttr, stats.Points);
         }
 
-        playerSender.PlayerExperience(player);
-        if (numLevel > 0) mapSender.MapPlayers(player);
+        playerSender.PlayerExperience(entityId);
+        if (numLevel > 0) mapSender.MapPlayers(entityId);
     }
 
-    private void PartySplitXp(Player player, int value)
+    private void PartySplitXp(EntityId entityId, int value)
     {
-        var diff = new double[player.Party.Count];
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(entityId)!;
+        var stats = e.Get<StatBlock>()!;
+        var party = e.Get<PartyState>()!;
+
+        var diff = new double[party.Members.Count];
         double diffSum = 0;
 
-        for (byte i = 0; i < player.Party.Count; i++)
+        for (byte i = 0; i < party.Members.Count; i++)
         {
-            var difference = Math.Abs(player.Level - player.Party[i].Level);
+            var memberE = world.Entities.Get(party.Members[i])!;
+            var memberStats = memberE.Get<StatBlock>()!;
+            var difference = Math.Abs(stats.Level - memberStats.Level);
             diff[i] = LevelingFormulas.PartyXpWeight(difference);
             diffSum += diff[i];
         }
 
         var experienceSum = 0;
-        for (byte i = 0; i < player.Party.Count; i++)
+        for (byte i = 0; i < party.Members.Count; i++)
         {
             if (diffSum > 1) diff[i] *= 1 / diffSum;
 
             var givenExperience = (int)(value / 2 * diff[i]);
             experienceSum += givenExperience;
 
-            GiveExperience(player.Party[i], givenExperience);
-            playerSender.PlayerExperience(player.Party[i]);
+            GiveExperience(party.Members[i], givenExperience);
+            playerSender.PlayerExperience(party.Members[i]);
         }
 
-        player.Experience += value - experienceSum;
-        CheckLevelUp(player);
-        playerSender.PlayerExperience(player);
+        stats.Experience += value - experienceSum;
+        CheckLevelUp(entityId);
+        playerSender.PlayerExperience(entityId);
     }
 
     public void Execute(GameWorld world, Tick tick)
@@ -90,15 +120,19 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
             if (ev is not EntityDiedEvent died) continue;
             if (!died.SourceId.HasValue || died.SourceIsPlayer != true) continue;
 
-            var killer = world.FindPlayer(died.SourceId.Value);
-            if (killer == null) continue;
+            var killerId = world.FindPlayerByValue(died.SourceId.Value);
+            if (killerId == null) continue;
 
             var xp = died.EntityIsPlayer
-                ? world.FindPlayer(died.EntityId)?.Experience / 10 ?? 0
-                : world.FindNpcInstance(died.EntityId)?.Data.Experience ?? 0;
+                ? world.FindPlayerByValue(died.EntityId) is { } victimId
+                    ? world.Entities.Get(victimId)!.Get<StatBlock>()!.Experience / 10
+                    : 0
+                : world.FindNpcInstance(died.EntityId) is { } npcId
+                    ? DefinitionCatalog.Instance.Npcs.Get(world.Entities.Get(npcId)!.Get<NpcState>()!.NpcDefId)!.Experience
+                    : 0;
 
             if (xp > 0)
-                GiveExperience(killer, xp);
+                GiveExperience(killerId.Value, xp);
         }
     }
 }

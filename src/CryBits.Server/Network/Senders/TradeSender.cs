@@ -1,6 +1,8 @@
 using CryBits.Definitions.Common;
 using CryBits.Network.Packets.Server;
-using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
+using CryBits.Server.World;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Server.Network.Senders;
@@ -9,24 +11,29 @@ internal sealed class TradeSender(PackageSender packageSender)
 {
     public static TradeSender Instance { get; } = new(PackageSender.Instance);
 
-    public void Trade(Player player, bool state)
+    public void Trade(EntityId entityId, bool state)
     {
-        packageSender.ToPlayer(player, new TradePacket { State = state });
+        packageSender.ToPlayer(entityId, new TradePacket { State = state });
     }
 
-    public void TradeInvitation(Player player, string playerInvitation)
+    public void TradeInvitation(EntityId entityId, string playerInvitation)
     {
-        packageSender.ToPlayer(player, new TradeInvitationPacket { PlayerInvitation = playerInvitation });
+        packageSender.ToPlayer(entityId, new TradeInvitationPacket { PlayerInvitation = playerInvitation });
     }
 
-    public void TradeState(Player player, TradeStatus state)
+    public void TradeState(EntityId entityId, TradeStatus state)
     {
-        packageSender.ToPlayer(player, new TradeStatePacket { State = (byte)state });
+        packageSender.ToPlayer(entityId, new TradeStatePacket { State = (byte)state });
     }
 
-    public void TradeOffer(Player player, bool own = true)
+    public void TradeOffer(EntityId entityId, bool own = true)
     {
-        var to = own ? player : player.Trade;
+        var entity = GameWorld.Current.Entities.Get(entityId)!;
+        var trade = entity.Get<TradeState>()!;
+        var toId = own ? entityId : trade.Partner!.Value;
+        var toEntity = GameWorld.Current.Entities.Get(toId)!;
+        var toInv = toEntity.Get<InventoryState>()!;
+        var toTrade = toEntity.Get<TradeState>()!;
         var packet = new TradeOfferPacket
         {
             Own = own,
@@ -36,10 +43,10 @@ internal sealed class TradeSender(PackageSender packageSender)
         {
             packet.Items[i] = new PacketsTradeOfferItem
             {
-                ItemId = to.Inventory[to.TradeOffer[i].SlotNum].ItemId,
-                Amount = to.TradeOffer[i].Amount
+                ItemId = toInv.Slots[toTrade.Offer![i].SlotNum].ItemId,
+                Amount = toTrade.Offer[i].Amount
             };
         }
-        packageSender.ToPlayer(player, packet);
+        packageSender.ToPlayer(entityId, packet);
     }
 }

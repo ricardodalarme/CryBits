@@ -1,6 +1,10 @@
 using CryBits.Definitions.Items;
+using CryBits.Definitions.Slots;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Systems.Inventory;
 
@@ -8,49 +12,56 @@ internal sealed class HotbarSystem(PlayerSender playerSender, InventorySystem in
 {
     public static HotbarSystem Instance { get; } = new(PlayerSender.Instance, InventorySystem.Instance);
 
-    /// <summary>Assigns an inventory or skill slot to a hotbar position.</summary>
-    internal void Add(Player player, short hotbarSlot, SlotType type, short slot)
+    internal void Add(EntityId entityId, short hotbarSlot, SlotType type, short slot)
     {
-        if (slot != 0 && player.FindHotbar(type, slot) != null) return;
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var hotbar = e.Get<HotbarState>()!;
+        var inv = e.Get<InventoryState>()!;
 
-        player.Hotbar[hotbarSlot].Slot = slot;
-        player.Hotbar[hotbarSlot].Type = type;
-        playerSender.PlayerHotbar(player);
+        if (slot != 0 && hotbar.Find(type, slot) != null) return;
+
+        hotbar.Slots[hotbarSlot].Slot = slot;
+        hotbar.Slots[hotbarSlot].Type = type;
+        playerSender.PlayerHotbar(entityId);
     }
 
-    /// <summary>Swaps two hotbar positions.</summary>
-    internal void Change(Player player, short slotOld, short slotNew)
+    internal void Change(EntityId entityId, short slotOld, short slotNew)
     {
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var hotbar = e.Get<HotbarState>()!;
+
         if (slotOld < 0 || slotNew < 0) return;
         if (slotOld == slotNew) return;
-        if (player.Hotbar[slotOld].Slot == 0) return;
+        if (hotbar.Slots[slotOld].Slot == 0) return;
 
-        (player.Hotbar[slotOld], player.Hotbar[slotNew]) = (player.Hotbar[slotNew], player.Hotbar[slotOld]);
-        playerSender.PlayerHotbar(player);
+        (hotbar.Slots[slotOld], hotbar.Slots[slotNew]) = (hotbar.Slots[slotNew], hotbar.Slots[slotOld]);
+        playerSender.PlayerHotbar(entityId);
     }
 
-    /// <summary>Activates the item or skill bound to a hotbar slot.</summary>
-    internal void Use(Player player, short hotbarSlot)
+    internal void Use(EntityId entityId, short hotbarSlot)
     {
-        switch (player.Hotbar[hotbarSlot].Type)
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var hotbar = e.Get<HotbarState>()!;
+        var inv = e.Get<InventoryState>()!;
+
+        switch (hotbar.Slots[hotbarSlot].Type)
         {
             case SlotType.Item:
-                var invSlot = player.Hotbar[hotbarSlot].Slot;
-                inventorySystem.UseItem(player, invSlot, player.Inventory[invSlot]);
+                var invSlot = hotbar.Slots[hotbarSlot].Slot;
+                inventorySystem.UseItem(entityId, invSlot, inv.Slots[invSlot]);
                 break;
         }
     }
 
-    /// <summary>
-    /// Keeps hotbar indices in sync after two inventory slots are swapped.
-    /// Must be called after the inventory swap has already been applied.
-    /// </summary>
-    internal void SyncInventorySwap(Player player, short slotOld, short slotNew)
+    internal void SyncInventorySwap(EntityId entityId, short slotOld, short slotNew)
     {
-        var hotbarSlot = player.FindHotbar(SlotType.Item, player.Inventory[slotOld]);
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var hotbar = e.Get<HotbarState>()!;
+
+        var hotbarSlot = hotbar.Find(SlotType.Item, slotOld);
         if (hotbarSlot == null) return;
 
         hotbarSlot.Slot = slotNew;
-        playerSender.PlayerHotbar(player);
+        playerSender.PlayerHotbar(entityId);
     }
 }

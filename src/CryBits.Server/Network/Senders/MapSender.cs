@@ -5,6 +5,8 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Network.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
@@ -25,22 +27,28 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
         foreach (var map in _catalog.Maps.Values) Map(session, map);
     }
 
-    public void MapRevision(Player player, Map map)
+    public void MapRevision(EntityId entityId, Map map)
     {
-        packageSender.ToPlayer(player, new MapRevisionPacket { MapId = map.GetId(), Revision = map.Revision });
+        packageSender.ToPlayer(entityId, new MapRevisionPacket { MapId = map.GetId(), Revision = map.Revision });
     }
 
-    public void MapPlayers(Player player)
+    public void MapPlayers(EntityId entityId)
     {
+        var pos = GameWorld.Current.Entities.Get(entityId)!.Get<Position>()!;
         for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
-            if (GameWorld.Current.Sessions[i].IsPlaying)
-                if (player != GameWorld.Current.Sessions[i].Character)
-                    if (GameWorld.Current.Sessions[i].Character!.MapInstance == player.MapInstance)
-                        packageSender.ToPlayer(player, PlayerDataCache(GameWorld.Current.Sessions[i].Character!));
-        packageSender.ToMap(player.MapInstance.Id, PlayerDataCache(player));
+        {
+            var session = GameWorld.Current.Sessions[i];
+            if (!session.IsPlaying) continue;
+            if (session.Character is not { } otherId) continue;
+            if (otherId.Equals(entityId)) continue;
+            var otherPos = GameWorld.Current.Entities.Get(otherId)?.Get<Position>();
+            if (otherPos?.MapId == pos.MapId)
+                packageSender.ToPlayer(entityId, PlayerDataCache(otherId));
+        }
+        packageSender.ToMap(pos.MapId, PlayerDataCache(entityId));
     }
 
-    public void MapItems(Player player, MapInstance mapInstance)
+    public void MapItems(EntityId entityId, MapInstance mapInstance)
     {
         var packet = new MapItemsPacket { Items = new PacketsMapItem[mapInstance.Item.Count] };
         for (byte i = 0; i < mapInstance.Item.Count; i++)
@@ -53,7 +61,7 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
             };
         }
 
-        packageSender.ToPlayer(player, packet);
+        packageSender.ToPlayer(entityId, packet);
     }
 
     public void MapItems(MapInstance mapInstance)
@@ -72,18 +80,24 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
         packageSender.ToMap(mapInstance.Id, packet);
     }
 
-    private static PlayerDataPacket PlayerDataCache(Player player)
+    private static PlayerDataPacket PlayerDataCache(EntityId entityId)
     {
+        var entity = GameWorld.Current.Entities.Get(entityId)!;
+        var appearance = entity.Get<PlayerAppearance>()!;
+        var pos = entity.Get<Position>()!;
+        var vitals = entity.Get<Vitals>()!;
+        var stats = entity.Get<StatBlock>()!;
+        var equip = entity.Get<EquipmentState>()!;
         var packet = new PlayerDataPacket
         {
-            NetworkId = player.Id,
-            Name = player.Name,
-            TextureNum = player.TextureNum,
-            Level = player.Level,
-            MapId = player.MapInstance.GetId(),
-            X = player.X,
-            Y = player.Y,
-            Direction = (byte)player.Direction,
+            NetworkId = entityId.Value,
+            Name = appearance.Name,
+            TextureNum = appearance.TextureNum,
+            Level = stats.Level,
+            MapId = pos.MapId,
+            X = pos.X,
+            Y = pos.Y,
+            Direction = (byte)pos.Direction,
             Vital = new short[(byte)Vital.Count],
             MaxVital = new short[(byte)Vital.Count],
             Attribute = new short[(byte)Attribute.Count],
@@ -91,12 +105,12 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
         };
         for (byte n = 0; n < (byte)Vital.Count; n++)
         {
-            packet.Vital[n] = player.Vital[n];
-            packet.MaxVital[n] = player.MaxVital(n);
+            packet.Vital[n] = n == 0 ? vitals.Hp : vitals.Mp;
+            packet.MaxVital[n] = n == 0 ? vitals.MaxHp : vitals.MaxMp;
         }
 
-        for (byte n = 0; n < (byte)Attribute.Count; n++) packet.Attribute[n] = player.Attribute[n];
-        for (byte n = 0; n < (byte)Equipment.Count; n++) packet.Equipment[n] = player.Equipment[n].GetId();
+        for (byte n = 0; n < (byte)Attribute.Count; n++) packet.Attribute[n] = stats.Attribute[n];
+        for (byte n = 0; n < (byte)Equipment.Count; n++) packet.Equipment[n] = equip.Slots[n];
 
         return packet;
     }

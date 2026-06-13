@@ -5,6 +5,8 @@ using CryBits.Definitions.Shops;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.World;
@@ -27,71 +29,89 @@ internal sealed class ShopSystem(
         ChatSender.Instance,
         DefinitionCatalog.Instance);
 
-    public void Open(Player player, Shop shop)
+    public void Open(EntityId entityId, Shop shop)
     {
-        player.Shop = shop;
-        shopSender.ShopOpen(player, shop);
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var shopState = e.Get<ShopState>()!;
+
+        shopState.ShopId = shop.Id;
+        shopSender.ShopOpen(entityId, shop);
     }
 
-    public void Leave(Player player)
+    public void Leave(EntityId entityId)
     {
-        if (player.Shop == null) return;
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var shopState = e.Get<ShopState>()!;
 
-        player.Shop = null;
-        shopSender.ShopOpen(player, null);
+        if (shopState.ShopId == null) return;
+
+        shopState.ShopId = null;
+        shopSender.ShopOpen(entityId, null);
     }
 
-    internal void Buy(Player player, short shopSoldIndex)
+    internal void Buy(EntityId entityId, short shopSoldIndex)
     {
-        var shopSold = player.Shop.Sold[shopSoldIndex];
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var shopState = e.Get<ShopState>()!;
+        var inv = e.Get<InventoryState>()!;
+        var catalog = DefinitionCatalog.Instance;
 
-        if (player.Shop.CurrencyId == Guid.Empty) return;
+        var shop = _catalog.Shops.Get(shopState.ShopId!.Value);
+        var shopSold = shop.Sold[shopSoldIndex];
 
-        var inventorySlot = player.FindInventory(player.Shop.CurrencyId);
+        if (shop.CurrencyId == Guid.Empty) return;
+
+        var inventorySlot = inv.Find(shop.CurrencyId);
 
         if (inventorySlot == null || inventorySlot.Amount < shopSold.Price)
         {
-            chatSender.Message(player, "You don't have enough money to buy the item.", Color.Red);
+            chatSender.Message(entityId, "You don't have enough money to buy the item.", Color.Red);
             return;
         }
 
-        if (player.TotalInventoryFree == 0 && inventorySlot.Amount > shopSold.Price)
+        if (inv.TotalFree == 0 && inventorySlot.Amount > shopSold.Price)
         {
-            chatSender.Message(player, "You don't have space in your bag.", Color.Red);
+            chatSender.Message(entityId, "You don't have space in your bag.", Color.Red);
             return;
         }
 
         var soldItem = _catalog.Items.Get(shopSold.ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
-        inventorySystem.TakeItem(player, inventorySlot, shopSold.Price);
-        inventorySystem.GiveItem(player, soldItem, shopSold.Amount);
-        chatSender.Message(player, "You bought " + shopSold.Price + "x " + soldItemName + ".", Color.Green);
+        inventorySystem.TakeItem(entityId, inventorySlot, shopSold.Price);
+        inventorySystem.GiveItem(entityId, soldItem, shopSold.Amount);
+        chatSender.Message(entityId, "You bought " + shopSold.Price + "x " + soldItemName + ".", Color.Green);
     }
 
-    internal void Sell(Player player, byte inventorySlotIndex, short amount)
+    internal void Sell(EntityId entityId, byte inventorySlotIndex, short amount)
     {
-        amount = Math.Min(amount, player.Inventory[inventorySlotIndex].Amount);
-        var buy = player.Shop.FindBought(player.Inventory[inventorySlotIndex].ItemId);
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var shopState = e.Get<ShopState>()!;
+        var inv = e.Get<InventoryState>()!;
+
+        var shop = _catalog.Shops.Get(shopState.ShopId!.Value);
+
+        amount = Math.Min(amount, inv.Slots[inventorySlotIndex].Amount);
+        var buy = shop.FindBought(inv.Slots[inventorySlotIndex].ItemId);
 
         if (buy == null)
         {
-            chatSender.Message(player, "The store doesn't sell this item", Color.Red);
+            chatSender.Message(entityId, "The store doesn't sell this item", Color.Red);
             return;
         }
 
-        if (player.TotalInventoryFree == 0 && player.Inventory[inventorySlotIndex].Amount > amount)
+        if (inv.TotalFree == 0 && inv.Slots[inventorySlotIndex].Amount > amount)
         {
-            chatSender.Message(player, "You don't have space in your bag.", Color.Red);
+            chatSender.Message(entityId, "You don't have space in your bag.", Color.Red);
             return;
         }
 
-        var soldItem = _catalog.Items.Get(player.Inventory[inventorySlotIndex].ItemId);
+        var soldItem = _catalog.Items.Get(inv.Slots[inventorySlotIndex].ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
-        var currencyItem = _catalog.Items.Get(player.Shop.CurrencyId);
-        chatSender.Message(player,
+        var currencyItem = _catalog.Items.Get(shop.CurrencyId);
+        chatSender.Message(entityId,
             "You sold " + soldItemName + "x " + amount + " for .", Color.Green);
-        inventorySystem.TakeItem(player, player.Inventory[inventorySlotIndex], amount);
-        inventorySystem.GiveItem(player, currencyItem, (short)(buy.Price * amount));
+        inventorySystem.TakeItem(entityId, inv.Slots[inventorySlotIndex], amount);
+        inventorySystem.GiveItem(entityId, currencyItem, (short)(buy.Price * amount));
     }
 
     public void Execute(GameWorld world, Tick tick)
@@ -102,25 +122,28 @@ internal sealed class ShopSystem(
             {
                 case PlayerStartedMovingEvent e:
                     {
-                        var player = world.FindPlayer(e.PlayerId);
-                        if (player != null) Leave(player);
+                        var playerId = world.FindPlayerByValue(e.PlayerId);
+                        if (playerId != null) Leave(playerId.Value);
                         break;
                     }
                 case PlayerWarpedEvent e:
                     {
-                        var player = world.FindPlayer(e.PlayerId);
-                        if (player != null) Leave(player);
+                        var playerId = world.FindPlayerByValue(e.PlayerId);
+                        if (playerId != null) Leave(playerId.Value);
                         break;
                     }
                 case NpcAttackedEvent e:
                     {
-                        var attacker = world.FindPlayer(e.AttackerId);
-                        var npc = world.FindNpcInstance(e.NpcInstanceId);
-                        if (attacker == null || npc == null) break;
-                        if (npc.Data.Behaviour == Behaviour.ShopKeeper)
+                        var attackerId = world.FindPlayerByValue(e.AttackerId);
+                        var npcId = world.FindNpcInstance(e.NpcInstanceId);
+                        if (attackerId == null || npcId == null) break;
+                        var npcE = world.Entities.Get(npcId.Value)!;
+                        var npcState = npcE.Get<NpcState>()!;
+                        var npcData = _catalog.Npcs.Get(npcState.NpcDefId);
+                        if (npcData.Behaviour == Behaviour.ShopKeeper)
                         {
-                            var shop = _catalog.Shops.Get(npc.Data.ShopId);
-                            if (shop != null) Open(attacker, shop);
+                            var shop = _catalog.Shops.Get(npcData.ShopId);
+                            if (shop != null) Open(attackerId.Value, shop);
                         }
                         break;
                     }

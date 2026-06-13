@@ -1,5 +1,5 @@
 using CryBits.Definitions.Common;
-using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
 using LiteNetLib;
 using System.Collections.Generic;
 
@@ -27,10 +27,10 @@ internal sealed class GameSession(NetPeer connection)
     public bool InEditor { get; set; }
 
     /// <summary>
-    /// The player character that is currently in the world, or
+    /// The player character entity ID that is currently in the world, or
     /// <see langword="null"/> when the session is at the character-selection screen.
     /// </summary>
-    public Player? Character { get; set; }
+    public EntityId? Character { get; set; }
 
     /// <summary>Character slots shown on the character-selection screen.</summary>
     public List<CharacterSlot> Characters { get; set; } = [];

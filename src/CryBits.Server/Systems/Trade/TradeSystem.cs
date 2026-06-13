@@ -4,7 +4,10 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Slots;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using System.Linq;
 using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.State;
+using CryBits.Server.Simulation.State.Components;
 using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.World;
@@ -30,194 +33,250 @@ internal sealed class TradeSystem(
         PlayerSender.Instance,
         DefinitionCatalog.Instance);
 
-    internal void Invite(Player player, string targetName)
+    internal void Invite(EntityId entityId, string targetName)
     {
-        var invited = GameWorld.Current.FindPlayer(targetName);
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(entityId)!;
+        var appearance = e.Get<PlayerAppearance>()!;
+        var pos = e.Get<Position>()!;
+        var trade = e.Get<TradeState>()!;
+        var shop = e.Get<ShopState>();
 
-        if (invited == null)
+        var invitedId = world.FindPlayer(targetName);
+
+        if (invitedId == null)
         {
-            chatSender.Message(player, "The player isn't connected.", Color.White);
+            chatSender.Message(entityId, "The player isn't connected.", Color.White);
             return;
         }
 
-        if (invited == player)
+        if (invitedId.Value == entityId)
         {
-            chatSender.Message(player, "You can't be invited.", Color.White);
+            chatSender.Message(entityId, "You can't be invited.", Color.White);
             return;
         }
 
-        if (invited.Trade != null)
+        var invitedE = world.Entities.Get(invitedId.Value)!;
+        var invitedTrade = invitedE.Get<TradeState>()!;
+        var invitedPos = invitedE.Get<Position>()!;
+        var invitedShop = invitedE.Get<ShopState>();
+
+        if (invitedTrade.Partner != null)
         {
-            chatSender.Message(player, "The player is already part of a trade.", Color.White);
+            chatSender.Message(entityId, "The player is already part of a trade.", Color.White);
             return;
         }
 
-        if (!string.IsNullOrEmpty(invited.TradeRequest))
+        if (!string.IsNullOrEmpty(invitedTrade.Request))
         {
-            chatSender.Message(player, "The player is analyzing an invitation of another trade.", Color.White);
+            chatSender.Message(entityId, "The player is analyzing an invitation of another trade.", Color.White);
             return;
         }
 
-        if (player.Shop != null)
+        if (shop?.ShopId != null)
         {
-            chatSender.Message(player, "You can't start a trade while in the shop.", Color.White);
+            chatSender.Message(entityId, "You can't start a trade while in the shop.", Color.White);
             return;
         }
 
-        if (invited.Shop != null)
+        if (invitedShop?.ShopId != null)
         {
-            chatSender.Message(player, "The player is in the shop.", Color.White);
+            chatSender.Message(entityId, "The player is in the shop.", Color.White);
             return;
         }
 
-        if (Math.Abs(player.X - invited.X) + Math.Abs(player.Y - invited.Y) != 1)
+        if (Math.Abs(pos.X - invitedPos.X) + Math.Abs(pos.Y - invitedPos.Y) != 1)
         {
-            chatSender.Message(player, "You need to be close to the player to start trade.", Color.White);
+            chatSender.Message(entityId, "You need to be close to the player to start trade.", Color.White);
             return;
         }
 
-        invited.TradeRequest = player.Name;
-        tradeSender.TradeInvitation(invited, player.Name);
+        invitedTrade.Request = appearance.Name;
+        tradeSender.TradeInvitation(invitedId.Value, appearance.Name);
     }
 
-    internal void Accept(Player player)
+    internal void Accept(EntityId entityId)
     {
-        var invited = GameWorld.Current.FindPlayer(player.TradeRequest);
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(entityId)!;
+        var appearance = e.Get<PlayerAppearance>()!;
+        var pos = e.Get<Position>()!;
+        var trade = e.Get<TradeState>()!;
+        var shop = e.Get<ShopState>();
 
-        if (player.Trade != null)
+        var invitedId = world.FindPlayer(trade.Request);
+
+        if (trade.Partner != null)
         {
-            chatSender.Message(player, "You are already part of a trade.", Color.White);
+            chatSender.Message(entityId, "You are already part of a trade.", Color.White);
             return;
         }
 
-        if (invited == null)
+        if (invitedId == null)
         {
-            chatSender.Message(player, "Who invited you is no longer available.", Color.White);
+            chatSender.Message(entityId, "Who invited you is no longer available.", Color.White);
             return;
         }
 
-        if (Math.Abs(player.X - invited.X) + Math.Abs(player.Y - invited.Y) != 1)
+        var invitedE = world.Entities.Get(invitedId.Value)!;
+        var invitedPos = invitedE.Get<Position>()!;
+        var invitedAppearance = invitedE.Get<PlayerAppearance>()!;
+        var invitedShop = invitedE.Get<ShopState>();
+
+        if (Math.Abs(pos.X - invitedPos.X) + Math.Abs(pos.Y - invitedPos.Y) != 1)
         {
-            chatSender.Message(player, "You need to be close to the player to accept the trade.", Color.White);
+            chatSender.Message(entityId, "You need to be close to the player to accept the trade.", Color.White);
             return;
         }
 
-        if (invited.Shop != null)
+        if (invitedShop?.ShopId != null)
         {
-            chatSender.Message(player, "Who invited you is in the shop.", Color.White);
+            chatSender.Message(entityId, "Who invited you is in the shop.", Color.White);
             return;
         }
 
-        player.Trade = invited;
-        invited.Trade = player;
-        chatSender.Message(player, "You have accepted " + invited.Name + "'s trade request.", Color.White);
-        chatSender.Message(invited, player.Name + " has accepted your trade request.", Color.White);
+        trade.Partner = invitedId.Value;
+        var invitedTrade = invitedE.Get<TradeState>()!;
+        invitedTrade.Partner = entityId;
+        chatSender.Message(entityId, "You have accepted " + invitedAppearance.Name + "'s trade request.", Color.White);
+        chatSender.Message(invitedId.Value, appearance.Name + " has accepted your trade request.", Color.White);
 
-        player.TradeRequest = string.Empty;
-        player.TradeOffer = new TradeSlot[MaxInventory];
-        invited.TradeOffer = new TradeSlot[MaxInventory];
+        trade.Request = string.Empty;
+        trade.Offer = new TradeSlot[MaxInventory];
+        invitedTrade.Offer = new TradeSlot[MaxInventory];
 
-        tradeSender.Trade(player, true);
-        tradeSender.Trade(invited, true);
+        tradeSender.Trade(entityId, true);
+        tradeSender.Trade(invitedId.Value, true);
     }
 
-    internal void Decline(Player player)
+    internal void Decline(EntityId entityId)
     {
-        var invited = GameWorld.Current.FindPlayer(player.TradeRequest);
-        if (invited != null) chatSender.Message(invited, player.Name + " decline the trade.", Color.White);
-        player.TradeRequest = string.Empty;
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(entityId)!;
+        var appearance = e.Get<PlayerAppearance>()!;
+        var trade = e.Get<TradeState>()!;
+
+        var invitedId = world.FindPlayer(trade.Request);
+        if (invitedId != null) chatSender.Message(invitedId.Value, appearance.Name + " decline the trade.", Color.White);
+        trade.Request = string.Empty;
     }
 
-    public void Leave(Player player)
+    public void Leave(EntityId entityId)
     {
-        if (player.Trade == null) return;
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(entityId)!;
+        var trade = e.Get<TradeState>();
+        if (trade == null || trade.Partner == null) return;
 
-        player.Trade.Trade = null;
-        tradeSender.Trade(player.Trade, false);
-        player.Trade = null;
-        tradeSender.Trade(player, false);
+        var partnerE = world.Entities.Get(trade.Partner.Value)!;
+        var partnerTrade = partnerE.Get<TradeState>()!;
+
+        partnerTrade.Partner = null;
+        tradeSender.Trade(trade.Partner.Value, false);
+        trade.Partner = null;
+        tradeSender.Trade(entityId, false);
     }
 
-    internal void Offer(Player player, short slot, short inventorySlot, short amount)
+    internal void Offer(EntityId entityId, short slot, short inventorySlot, short amount)
     {
-        amount = Math.Min(amount, player.Inventory[inventorySlot].Amount);
+        var e = GameWorld.Current.Entities.Get(entityId)!;
+        var inv = e.Get<InventoryState>()!;
+        var trade = e.Get<TradeState>()!;
+
+        amount = Math.Min(amount, inv.Slots[inventorySlot].Amount);
 
         if (inventorySlot != 0)
         {
             for (byte i = 0; i < MaxInventory; i++)
-                if (player.TradeOffer[i].SlotNum == inventorySlot)
+                if (trade.Offer[i].SlotNum == inventorySlot)
                     return;
 
-            player.TradeOffer[slot].SlotNum = inventorySlot;
-            player.TradeOffer[slot].Amount = amount;
+            trade.Offer[slot].SlotNum = inventorySlot;
+            trade.Offer[slot].Amount = amount;
         }
         else
-            player.TradeOffer[slot] = new TradeSlot();
+            trade.Offer[slot] = new TradeSlot();
 
-        tradeSender.TradeOffer(player);
-        tradeSender.TradeOffer(player.Trade, false);
+        tradeSender.TradeOffer(entityId);
+        if (trade.Partner.HasValue) tradeSender.TradeOffer(trade.Partner.Value, false);
     }
 
-    internal void OfferState(Player player, TradeStatus state)
+    internal void OfferState(EntityId entityId, TradeStatus state)
     {
-        var invited = player.Trade;
+        var world = GameWorld.Current;
+        var e = world.Entities.Get(entityId)!;
+        var inv = e.Get<InventoryState>()!;
+        var trade = e.Get<TradeState>()!;
+
+        var invitedId = trade.Partner;
+        if (!invitedId.HasValue) return;
+
+        var appearance = e.Get<PlayerAppearance>()!;
+        var invitedE = world.Entities.Get(invitedId.Value)!;
+        var invitedInv = invitedE.Get<InventoryState>()!;
+        var invitedAppearance = invitedE.Get<PlayerAppearance>()!;
+        var invitedTrade = invitedE.Get<TradeState>()!;
 
         switch (state)
         {
             case TradeStatus.Accepted:
-                if (player.TotalTradeItems > invited.TotalInventoryFree)
+                if (trade.Offer.Count(x => x.SlotNum != 0) > invitedInv.TotalFree)
                 {
-                    chatSender.Message(invited,
-                        invited.Name + " don't have enough space in their inventory to do this trade.", Color.Red);
+                    chatSender.Message(invitedId.Value,
+                        invitedAppearance.Name + " don't have enough space in their inventory to do this trade.", Color.Red);
                     break;
                 }
 
-                if (invited.TotalTradeItems > player.TotalInventoryFree)
+                if (invitedTrade.Offer.Count(x => x.SlotNum != 0) > inv.TotalFree)
                 {
-                    chatSender.Message(invited, "You don't have enough space in your inventory to do this trade.",
+                    chatSender.Message(invitedId.Value, "You don't have enough space in your inventory to do this trade.",
                         Color.Red);
                     break;
                 }
 
-                chatSender.Message(invited, "The offer was accepted.", Color.Green);
+                chatSender.Message(invitedId.Value, "The offer was accepted.", Color.Green);
 
-                ItemSlot[] yourInventory = (ItemSlot[])player.Inventory.Clone(),
-                    theirInventory = (ItemSlot[])invited.Inventory.Clone();
+                ItemSlot[] yourInventory = (ItemSlot[])inv.Slots.Clone(),
+                    theirInventory = (ItemSlot[])invitedInv.Slots.Clone();
 
-                var to = player;
-                for (byte j = 0; j < 2; j++, to = to == player ? invited : player)
+                var to = entityId;
+                for (byte j = 0; j < 2; j++, to = to == entityId ? invitedId.Value : entityId)
                     for (byte i = 0; i < MaxInventory; i++)
-                        inventorySystem.TakeItem(to, to.Inventory[to.TradeOffer[i].SlotNum], to.TradeOffer[i].Amount);
+                    {
+                        var toInv = to == entityId ? inv : invitedInv;
+                        var toTrade = to == entityId ? trade : invitedTrade;
+                        inventorySystem.TakeItem(to, toInv.Slots[toTrade.Offer[i].SlotNum], toTrade.Offer[i].Amount);
+                    }
 
                 for (byte i = 0; i < MaxInventory; i++)
                 {
-                    if (player.TradeOffer[i].SlotNum > 0)
-                        inventorySystem.GiveItem(invited, _catalog.Items.Get(yourInventory[player.TradeOffer[i].SlotNum].ItemId),
-                            player.TradeOffer[i].Amount);
-                    if (invited.TradeOffer[i].SlotNum > 0)
-                        inventorySystem.GiveItem(player, _catalog.Items.Get(theirInventory[invited.TradeOffer[i].SlotNum].ItemId),
-                            invited.TradeOffer[i].Amount);
+                    if (trade.Offer[i].SlotNum > 0)
+                        inventorySystem.GiveItem(invitedId.Value, _catalog.Items.Get(yourInventory[trade.Offer[i].SlotNum].ItemId),
+                            trade.Offer[i].Amount);
+                    if (invitedTrade.Offer[i].SlotNum > 0)
+                        inventorySystem.GiveItem(entityId, _catalog.Items.Get(theirInventory[invitedTrade.Offer[i].SlotNum].ItemId),
+                            invitedTrade.Offer[i].Amount);
                 }
 
-                playerSender.PlayerInventory(player);
-                playerSender.PlayerInventory(invited);
+                playerSender.PlayerInventory(entityId);
+                playerSender.PlayerInventory(invitedId.Value);
 
-                player.TradeOffer = new TradeSlot[MaxInventory];
-                invited.TradeOffer = new TradeSlot[MaxInventory];
-                tradeSender.TradeOffer(invited);
-                tradeSender.TradeOffer(invited, false);
+                trade.Offer = new TradeSlot[MaxInventory];
+                invitedTrade.Offer = new TradeSlot[MaxInventory];
+                tradeSender.TradeOffer(invitedId.Value);
+                tradeSender.TradeOffer(invitedId.Value, false);
                 break;
 
             case TradeStatus.Declined:
-                chatSender.Message(invited, "The offer was declined.", Color.Red);
+                chatSender.Message(invitedId.Value, "The offer was declined.", Color.Red);
                 break;
 
             case TradeStatus.Waiting:
-                chatSender.Message(invited, player.Name + " send you a offer.", Color.White);
+                chatSender.Message(invitedId.Value, appearance.Name + " send you a offer.", Color.White);
                 break;
         }
 
-        tradeSender.TradeState(invited, state);
+        tradeSender.TradeState(invitedId.Value, state);
     }
 
     public void Execute(GameWorld world, Tick tick)
@@ -228,20 +287,20 @@ internal sealed class TradeSystem(
             {
                 case PlayerStartedMovingEvent e:
                     {
-                        var player = world.FindPlayer(e.PlayerId);
-                        if (player != null) Leave(player);
+                        var playerId = world.FindPlayerByValue(e.PlayerId);
+                        if (playerId != null) Leave(playerId.Value);
                         break;
                     }
                 case PlayerWarpedEvent e:
                     {
-                        var player = world.FindPlayer(e.PlayerId);
-                        if (player != null) Leave(player);
+                        var playerId = world.FindPlayerByValue(e.PlayerId);
+                        if (playerId != null) Leave(playerId.Value);
                         break;
                     }
                 case PlayerDisconnectedEvent e:
                     {
-                        var player = world.FindPlayer(e.PlayerId);
-                        if (player != null) Leave(player);
+                        var playerId = world.FindPlayerByValue(e.PlayerId);
+                        if (playerId != null) Leave(playerId.Value);
                         break;
                     }
             }

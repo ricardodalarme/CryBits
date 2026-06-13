@@ -1,6 +1,6 @@
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
-using CryBits.Server.Entities;
+using CryBits.Server.Simulation.State;
 using CryBits.Server.Systems.Party;
 
 namespace CryBits.Server.Network.Handlers;
@@ -10,26 +10,26 @@ internal sealed class PartyHandler(PartySystem partySystem)
     public static PartyHandler Instance { get; } = new(PartySystem.Instance);
 
     [PacketHandler]
-    internal void PartyInvite(Player player, PartyInvitePacket packet)
+    internal void PartyInvite(EntityId entityId, PartyInvitePacket packet)
     {
-        partySystem.Invite(player, packet.PlayerName);
+        partySystem.Invite(entityId, packet.PlayerName);
     }
 
     [PacketHandler]
-    internal void PartyAccept(Player player, PartyAcceptPacket _)
+    internal void PartyAccept(EntityId entityId, PartyAcceptPacket _)
     {
-        partySystem.Accept(player);
+        partySystem.Accept(entityId);
     }
 
     [PacketHandler]
-    internal void PartyDecline(Player player, PartyDeclinePacket _)
+    internal void PartyDecline(EntityId entityId, PartyDeclinePacket _)
     {
-        partySystem.Decline(player);
+        partySystem.Decline(entityId);
     }
 
     [PacketHandler]
-    internal void PartyLeave(Player player, PartyLeavePacket _)
+    internal void PartyLeave(EntityId entityId, PartyLeavePacket _)
     {
-        partySystem.Leave(player);
+        partySystem.Leave(entityId);
     }
 }
