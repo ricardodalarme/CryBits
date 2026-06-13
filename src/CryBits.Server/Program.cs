@@ -4,11 +4,11 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Host.Core;
-using CryBits.Host.Logic;
 using CryBits.Host.Network;
 using CryBits.Host.Network.Handlers;
 using CryBits.Host.Persistence;
 using CryBits.Host.Persistence.Repositories;
+using CryBits.Host.Scheduling;
 using CryBits.Server.Commands;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
@@ -128,16 +128,17 @@ internal static class Program
 
         // Start command loop on background thread.
         var dispatcher = new CommandDispatcher()
-            .Register<CpsCommand>()
             .Register<DefineAccessCommand>()
             .Register<SeedCommand>();
-        var consoleThread = new Thread(() => Loop.Instance.Commands(dispatcher.Dispatch, cts.Token)) { IsBackground = true };
+
+        // Start command loop on background thread.
+        var consoleThread = new Thread(() => ConsoleLoop.Run(dispatcher, cts.Token)) { IsBackground = true };
         consoleThread.Start();
 
         // Start main loop and wait for cancellation.
         try
         {
-            await Loop.Instance.MainAsync(cts.Token);
+            await TickDriver.Instance.MainAsync(cts.Token);
         }
         catch (OperationCanceledException)
         {

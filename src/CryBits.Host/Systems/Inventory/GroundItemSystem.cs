@@ -1,6 +1,6 @@
 using CryBits.Host.Network.Senders;
 using CryBits.Simulation.Core;
-using System;
+using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Host.Systems.Inventory;
 
@@ -8,12 +8,12 @@ internal sealed class GroundItemSystem(MapSender mapSender) : ISimulationSystem
 {
     public static GroundItemSystem Instance { get; } = new(MapSender.Instance);
 
-    private long _timer;
+    private long _lastCleanTick;
 
     public void Execute(World world, Tick tick)
     {
-        if (Environment.TickCount64 <= _timer + 300000) return;
-        _timer = Environment.TickCount64;
+        if (tick.TickNumber - _lastCleanTick < TicksPerSecond * 300) return;
+        _lastCleanTick = tick.TickNumber;
 
         foreach (var map in world.Maps.Values)
         {

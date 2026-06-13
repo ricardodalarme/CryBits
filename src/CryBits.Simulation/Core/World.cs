@@ -8,6 +8,7 @@ namespace CryBits.Simulation.Core;
 public sealed class World
 {
     public Dictionary<Guid, MapState> Maps { get; } = [];
+    public long TickCount { get; set; }
     public EntityRegistry Entities { get; } = new();
     public DirtyTracking Dirty { get; } = new();
     public Tick? CurrentTick { get; set; }

@@ -292,7 +292,7 @@ internal sealed class CombatSystem(
 
         npcState.Alive = false;
         npcState.TargetId = null;
-        npcState.SpawnTimer = Environment.TickCount64;
+        npcState.SpawnTimer = world.CurrentTick!.TickNumber;
         world.Dirty.Mark<NpcState>(npcId);
     }
 

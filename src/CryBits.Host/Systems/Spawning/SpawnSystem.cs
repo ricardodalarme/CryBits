@@ -3,7 +3,7 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Simulation.Components;
 using CryBits.Host.Systems.Npc;
 using CryBits.Simulation.Core;
-using System;
+using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Host.Systems.Spawning;
 
@@ -24,7 +24,7 @@ internal sealed class SpawnSystem : ISimulationSystem
                 var npcState = e.Get<NpcState>();
                 if (npcState == null || npcState.Alive) continue;
                 var npcData = DefinitionCatalog.Instance.Npcs.Get(npcState.NpcDefId);
-                if (Environment.TickCount64 > npcState.SpawnTimer + npcData.SpawnTime * 1000)
+                if (tick.TickNumber > npcState.SpawnTimer + npcData.SpawnTime * TicksPerSecond)
                     NpcBrainSystem.Instance.Spawn(world, npcId);
             }
         }

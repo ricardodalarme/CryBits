@@ -9,6 +9,7 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 using System;
+using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Host.Systems.Npc;
 
@@ -24,8 +25,8 @@ internal sealed class NpcBrainSystem(
 
     public void Execute(World world, Tick tick)
     {
-        if (Environment.TickCount64 <= _lastTick + 500) return;
-        _lastTick = Environment.TickCount64;
+        if (tick.TickNumber - _lastTick < TicksPerSecond / 2) return;
+        _lastTick = tick.TickNumber;
 
         foreach (var map in world.Maps.Values)
         {
