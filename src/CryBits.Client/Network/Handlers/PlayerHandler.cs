@@ -10,8 +10,8 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
-using CryBits.Network;
-using CryBits.Network.Packets.Server;
+using CryBits.Transport;
+using CryBits.Transport.Packets.Server;
 using static CryBits.Definitions.Globals;
 using Entity = Arch.Core.Entity;
 

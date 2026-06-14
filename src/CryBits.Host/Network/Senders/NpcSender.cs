@@ -2,7 +2,7 @@ using CryBits.Definitions;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
-using CryBits.Network.Packets.Server;
+using CryBits.Transport.Packets.Server;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using LiteNetLib;

@@ -1,5 +1,5 @@
-using CryBits.Network;
-using CryBits.Network.Packets.Server;
+using CryBits.Transport;
+using CryBits.Transport.Packets.Server;
 using CryBits.Simulation.Components;
 using LiteNetLib;
 using LiteNetLib.Utils;

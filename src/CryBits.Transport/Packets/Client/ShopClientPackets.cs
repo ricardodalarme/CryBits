@@ -1,6 +1,6 @@
 using System;
 
-namespace CryBits.Network.Packets.Client;
+namespace CryBits.Transport.Packets.Client;
 
 [Serializable] public struct ShopBuyPacket : IClientPacket { public short Slot; }
 [Serializable] public struct ShopSellPacket : IClientPacket { public short Slot; public short Amount; }

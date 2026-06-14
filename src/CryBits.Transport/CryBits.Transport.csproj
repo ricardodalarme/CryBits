@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <RootNamespace>CryBits.Network</RootNamespace>
-    <AssemblyName>CryBits.Network</AssemblyName>
+    <RootNamespace>CryBits.Transport</RootNamespace>
+    <AssemblyName>CryBits.Transport</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>../../Build/Network/</OutputPath>
+    <OutputPath>../../Build/Transport/</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

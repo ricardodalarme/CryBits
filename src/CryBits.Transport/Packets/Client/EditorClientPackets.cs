@@ -6,7 +6,7 @@ using CryBits.Definitions.Shops;
 using System;
 using System.Collections.Generic;
 
-namespace CryBits.Network.Packets.Client;
+namespace CryBits.Transport.Packets.Client;
 
 [Serializable] public struct WriteClassesPacket : IClientPacket { public Dictionary<Guid, Class> Classes; }
 [Serializable] public struct WriteMapsPacket : IClientPacket { public Dictionary<Guid, Map> Maps; }

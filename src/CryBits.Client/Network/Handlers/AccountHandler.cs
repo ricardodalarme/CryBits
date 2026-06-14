@@ -8,8 +8,8 @@ using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
-using CryBits.Network;
-using CryBits.Network.Packets.Server;
+using CryBits.Transport;
+using CryBits.Transport.Packets.Server;
 using System;
 using OptionsView = CryBits.Client.UI.Game.Views.OptionsView;
 

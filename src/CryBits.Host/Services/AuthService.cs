@@ -1,6 +1,6 @@
 using CryBits.Definitions.Common;
-using CryBits.Network;
-using CryBits.Network.Packets.Client;
+using CryBits.Transport;
+using CryBits.Transport.Packets.Client;
 using CryBits.Host.Core;
 using CryBits.Host.Network.Senders;
 using CryBits.Host.Persistence;

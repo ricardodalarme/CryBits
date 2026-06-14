@@ -4,7 +4,7 @@ using CryBits.Definitions.Npcs;
 using System;
 using System.Collections.Generic;
 
-namespace CryBits.Network.Packets.Server;
+namespace CryBits.Transport.Packets.Server;
 
 [Serializable]
 public struct ClassesPacket : IServerPacket

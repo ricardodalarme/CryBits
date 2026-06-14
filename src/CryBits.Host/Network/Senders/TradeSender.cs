@@ -1,5 +1,5 @@
 using CryBits.Definitions.Common;
-using CryBits.Network.Packets.Server;
+using CryBits.Transport.Packets.Server;
 using CryBits.Simulation.Components;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.State;

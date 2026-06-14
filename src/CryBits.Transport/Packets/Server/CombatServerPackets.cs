@@ -1,6 +1,6 @@
 using System;
 
-namespace CryBits.Network.Packets.Server;
+namespace CryBits.Transport.Packets.Server;
 
 [Serializable]
 public struct CombatAttackPacket : IServerPacket

@@ -1,7 +1,7 @@
 using CryBits.Definitions.Characters;
 using System;
 
-namespace CryBits.Network.Packets.Client;
+namespace CryBits.Transport.Packets.Client;
 
 [Serializable]
 public struct CreateCharacterPacket : IClientPacket

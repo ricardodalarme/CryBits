@@ -1,7 +1,7 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Shops;
-using CryBits.Network.Packets.Server;
+using CryBits.Transport.Packets.Server;
 using CryBits.Host.Core;
 using CryBits.Simulation.State;
 

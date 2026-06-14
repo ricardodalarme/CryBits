@@ -109,7 +109,7 @@
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
-          "CryBits.Network": "[1.0.0, )",
+          "CryBits.Transport": "[1.0.0, )",
           "CryBits.Persistence": "[1.0.0, )",
           "SFML.Audio": "[3.0.0, )",
           "SFML.Graphics": "[3.0.0, )",
@@ -123,7 +123,7 @@
           "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
-      "crybits.network": {
+      "crybits.transport": {
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",

@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.Network;
 using CryBits.Definitions.Common;
-using CryBits.Network.Packets.Client;
+using CryBits.Transport.Packets.Client;
 using LiteNetLib;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 

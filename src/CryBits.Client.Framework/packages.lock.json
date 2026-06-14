@@ -63,7 +63,7 @@
           "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
-      "crybits.network": {
+      "crybits.transport": {
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
