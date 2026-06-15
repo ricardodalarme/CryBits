@@ -3,11 +3,11 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Transport;
 using CryBits.Transport.Packets.Client;
-using CryBits.Persistence.Stores;
 using CryBits.Host.Network.Senders;
 using CryBits.Simulation.Components;
 using System.Linq;
 using CryBits.Host.Core;
+using CryBits.Persistence.Repositories;
 
 namespace CryBits.Host.Services;
 
@@ -19,7 +19,7 @@ internal sealed class EditorService(
     NpcSender npcSender,
     ShopSender shopSender,
     PlayerSender playerSender,
-    FileContentStore contentStore,
+    ContentRepository contentRepository,
     DefinitionCatalog catalog,
     WorldHost host)
 {
@@ -33,7 +33,7 @@ internal sealed class EditorService(
         }
 
         catalog.Classes = packet.Classes;
-        contentStore.SaveAll(catalog.Classes.Values);
+        contentRepository.SaveAll(catalog.Classes.Values);
 
         foreach (var t in host.Sessions.Where(t => t != session))
             classSender.Classes(t);
@@ -49,7 +49,7 @@ internal sealed class EditorService(
         }
 
         catalog.Maps = packet.Maps;
-        contentStore.SaveAll(catalog.Maps.Values);
+        contentRepository.SaveAll(catalog.Maps.Values);
 
         foreach (var tempMap in host.Maps.Values)
         {
@@ -81,7 +81,7 @@ internal sealed class EditorService(
         }
 
         catalog.Npcs = packet.Npcs;
-        contentStore.SaveAll(catalog.Npcs.Values);
+        contentRepository.SaveAll(catalog.Npcs.Values);
 
         foreach (var t in host.Sessions.Where(t => t != session))
             npcSender.Npcs(t);
@@ -97,7 +97,7 @@ internal sealed class EditorService(
         }
 
         catalog.Items = packet.Items;
-        contentStore.SaveAll(catalog.Items.Values);
+        contentRepository.SaveAll(catalog.Items.Values);
 
         foreach (var t in host.Sessions.Where(t => t != session))
             itemSender.Items(t);
@@ -113,7 +113,7 @@ internal sealed class EditorService(
         }
 
         catalog.Shops = packet.Shops;
-        contentStore.SaveAll(catalog.Shops.Values);
+        contentRepository.SaveAll(catalog.Shops.Values);
 
         foreach (var t in host.Sessions.Where(t => t != session))
             shopSender.Shops(t);

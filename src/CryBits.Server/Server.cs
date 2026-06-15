@@ -1,8 +1,10 @@
+using CryBits.Host;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
-using CryBits.Host.Persistence;
 using CryBits.Host.Services;
+using CryBits.Persistence;
 using CryBits.Transport.Abstractions;
+using LinqToDB.Data;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,7 @@ internal sealed class Server(
     WorldInitializer worldInitializer,
     ReplicationService replicationService,
     CharacterService characterService,
+    DataConnection dataConnection,
     IEnumerable<object> packetHandlers) : IHostedService
 {
     private CancellationTokenSource? _cts;
@@ -39,6 +42,9 @@ internal sealed class Server(
 
         Directories.Create();
         Console.WriteLine("Directories created.");
+
+        SchemaBootstrap.EnsureCreated(dataConnection);
+        Console.WriteLine("Database schema ensured.");
 
         Console.WriteLine("Creating world.");
         dataLoader.LoadAll();

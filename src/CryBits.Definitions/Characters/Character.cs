@@ -2,7 +2,6 @@ using System;
 
 namespace CryBits.Definitions.Characters;
 
-[Serializable]
 public sealed class Character
 {
     public string Name { get; set; } = string.Empty;

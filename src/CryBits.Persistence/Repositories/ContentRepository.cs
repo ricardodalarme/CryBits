@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace CryBits.Persistence.Stores;
+namespace CryBits.Persistence.Repositories;
 
-public class FileContentStore(DirectoryInfo data)
+public class ContentRepository()
 {
-    private readonly DirectoryInfo _data = data;
     private const string Format = ".json";
 
     public T? Load<T>(Guid id) where T : Entity
@@ -50,7 +49,7 @@ public class FileContentStore(DirectoryInfo data)
     }
 
     public DirectoryInfo DirectoryFor<T>() where T : Entity =>
-        new(Path.Combine(_data.FullName, typeof(T).Name));
+        new(Path.Combine(Directories.Content.FullName, typeof(T).Name));
 
     private string PathFor<T>(Guid id) where T : Entity =>
         Path.Combine(DirectoryFor<T>().FullName, id.ToString()) + Format;

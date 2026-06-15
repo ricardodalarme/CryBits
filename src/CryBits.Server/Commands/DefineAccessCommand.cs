@@ -24,7 +24,6 @@ internal sealed class DefineAccessCommand : IConsoleCommand
         }
 
         session.Account.AccessLevel = (Access)Access;
-        ServerContext.AccountRepository?.Write(session.Account);
         Console.WriteLine($"{(Access)Access} access granted to {PlayerName}.");
     }
 }

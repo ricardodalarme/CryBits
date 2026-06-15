@@ -5,14 +5,14 @@ using CryBits.Definitions.Items;
 using CryBits.Transport;
 using CryBits.Transport.Packets.Client;
 using CryBits.Host.Network.Senders;
-using CryBits.Host.Persistence;
-using CryBits.Host.Persistence.Repositories;
+using CryBits.Persistence;
+using CryBits.Persistence.Models;
+using CryBits.Persistence.Repositories;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Spawners;
 using System;
 using System.Drawing;
-using System.IO;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.State;
 using CryBits.Host.Core;
@@ -21,7 +21,6 @@ namespace CryBits.Host.Services;
 
 internal sealed class CharacterService(
     CharacterRepository characterRepository,
-    AccountRepository accountRepository,
     AuthSender authSender,
     PlayerSender playerSender,
     ItemSender itemSender,
@@ -48,13 +47,7 @@ internal sealed class CharacterService(
             return;
         }
 
-        if (name.Contains(';') || name.Contains(':'))
-        {
-            authSender.Alert(session, "Can't contain ';' and ':' in the character name.", false);
-            return;
-        }
-
-        if (characterRepository.ReadAllNames().Contains(";" + name + ":"))
+        if (characterRepository.NameExists(name))
         {
             authSender.Alert(session, "A character with this name already exists", false);
             return;
@@ -101,8 +94,7 @@ internal sealed class CharacterService(
             }
         }
 
-        characterRepository.WriteName(name);
-        characterRepository.Write(session.Account!, data);
+        characterRepository.Save(session.Account!.Username, data);
 
         Join(session, data);
     }
@@ -112,7 +104,7 @@ internal sealed class CharacterService(
     {
         if (packet.CharacterIndex < 0 || packet.CharacterIndex >= session.Account!.Characters.Count) return;
 
-        var data = characterRepository.Read(session.Account!,
+        var data = characterRepository.Find(session.Account!.Username,
             session.Account!.Characters[packet.CharacterIndex].Name);
         if (data == null) return;
 
@@ -139,12 +131,10 @@ internal sealed class CharacterService(
 
         var name = session.Account!.Characters[packet.CharacterIndex].Name;
         authSender.Alert(session, "The character '" + name + "' has been deleted.", false);
-        characterRepository.WriteAllNames(characterRepository.ReadAllNames().Replace(":;" + name + ":", ":"));
+        characterRepository.Delete(session.Account!.Username, name);
         session.Account!.Characters.RemoveAt(packet.CharacterIndex);
-        File.Delete(Path.Combine(Directories.Accounts.FullName, session.Account!.Username, "Characters", name) + Directories.Format);
 
         accountSender.Characters(session);
-        accountRepository.Write(session.Account!);
     }
 
     internal void Leave(EntityId entityId)
@@ -218,7 +208,7 @@ internal sealed class CharacterService(
             data.HotbarSlots[i] = (byte)hotbar.Slots[i].Slot;
         }
 
-        characterRepository.Write(session.Account!, data);
+        characterRepository.Save(session.Account!.Username, data);
     }
 
     private void Join(Session session, Character data)

@@ -3,9 +3,10 @@ using CryBits.Transport;
 using CryBits.Transport.Packets.Client;
 using CryBits.Host.Core;
 using CryBits.Host.Network.Senders;
-using CryBits.Host.Persistence;
-using CryBits.Host.Persistence.Repositories;
-using System.IO;
+using CryBits.Persistence;
+using CryBits.Persistence.Models;
+using CryBits.Persistence.Repositories;
+using System.Linq;
 using static CryBits.Definitions.Globals;
 using BcryptNet = BCrypt.Net.BCrypt;
 
@@ -20,6 +21,7 @@ internal sealed class AuthService(
     NpcSender npcSender,
     AccountSender accountSender,
     AccountRepository accountRepository,
+    CharacterRepository characterRepository,
     WorldHost host)
 {
     [PacketHandler]
@@ -29,7 +31,8 @@ internal sealed class AuthService(
         var password = packet.Password;
         var editor = packet.IsClientAccess;
 
-        if (!Directory.Exists(Path.Combine(Directories.Accounts.FullName, user)))
+        var record = accountRepository.Find(user);
+        if (record == null)
         {
             authSender.Alert(session, "This username isn't registered.");
             return;
@@ -41,7 +44,12 @@ internal sealed class AuthService(
             return;
         }
 
-        session.Account = accountRepository.Read(user);
+        session.Account = new Account
+        {
+            Username = record.Username,
+            PasswordHash = record.PasswordHash,
+            AccessLevel = (Access)record.Access
+        };
 
         if (!BcryptNet.Verify(password, session.Account.PasswordHash))
         {
@@ -69,7 +77,10 @@ internal sealed class AuthService(
         }
         else
         {
-            accountRepository.ReadCharacters(session.Account);
+            session.Account.Characters = characterRepository
+                .GetSlots(session.Account.Username)
+                .Select(c => new Account.CharacterSlot { Name = c.Name, TextureNum = c.TextureNum })
+                .ToList();
             classSender.Classes(session);
             accountSender.Characters(session);
 
@@ -103,7 +114,7 @@ internal sealed class AuthService(
             return;
         }
 
-        if (File.Exists(Path.Combine(Directories.Accounts.FullName, user) + Directories.Format))
+        if (accountRepository.Find(user) != null)
         {
             authSender.Alert(session, "There is already someone registered with this name.");
             return;
@@ -115,7 +126,12 @@ internal sealed class AuthService(
             PasswordHash = BcryptNet.HashPassword(password)
         };
 
-        accountRepository.Write(session.Account);
+        accountRepository.Save(new AccountModel
+        {
+            Username = session.Account.Username,
+            PasswordHash = session.Account.PasswordHash,
+            Access = (byte)session.Account.AccessLevel
+        });
 
         classSender.Classes(session);
         accountSender.CreateCharacter(session);

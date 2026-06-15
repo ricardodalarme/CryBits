@@ -12,6 +12,11 @@
     <PackageVersion Include="BCrypt.Net-Next" Version="4.2.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Database">
+    <PackageVersion Include="linq2db" Version="5.4.1" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+  </ItemGroup>
+
   <ItemGroup Label="ECS">
     <PackageVersion Include="Arch" Version="2.1.0" />
     <PackageVersion Include="Arch.System" Version="1.1.0" />

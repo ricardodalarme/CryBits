@@ -10,13 +10,13 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Transport;
 using CryBits.Transport.Packets.Server;
-using CryBits.Persistence.Stores;
 using System.Collections.Generic;
 using Entity = Arch.Core.Entity;
+using CryBits.Persistence.Repositories;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class MapHandler(GameContext context, MapSender mapSender, AudioManager audioManager, DefinitionCatalog catalog, FileContentStore contentStore)
+internal class MapHandler(GameContext context, MapSender mapSender, AudioManager audioManager, DefinitionCatalog catalog, ContentRepository contentRepository)
 {
     private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
@@ -36,7 +36,7 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         foreach (var e in toDestroy) context.World.Destroy(e);
 
         // Check whether the map data needs to be downloaded
-        var map = contentStore.Load<Map>(id);
+        var map = contentRepository.Load<Map>(id);
         bool needed;
         if (map is not null)
         {
@@ -59,7 +59,7 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         context.CurrentMap = new ClientMap(map, context.World);
 
         // Persist map to disk
-        contentStore.Save(map);
+        contentRepository.Save(map);
 
         // Reset weather ECS state for the new map and spawn the fog entity.
         WeatherSpawner.Reset(context.World, context.CurrentMap.Data.Weather.Type);

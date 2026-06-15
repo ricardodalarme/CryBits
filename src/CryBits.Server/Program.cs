@@ -3,15 +3,17 @@ using CryBits.Host;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
 using CryBits.Host.Network.Senders;
-using CryBits.Host.Persistence;
-using CryBits.Host.Persistence.Repositories;
 using CryBits.Host.Services;
-using CryBits.Persistence.Stores;
+using CryBits.Persistence;
+using CryBits.Persistence.Repositories;
 using CryBits.Server;
 using CryBits.Server.Commands;
 using CryBits.Simulation.Core;
 using CryBits.Transport.Abstractions;
 using CryBits.Transport.Udp;
+using LinqToDB;
+using LinqToDB.Data;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -25,12 +27,24 @@ builder.ConfigureServices((ctx, services) =>
 {
     services.AddSingleton<DefinitionCatalog>();
 
+    // Database connection — single instance, WAL mode
     services.AddSingleton(_ =>
-        new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data"))));
+    {
+        Directories.Database.Directory!.Create();
+        var conn = new SqliteConnection($"Data Source={Directories.Database.FullName}");
+        conn.Open();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = "PRAGMA journal_mode=WAL;";
+        cmd.ExecuteNonQuery();
+        return conn;
+    });
+    services.AddSingleton(sp => new DataConnection(
+        new DataOptions().UseSQLiteMicrosoft(sp.GetRequiredService<SqliteConnection>().ConnectionString)));
 
-    services.AddSingleton<SettingsRepository>();
+    // Repositories
     services.AddSingleton<AccountRepository>();
     services.AddSingleton<CharacterRepository>();
+    services.AddSingleton<ContentRepository>();
     services.AddSingleton<DataLoader>();
 
     services.AddSingleton<ITransport>(_ => new UdpTransport());
@@ -87,7 +101,6 @@ var app = builder.Build();
 var host = app.Services.GetRequiredService<WorldHost>();
 ServerContext.Host = host;
 ServerContext.Catalog = app.Services.GetRequiredService<DefinitionCatalog>();
-ServerContext.AccountRepository = app.Services.GetRequiredService<AccountRepository>();
 
 var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) =>

@@ -15,11 +15,14 @@ using CryBits.Definitions.Catalog;
 using CryBits.Host;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
-using CryBits.Host.Persistence.Repositories;
 using CryBits.Host.Services;
-using CryBits.Persistence.Stores;
+using CryBits.Persistence;
+using CryBits.Persistence.Repositories;
 using CryBits.Simulation.Core;
 using CryBits.Transport.Transports;
+using LinqToDB;
+using LinqToDB.Data;
+using Microsoft.Data.Sqlite;
 using System;
 using System.IO;
 using System.Linq;
@@ -42,7 +45,7 @@ internal static class Program
     [STAThread]
     private static void Main(string[] args)
     {
-        CryBits.Host.Persistence.Directories.Create();
+        CryBits.Persistence.Directories.Create();
 
         ToolsRepository.Instance.Read();
         OptionsRepository.Read();
@@ -53,10 +56,20 @@ internal static class Program
         {
             var pair = new LoopbackPair();
             var catalog = DefinitionCatalog.Instance;
-            var offlineContentStore = new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data")));
-            var settingsRepo = new SettingsRepository();
-            var dataLoader = new CrybitsHost.Persistence.DataLoader(settingsRepo, offlineContentStore, catalog);
+            var offlineContentRepository = new ContentRepository();
+            var dataLoader = new DataLoader(offlineContentRepository, catalog);
             dataLoader.LoadAll();
+
+            // SQLite databases for offline mode
+            var saveSlotDir = Path.Combine(AppContext.BaseDirectory, "Data");
+            var dbPath = Path.Combine(saveSlotDir, "crybits.db");
+            var conn = new SqliteConnection($"Data Source={dbPath}");
+            conn.Open();
+            var db = new DataConnection(new DataOptions().UseSQLiteMicrosoft(conn.ConnectionString));
+            SchemaBootstrap.EnsureCreated(db);
+
+            var accountRepo = new AccountRepository(db);
+            var charRepo = new CharacterRepository(db);
 
             var simulation = new World();
             var sessions = new SessionManager();
@@ -83,15 +96,13 @@ internal static class Program
             var playerSender = new CrybitsHost.Network.Senders.PlayerSender(ps, es);
             var chatSender = new CrybitsHost.Network.Senders.ChatSender(ps, es);
             var combatSender = new CrybitsHost.Network.Senders.CombatSender(ps);
-            var accountRepo = new AccountRepository();
-            var charRepo = new CharacterRepository();
 
             hostDispatcher.Register(new AuthService(
                 authSender, mapSender, itemSender, shopSender, classSender, npcSender,
-                accountSenderHost, accountRepo, host));
+                accountSenderHost, accountRepo, charRepo, host));
 
             hostDispatcher.Register(new CharacterService(
-                charRepo, accountRepo, authSender, playerSender, itemSender, npcSender,
+                charRepo, authSender, playerSender, itemSender, npcSender,
                 shopSender, mapSender, accountSenderHost, classSender, chatSender, catalog, host));
 
             hostDispatcher.Register(new PlayerService(host));
@@ -138,13 +149,13 @@ internal static class Program
         var context = GameContext.Instance;
         var audioManager = AudioManager.Instance;
 
-        var contentStore = new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data")));
+        var contentRepository = new ContentRepository();
         var cat = DefinitionCatalog.Instance;
 
         Client.Framework.Network.PacketDispatcher.Register(new AuthHandler(cat));
         Client.Framework.Network.PacketDispatcher.Register(new AccountHandler(audioManager, context, cat));
         Client.Framework.Network.PacketDispatcher.Register(new PlayerHandler(context, cat));
-        Client.Framework.Network.PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager, cat, contentStore));
+        Client.Framework.Network.PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager, cat, contentRepository));
         Client.Framework.Network.PacketDispatcher.Register(new NpcHandler(context, cat));
         Client.Framework.Network.PacketDispatcher.Register(new CombatHandler(context));
         Client.Framework.Network.PacketDispatcher.Register(new ChatHandler(Chat.Instance));

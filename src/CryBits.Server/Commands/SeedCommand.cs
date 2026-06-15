@@ -7,7 +7,7 @@ using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Slots;
 using CryBits.Host.Core;
-using CryBits.Persistence.Stores;
+using CryBits.Persistence.Repositories;
 using System;
 using System.IO;
 using Attribute = CryBits.Definitions.Characters.Attribute;
@@ -23,7 +23,7 @@ namespace CryBits.Server.Commands;
         "Seeds the server with starter items, NPCs, shops and a map. Skips if data already exists (use -f to overwrite).")]
 internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer worldInitializer) : IConsoleCommand
 {
-    public SeedCommand() : this(ServerContext.Catalog!, null!) { }
+    public SeedCommand() : this(ServerContext.Catalog!, new WorldInitializer(ServerContext.Host!, ServerContext.Catalog!)) { }
 
     [Option('f', "force", HelpText = "Overwrite existing data even if it is already present.")]
     public bool Force { get; set; }
@@ -316,7 +316,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         catalog.Classes[mage.Id] = mage;
         Console.WriteLine($"[Seed] Created class '{mage.Name}'.");
 
-        var store = new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data")));
+        var store = new ContentRepository();
         store.SaveAll(catalog.Items.Values);
         store.SaveAll(catalog.Npcs.Values);
         store.SaveAll(catalog.Shops.Values);
