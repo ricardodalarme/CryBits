@@ -2,7 +2,6 @@ using CryBits.Transport;
 using CryBits.Transport.Packets.Server;
 using CryBits.Simulation.Components;
 using LiteNetLib;
-using LiteNetLib.Utils;
 using System;
 using System.Linq;
 using CryBits.Simulation.State;
@@ -16,9 +15,8 @@ internal sealed class PackageSender
 
     public void ToPlayer(Session session, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
-        var data = new NetDataWriter();
-        data.WriteObject(packet);
-        session.Connection.Send(data, delivery);
+        var bytes = PacketSerializer.Serialize(packet);
+        WorldHost.Current.Transport.Send(session.Id, bytes, delivery);
     }
 
     public void ToPlayer(EntityId entityId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
@@ -29,26 +27,23 @@ internal sealed class PackageSender
 
     public void ToAll(IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
-        var data = new NetDataWriter();
-        data.WriteObject(packet);
+        var bytes = PacketSerializer.Serialize(packet);
 
         foreach (var t in WorldHost.Current.Sessions.Where(t => t.IsPlaying))
-            t.Connection.Send(data, delivery);
+            WorldHost.Current.Transport.Send(t.Id, bytes, delivery);
     }
 
     public void ToAllBut(EntityId entityId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
-        var data = new NetDataWriter();
-        data.WriteObject(packet);
+        var bytes = PacketSerializer.Serialize(packet);
 
         foreach (var t in WorldHost.Current.Sessions.Where(t => t.IsPlaying && t.Character.HasValue && !t.Character.Value.Equals(entityId)))
-            t.Connection.Send(data, delivery);
+            WorldHost.Current.Transport.Send(t.Id, bytes, delivery);
     }
 
     public void ToMap(Guid mapId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
-        var data = new NetDataWriter();
-        data.WriteObject(packet);
+        var bytes = PacketSerializer.Serialize(packet);
 
         var world = WorldHost.Current;
         foreach (var t in world.Sessions.Where(t => t.IsPlaying && t.Character.HasValue))
@@ -56,14 +51,13 @@ internal sealed class PackageSender
             var entity = world.Entities.Get(t.Character.Value);
             var pos = entity?.Get<Position>();
             if (pos?.MapId == mapId)
-                t.Connection.Send(data, delivery);
+                WorldHost.Current.Transport.Send(t.Id, bytes, delivery);
         }
     }
 
     public void ToMapBut(Guid mapId, EntityId entityId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
-        var data = new NetDataWriter();
-        data.WriteObject(packet);
+        var bytes = PacketSerializer.Serialize(packet);
 
         var world = WorldHost.Current;
         foreach (var t in world.Sessions.Where(t => t.IsPlaying && t.Character.HasValue))
@@ -74,7 +68,7 @@ internal sealed class PackageSender
             var entity = world.Entities.Get(cid);
             var pos = entity?.Get<Position>();
             if (pos?.MapId == mapId)
-                t.Connection.Send(data, delivery);
+                WorldHost.Current.Transport.Send(t.Id, bytes, delivery);
         }
     }
 }

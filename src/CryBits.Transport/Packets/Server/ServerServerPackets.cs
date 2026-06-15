@@ -1,8 +1,6 @@
 using CryBits.Definitions.Classes;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Npcs;
-using System;
-using System.Collections.Generic;
 
 namespace CryBits.Transport.Packets.Server;
 

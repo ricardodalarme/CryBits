@@ -18,9 +18,9 @@ namespace CryBits.Client.UI;
 /// Handles window-level and UI-level input events.
 /// Game-screen key bindings live in <see cref="Logic.GameInput"/>.
 /// </summary>
-internal class Window(InputManager inputManager, NetworkClient networkClient, AudioManager audioManager)
+internal class Window(InputManager inputManager, AudioManager audioManager)
 {
-    public static Window Instance { get; } = new(InputManager.Instance, NetworkClient.Instance, AudioManager.Instance);
+    public static Window Instance { get; } = new(InputManager.Instance, AudioManager.Instance);
 
     /// <summary>Interval in milliseconds within which two clicks count as a double-click.</summary>
     private const int DoubleClickIntervalMs = 142;
@@ -43,7 +43,7 @@ internal class Window(InputManager inputManager, NetworkClient networkClient, Au
     public void OnClosed(object sender, EventArgs e)
     {
         if (Screen.Current == Screens.Game)
-            networkClient.Disconnect();
+            Connection.Instance.Disconnect();
         else
             Program.Working = false;
     }

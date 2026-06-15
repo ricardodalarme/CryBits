@@ -320,8 +320,8 @@
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
-          "CryBits.Transport": "[1.0.0, )",
           "CryBits.Persistence": "[1.0.0, )",
+          "CryBits.Transport": "[1.0.0, )",
           "SFML.Audio": "[3.0.0, )",
           "SFML.Graphics": "[3.0.0, )",
           "SFML.Window": "[3.0.0, )",
@@ -334,14 +334,6 @@
           "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
-      "crybits.transport": {
-        "type": "Project",
-        "dependencies": {
-          "CryBits.Definitions": "[1.0.0, )",
-          "LiteNetLib": "[2.1.4, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
-        }
-      },
       "crybits.persistence": {
         "type": "Project",
         "dependencies": {
@@ -349,10 +341,11 @@
           "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
-      "crybits.simulation": {
+      "crybits.transport": {
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
+          "LiteNetLib": "[2.1.4, )",
           "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       }

@@ -10,10 +10,10 @@ namespace CryBits.Client.UI.Menu;
 
 internal class MenuScreen
 {
-    private readonly BackgroundView BackgroundView = new(NetworkClient.Instance);
-    private readonly LoginView LoginView = new(NetworkClient.Instance, AuthSender.Instance);
-    private readonly RegisterView RegisterView = new(NetworkClient.Instance, AuthSender.Instance);
-    private readonly OptionsView OptionsPanel = new(AudioManager.Instance, NetworkClient.Instance, GameContext.Instance);
+    private readonly BackgroundView BackgroundView = new();
+    private readonly LoginView LoginView = new(AuthSender.Instance);
+    private readonly RegisterView RegisterView = new(AuthSender.Instance);
+    private readonly OptionsView OptionsPanel = new(AudioManager.Instance, GameContext.Instance);
     private readonly SelectCharacterView SelectCharacterView = new(AccountSender.Instance, CharacterRenderer.Instance);
     private readonly CreateCharacterView CreateCharacterView = new(AccountSender.Instance, CharacterRenderer.Instance, DefinitionCatalog.Instance);
 

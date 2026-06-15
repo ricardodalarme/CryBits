@@ -34,5 +34,6 @@
     <ProjectReference Include="../CryBits.Transport/CryBits.Transport.csproj" />
     <ProjectReference Include="../CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
     <ProjectReference Include="../CryBits.Persistence/CryBits.Persistence.csproj" />
+    <ProjectReference Include="../CryBits.Host/CryBits.Host.csproj" />
   </ItemGroup>
 </Project>

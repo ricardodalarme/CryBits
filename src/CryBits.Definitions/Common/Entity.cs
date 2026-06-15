@@ -5,7 +5,7 @@ namespace CryBits.Definitions.Common;
 [Serializable]
 public class Entity(Guid id) : IEquatable<Entity>
 {
-    public Guid Id { get; } = id;
+    public Guid Id { get; set; } = id;
     public string Name { get; set; } = string.Empty;
 
     public Entity() : this(Guid.NewGuid())

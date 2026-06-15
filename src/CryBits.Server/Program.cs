@@ -1,18 +1,15 @@
 using CryBits.Definitions;
-using CryBits.Definitions.Catalog;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
 using CryBits.Host.Persistence;
-using CryBits.Host.Services;
 using CryBits.Host.Persistence.Repositories;
 using CryBits.Host.Scheduling;
 using CryBits.Server.Commands;
-using CryBits.Simulation.Core;
+using CryBits.Transport.Udp;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CryBits.Simulation.Spawners;
 
 namespace CryBits.Server;
 
@@ -47,39 +44,16 @@ internal static class Program
         Directories.Create();
         Console.WriteLine("Directories created.");
 
-        // Load all game data.
-        DataLoader.Instance.LoadAll();
-
-        // Create world
+        // Create UDP transport and start listening.
         Console.WriteLine("Creating world.");
-        _ = new WorldHost();
-
-        // Create temporary maps.
-        Console.WriteLine("Creating map instances.");
-        var world = WorldHost.Current;
-        foreach (var map in DefinitionCatalog.Instance.Maps.Values)
-        {
-            var mapState = new MapState(map.Id, map);
-            mapState.SpawnItems(world.Simulation.Entities);
-            world.Simulation.Maps.Add(map.Id, mapState);
-
-            for (byte i = 0; i < map.Npc.Count; i++)
-                NpcSpawner.Spawn(WorldHost.Current.Simulation, DefinitionCatalog.Instance, mapState.Id, i);
-        }
-
-        // Initialize network sockets.
-        NetworkServer.Instance.Init();
+        var transport = new UdpTransport();
+        transport.Start(Globals.Config.Port);
+        var host = new WorldHost(transport);
+        host.Initialize();
         Console.WriteLine("Network started. Port: " + Globals.Config.Port);
 
         // Register all [PacketHandler] methods before accepting connections.
-        PacketDispatcher.Register(AuthService.Instance);
-        PacketDispatcher.Register(CharacterService.Instance);
-        PacketDispatcher.Register(PlayerService.Instance);
-        PacketDispatcher.Register(ChatService.Instance);
-        PacketDispatcher.Register(PartyService.Instance);
-        PacketDispatcher.Register(TradeService.Instance);
-        PacketDispatcher.Register(ShopService.Instance);
-        PacketDispatcher.Register(EditorService.Instance);
+        host.RegisterDefaultServices(true);
         Console.WriteLine($"PacketDispatcher: {PacketDispatcher.Count} services registered.");
 
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
@@ -162,7 +136,7 @@ internal static class Program
         }
 
         // Stop network device.
-        NetworkServer.Instance.Device.Stop();
+        WorldHost.Current.Transport.Stop();
     }
 
     private static void Logo()

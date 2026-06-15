@@ -8,7 +8,7 @@ using CryBits.Client.Worlds;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class OptionsView(AudioManager audioManager, NetworkClient networkClient, GameContext context) : IView
+internal class OptionsView(AudioManager audioManager, GameContext context) : IView
 {
     internal static Panel OptionsPanel => Tools.Panels["Options"];
     internal static CheckBox SoundsCheckBox => Tools.CheckBoxes["Sounds"];
@@ -51,7 +51,7 @@ internal class OptionsView(AudioManager audioManager, NetworkClient networkClien
 
     private void OnBackPressed()
     {
-        networkClient.Disconnect();
+        Connection.Instance.Disconnect();
 
         MenuScreen.CloseMenus();
         LoginView.LoginPanel.Visible = true;

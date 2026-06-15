@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="CryBits.Server" />
+    <InternalsVisibleTo Include="CryBits.Client" />
   </ItemGroup>
 
   <ItemGroup>

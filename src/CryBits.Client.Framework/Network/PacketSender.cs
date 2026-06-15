@@ -1,18 +1,16 @@
 using CryBits.Transport;
 using CryBits.Transport.Packets.Client;
 using LiteNetLib;
-using LiteNetLib.Utils;
 
 namespace CryBits.Client.Framework.Network;
 
-public class PacketSender(NetworkClient networkClient)
+public class PacketSender
 {
-    public static PacketSender Instance { get; } = new(NetworkClient.Instance);
+    public static PacketSender Instance { get; } = new();
 
     public void Packet(IClientPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
-        var data = new NetDataWriter();
-        data.WriteObject(packet);
-        networkClient.ServerPeer?.Send(data, delivery);
+        var bytes = PacketSerializer.Serialize(packet);
+        Connection.Instance.Send(bytes, delivery);
     }
 }

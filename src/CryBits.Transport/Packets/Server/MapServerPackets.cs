@@ -1,6 +1,4 @@
 using CryBits.Definitions.Maps;
-using System;
-using System.Collections.Generic;
 
 namespace CryBits.Transport.Packets.Server;
 

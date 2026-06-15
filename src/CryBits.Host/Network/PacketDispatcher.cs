@@ -2,7 +2,6 @@ using CryBits.Transport;
 using CryBits.Transport.Packets.Client;
 using CryBits.Host.Core;
 using CryBits.Simulation.State;
-using LiteNetLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,12 +57,15 @@ internal static class PacketDispatcher
         }
     }
 
-    internal static void Dispatch(Session session, NetPacketReader data)
+    internal static void Dispatch(Session session, byte[] data)
     {
-        var packet = (IClientPacket)data.ReadObject();
+        var packet = PacketSerializer.Deserialize<IClientPacket>(data);
+        var type = packet.GetType();
 
-        if (_handlers.TryGetValue(packet.GetType(), out var handler))
+        if (_handlers.TryGetValue(type, out var handler))
+        {
             handler(session, packet);
+        }
     }
 
     private static Action<Session, IClientPacket> BuildInstanceHandler(MethodInfo method, object instance)

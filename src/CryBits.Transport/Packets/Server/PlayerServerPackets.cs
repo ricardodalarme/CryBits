@@ -1,5 +1,3 @@
-using System;
-
 namespace CryBits.Transport.Packets.Server;
 
 [Serializable] public struct JoinGamePacket : IServerPacket;

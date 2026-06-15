@@ -5,7 +5,7 @@ using CryBits.Client.Framework.Network;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class BackgroundView(NetworkClient networkClient) : IView
+internal class BackgroundView : IView
 {
     private static Button OptionsButton => Tools.Buttons["Options"];
 
@@ -21,7 +21,7 @@ internal class BackgroundView(NetworkClient networkClient) : IView
 
     private void OnOptionsPressed()
     {
-        networkClient.Disconnect();
+        Connection.Instance.Disconnect();
 
         OptionsView.SoundsCheckBox.Checked = Options.Instance.Sounds;
         OptionsView.MusicsCheckBox.Checked = Options.Instance.Musics;

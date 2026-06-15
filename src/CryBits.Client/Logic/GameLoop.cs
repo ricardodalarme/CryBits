@@ -10,14 +10,14 @@ namespace CryBits.Client.Logic;
 
 internal class GameLoop(
     RenderPipeline renderPipeline,
-    NetworkClient networkClient,
+    Connection connection,
     Renderer renderer,
     InputManager inputManager,
     SystemScheduler scheduler)
 {
     public static GameLoop Instance { get; } = new(
         RenderPipeline.Instance,
-        NetworkClient.Instance,
+        Connection.Instance!,
         Renderer.Instance,
         InputManager.Instance,
         SystemScheduler.Instance);
@@ -46,7 +46,7 @@ internal class GameLoop(
             try
             {
                 // Handle incoming network data.
-                networkClient.HandleData();
+                connection.Poll();
 
                 // Present the rendered frame.
                 renderPipeline.Present();

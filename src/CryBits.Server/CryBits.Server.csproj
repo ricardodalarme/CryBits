@@ -27,5 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="../CryBits.Host/CryBits.Host.csproj" />
     <ProjectReference Include="../CryBits.Definitions/CryBits.Definitions.csproj" />
+    <ProjectReference Include="../CryBits.Transport/CryBits.Transport.csproj" />
   </ItemGroup>
 </Project>

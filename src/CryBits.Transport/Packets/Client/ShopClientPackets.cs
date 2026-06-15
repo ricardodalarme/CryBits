@@ -1,5 +1,3 @@
-using System;
-
 namespace CryBits.Transport.Packets.Client;
 
 [Serializable] public struct ShopBuyPacket : IClientPacket { public short Slot; }

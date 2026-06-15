@@ -1,6 +1,5 @@
 using CryBits.Transport;
 using CryBits.Transport.Packets.Server;
-using LiteNetLib;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -45,12 +44,21 @@ public static class PacketDispatcher
         }
     }
 
-    public static void Dispatch(NetPacketReader data)
+    public static void Dispatch(byte[] data)
     {
-        var packet = (IServerPacket)data.ReadObject();
+        var packet = PacketSerializer.Deserialize<IServerPacket>(data);
 
         if (_handlers.TryGetValue(packet.GetType(), out var handler))
-            handler(packet);
+        {
+            try
+            {
+                handler(packet);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[PacketDispatcher] Handler for '{packet.GetType().Name}' threw: {ex}");
+            }
+        }
     }
 
     private static Action<IServerPacket> BuildInstanceHandler(MethodInfo method, object instance)

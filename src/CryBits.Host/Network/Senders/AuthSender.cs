@@ -11,7 +11,7 @@ internal sealed class AuthSender(PackageSender packageSender)
     {
         packageSender.ToPlayer(session, new AlertPacket { Message = message });
 
-        if (disconnect) session.Connection.Disconnect();
+        if (disconnect) WorldHost.Current.Transport.Disconnect(session.Id);
     }
 
     public void Connect(Session session)

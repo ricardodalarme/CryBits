@@ -5,7 +5,7 @@ using CryBits.Client.Network.Senders;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class RegisterView(NetworkClient networkClient, AuthSender authSender) : IView
+internal class RegisterView(AuthSender authSender) : IView
 {
     internal static Panel RegisterPanel => Tools.Panels["Register"];
     private static TextBox UsernameTextBox => Tools.TextBoxes["Register_Username"];
@@ -35,7 +35,7 @@ internal class RegisterView(NetworkClient networkClient, AuthSender authSender) 
             return;
         }
 
-        if (!networkClient.TryConnect())
+        if (!Connection.Instance.TryConnect())
         {
             Alert.Show("The server is currently unavailable.");
             return;
@@ -46,7 +46,7 @@ internal class RegisterView(NetworkClient networkClient, AuthSender authSender) 
 
     private void OnLoginPressed()
     {
-        networkClient.Disconnect();
+        Connection.Instance.Disconnect();
 
         MenuScreen.CloseMenus();
         LoginView.LoginPanel.Visible = true;

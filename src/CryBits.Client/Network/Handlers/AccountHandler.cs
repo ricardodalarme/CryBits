@@ -21,12 +21,7 @@ internal class AccountHandler(AudioManager audioManager, GameContext context, De
     [PacketHandler]
     internal void Join(JoinPacket packet)
     {
-        // Clear entity collections
         context.CurrentMap = null!;
-        _catalog.Items = [];
-        _catalog.Shops = [];
-        _catalog.Npcs = [];
-
         context.LocalPlayer.Id = packet.PlayerId;
     }
 

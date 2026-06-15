@@ -68,7 +68,7 @@ internal partial class LoginWindow : Window
             return;
         }
 
-        if (!NetworkClient.Instance.TryConnect())
+        if (Connection.Instance == null || !Connection.Instance.TryConnect())
         {
             MessageBox.Show("The server is currently unavailable.");
             return;

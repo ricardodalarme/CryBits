@@ -7,9 +7,9 @@ using System.Threading;
 
 namespace CryBits.Editors.Logic;
 
-internal class Loop(NetworkClient network, MapInstance mapInstance)
+internal class Loop(MapInstance mapInstance)
 {
-    public static Loop Instance { get; } = new(NetworkClient.Instance, MapInstance.Instance);
+    public static Loop Instance { get; } = new(MapInstance.Instance);
 
     /// <summary>
     /// Start the editor main loop: process incoming data, update state and present render targets.
@@ -23,7 +23,7 @@ internal class Loop(NetworkClient network, MapInstance mapInstance)
         {
             var count = Environment.TickCount64;
 
-            network.HandleData();
+            Connection.Instance.Poll();
 
             mapInstance.UpdateFog();
             mapInstance.UpdateWeather();

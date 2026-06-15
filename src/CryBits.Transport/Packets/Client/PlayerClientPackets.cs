@@ -1,5 +1,3 @@
-using System;
-
 namespace CryBits.Transport.Packets.Client;
 
 [Serializable] public struct PlayerMovePacket : IClientPacket { public byte Direction, Movement; }

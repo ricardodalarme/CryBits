@@ -4,6 +4,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>CryBits.Transport</RootNamespace>
     <AssemblyName>CryBits.Transport</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

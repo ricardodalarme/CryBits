@@ -3,15 +3,18 @@ using Avalonia.Controls;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
+using CryBits.Client.Framework.Network.Transport;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network.Handlers;
+using CryBits.Transport.Abstractions;
 using System;
 using System.Linq;
 using System.Threading;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Editors;
 
@@ -34,7 +37,10 @@ internal static class Program
         InterfaceData.Instance.BuildFromScreens();
 
         // Initialize subsystems
-        NetworkClient.Instance.Start(onDisconnected: Leave);
+        var clientTransport = new UdpClientTransport();
+        clientTransport.Connect("localhost", Config.Port, Config.GameName);
+        _ = new Connection(clientTransport);
+        Connection.Instance.Start(onDisconnected: Leave);
         PacketDispatcher.Register(new EditorHandler());
         AudioManager.Instance.LoadSounds();
 
@@ -85,10 +91,10 @@ internal static class Program
         var waitTimer = Environment.TickCount64;
 
         // Disconnect from network
-        NetworkClient.Instance.Disconnect();
+        Connection.Instance.Disconnect();
 
         // Wait until the player is disconnected
-        while (NetworkClient.Instance.IsConnected() && Environment.TickCount64 <= waitTimer + 1000)
+        while (Connection.Instance.IsConnected && Environment.TickCount64 <= waitTimer + 1000)
             Thread.Sleep(10);
 
         // Close the application

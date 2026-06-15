@@ -1,16 +1,16 @@
 using CryBits.Simulation.State;
-using LiteNetLib;
+using System;
 
 namespace CryBits.Host.Core;
 
 /// <summary>
-/// Represents a single connected client session: the network peer,
+/// Represents a single connected client session: the transport session ID,
 /// the authenticated account, and the active character (if any).
 /// </summary>
-internal sealed class Session(NetPeer connection)
+internal sealed class Session(Guid id)
 {
-    /// <summary>Underlying network connection for this session.</summary>
-    public NetPeer Connection { get; } = connection;
+    /// <summary>Unique identifier for this session, assigned by the transport layer.</summary>
+    public Guid Id { get; } = id;
 
     /// <summary>The authenticated account, or <see langword="null"/> before login.</summary>
     public Account? Account { get; set; }

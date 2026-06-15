@@ -72,6 +72,11 @@
           "CommunityToolkit.HighPerformance": "8.2.2"
         }
       },
+      "BCrypt.Net-Next": {
+        "type": "Transitive",
+        "resolved": "4.2.0",
+        "contentHash": "gwLD2KfCuwQesP17aVh4h6lpiMPEVt5Lbpndo0ej903hNUUTtyxt3ARdDjmuydBRTAUICc7OVKVbaOvc6SQYXA=="
+      },
       "Collections.Pooled": {
         "type": "Transitive",
         "resolved": "2.0.0-preview.27",
@@ -109,8 +114,8 @@
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
-          "CryBits.Transport": "[1.0.0, )",
           "CryBits.Persistence": "[1.0.0, )",
+          "CryBits.Transport": "[1.0.0, )",
           "SFML.Audio": "[3.0.0, )",
           "SFML.Graphics": "[3.0.0, )",
           "SFML.Window": "[3.0.0, )",
@@ -123,10 +128,14 @@
           "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
-      "crybits.transport": {
+      "crybits.host": {
         "type": "Project",
         "dependencies": {
+          "BCrypt.Net-Next": "[4.2.0, )",
           "CryBits.Definitions": "[1.0.0, )",
+          "CryBits.Persistence": "[1.0.0, )",
+          "CryBits.Simulation": "[1.0.0, )",
+          "CryBits.Transport": "[1.0.0, )",
           "LiteNetLib": "[2.1.4, )",
           "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
@@ -142,6 +151,14 @@
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
+          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
+        }
+      },
+      "crybits.transport": {
+        "type": "Project",
+        "dependencies": {
+          "CryBits.Definitions": "[1.0.0, )",
+          "LiteNetLib": "[2.1.4, )",
           "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       }
