@@ -45,7 +45,7 @@ internal class Window(InputManager inputManager, AudioManager audioManager)
         if (Screen.Current == Screens.Game)
             Connection.Instance.Disconnect();
         else
-            Program.Working = false;
+            Client.Game.Working = false;
     }
 
     private void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)

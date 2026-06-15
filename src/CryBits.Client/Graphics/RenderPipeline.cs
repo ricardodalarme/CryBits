@@ -3,7 +3,6 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Graphics.Renderers;
-using CryBits.Client.Logic;
 using CryBits.Client.Managers;
 using CryBits.Client.Systems;
 using CryBits.Definitions.Maps;
@@ -66,7 +65,7 @@ internal sealed class RenderPipeline(
         uiRenderer.DrawParty();
 
         // FPS/Latency overlays.
-        if (Options.Instance.ShowMetrics) renderer.DrawText("FPS: " + GameLoop.Fps, 176, 7, Color.White);
+        if (Options.Instance.ShowMetrics) renderer.DrawText("FPS: " + Game.Fps, 176, 7, Color.White);
         if (Options.Instance.ShowMetrics) renderer.DrawText("Latency: " + Connection.Latency, 176, 19, Color.White);
     }
 }
