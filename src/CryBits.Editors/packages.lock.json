@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "dependencies": {
     "net10.0": {
       "Avalonia": {
@@ -273,15 +273,6 @@
           "CSFML": "[3.0.0, 3.1.0)"
         }
       },
-      "SFML.Window": {
-        "type": "Transitive",
-        "resolved": "3.0.0",
-        "contentHash": "Yu+QJVQ4dRbfOgnN+xSl3rqetseNKD711k9gsdYqic9f9QDBK2raIUJTYx+JsH/NXo3rVt1NGkCm5ucSj5OzdQ==",
-        "dependencies": {
-          "CSFML": "[3.0.0, 3.1.0)",
-          "SFML.System": "3.0.0"
-        }
-      },
       "SkiaSharp": {
         "type": "Transitive",
         "resolved": "3.119.4",
@@ -347,6 +338,16 @@
           "CryBits.Definitions": "[1.0.0, )",
           "LiteNetLib": "[2.1.4, )",
           "System.Runtime.Serialization.Formatters": "[10.0.9, )"
+        }
+      },
+      "SFML.Window": {
+        "type": "CentralTransitive",
+        "requested": "[3.0.0, )",
+        "resolved": "3.0.0",
+        "contentHash": "Yu+QJVQ4dRbfOgnN+xSl3rqetseNKD711k9gsdYqic9f9QDBK2raIUJTYx+JsH/NXo3rVt1NGkCm5ucSj5OzdQ==",
+        "dependencies": {
+          "CSFML": "[3.0.0, 3.1.0)",
+          "SFML.System": "3.0.0"
         }
       }
     }

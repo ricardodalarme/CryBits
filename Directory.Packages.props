@@ -1,0 +1,48 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup Label="Networking">
+    <PackageVersion Include="LiteNetLib" Version="2.1.4" />
+  </ItemGroup>
+
+  <ItemGroup Label="Security">
+    <PackageVersion Include="BCrypt.Net-Next" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="ECS">
+    <PackageVersion Include="Arch" Version="2.1.0" />
+    <PackageVersion Include="Arch.System" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Serialization">
+    <PackageVersion Include="System.Runtime.Serialization.Formatters" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup Label="Host infrastructure">
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Client">
+    <PackageVersion Include="SFML.Audio" Version="3.0.0" />
+    <PackageVersion Include="SFML.Graphics" Version="3.0.0" />
+    <PackageVersion Include="SFML.Window" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Editor">
+    <PackageVersion Include="Avalonia" Version="12.0.4" />
+    <PackageVersion Include="Avalonia.Desktop" Version="12.0.4" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.0.4" />
+    <PackageVersion Include="MessageBox.Avalonia" Version="12.0.0" />
+    <PackageVersion Include="Semi.Avalonia" Version="12.0.3" />
+    <PackageVersion Include="Semi.Avalonia.ColorPicker" Version="12.0.3" />
+    <PackageVersion Include="Semi.Avalonia.DataGrid" Version="12.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Tooling">
+    <PackageVersion Include="CommandLineParser" Version="2.9.1" />
+  </ItemGroup>
+
+</Project>

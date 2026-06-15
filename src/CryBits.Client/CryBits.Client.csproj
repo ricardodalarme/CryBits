@@ -21,12 +21,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Arch" Version="2.1.0" />
-    <PackageReference Include="Arch.System" Version="1.1.0" />
-    <PackageReference Include="LiteNetLib" Version="2.1.4" />
-    <PackageReference Include="SFML.Audio" Version="3.0.0" />
-    <PackageReference Include="SFML.Graphics" Version="3.0.0" />
-    <PackageReference Include="SFML.Window" Version="3.0.0" />
+    <PackageReference Include="Arch" />
+    <PackageReference Include="Arch.System" />
+    <PackageReference Include="LiteNetLib" />
+    <PackageReference Include="SFML.Audio" />
+    <PackageReference Include="SFML.Graphics" />
+    <PackageReference Include="SFML.Window" />
   </ItemGroup>
 
   <ItemGroup>

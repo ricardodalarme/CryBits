@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiteNetLib" Version="2.1.4" />
+    <PackageReference Include="LiteNetLib" />
   </ItemGroup>
 
   <ItemGroup>

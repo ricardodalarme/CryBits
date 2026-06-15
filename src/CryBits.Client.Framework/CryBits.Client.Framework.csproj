@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SFML.Audio" Version="3.0.0" />
-    <PackageReference Include="SFML.Graphics" Version="3.0.0" />
-    <PackageReference Include="SFML.Window" Version="3.0.0" />
+    <PackageReference Include="SFML.Audio" />
+    <PackageReference Include="SFML.Graphics" />
+    <PackageReference Include="SFML.Window" />
   </ItemGroup>
 
   <ItemGroup>

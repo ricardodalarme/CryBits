@@ -22,16 +22,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.4" />
-    <PackageReference Include="Semi.Avalonia.ColorPicker" Version="12.0.3" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.4" />
-    <PackageReference Include="LiteNetLib" Version="2.1.4" />
-    <PackageReference Include="MessageBox.Avalonia" Version="12.0.0" />
-    <PackageReference Include="Semi.Avalonia" Version="12.0.3" />
-    <PackageReference Include="Semi.Avalonia.DataGrid" Version="12.0.0" />
-    <PackageReference Include="SFML.Audio" Version="3.0.0" />
-    <PackageReference Include="SFML.Graphics" Version="3.0.0" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Semi.Avalonia.ColorPicker" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="LiteNetLib" />
+    <PackageReference Include="MessageBox.Avalonia" />
+    <PackageReference Include="Semi.Avalonia" />
+    <PackageReference Include="Semi.Avalonia.DataGrid" />
+    <PackageReference Include="SFML.Audio" />
+    <PackageReference Include="SFML.Graphics" />
   </ItemGroup>
 
   <ItemGroup>
