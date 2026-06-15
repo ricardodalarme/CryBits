@@ -1,152 +1,115 @@
-using CryBits.Definitions;
+using CryBits.Definitions.Catalog;
+using CryBits.Host;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
+using CryBits.Host.Network.Senders;
 using CryBits.Host.Persistence;
 using CryBits.Host.Persistence.Repositories;
-using CryBits.Host.Scheduling;
+using CryBits.Host.Services;
+using CryBits.Persistence.Stores;
+using CryBits.Server;
 using CryBits.Server.Commands;
+using CryBits.Simulation.Core;
+using CryBits.Transport.Abstractions;
 using CryBits.Transport.Udp;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
-using System.Linq;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CryBits.Server;
+var builder = Host.CreateDefaultBuilder(args);
 
-internal static class Program
+builder.ConfigureServices((ctx, services) =>
 {
-    private static async Task Main()
-    {
-        Console.Title = "Server";
-        Logo();
-        Console.WriteLine("[Starting]");
+    services.AddSingleton<DefinitionCatalog>();
 
-        using var cts = new CancellationTokenSource();
+    services.AddSingleton(_ =>
+        new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data"))));
 
-        // Hook console shutdown handlers (cross-platform)
-        Console.CancelKeyPress += (_, e) =>
-        {
-            e.Cancel = true;
-            Console.WriteLine("\r\n[Shutting down...]");
-            cts.Cancel();
-        };
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => cts.Cancel();
+    services.AddSingleton<SettingsRepository>();
+    services.AddSingleton<AccountRepository>();
+    services.AddSingleton<CharacterRepository>();
+    services.AddSingleton<DataLoader>();
 
-        // Global exception handlers to prevent crashing
-        AppDomain.CurrentDomain.UnhandledException += (_, e) => Console.WriteLine($"[Global Error] Unhandled exception: {e.ExceptionObject}");
-        TaskScheduler.UnobservedTaskException += (_, e) =>
-        {
-            Console.WriteLine($"[Global Error] Unobserved task exception: {e.Exception}");
-            e.SetObserved();
-        };
+    services.AddSingleton<ITransport>(_ => new UdpTransport());
 
-        // Ensure required directories exist.
-        Directories.Create();
-        Console.WriteLine("Directories created.");
+    services.AddSingleton<World>();
+    services.AddSingleton(sp => sp.GetRequiredService<World>().Entities);
+    services.AddSingleton<SessionManager>();
+    services.AddSingleton(sp => HostPipelineBuilder.Build(sp.GetRequiredService<DefinitionCatalog>()));
+    services.AddSingleton<PackageSender>();
+    services.AddSingleton<WorldHost>();
+    services.AddSingleton<WorldInitializer>();
 
-        // Create UDP transport and start listening.
-        Console.WriteLine("Creating world.");
-        var transport = new UdpTransport();
-        transport.Start(Globals.Config.Port);
-        var host = new WorldHost(transport);
-        host.Initialize();
-        Console.WriteLine("Network started. Port: " + Globals.Config.Port);
+    services.AddSingleton<PacketDispatcher>();
 
-        // Register all [PacketHandler] methods before accepting connections.
-        host.RegisterDefaultServices(true);
-        Console.WriteLine($"PacketDispatcher: {PacketDispatcher.Count} services registered.");
+    services.AddSingleton<AccountSender>();
+    services.AddSingleton<AuthSender>();
+    services.AddSingleton<ChatSender>();
+    services.AddSingleton<ClassSender>();
+    services.AddSingleton<CombatSender>();
+    services.AddSingleton<ItemSender>();
+    services.AddSingleton<MapSender>();
+    services.AddSingleton<NpcSender>();
+    services.AddSingleton<PartySender>();
+    services.AddSingleton<PlayerSender>();
+    services.AddSingleton<ShopSender>();
+    services.AddSingleton<TradeSender>();
 
-        Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
+    services.AddSingleton<AuthService>();
+    services.AddSingleton<CharacterService>();
+    services.AddSingleton<PlayerService>();
+    services.AddSingleton<ChatService>();
+    services.AddSingleton<PartyService>();
+    services.AddSingleton<TradeService>();
+    services.AddSingleton<ShopService>();
+    services.AddSingleton<EditorService>();
+    services.AddSingleton<ReplicationService>();
 
-        // Start command loop on background thread.
-        var dispatcher = new CommandDispatcher()
-            .Register<DefineAccessCommand>()
-            .Register<SeedCommand>();
+    services.AddSingleton<CommandDispatcher>();
 
-        // Start command loop on background thread.
-        var consoleThread = new Thread(() => ConsoleLoop.Run(dispatcher, cts.Token)) { IsBackground = true };
-        consoleThread.Start();
+    services.AddSingleton<object>(sp => sp.GetRequiredService<AuthService>());
+    services.AddSingleton<object>(sp => sp.GetRequiredService<CharacterService>());
+    services.AddSingleton<object>(sp => sp.GetRequiredService<PlayerService>());
+    services.AddSingleton<object>(sp => sp.GetRequiredService<ChatService>());
+    services.AddSingleton<object>(sp => sp.GetRequiredService<PartyService>());
+    services.AddSingleton<object>(sp => sp.GetRequiredService<TradeService>());
+    services.AddSingleton<object>(sp => sp.GetRequiredService<ShopService>());
+    services.AddSingleton<object>(sp => sp.GetRequiredService<EditorService>());
 
-        // Start main loop and wait for cancellation.
-        try
-        {
-            await TickDriver.Instance.MainAsync(cts.Token);
-        }
-        catch (OperationCanceledException)
-        {
-        }
+    services.AddHostedService<Server>();
+});
 
-        PerformShutdown();
-    }
+var app = builder.Build();
 
-    private static void PerformShutdown()
-    {
-        // Save character data for all connected players.
-        foreach (var t in WorldHost.Current.Sessions.Where(t => t.IsPlaying))
-        {
-            var entityId = t.Character!.Value;
-            var entity = WorldHost.Current.Entities.Get(entityId);
-            if (entity == null) continue;
-            var pos = entity.Get<CryBits.Simulation.Components.Position>();
-            var appearance = entity.Get<CryBits.Simulation.Components.PlayerAppearance>();
-            var stats = entity.Get<CryBits.Simulation.Components.StatBlock>();
-            var vitals = entity.Get<CryBits.Simulation.Components.Vitals>();
-            var inv = entity.Get<Simulation.Components.InventoryState>();
-            var equip = entity.Get<CryBits.Simulation.Components.EquipmentState>();
-            var hotbar = entity.Get<CryBits.Simulation.Components.HotbarState>();
-            if (pos == null || appearance == null || stats == null || vitals == null ||
-                inv == null || equip == null || hotbar == null) continue;
+var host = app.Services.GetRequiredService<WorldHost>();
+ServerContext.Host = host;
+ServerContext.Catalog = app.Services.GetRequiredService<DefinitionCatalog>();
+ServerContext.AccountRepository = app.Services.GetRequiredService<AccountRepository>();
 
-            var data = new CryBits.Definitions.Characters.Character
-            {
-                Name = appearance.Name,
-                ClassId = appearance.ClassId,
-                Gender = appearance.Gender,
-                TextureNum = appearance.TextureNum,
-                Level = stats.Level,
-                Experience = stats.Experience,
-                Points = stats.Points,
-                Attributes = (short[])stats.Attribute.Clone(),
-                MapId = pos.MapId,
-                X = pos.X,
-                Y = pos.Y,
-                Direction = (byte)pos.Direction,
-                Hp = vitals.Hp,
-                Mp = vitals.Mp,
-                InventoryIds = new Guid[CryBits.Definitions.Globals.MaxInventory],
-                InventoryAmounts = new short[CryBits.Definitions.Globals.MaxInventory],
-                Equipment = new Guid[(byte)CryBits.Definitions.Items.Equipment.Count],
-                HotbarTypes = new byte[CryBits.Definitions.Globals.MaxHotbar],
-                HotbarSlots = new byte[CryBits.Definitions.Globals.MaxHotbar],
-            };
-            for (byte i = 0; i < CryBits.Definitions.Globals.MaxInventory; i++)
-            {
-                data.InventoryIds[i] = inv.Slots[i].ItemId;
-                data.InventoryAmounts[i] = inv.Slots[i].Amount;
-            }
-            for (byte i = 0; i < (byte)CryBits.Definitions.Items.Equipment.Count; i++)
-                data.Equipment[i] = equip.Slots[i];
-            for (byte i = 0; i < CryBits.Definitions.Globals.MaxHotbar; i++)
-            {
-                data.HotbarTypes[i] = (byte)hotbar.Slots[i].Type;
-                data.HotbarSlots[i] = (byte)hotbar.Slots[i].Slot;
-            }
+var cts = new CancellationTokenSource();
+Console.CancelKeyPress += (_, e) =>
+{
+    e.Cancel = true;
+    Console.WriteLine("\r\n[Shutting down...]");
+    cts.Cancel();
+};
+AppDomain.CurrentDomain.ProcessExit += (_, _) => cts.Cancel();
+AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+    Console.WriteLine($"[Global Error] Unhandled exception: {e.ExceptionObject}");
+TaskScheduler.UnobservedTaskException += (_, e) =>
+{
+    Console.WriteLine($"[Global Error] Unobserved task exception: {e.Exception}");
+    e.SetObserved();
+};
 
-            CharacterRepository.Instance.Write(t.Account!, data);
-        }
+var dispatcher = new CommandDispatcher()
+    .Register<DefineAccessCommand>()
+    .Register<SeedCommand>();
 
-        // Stop network device.
-        WorldHost.Current.Transport.Stop();
-    }
+var consoleThread = new Thread(() => ConsoleLoop.Run(dispatcher, cts.Token)) { IsBackground = true };
+consoleThread.Start();
 
-    private static void Logo()
-    {
-        Console.WriteLine(@"  ______              _____     _
- |   ___|            |     \   | |
- |  |     _ ____   _ |   __/ _ | |_  ___
- |  |    | '__/\\ // |   \_ | || __|/ __|
- |  |___ | |    | |  |     \| || |_ \__ \
- |______||_|    |_|  |_____/|_| \__||___/
-                          2D orpg engine" + "\r\n");
-    }
-}
+await app.RunAsync(cts.Token);

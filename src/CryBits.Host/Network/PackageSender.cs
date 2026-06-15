@@ -6,22 +6,21 @@ using System;
 using System.Linq;
 using CryBits.Simulation.State;
 using CryBits.Host.Core;
+using CryBits.Transport.Abstractions;
 
 namespace CryBits.Host.Network;
 
-internal sealed class PackageSender
+internal sealed class PackageSender(ITransport transport, SessionManager sessions, EntityRegistry entities)
 {
-    public static PackageSender Instance { get; } = new();
-
     public void ToPlayer(Session session, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
         var bytes = PacketSerializer.Serialize(packet);
-        WorldHost.Current.Transport.Send(session.Id, bytes, delivery);
+        transport.Send(session.Id, bytes, delivery);
     }
 
     public void ToPlayer(EntityId entityId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
-        var session = WorldHost.Current.Sessions.Get(entityId)!;
+        var session = sessions.Get(entityId)!;
         ToPlayer(session, packet, delivery);
     }
 
@@ -29,29 +28,28 @@ internal sealed class PackageSender
     {
         var bytes = PacketSerializer.Serialize(packet);
 
-        foreach (var t in WorldHost.Current.Sessions.Where(t => t.IsPlaying))
-            WorldHost.Current.Transport.Send(t.Id, bytes, delivery);
+        foreach (var t in sessions.Where(t => t.IsPlaying))
+            transport.Send(t.Id, bytes, delivery);
     }
 
     public void ToAllBut(EntityId entityId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
         var bytes = PacketSerializer.Serialize(packet);
 
-        foreach (var t in WorldHost.Current.Sessions.Where(t => t.IsPlaying && t.Character.HasValue && !t.Character.Value.Equals(entityId)))
-            WorldHost.Current.Transport.Send(t.Id, bytes, delivery);
+        foreach (var t in sessions.Where(t => t.IsPlaying && t.Character.HasValue && !t.Character.Value.Equals(entityId)))
+            transport.Send(t.Id, bytes, delivery);
     }
 
     public void ToMap(Guid mapId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
         var bytes = PacketSerializer.Serialize(packet);
 
-        var world = WorldHost.Current;
-        foreach (var t in world.Sessions.Where(t => t.IsPlaying && t.Character.HasValue))
+        foreach (var t in sessions.Where(t => t.IsPlaying && t.Character.HasValue))
         {
-            var entity = world.Entities.Get(t.Character.Value);
+            var entity = entities.Get(t.Character.Value);
             var pos = entity?.Get<Position>();
             if (pos?.MapId == mapId)
-                WorldHost.Current.Transport.Send(t.Id, bytes, delivery);
+                transport.Send(t.Id, bytes, delivery);
         }
     }
 
@@ -59,16 +57,15 @@ internal sealed class PackageSender
     {
         var bytes = PacketSerializer.Serialize(packet);
 
-        var world = WorldHost.Current;
-        foreach (var t in world.Sessions.Where(t => t.IsPlaying && t.Character.HasValue))
+        foreach (var t in sessions.Where(t => t.IsPlaying && t.Character.HasValue))
         {
             var cid = t.Character.Value;
             if (cid.Equals(entityId)) continue;
 
-            var entity = world.Entities.Get(cid);
+            var entity = entities.Get(cid);
             var pos = entity?.Get<Position>();
             if (pos?.MapId == mapId)
-                WorldHost.Current.Transport.Send(t.Id, bytes, delivery);
+                transport.Send(t.Id, bytes, delivery);
         }
     }
 }

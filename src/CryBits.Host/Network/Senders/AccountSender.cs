@@ -5,8 +5,6 @@ namespace CryBits.Host.Network.Senders;
 
 internal sealed class AccountSender(PackageSender packageSender)
 {
-    public static AccountSender Instance { get; } = new(PackageSender.Instance);
-
     public void Characters(Session session)
     {
         var packet = new CharactersPacket

@@ -6,8 +6,6 @@ using CryBits.Transport.Packets.Client;
 using CryBits.Persistence.Stores;
 using CryBits.Host.Network.Senders;
 using CryBits.Simulation.Components;
-using System;
-using System.IO;
 using System.Linq;
 using CryBits.Host.Core;
 
@@ -20,20 +18,11 @@ internal sealed class EditorService(
     ItemSender itemSender,
     NpcSender npcSender,
     ShopSender shopSender,
+    PlayerSender playerSender,
     FileContentStore contentStore,
-    DefinitionCatalog catalog)
+    DefinitionCatalog catalog,
+    WorldHost host)
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-    public static EditorService Instance { get; } = new(
-        AuthSender.Instance,
-        ClassSender.Instance,
-        MapSender.Instance,
-        ItemSender.Instance,
-        NpcSender.Instance,
-        ShopSender.Instance,
-        new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data"))),
-        DefinitionCatalog.Instance);
-
     [PacketHandler]
     internal void WriteClasses(Session session, WriteClassesPacket packet)
     {
@@ -43,10 +32,10 @@ internal sealed class EditorService(
             return;
         }
 
-        _catalog.Classes = packet.Classes;
-        contentStore.SaveAll(_catalog.Classes.Values);
+        catalog.Classes = packet.Classes;
+        contentStore.SaveAll(catalog.Classes.Values);
 
-        foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
+        foreach (var t in host.Sessions.Where(t => t != session))
             classSender.Classes(t);
     }
 
@@ -59,14 +48,14 @@ internal sealed class EditorService(
             return;
         }
 
-        _catalog.Maps = packet.Maps;
-        contentStore.SaveAll(_catalog.Maps.Values);
+        catalog.Maps = packet.Maps;
+        contentStore.SaveAll(catalog.Maps.Values);
 
-        foreach (var tempMap in WorldHost.Current.Maps.Values)
+        foreach (var tempMap in host.Maps.Values)
         {
-            tempMap.SpawnItems(WorldHost.Current.Entities);
+            tempMap.SpawnItems(host.Entities);
 
-            foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
+            foreach (var t in host.Sessions.Where(t => t != session))
             {
                 if (t.InEditor)
                 {
@@ -74,7 +63,7 @@ internal sealed class EditorService(
                 }
                 else if (t.Character.HasValue)
                 {
-                    var otherPos = WorldHost.Current.Entities.Get(t.Character.Value)?.Get<Position>();
+                    var otherPos = host.Entities.Get(t.Character.Value)?.Get<Position>();
                     if (otherPos?.MapId == tempMap.Id)
                         mapSender.Map(t, tempMap.Data);
                 }
@@ -91,10 +80,10 @@ internal sealed class EditorService(
             return;
         }
 
-        _catalog.Npcs = packet.Npcs;
-        contentStore.SaveAll(_catalog.Npcs.Values);
+        catalog.Npcs = packet.Npcs;
+        contentStore.SaveAll(catalog.Npcs.Values);
 
-        foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
+        foreach (var t in host.Sessions.Where(t => t != session))
             npcSender.Npcs(t);
     }
 
@@ -107,10 +96,10 @@ internal sealed class EditorService(
             return;
         }
 
-        _catalog.Items = packet.Items;
-        contentStore.SaveAll(_catalog.Items.Values);
+        catalog.Items = packet.Items;
+        contentStore.SaveAll(catalog.Items.Values);
 
-        foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
+        foreach (var t in host.Sessions.Where(t => t != session))
             itemSender.Items(t);
     }
 
@@ -123,10 +112,10 @@ internal sealed class EditorService(
             return;
         }
 
-        _catalog.Shops = packet.Shops;
-        contentStore.SaveAll(_catalog.Shops.Values);
+        catalog.Shops = packet.Shops;
+        contentStore.SaveAll(catalog.Shops.Values);
 
-        foreach (var t in WorldHost.Current.Sessions.Where(t => t != session))
+        foreach (var t in host.Sessions.Where(t => t != session))
             shopSender.Shops(t);
     }
 
@@ -140,21 +129,20 @@ internal sealed class EditorService(
     internal void RequestMap(Session session, RequestMapPacket packet)
     {
         if (session.InEditor)
-            mapSender.Map(session, _catalog.Maps.Get(packet.Id));
+            mapSender.Map(session, catalog.Maps.Get(packet.Id));
         else
         {
             var entityId = session.Character!.Value;
-            var world = WorldHost.Current;
-            var state = world.Entities.Get(entityId)!;
+            var state = host.Entities.Get(entityId)!;
             var pos = state.Get<Position>()!;
-            var mapInstance = world.Maps[pos.MapId];
+            var mapInstance = host.Maps[pos.MapId];
 
             if (packet.SendMap) mapSender.Map(session, mapInstance.Data);
 
             mapSender.MapPlayers(entityId);
 
             pos.LoadingMap = false;
-            PlayerSender.Instance.JoinMap(entityId);
+            playerSender.JoinMap(entityId);
         }
     }
 

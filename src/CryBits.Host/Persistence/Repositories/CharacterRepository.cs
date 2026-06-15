@@ -6,10 +6,8 @@ using System.Text.Json;
 
 namespace CryBits.Host.Persistence.Repositories;
 
-internal sealed class CharacterRepository()
+internal sealed class CharacterRepository
 {
-    public static CharacterRepository Instance { get; } = new();
-
     public Character? Read(Account account, string name)
     {
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.Username, "Characters", name) + ".json");

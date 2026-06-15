@@ -16,12 +16,9 @@
     <OutputPath>../../Build/Server/</OutputPath>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <StartupObject>CryBits.Server.Program</StartupObject>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>

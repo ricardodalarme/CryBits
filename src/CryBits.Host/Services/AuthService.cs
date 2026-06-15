@@ -19,18 +19,9 @@ internal sealed class AuthService(
     ClassSender classSender,
     NpcSender npcSender,
     AccountSender accountSender,
-    AccountRepository accountRepository)
+    AccountRepository accountRepository,
+    WorldHost host)
 {
-    public static AuthService Instance { get; } = new(
-        AuthSender.Instance,
-        MapSender.Instance,
-        ItemSender.Instance,
-        ShopSender.Instance,
-        ClassSender.Instance,
-        NpcSender.Instance,
-        AccountSender.Instance,
-        AccountRepository.Instance);
-
     [PacketHandler]
     internal void Connect(Session session, ConnectPacket packet)
     {
@@ -44,7 +35,7 @@ internal sealed class AuthService(
             return;
         }
 
-        if (WorldHost.Current.Sessions.Find(x => x.Account?.Username.Equals(user) == true) != null)
+        if (host.Sessions.Find(x => x.Account?.Username.Equals(user) == true) != null)
         {
             authSender.Alert(session, "Someone already signed in to this account.");
             return;

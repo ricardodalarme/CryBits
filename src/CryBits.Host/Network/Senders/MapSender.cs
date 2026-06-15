@@ -14,11 +14,8 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Host.Network.Senders;
 
-internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog catalog)
+internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog catalog, SessionManager sessions, EntityRegistry entities)
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-    public static MapSender Instance { get; } = new(PackageSender.Instance, DefinitionCatalog.Instance);
-
     public void Map(Session session, Map map)
     {
         packageSender.ToPlayer(session, new MapPacket { Map = map });
@@ -26,8 +23,8 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
 
     public void Maps(Session session)
     {
-        packageSender.ToPlayer(session, new MapsPacket { List = _catalog.Maps });
-        foreach (var map in _catalog.Maps.Values) Map(session, map);
+        packageSender.ToPlayer(session, new MapsPacket { List = catalog.Maps });
+        foreach (var map in catalog.Maps.Values) Map(session, map);
     }
 
     public void MapRevision(EntityId entityId, Map map)
@@ -37,14 +34,14 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
 
     public void MapPlayers(EntityId entityId)
     {
-        var pos = WorldHost.Current.Entities.Get(entityId)!.Get<Position>()!;
-        for (var i = 0; i < WorldHost.Current.Sessions.Count; i++)
+        var pos = entities.Get(entityId)!.Get<Position>()!;
+        for (var i = 0; i < sessions.Count; i++)
         {
-            var session = WorldHost.Current.Sessions[i];
+            var session = sessions[i];
             if (!session.IsPlaying) continue;
             if (session.Character is not { } otherId) continue;
             if (otherId.Equals(entityId)) continue;
-            var otherPos = WorldHost.Current.Entities.Get(otherId)?.Get<Position>();
+            var otherPos = entities.Get(otherId)?.Get<Position>();
             if (otherPos?.MapId == pos.MapId)
                 packageSender.ToPlayer(entityId, PlayerDataCache(otherId));
         }
@@ -67,7 +64,7 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
 
     public void MapGroundItem(EntityId entityId)
     {
-        var entity = WorldHost.Current.Entities.Get(entityId);
+        var entity = entities.Get(entityId);
         if (entity == null) return;
         var pos = entity.Get<Position>();
         var comp = entity.Get<GroundItem>();
@@ -82,16 +79,15 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
 
     public void RemoveGroundItem(EntityId entityId)
     {
-        packageSender.ToMap(Guid.Empty, new MapItemsPacket());  // Placeholder: actual removal packet
+        packageSender.ToMap(Guid.Empty, new MapItemsPacket());
     }
 
-    private static PacketsMapItem[] BuildItemsPacket(MapState mapState)
+    private PacketsMapItem[] BuildItemsPacket(MapState mapState)
     {
-        var world = WorldHost.Current;
         var items = new List<PacketsMapItem>();
         foreach (var id in mapState.GroundItemIds)
         {
-            var entity = world.Entities.Get(id);
+            var entity = entities.Get(id);
             if (entity == null) continue;
             var pos = entity.Get<Position>();
             var comp = entity.Get<GroundItem>();
@@ -101,9 +97,9 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
         return items.ToArray();
     }
 
-    private static PlayerDataPacket PlayerDataCache(EntityId entityId)
+    private PlayerDataPacket PlayerDataCache(EntityId entityId)
     {
-        var entity = WorldHost.Current.Entities.Get(entityId)!;
+        var entity = entities.Get(entityId)!;
         var appearance = entity.Get<PlayerAppearance>()!;
         var pos = entity.Get<Position>()!;
         var vitals = entity.Get<Vitals>()!;
@@ -122,7 +118,7 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
             Vital = new short[(byte)Vital.Count],
             MaxVital = new short[(byte)Vital.Count],
             Attribute = new short[(byte)Attribute.Count],
-            Equipment = new System.Guid[(byte)Equipment.Count]
+            Equipment = new Guid[(byte)Equipment.Count]
         };
         for (byte n = 0; n < (byte)Vital.Count; n++)
         {

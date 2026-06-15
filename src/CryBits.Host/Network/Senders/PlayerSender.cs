@@ -8,14 +8,11 @@ using LiteNetLib;
 using System;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.State;
-using CryBits.Host.Core;
 
 namespace CryBits.Host.Network.Senders;
 
-internal sealed class PlayerSender(PackageSender packageSender)
+internal sealed class PlayerSender(PackageSender packageSender, EntityRegistry entities)
 {
-    public static PlayerSender Instance { get; } = new(PackageSender.Instance);
-
     public void Join(EntityId entityId)
     {
         packageSender.ToPlayer(entityId, new JoinPacket { PlayerId = entityId.Value });
@@ -39,7 +36,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerPosition(EntityId entityId)
     {
-        var pos = WorldHost.Current.Entities.Get(entityId)!.Get<Position>()!;
+        var pos = entities.Get(entityId)!.Get<Position>()!;
         packageSender.ToMap(pos.MapId,
             new PlayerPositionPacket
             { NetworkId = entityId.Value, X = pos.X, Y = pos.Y, Direction = (byte)pos.Direction },
@@ -48,7 +45,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerVitals(EntityId entityId)
     {
-        var entity = WorldHost.Current.Entities.Get(entityId)!;
+        var entity = entities.Get(entityId)!;
         var vitals = entity.Get<Vitals>()!;
         var pos = entity.Get<Position>()!;
         var packet = new PlayerVitalsPacket
@@ -70,7 +67,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerMove(EntityId entityId, byte movement)
     {
-        var pos = WorldHost.Current.Entities.Get(entityId)!.Get<Position>()!;
+        var pos = entities.Get(entityId)!.Get<Position>()!;
         var speed = movement == (byte)Movement.Moving
             ? RunSpeedPixelsPerSecond
             : WalkSpeedPixelsPerSecond;
@@ -89,7 +86,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerDirection(EntityId entityId)
     {
-        var pos = WorldHost.Current.Entities.Get(entityId)!.Get<Position>()!;
+        var pos = entities.Get(entityId)!.Get<Position>()!;
         packageSender.ToMapBut(pos.MapId, entityId,
             new PlayerDirectionPacket { NetworkId = entityId.Value, Direction = (byte)pos.Direction },
             DeliveryMethod.Sequenced);
@@ -97,7 +94,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerExperience(EntityId entityId)
     {
-        var stats = WorldHost.Current.Entities.Get(entityId)!.Get<StatBlock>()!;
+        var stats = entities.Get(entityId)!.Get<StatBlock>()!;
         short total = 0;
         for (byte i = 0; i < (byte)CryBits.Definitions.Characters.Attribute.Count; i++) total += stats.Attribute[i];
         var expNeeded = LevelingFormulas.ExperienceNeeded(stats.Level, total, stats.Points);
@@ -108,7 +105,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerEquipments(EntityId entityId)
     {
-        var entity = WorldHost.Current.Entities.Get(entityId)!;
+        var entity = entities.Get(entityId)!;
         var equip = entity.Get<EquipmentState>()!;
         var pos = entity.Get<Position>()!;
         var packet = new PlayerEquipmentsPacket
@@ -119,7 +116,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerInventory(EntityId entityId)
     {
-        var inv = WorldHost.Current.Entities.Get(entityId)!.Get<InventoryState>()!;
+        var inv = entities.Get(entityId)!.Get<InventoryState>()!;
         var packet = new PlayerInventoryPacket
         { ItemIds = new Guid[MaxInventory], Amounts = new short[MaxInventory] };
         for (byte i = 0; i < MaxInventory; i++)
@@ -133,7 +130,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerHotbar(EntityId entityId)
     {
-        var hotbar = WorldHost.Current.Entities.Get(entityId)!.Get<HotbarState>()!;
+        var hotbar = entities.Get(entityId)!.Get<HotbarState>()!;
         var packet = new PlayerHotbarPacket { Types = new byte[MaxHotbar], Slots = new byte[MaxHotbar] };
         for (byte i = 0; i < MaxHotbar; i++)
         {

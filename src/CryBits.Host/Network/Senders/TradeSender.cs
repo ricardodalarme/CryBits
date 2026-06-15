@@ -3,14 +3,11 @@ using CryBits.Transport.Packets.Server;
 using CryBits.Simulation.Components;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.State;
-using CryBits.Host.Core;
 
 namespace CryBits.Host.Network.Senders;
 
-internal sealed class TradeSender(PackageSender packageSender)
+internal sealed class TradeSender(PackageSender packageSender, EntityRegistry entities)
 {
-    public static TradeSender Instance { get; } = new(PackageSender.Instance);
-
     public void Trade(EntityId entityId, bool state)
     {
         packageSender.ToPlayer(entityId, new TradePacket { State = state });
@@ -28,10 +25,10 @@ internal sealed class TradeSender(PackageSender packageSender)
 
     public void TradeOffer(EntityId entityId, bool own = true)
     {
-        var entity = WorldHost.Current.Entities.Get(entityId)!;
+        var entity = entities.Get(entityId)!;
         var trade = entity.Get<TradeState>()!;
         var toId = own ? entityId : trade.Partner!.Value;
-        var toEntity = WorldHost.Current.Entities.Get(toId)!;
+        var toEntity = entities.Get(toId)!;
         var toInv = toEntity.Get<InventoryState>()!;
         var toTrade = toEntity.Get<TradeState>()!;
         var packet = new TradeOfferPacket

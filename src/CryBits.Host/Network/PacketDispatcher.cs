@@ -10,29 +10,13 @@ using System.Reflection;
 
 namespace CryBits.Host.Network;
 
-/// <summary>
-/// Builds a type-keyed dispatch table from methods decorated with
-/// <see cref="PacketHandlerAttribute"/>.
-///
-/// The packet type is inferred from the IClientPacket parameter of each handler:
-///   void Method(Session session, TPacket packet)
-///   void Method(EntityId   entityId, TPacket packet)
-///
-/// On receive, BinaryFormatter already embeds full type info, so
-/// packet.GetType() is used as the lookup key — no byte prefix needed.
-/// </summary>
-internal static class PacketDispatcher
+internal sealed class PacketDispatcher
 {
-    private static readonly Dictionary<Type, Action<Session, IClientPacket>> _handlers = [];
+    private readonly Dictionary<Type, Action<Session, IClientPacket>> _handlers = [];
 
-    internal static int Count => _handlers.Count;
+    internal int Count => _handlers.Count;
 
-    /// <summary>
-    /// Discovers all instance <see cref="PacketHandlerAttribute"/> methods on <paramref name="handler"/>
-    /// and registers a bound delegate for each.  The instance is captured so that dependencies
-    /// injected via the constructor are available when the handler is invoked.
-    /// </summary>
-    internal static void Register(object handler)
+    internal void Register(object handler)
     {
         var methods = handler.GetType()
             .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
@@ -57,7 +41,7 @@ internal static class PacketDispatcher
         }
     }
 
-    internal static void Dispatch(Session session, byte[] data)
+    internal void Dispatch(Session session, byte[] data)
     {
         var packet = PacketSerializer.Deserialize<IClientPacket>(data);
         var type = packet.GetType();
@@ -77,7 +61,6 @@ internal static class PacketDispatcher
         var methodParams = method.GetParameters();
         var firstParamType = methodParams[0].ParameterType;
 
-        // Session-based handler
         if (firstParamType == typeof(Session))
         {
             var call = Expression.Call(instanceExpr, method, sessionParam,
@@ -87,7 +70,6 @@ internal static class PacketDispatcher
                 call, sessionParam, packetParam).Compile();
         }
 
-        // EntityId-based handler (null-guarded via Nullable<T>.HasValue)
         if (firstParamType == typeof(EntityId))
         {
             var entityIdVar = Expression.Variable(typeof(EntityId), "entityId");

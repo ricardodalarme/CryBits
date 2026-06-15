@@ -1,18 +1,14 @@
 using CryBits.Transport.Packets.Server;
 using CryBits.Simulation.Components;
-using System;
 using CryBits.Simulation.State;
-using CryBits.Host.Core;
 
 namespace CryBits.Host.Network.Senders;
 
-internal sealed class PartySender(PackageSender packageSender)
+internal sealed class PartySender(PackageSender packageSender, EntityRegistry entities)
 {
-    public static PartySender Instance { get; } = new(PackageSender.Instance);
-
     public void Party(EntityId entityId)
     {
-        var party = WorldHost.Current.Entities.Get(entityId)!.Get<PartyState>()!;
+        var party = entities.Get(entityId)!.Get<PartyState>()!;
         var packet = new PartyPacket { MemberIds = new long[party.Members.Count] };
         for (var i = 0; i < party.Members.Count; i++) packet.MemberIds[i] = party.Members[i].Value;
         packageSender.ToPlayer(entityId, packet);

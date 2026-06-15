@@ -6,10 +6,8 @@ using CryBits.Host.Core;
 
 namespace CryBits.Host.Network.Senders;
 
-internal sealed class ChatSender(PackageSender packageSender)
+internal sealed class ChatSender(PackageSender packageSender, EntityRegistry entities)
 {
-    public static ChatSender Instance { get; } = new(PackageSender.Instance);
-
     public void Message(EntityId entityId, string text, Color color)
     {
         packageSender.ToPlayer(entityId, new MessagePacket { Text = text, ColorArgb = color.ToArgb() });
@@ -22,32 +20,30 @@ internal sealed class ChatSender(PackageSender packageSender)
 
     public void MessageMap(EntityId entityId, string text)
     {
-        var appearance = WorldHost.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
-        var pos = WorldHost.Current.Entities.Get(entityId)!.Get<Position>()!;
+        var appearance = entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        var pos = entities.Get(entityId)!.Get<Position>()!;
         var message = "[Map] " + appearance.Name + ": " + text;
         packageSender.ToMap(pos.MapId, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
     }
 
     public void MessageGlobal(EntityId entityId, string text)
     {
-        var appearance = WorldHost.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        var appearance = entities.Get(entityId)!.Get<PlayerAppearance>()!;
         var message = "[Global] " + appearance.Name + ": " + text;
         packageSender.ToAll(new MessagePacket { Text = message, ColorArgb = Color.Yellow.ToArgb() });
     }
 
-    public void MessagePrivate(EntityId entityId, string addresseeName, string text)
+    public void MessagePrivate(EntityId entityId, string addresseeName, string text, WorldHost host)
     {
-        var addressee = WorldHost.Current.FindPlayer(addresseeName);
+        var addressee = host.FindPlayer(addresseeName);
 
-        // Check if the addressee is connected.
         if (addressee == null)
         {
             Message(entityId, addresseeName + " is currently offline.", Color.Blue);
             return;
         }
 
-        // Send private messages.
-        var appearance = WorldHost.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        var appearance = entities.Get(entityId)!.Get<PlayerAppearance>()!;
         Message(entityId, "[To] " + addresseeName + ": " + text, Color.Pink);
         Message(addressee.Value, "[From] " + appearance.Name + ": " + text, Color.Pink);
     }

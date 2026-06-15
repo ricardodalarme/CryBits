@@ -6,8 +6,6 @@ namespace CryBits.Host.Persistence.Repositories;
 
 internal sealed class AccountRepository
 {
-    public static AccountRepository Instance { get; } = new();
-
     public Account Read(string name)
     {
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, name, "Data") + ".dat");

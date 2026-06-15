@@ -12,58 +12,117 @@ using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
+using CryBits.Host;
 using CryBits.Host.Core;
-using CryBits.Host.Scheduling;
+using CryBits.Host.Network;
+using CryBits.Host.Persistence.Repositories;
+using CryBits.Host.Services;
 using CryBits.Persistence.Stores;
+using CryBits.Simulation.Core;
+using CryBits.Transport.Transports;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using static CryBits.Definitions.Globals;
-using CryBits.Transport.Transports;
+using CrybitsHost = CryBits.Host;
 
 namespace CryBits.Client;
 
 internal static class Program
 {
-    /// <summary>
-    /// Indicates whether the application main loop is running.
-    /// </summary>
     public static bool Working = true;
 
     private static CancellationTokenSource _cts = new();
     private static Task? _hostTask;
     private static Connection? _connection;
+    private static WorldHost? _offlineHost;
 
     [STAThread]
     private static void Main(string[] args)
     {
-        Directories.Create();
+        CryBits.Host.Persistence.Directories.Create();
 
         ToolsRepository.Instance.Read();
         OptionsRepository.Read();
 
-        // Window must be created before any event bindings that require it.
         Renderer.Instance.Init();
 
-        // Establish connection before registering views that depend on Connection.Instance.
         if (args.Contains("--offline"))
         {
             var pair = new LoopbackPair();
-            var host = new WorldHost(pair.Server);
+            var catalog = DefinitionCatalog.Instance;
+            var offlineContentStore = new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data")));
+            var settingsRepo = new SettingsRepository();
+            var dataLoader = new CrybitsHost.Persistence.DataLoader(settingsRepo, offlineContentStore, catalog);
+            dataLoader.LoadAll();
+
+            var simulation = new World();
+            var sessions = new SessionManager();
+            var packageSender = new PackageSender(pair.Server, sessions, simulation.Entities);
+            var pipeline = HostPipelineBuilder.Build(catalog);
+            var host = new WorldHost(pair.Server, simulation, pipeline, sessions, packageSender);
             pair.Server.Start(0);
-            host.Initialize();
-            host.RegisterDefaultServices();
+
+            var worldInitializer = new WorldInitializer(host, catalog);
+            worldInitializer.Initialize();
+
+            var hostDispatcher = new CrybitsHost.Network.PacketDispatcher();
+            var ps = host.PackageSender;
+            var es = host.Entities;
+            var ss = host.Sessions;
+
+            var authSender = new CrybitsHost.Network.Senders.AuthSender(ps, pair.Server);
+            var mapSender = new CrybitsHost.Network.Senders.MapSender(ps, catalog, ss, es);
+            var itemSender = new CrybitsHost.Network.Senders.ItemSender(ps, catalog);
+            var shopSender = new CrybitsHost.Network.Senders.ShopSender(ps, catalog);
+            var classSender = new CrybitsHost.Network.Senders.ClassSender(ps, catalog);
+            var npcSender = new CrybitsHost.Network.Senders.NpcSender(ps, catalog, es);
+            var accountSenderHost = new CrybitsHost.Network.Senders.AccountSender(ps);
+            var playerSender = new CrybitsHost.Network.Senders.PlayerSender(ps, es);
+            var chatSender = new CrybitsHost.Network.Senders.ChatSender(ps, es);
+            var combatSender = new CrybitsHost.Network.Senders.CombatSender(ps);
+            var accountRepo = new AccountRepository();
+            var charRepo = new CharacterRepository();
+
+            hostDispatcher.Register(new AuthService(
+                authSender, mapSender, itemSender, shopSender, classSender, npcSender,
+                accountSenderHost, accountRepo, host));
+
+            hostDispatcher.Register(new CharacterService(
+                charRepo, accountRepo, authSender, playerSender, itemSender, npcSender,
+                shopSender, mapSender, accountSenderHost, classSender, chatSender, catalog, host));
+
+            hostDispatcher.Register(new PlayerService(host));
+            hostDispatcher.Register(new ChatService(host));
+            hostDispatcher.Register(new PartyService(host));
+            hostDispatcher.Register(new TradeService(host));
+            hostDispatcher.Register(new ShopService(host));
+
+            host.Pipeline.AddSystem(new ReplicationService(
+                playerSender, npcSender, mapSender, combatSender, chatSender, ss));
 
             _cts = new CancellationTokenSource();
-            _hostTask = Task.Run(() => TickDriver.Instance.MainAsync(_cts.Token));
+            _offlineHost = host;
+            _hostTask = Task.Run(() => host.StartTickLoop(new CancellationToken()));
+
+            pair.Server.OnConnected += id => host.Sessions.Add(new Session(id));
+            pair.Server.OnDisconnected += id =>
+            {
+                var session = host.Sessions.Find(s => s.Id == id);
+                if (session != null) host.Sessions.Remove(session);
+            };
+            pair.Server.OnDataReceived += (id, data) =>
+            {
+                var session = host.Sessions.Find(s => s.Id == id);
+                if (session != null) hostDispatcher.Dispatch(session, data);
+            };
 
             _connection = new Connection(pair.Client);
         }
         else
         {
-            // Online mode
             var clientTransport = new UdpClientTransport();
             clientTransport.Connect("localhost", Config.Port, Config.GameName);
             _connection = new Connection(clientTransport);
@@ -71,7 +130,6 @@ internal static class Program
 
         _connection.Start(onDisconnected: Leave);
 
-        // Register all input and UI event handlers (may reference Connection.Instance).
         new MenuScreen().Bind();
         new GameScreen().Bind();
         Window.Instance.Bind();
@@ -81,19 +139,20 @@ internal static class Program
         var audioManager = AudioManager.Instance;
 
         var contentStore = new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data")));
+        var cat = DefinitionCatalog.Instance;
 
-        PacketDispatcher.Register(new AuthHandler(DefinitionCatalog.Instance));
-        PacketDispatcher.Register(new AccountHandler(audioManager, context, DefinitionCatalog.Instance));
-        PacketDispatcher.Register(new PlayerHandler(context, DefinitionCatalog.Instance));
-        PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager, DefinitionCatalog.Instance, contentStore));
-        PacketDispatcher.Register(new NpcHandler(context, DefinitionCatalog.Instance));
-        PacketDispatcher.Register(new CombatHandler(context));
-        PacketDispatcher.Register(new ChatHandler(Chat.Instance));
-        PacketDispatcher.Register(new PartyHandler(PartySender.Instance, context));
-        PacketDispatcher.Register(new TradeHandler(TradeSender.Instance, context, DefinitionCatalog.Instance));
-        PacketDispatcher.Register(new ShopHandler(DefinitionCatalog.Instance));
-        PacketDispatcher.Register(new ClassHandler(DefinitionCatalog.Instance));
-        PacketDispatcher.Register(new ItemHandler(DefinitionCatalog.Instance));
+        Client.Framework.Network.PacketDispatcher.Register(new AuthHandler(cat));
+        Client.Framework.Network.PacketDispatcher.Register(new AccountHandler(audioManager, context, cat));
+        Client.Framework.Network.PacketDispatcher.Register(new PlayerHandler(context, cat));
+        Client.Framework.Network.PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager, cat, contentStore));
+        Client.Framework.Network.PacketDispatcher.Register(new NpcHandler(context, cat));
+        Client.Framework.Network.PacketDispatcher.Register(new CombatHandler(context));
+        Client.Framework.Network.PacketDispatcher.Register(new ChatHandler(Chat.Instance));
+        Client.Framework.Network.PacketDispatcher.Register(new PartyHandler(PartySender.Instance, context));
+        Client.Framework.Network.PacketDispatcher.Register(new TradeHandler(TradeSender.Instance, context, cat));
+        Client.Framework.Network.PacketDispatcher.Register(new ShopHandler(cat));
+        Client.Framework.Network.PacketDispatcher.Register(new ClassHandler(cat));
+        Client.Framework.Network.PacketDispatcher.Register(new ItemHandler(cat));
         AudioManager.Instance.LoadSounds();
 
         Window.Instance.OpenMenu();
@@ -107,9 +166,6 @@ internal static class Program
         Window.Instance.OpenMenu();
     }
 
-    /// <summary>
-    /// Disconnects from the server and exits the application.
-    /// </summary>
     public static void Close()
     {
         var waitTimer = Environment.TickCount64;

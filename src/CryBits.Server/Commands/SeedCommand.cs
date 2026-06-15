@@ -2,16 +2,12 @@ using CommandLine;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Classes;
-using CryBits.Definitions.Common;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Slots;
-using CryBits.Persistence.Stores;
 using CryBits.Host.Core;
-using CryBits.Simulation.Components;
-using CryBits.Simulation.Core;
+using CryBits.Persistence.Stores;
 using System;
 using System.IO;
 using Attribute = CryBits.Definitions.Characters.Attribute;
@@ -19,28 +15,23 @@ using NpcDef = CryBits.Definitions.Npcs.Npc;
 using NpcDropDef = CryBits.Definitions.Npcs.NpcDrop;
 using ShopDef = CryBits.Definitions.Shops.Shop;
 using ShopItemDef = CryBits.Definitions.Shops.ShopItem;
-using CryBits.Simulation.Spawners;
 
 namespace CryBits.Server.Commands;
 
 [Verb("seed",
     HelpText =
         "Seeds the server with starter items, NPCs, shops and a map. Skips if data already exists (use -f to overwrite).")]
-internal sealed class SeedCommand : IConsoleCommand
+internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer worldInitializer) : IConsoleCommand
 {
-    private readonly DefinitionCatalog _catalog;
-
-    public SeedCommand() : this(DefinitionCatalog.Instance) { }
-    public SeedCommand(DefinitionCatalog catalog) => _catalog = catalog;
+    public SeedCommand() : this(ServerContext.Catalog!, null!) { }
 
     [Option('f', "force", HelpText = "Overwrite existing data even if it is already present.")]
     public bool Force { get; set; }
 
     public void Execute()
     {
-        // Guard: abort if data already exists and force flag not set.
-        if (!Force && (_catalog.Items.Count > 0 || _catalog.Npcs.Count > 0 || _catalog.Shops.Count > 0 || _catalog.Maps.Count > 0 ||
-                       _catalog.Classes.Count > 0))
+        if (!Force && (catalog.Items.Count > 0 || catalog.Npcs.Count > 0 || catalog.Shops.Count > 0 || catalog.Maps.Count > 0 ||
+                       catalog.Classes.Count > 0))
         {
             Console.WriteLine("[Seed] Data already exists. Run with -f / --force to overwrite.");
             return;
@@ -48,20 +39,17 @@ internal sealed class SeedCommand : IConsoleCommand
 
         Console.WriteLine("[Seed] Seeding data...");
 
-        // Clear any in-memory data so we start fresh.
-        _catalog.Items.Clear();
-        _catalog.Npcs.Clear();
-        _catalog.Shops.Clear();
-        _catalog.Maps.Clear();
-        _catalog.Classes.Clear();
-
-        // ── Items ────────────────────────────────────────────────────────────
+        catalog.Items.Clear();
+        catalog.Npcs.Clear();
+        catalog.Shops.Clear();
+        catalog.Maps.Clear();
+        catalog.Classes.Clear();
 
         var gold = new Item
         {
             Name = "Gold",
             Description = "Common currency used throughout the world.",
-            Texture = 6, // Amulet — shiny valuable
+            Texture = 6,
             Stackable = true,
             Rarity = Rarity.Common
         };
@@ -70,7 +58,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Iron Sword",
             Description = "A sturdy sword forged from iron.",
-            Texture = 2, // Sword
+            Texture = 2,
             Type = ItemType.Equipment,
             EquipType = (byte)Equipment.Weapon,
             WeaponDamage = 15,
@@ -81,7 +69,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Leather Armor",
             Description = "Simple but reliable leather armor.",
-            Texture = 3, // Armor
+            Texture = 3,
             Type = ItemType.Equipment,
             EquipType = (byte)Equipment.Armor,
             Rarity = Rarity.Common,
@@ -95,7 +83,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Iron Helmet",
             Description = "A sturdy iron helmet.",
-            Texture = 4, // Helmet
+            Texture = 4,
             Type = ItemType.Equipment,
             EquipType = (byte)Equipment.Helmet,
             Rarity = Rarity.Common,
@@ -109,7 +97,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Wooden Shield",
             Description = "A basic wooden shield.",
-            Texture = 5, // Shield
+            Texture = 5,
             Type = ItemType.Equipment,
             EquipType = (byte)Equipment.Shield,
             Rarity = Rarity.Common,
@@ -123,7 +111,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Stone Amulet",
             Description = "Imbued with a faint magical energy.",
-            Texture = 6, // Amulet
+            Texture = 6,
             Type = ItemType.Equipment,
             EquipType = (byte)Equipment.Amulet,
             Rarity = Rarity.Uncommon,
@@ -137,7 +125,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Health Potion",
             Description = "Restores a moderate amount of HP.",
-            Texture = 7, // Bread
+            Texture = 7,
             Stackable = true,
             Rarity = Rarity.Common,
             PotionVital =
@@ -150,7 +138,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Mana Potion",
             Description = "Restores a moderate amount of MP.",
-            Texture = 1, // Leather
+            Texture = 1,
             Stackable = true,
             Rarity = Rarity.Common,
             PotionVital =
@@ -160,11 +148,9 @@ internal sealed class SeedCommand : IConsoleCommand
         };
 
         foreach (var item in new[] { gold, sword, armor, helmet, shield, amulet, healthPotion, manaPotion })
-            _catalog.Items[item.Id] = item;
+            catalog.Items[item.Id] = item;
 
-        Console.WriteLine($"[Seed] Created {_catalog.Items.Count} items.");
-
-        // ── Shop ─────────────────────────────────────────────────────────────
+        Console.WriteLine($"[Seed] Created {catalog.Items.Count} items.");
 
         var generalStore = new ShopDef { Name = "General Store", CurrencyId = gold.Id };
         generalStore.Sold.Add(new ShopItemDef(healthPotion.Id, 1, 10));
@@ -173,17 +159,15 @@ internal sealed class SeedCommand : IConsoleCommand
         generalStore.Sold.Add(new ShopItemDef(shield.Id, 1, 25));
         generalStore.Sold.Add(new ShopItemDef(amulet.Id, 1, 50));
         generalStore.Bought.Add(new ShopItemDef(sword.Id, 1, 5));
-        _catalog.Shops[generalStore.Id] = generalStore;
+        catalog.Shops[generalStore.Id] = generalStore;
 
-        Console.WriteLine($"[Seed] Created {_catalog.Shops.Count} shops.");
-
-        // ── NPCs ─────────────────────────────────────────────────────────────
+        Console.WriteLine($"[Seed] Created {catalog.Shops.Count} shops.");
 
         var merchant = new NpcDef
         {
             Name = "Old Merchant",
             SayMsg = "Welcome, traveller! Browse my wares.",
-            Texture = 1, // Male Warrior
+            Texture = 1,
             Behaviour = Behaviour.Friendly,
             Movement = MovementStyle.TurnRandomly,
             SpawnTime = 10,
@@ -199,7 +183,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Wild Wolf",
             SayMsg = string.Empty,
-            Texture = 5, // Wolf
+            Texture = 5,
             Behaviour = Behaviour.AttackOnSight,
             Movement = MovementStyle.MoveRandomly,
             SpawnTime = 15,
@@ -221,7 +205,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Venomous Snake",
             SayMsg = string.Empty,
-            Texture = 6, // Snake
+            Texture = 6,
             Behaviour = Behaviour.AttackWhenAttacked,
             Movement = MovementStyle.MoveRandomly,
             SpawnTime = 20,
@@ -239,11 +223,9 @@ internal sealed class SeedCommand : IConsoleCommand
         snake.Drop.Add(new NpcDropDef(gold.Id, 2, 60));
 
         foreach (var npc in new[] { merchant, goblin, snake })
-            _catalog.Npcs[npc.Id] = npc;
+            catalog.Npcs[npc.Id] = npc;
 
-        Console.WriteLine($"[Seed] Created {_catalog.Npcs.Count} NPCs.");
-
-        // ── Map ──────────────────────────────────────────────────────────────
+        Console.WriteLine($"[Seed] Created {catalog.Npcs.Count} NPCs.");
 
         var map = new Map
         {
@@ -259,7 +241,6 @@ internal sealed class SeedCommand : IConsoleCommand
             }
         };
 
-        // Fill the entire ground layer with grass (tileset 1, grid 0,0).
         var groundLayer = map.Layer[0];
         for (byte x = 0; x < Map.Width; x++)
             for (byte y = 0; y < Map.Height; y++)
@@ -272,11 +253,9 @@ internal sealed class SeedCommand : IConsoleCommand
         map.Npc.Add(new MapNpc { NpcId = merchant.Id, Spawn = true, X = 12, Y = 9 });
         map.Npc.Add(new MapNpc { NpcId = goblin.Id, Spawn = true, X = 20, Y = 15 });
         map.Npc.Add(new MapNpc { NpcId = snake.Id, Spawn = true, X = 18, Y = 12 });
-        _catalog.Maps[map.Id] = map;
+        catalog.Maps[map.Id] = map;
 
-        Console.WriteLine($"[Seed] Created {_catalog.Maps.Count} maps.");
-
-        // ── Warrior Class (powerful starter class) ───────────────────────────
+        Console.WriteLine($"[Seed] Created {catalog.Maps.Count} maps.");
 
         var warrior = new Class
         {
@@ -288,11 +267,10 @@ internal sealed class SeedCommand : IConsoleCommand
             SpawnDirection = 1
         };
         warrior.TextureMale.Clear();
-        warrior.TextureMale.Add(1); // Male Warrior
+        warrior.TextureMale.Add(1);
         warrior.TextureFemale.Clear();
-        warrior.TextureFemale.Add(2); // Female Warrior
+        warrior.TextureFemale.Add(2);
 
-        // Stats — favouring strength and vitality.
         warrior.Vital[(byte)Vital.Hp] = 200;
         warrior.Vital[(byte)Vital.Mp] = 50;
         warrior.Attribute[(byte)Attribute.Strength] = 15;
@@ -301,16 +279,13 @@ internal sealed class SeedCommand : IConsoleCommand
         warrior.Attribute[(byte)Attribute.Agility] = 6;
         warrior.Attribute[(byte)Attribute.Intelligence] = 3;
 
-        // Starting equipment.
         warrior.Item.Add(new ItemSlot(sword.Id, 1));
         warrior.Item.Add(new ItemSlot(armor.Id, 1));
         warrior.Item.Add(new ItemSlot(helmet.Id, 1));
         warrior.Item.Add(new ItemSlot(healthPotion.Id, 3));
 
-        _catalog.Classes[warrior.Id] = warrior;
+        catalog.Classes[warrior.Id] = warrior;
         Console.WriteLine($"[Seed] Created class '{warrior.Name}'.");
-
-        // ── Mage Class ───────────────────────────────────────────────────────
 
         var mage = new Class
         {
@@ -322,11 +297,10 @@ internal sealed class SeedCommand : IConsoleCommand
             SpawnDirection = 1
         };
         mage.TextureMale.Clear();
-        mage.TextureMale.Add(3); // Male Mage
+        mage.TextureMale.Add(3);
         mage.TextureFemale.Clear();
-        mage.TextureFemale.Add(4); // Female Mage
+        mage.TextureFemale.Add(4);
 
-        // Stats — favouring intelligence and MP.
         mage.Vital[(byte)Vital.Hp] = 100;
         mage.Vital[(byte)Vital.Mp] = 200;
         mage.Attribute[(byte)Attribute.Intelligence] = 18;
@@ -335,34 +309,21 @@ internal sealed class SeedCommand : IConsoleCommand
         mage.Attribute[(byte)Attribute.Vitality] = 4;
         mage.Attribute[(byte)Attribute.Strength] = 2;
 
-        // Starting equipment.
         mage.Item.Add(new ItemSlot(amulet.Id, 1));
         mage.Item.Add(new ItemSlot(manaPotion.Id, 3));
         mage.Item.Add(new ItemSlot(healthPotion.Id, 1));
 
-        _catalog.Classes[mage.Id] = mage;
+        catalog.Classes[mage.Id] = mage;
         Console.WriteLine($"[Seed] Created class '{mage.Name}'.");
 
-        // ── Persist ──────────────────────────────────────────────────────────
-
         var store = new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data")));
-        store.SaveAll(_catalog.Items.Values);
-        store.SaveAll(_catalog.Npcs.Values);
-        store.SaveAll(_catalog.Shops.Values);
-        store.SaveAll(_catalog.Maps.Values);
-        store.SaveAll(_catalog.Classes.Values);
+        store.SaveAll(catalog.Items.Values);
+        store.SaveAll(catalog.Npcs.Values);
+        store.SaveAll(catalog.Shops.Values);
+        store.SaveAll(catalog.Maps.Values);
+        store.SaveAll(catalog.Classes.Values);
 
-        // Rebuild live GameWorld.Maps so the running server uses the new map IDs.
-        WorldHost.Current.Maps.Clear();
-        foreach (var mapDef in _catalog.Maps.Values)
-        {
-            var mapState = new MapState(mapDef.Id, mapDef);
-            mapState.SpawnItems(WorldHost.Current.Entities);
-            WorldHost.Current.Simulation.Maps.Add(mapDef.Id, mapState);
-
-            for (byte i = 0; i < mapDef.Npc.Count; i++)
-                NpcSpawner.Spawn(WorldHost.Current.Simulation, DefinitionCatalog.Instance, mapState.Id, i);
-        }
+        worldInitializer.Initialize();
 
         Console.WriteLine("[Seed] All data written to disk. Done.");
     }

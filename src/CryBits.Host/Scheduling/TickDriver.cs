@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace CryBits.Host.Scheduling;
 
-internal sealed class TickDriver
+internal sealed class TickDriver(WorldHost host)
 {
-    public static TickDriver Instance { get; } = new();
-
     public async Task MainAsync(CancellationToken ct)
     {
         using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000 / SimulationConstants.TicksPerSecond));
         while (await timer.WaitForNextTickAsync(ct))
             try
             {
-                WorldHost.Current.Tick();
+                host.Tick();
             }
             catch (Exception ex)
             {

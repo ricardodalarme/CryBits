@@ -1,7 +1,5 @@
 using CommandLine;
 using CryBits.Definitions.Common;
-using CryBits.Host.Core;
-using CryBits.Host.Persistence.Repositories;
 using System;
 
 namespace CryBits.Server.Commands;
@@ -18,7 +16,7 @@ internal sealed class DefineAccessCommand : IConsoleCommand
 
     public void Execute()
     {
-        var session = WorldHost.Current.Sessions.Find(x => x.Account?.Username.Equals(PlayerName, StringComparison.OrdinalIgnoreCase) == true);
+        var session = ServerContext.Host?.Sessions.Find(x => x.Account?.Username.Equals(PlayerName, StringComparison.OrdinalIgnoreCase) == true);
         if (session?.Account == null)
         {
             Console.WriteLine("This player is either offline or doesn't exist.");
@@ -26,7 +24,7 @@ internal sealed class DefineAccessCommand : IConsoleCommand
         }
 
         session.Account.AccessLevel = (Access)Access;
-        AccountRepository.Instance.Write(session.Account);
+        ServerContext.AccountRepository?.Write(session.Account);
         Console.WriteLine($"{(Access)Access} access granted to {PlayerName}.");
     }
 }

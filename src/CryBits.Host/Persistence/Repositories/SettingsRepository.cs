@@ -7,8 +7,6 @@ namespace CryBits.Host.Persistence.Repositories;
 
 internal sealed class SettingsRepository
 {
-    public static SettingsRepository Instance { get; } = new();
-
     public void Read()
     {
         if (!Directories.Settings.Exists)

@@ -1,3 +1,4 @@
+using CryBits.Host.Core;
 using CryBits.Host.Network.Senders;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
@@ -10,11 +11,12 @@ internal sealed class ReplicationService(
     PlayerSender playerSender,
     NpcSender npcSender,
     MapSender mapSender,
-    CombatSender combatSender) : ISimulationSystem
+    CombatSender combatSender,
+    ChatSender chatSender,
+    SessionManager sessions) : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
-        // 1. Replicate component changes via dirty tracking
         foreach (var (entityId, componentType) in world.Dirty.All)
         {
             var entity = world.Entities.Get(entityId);
@@ -38,7 +40,6 @@ internal sealed class ReplicationService(
                 mapSender.MapGroundItem(entityId);
         }
 
-        // 2. Replicate tick events
         foreach (var ev in tick.Events.Events)
         {
             if (ev is CombatAttackEvent attack)
@@ -52,6 +53,13 @@ internal sealed class ReplicationService(
 
             if (ev is PlayerWarpedEvent warp && warp.NeedsMapData)
                 ReplicatePlayerWarp(world, warp);
+
+            if (ev is ChatMessageEvent chat)
+            {
+                var session = sessions.Get(chat.RecipientId);
+                if (session != null)
+                    chatSender.SendMessage(session, chat.Text, chat.ColorArgb);
+            }
         }
 
         world.Dirty.Clear();

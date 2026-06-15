@@ -9,12 +9,9 @@ namespace CryBits.Host.Network.Senders;
 
 internal sealed class ShopSender(PackageSender packageSender, DefinitionCatalog catalog)
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-    public static ShopSender Instance { get; } = new(PackageSender.Instance, DefinitionCatalog.Instance);
-
     public void Shops(Session session)
     {
-        packageSender.ToPlayer(session, new ShopsPacket { List = _catalog.Shops });
+        packageSender.ToPlayer(session, new ShopsPacket { List = catalog.Shops });
     }
 
     public void ShopOpen(EntityId entityId, Shop shop)

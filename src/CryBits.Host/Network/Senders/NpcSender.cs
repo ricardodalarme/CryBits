@@ -12,19 +12,15 @@ using CryBits.Host.Core;
 
 namespace CryBits.Host.Network.Senders;
 
-internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog catalog)
+internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog catalog, EntityRegistry entities)
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-    public static NpcSender Instance { get; } = new(PackageSender.Instance, DefinitionCatalog.Instance);
-
     public void Npcs(Session session)
     {
-        packageSender.ToPlayer(session, new NpcsPacket { List = _catalog.Npcs });
+        packageSender.ToPlayer(session, new NpcsPacket { List = catalog.Npcs });
     }
 
     public void MapNpcs(EntityId entityId, MapState mapState)
     {
-        var entities = WorldHost.Current.Entities;
         var packet = new MapNpcsPacket { Npcs = new PacketsMapNpc[mapState.NpcIds.Count] };
         for (byte i = 0; i < mapState.NpcIds.Count; i++)
         {
@@ -49,7 +45,7 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
 
     public void MapNpc(EntityId entityId)
     {
-        var entity = WorldHost.Current.Entities.Get(entityId)!;
+        var entity = entities.Get(entityId)!;
         var npcState = entity.Get<NpcState>()!;
         var pos = entity.Get<Position>()!;
         var vitals = entity.Get<Vitals>()!;
@@ -68,7 +64,7 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
 
     public void MapNpcMovement(EntityId entityId, byte movement)
     {
-        var entity = WorldHost.Current.Entities.Get(entityId)!;
+        var entity = entities.Get(entityId)!;
         var pos = entity.Get<Position>()!;
         var speed = movement == (byte)Movement.Moving
             ? Globals.RunSpeedPixelsPerSecond
@@ -88,7 +84,7 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
 
     public void MapNpcDirection(EntityId entityId)
     {
-        var pos = WorldHost.Current.Entities.Get(entityId)!.Get<Position>()!;
+        var pos = entities.Get(entityId)!.Get<Position>()!;
         packageSender.ToMap(pos.MapId,
             new MapNpcDirectionPacket { InstanceId = entityId.Value, Direction = (byte)pos.Direction },
             DeliveryMethod.Sequenced);
@@ -96,7 +92,7 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
 
     public void MapNpcVitals(EntityId entityId)
     {
-        var entity = WorldHost.Current.Entities.Get(entityId)!;
+        var entity = entities.Get(entityId)!;
         var vitals = entity.Get<Vitals>()!;
         var pos = entity.Get<Position>()!;
         var packet = new MapNpcVitalsPacket { InstanceId = entityId.Value, Vital = new short[(byte)Vital.Count] };
