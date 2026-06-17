@@ -11,6 +11,7 @@ using CryBits.Simulation.Core;
 using CryBits.Transport.Transports;
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.DataProvider.SQLite;
 using Microsoft.Data.Sqlite;
 
 namespace CryBits.Client.Offline;
@@ -37,7 +38,7 @@ public sealed class EmbeddedHostRunner : IDisposable
         var dbPath = Path.Combine(baseDir, "Data", "crybits.db");
         var conn = new SqliteConnection($"Data Source={dbPath}");
         conn.Open();
-        var db = new DataConnection(new DataOptions().UseSQLiteMicrosoft(conn.ConnectionString));
+        var db = new DataConnection(new DataOptions().UseSQLite(conn.ConnectionString, SQLiteProvider.Microsoft));
         SchemaBootstrap.EnsureCreated(db);
 
         var accountRepo = new AccountRepository(db);

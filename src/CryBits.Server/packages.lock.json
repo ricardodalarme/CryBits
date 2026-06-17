@@ -359,7 +359,7 @@
           "CryBits.Definitions": "[1.0.0, )",
           "Microsoft.Data.Sqlite": "[10.0.9, )",
           "System.Runtime.Serialization.Formatters": "[10.0.9, )",
-          "linq2db": "[5.4.1, )"
+          "linq2db": "[6.3.0, )"
         }
       },
       "crybits.simulation": {
@@ -385,9 +385,9 @@
       },
       "linq2db": {
         "type": "CentralTransitive",
-        "requested": "[5.4.1, )",
-        "resolved": "5.4.1",
-        "contentHash": "qyH32MbFK6T55KsEcQYTbPFfkOa1Mo65lY/Zo8SFVMy0pwkQBCTnA/RUxyG5+l3D/mgfPz85PH3upDrtklSMrw=="
+        "requested": "[6.3.0, )",
+        "resolved": "6.3.0",
+        "contentHash": "Ew/IWZc9tNBgAYWCME1xN6/QkiVUNp9f3ozHrrugqh4vY3ny7Y8LTqhX8thG0WFPmWer+Kf9lilbFMYu5hXKyw=="
       },
       "LiteNetLib": {
         "type": "CentralTransitive",

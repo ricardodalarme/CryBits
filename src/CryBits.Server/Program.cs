@@ -13,6 +13,7 @@ using CryBits.Transport.Abstractions;
 using CryBits.Transport.Udp;
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.DataProvider.SQLite;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,7 +36,7 @@ builder.ConfigureServices((ctx, services) =>
         return conn;
     });
     services.AddSingleton(sp => new DataConnection(
-        new DataOptions().UseSQLiteMicrosoft(sp.GetRequiredService<SqliteConnection>().ConnectionString)));
+        new DataOptions().UseSQLite(sp.GetRequiredService<SqliteConnection>().ConnectionString, SQLiteProvider.Microsoft)));
 
     // Repositories
     services.AddSingleton<AccountRepository>();
