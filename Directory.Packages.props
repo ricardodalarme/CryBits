@@ -14,7 +14,7 @@
 
   <ItemGroup Label="Database">
     <PackageVersion Include="linq2db" Version="5.4.1" />
-    <PackageVersion Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.9" />
   </ItemGroup>
 
   <ItemGroup Label="ECS">
