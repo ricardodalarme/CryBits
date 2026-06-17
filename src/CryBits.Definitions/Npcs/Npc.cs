@@ -1,6 +1,4 @@
 using CryBits.Definitions.Common;
-using System;
-using System.Collections.Generic;
 
 namespace CryBits.Definitions.Npcs;
 

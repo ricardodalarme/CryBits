@@ -1,7 +1,6 @@
 using CryBits.Transport.Packets.Server;
 using CryBits.Simulation.State;
 using LiteNetLib;
-using System;
 
 namespace CryBits.Host.Network.Senders;
 

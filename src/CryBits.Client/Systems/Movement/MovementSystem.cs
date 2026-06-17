@@ -3,7 +3,6 @@ using Arch.System;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
 using CryBits.Definitions.Common;
-using System;
 using static CryBits.Definitions.Globals;
 using MovementState = CryBits.Definitions.Common.Movement;
 

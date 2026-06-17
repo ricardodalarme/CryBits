@@ -1,5 +1,3 @@
-using System;
-
 namespace CryBits.Client.UI;
 
 /// <summary>

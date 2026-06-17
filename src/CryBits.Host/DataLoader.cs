@@ -5,8 +5,6 @@ using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
 using CryBits.Persistence.Repositories;
-using System;
-using System.Linq;
 
 namespace CryBits.Host;
 

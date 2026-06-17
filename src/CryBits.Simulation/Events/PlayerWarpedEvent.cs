@@ -1,4 +1,3 @@
-using System;
 using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Events;

@@ -1,5 +1,3 @@
-using System;
-
 namespace CryBits;
 
 /// <summary>Mutable server configuration values. Loaded from <c>settings.json</c> at startup and persisted by the editor.</summary>

@@ -7,7 +7,6 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions;
 using CryBits.Definitions.Npcs;
 using SFML.Graphics;
-using System;
 using Direction = CryBits.Definitions.Common.Direction;
 
 namespace CryBits.Client.Spawners;

@@ -10,7 +10,6 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Transport;
 using CryBits.Transport.Packets.Server;
-using System.Collections.Generic;
 using Entity = Arch.Core.Entity;
 using CryBits.Persistence.Repositories;
 

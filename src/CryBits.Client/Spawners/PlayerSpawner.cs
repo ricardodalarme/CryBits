@@ -12,7 +12,6 @@ using CryBits.Definitions;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Items;
 using SFML.Graphics;
-using System;
 using Entity = Arch.Core.Entity;
 
 namespace CryBits.Client.Spawners;

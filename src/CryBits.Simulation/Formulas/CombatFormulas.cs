@@ -1,5 +1,3 @@
-using System;
-
 namespace CryBits.Simulation.Formulas;
 
 /// <summary>

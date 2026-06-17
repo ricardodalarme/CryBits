@@ -9,8 +9,6 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Transport;
 using CryBits.Transport.Packets.Server;
-using System;
-using System.Collections.Generic;
 using static CryBits.Definitions.Globals;
 using Direction = CryBits.Definitions.Common.Direction;
 using Movement = CryBits.Definitions.Common.Movement;

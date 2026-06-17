@@ -1,11 +1,8 @@
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
 using CryBits.Definitions.Utils;
-using System.Linq;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
-
-using System;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;

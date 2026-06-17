@@ -1,5 +1,4 @@
 using CryBits.Definitions.Common;
-using System;
 using CryBits.Definitions.Npcs;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;

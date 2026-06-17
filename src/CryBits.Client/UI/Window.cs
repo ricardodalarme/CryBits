@@ -9,7 +9,6 @@ using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using SFML.Window;
-using System;
 using System.Drawing;
 
 namespace CryBits.Client.UI;

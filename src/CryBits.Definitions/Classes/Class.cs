@@ -1,7 +1,5 @@
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
-using System;
-using System.Collections.Generic;
 
 namespace CryBits.Definitions.Classes;
 

@@ -1,5 +1,4 @@
 using CryBits.Definitions.Common;
-using System;
 
 namespace CryBits.Definitions.Maps;
 

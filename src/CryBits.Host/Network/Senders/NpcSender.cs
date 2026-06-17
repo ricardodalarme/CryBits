@@ -7,7 +7,6 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using LiteNetLib;
 using CryBits.Simulation.State;
-using System;
 using CryBits.Host.Core;
 
 namespace CryBits.Host.Network.Senders;

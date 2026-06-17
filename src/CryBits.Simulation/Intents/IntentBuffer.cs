@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace CryBits.Simulation.Intents;
 
 public sealed class IntentBuffer

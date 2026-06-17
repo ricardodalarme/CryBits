@@ -3,7 +3,6 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
-using System;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
 using Attribute = CryBits.Definitions.Characters.Attribute;

@@ -5,8 +5,6 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 

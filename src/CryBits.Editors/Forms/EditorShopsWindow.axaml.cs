@@ -6,8 +6,6 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Shops;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
-using System;
-using System.Linq;
 
 namespace CryBits.Editors.Forms;
 

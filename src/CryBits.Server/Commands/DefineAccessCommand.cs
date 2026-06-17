@@ -1,6 +1,5 @@
 using CommandLine;
 using CryBits.Definitions.Common;
-using System;
 
 namespace CryBits.Server.Commands;
 

@@ -1,5 +1,4 @@
 using CryBits.Definitions.Common;
-using System;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;

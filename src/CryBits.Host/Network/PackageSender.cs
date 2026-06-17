@@ -2,8 +2,6 @@ using CryBits.Transport;
 using CryBits.Transport.Packets.Server;
 using CryBits.Simulation.Components;
 using LiteNetLib;
-using System;
-using System.Linq;
 using CryBits.Simulation.State;
 using CryBits.Host.Core;
 using CryBits.Transport.Abstractions;

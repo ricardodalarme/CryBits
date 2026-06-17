@@ -1,5 +1,4 @@
 using CryBits.Definitions.Characters;
-using System;
 
 namespace CryBits.Simulation.Components;
 

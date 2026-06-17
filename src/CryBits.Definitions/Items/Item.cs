@@ -1,6 +1,5 @@
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
-using System;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Definitions.Items;

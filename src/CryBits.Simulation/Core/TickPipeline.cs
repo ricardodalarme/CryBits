@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace CryBits.Simulation.Core;
 
 public sealed class TickPipeline

@@ -16,10 +16,6 @@ using LinqToDB.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 var builder = Host.CreateDefaultBuilder(args);
 

@@ -3,7 +3,6 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
-using System;
 
 namespace CryBits.Simulation.Spawners;
 

@@ -1,7 +1,6 @@
 using Arch.System;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Graphics;
-using CryBits.Client.Logic;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Systems.Character;

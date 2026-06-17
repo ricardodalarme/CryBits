@@ -5,7 +5,6 @@ using CryBits.Transport.Packets.Server;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Formulas;
 using LiteNetLib;
-using System;
 using static CryBits.Definitions.Globals;
 using CryBits.Simulation.State;
 

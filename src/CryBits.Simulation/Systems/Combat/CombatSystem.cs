@@ -11,7 +11,6 @@ using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
-using System;
 using static CryBits.Simulation.SimulationConstants;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 

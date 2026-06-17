@@ -8,7 +8,6 @@ using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.State;
 using CryBits.Simulation.Systems.Npc.Behaviors;
-using System;
 using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Simulation.Systems.Npc;

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace CryBits.Simulation.State;
 
 public sealed class EntityRegistry

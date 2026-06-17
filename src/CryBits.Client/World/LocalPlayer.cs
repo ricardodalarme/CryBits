@@ -7,7 +7,6 @@ using CryBits.Client.Components.Inventory;
 using CryBits.Client.Components.Party;
 using CryBits.Client.Components.Player;
 using CryBits.Client.Components.Trade;
-using System;
 
 namespace CryBits.Client.Worlds;
 

@@ -8,7 +8,6 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Slots;
 using SFML.Window;
-using System;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
 

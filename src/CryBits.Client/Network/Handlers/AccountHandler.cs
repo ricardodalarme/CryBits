@@ -10,7 +10,6 @@ using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Transport;
 using CryBits.Transport.Packets.Server;
-using System;
 using OptionsView = CryBits.Client.UI.Game.Views.OptionsView;
 
 namespace CryBits.Client.Network.Handlers;

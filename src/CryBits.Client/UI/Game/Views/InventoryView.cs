@@ -8,7 +8,6 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using SFML.Window;
-using System;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;

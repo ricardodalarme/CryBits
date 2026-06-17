@@ -8,8 +8,6 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 using CryBits.Host.Core;
-using System;
-using System.Collections.Generic;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Host.Network.Senders;

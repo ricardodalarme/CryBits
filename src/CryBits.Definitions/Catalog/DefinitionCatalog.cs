@@ -3,8 +3,6 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
-using System;
-using System.Collections.Generic;
 
 namespace CryBits.Definitions.Catalog;
 

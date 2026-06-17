@@ -8,8 +8,6 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
-using System;
-using System.Linq;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using Map = CryBits.Definitions.Maps.Map;
 

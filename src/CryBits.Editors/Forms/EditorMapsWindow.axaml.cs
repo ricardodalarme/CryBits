@@ -21,10 +21,7 @@ using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Network;
 using SFML.Graphics;
 using SFML.System;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using static CryBits.Editors.Logic.Utils;
 // Note: Globals.Grid (byte) and Avalonia.Controls.Grid (type) differ in kind

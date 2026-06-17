@@ -2,8 +2,6 @@ using CryBits.Client.Framework.Interfacily.Components;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-using System;
-using System.Collections.Generic;
 
 namespace CryBits.Client.Managers;
 

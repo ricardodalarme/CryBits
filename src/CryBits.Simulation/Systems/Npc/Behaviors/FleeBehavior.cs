@@ -1,5 +1,4 @@
 using CryBits.Definitions.Common;
-using System;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;

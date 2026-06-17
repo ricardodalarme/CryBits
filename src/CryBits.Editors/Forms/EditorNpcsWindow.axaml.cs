@@ -14,8 +14,6 @@ using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Network;
 using SFML.Graphics;
 using SFML.System;
-using System;
-using System.Linq;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Editors.Forms;

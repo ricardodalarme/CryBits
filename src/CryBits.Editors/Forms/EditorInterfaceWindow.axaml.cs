@@ -10,8 +10,6 @@ using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics.Renderers;
 using SFML.Graphics;
 using SFML.System;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;

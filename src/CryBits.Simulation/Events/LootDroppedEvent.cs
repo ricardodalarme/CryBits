@@ -1,5 +1,3 @@
-using System;
-
 namespace CryBits.Simulation.Events;
 
 public sealed record LootDroppedEvent : SimEvent

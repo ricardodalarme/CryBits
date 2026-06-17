@@ -8,8 +8,6 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
-using System;
-using System.Linq;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Editors.Forms;

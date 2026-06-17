@@ -8,7 +8,6 @@ using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using SFML.Window;
-using System;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Player;

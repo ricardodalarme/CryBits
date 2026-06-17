@@ -1,5 +1,3 @@
-using System;
-
 namespace CryBits.Definitions.Characters;
 
 public sealed class Character

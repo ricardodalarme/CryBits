@@ -4,7 +4,6 @@ using CryBits.Definitions.Items;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
-using System;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;

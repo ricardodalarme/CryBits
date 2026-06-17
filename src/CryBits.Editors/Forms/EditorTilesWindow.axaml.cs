@@ -13,7 +13,6 @@ using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Graphics.Renderers;
 using SFML.Graphics;
 using SFML.System;
-using System;
 using static CryBits.Editors.Logic.Utils;
 using G = CryBits.Definitions.Globals;
 using Point = System.Drawing.Point;

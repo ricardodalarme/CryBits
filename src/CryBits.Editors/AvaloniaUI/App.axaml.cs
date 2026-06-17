@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Markup.Xaml;
-using System.Threading;
 
 namespace CryBits.Editors.AvaloniaUI;
 

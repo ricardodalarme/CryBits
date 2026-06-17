@@ -5,7 +5,6 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
-using System.Collections.Generic;
 
 namespace CryBits.Client.UI.Game;
 

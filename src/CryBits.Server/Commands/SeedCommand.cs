@@ -8,8 +8,6 @@ using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Slots;
 using CryBits.Host.Core;
 using CryBits.Persistence.Repositories;
-using System;
-using System.IO;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using NpcDef = CryBits.Definitions.Npcs.Npc;
 using NpcDropDef = CryBits.Definitions.Npcs.NpcDrop;

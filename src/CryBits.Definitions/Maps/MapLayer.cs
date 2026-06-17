@@ -1,6 +1,5 @@
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Utils;
-using System;
 using System.Text.Json.Serialization;
 
 namespace CryBits.Definitions.Maps;

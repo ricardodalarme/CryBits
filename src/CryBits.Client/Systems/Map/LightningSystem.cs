@@ -5,7 +5,6 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
-using System;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Map;

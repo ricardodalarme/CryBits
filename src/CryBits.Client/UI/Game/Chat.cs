@@ -5,8 +5,6 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Definitions.Common;
 using SFML.Graphics;
-using System;
-using System.Collections.Generic;
 using static CryBits.Client.Framework.Utils.TextUtils;
 
 namespace CryBits.Client.UI.Game;

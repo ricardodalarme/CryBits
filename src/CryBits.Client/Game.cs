@@ -16,9 +16,7 @@ using CryBits.Client.UI.Menu;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Persistence.Repositories;
-using System;
 using System.Diagnostics;
-using System.IO;
 using static CryBits.Definitions.Globals;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 

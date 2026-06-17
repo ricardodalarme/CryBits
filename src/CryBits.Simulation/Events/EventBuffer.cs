@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace CryBits.Simulation.Events;
 
 public sealed class EventBuffer

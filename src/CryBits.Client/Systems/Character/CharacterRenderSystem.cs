@@ -5,7 +5,6 @@ using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
-using System.Collections.Generic;
 using System.Drawing;
 using Color = SFML.Graphics.Color;
 using TextAlign = CryBits.Definitions.Common.TextAlign;

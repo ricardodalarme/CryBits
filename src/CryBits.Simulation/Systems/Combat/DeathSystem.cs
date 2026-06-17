@@ -4,7 +4,6 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Core;
-using System;
 using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Simulation.Systems.Combat;

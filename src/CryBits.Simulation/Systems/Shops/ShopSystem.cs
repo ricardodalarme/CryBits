@@ -5,7 +5,6 @@ using CryBits.Definitions.Shops;
 using CryBits.Definitions.Utils;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
-using System;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;

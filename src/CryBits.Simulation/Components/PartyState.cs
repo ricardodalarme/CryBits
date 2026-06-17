@@ -1,5 +1,4 @@
 using CryBits.Simulation.State;
-using System.Collections.Generic;
 
 namespace CryBits.Simulation.Components;
 

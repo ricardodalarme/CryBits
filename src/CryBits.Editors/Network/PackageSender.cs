@@ -4,7 +4,6 @@ using CryBits.Definitions.Maps;
 using CryBits.Editors.Forms;
 using CryBits.Transport.Packets.Client;
 using LiteNetLib;
-using static CryBits.Definitions.Globals;
 
 namespace CryBits.Editors.Network;
 

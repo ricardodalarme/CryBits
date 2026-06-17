@@ -12,9 +12,6 @@ using CryBits.Transport.Transports;
 using LinqToDB;
 using LinqToDB.Data;
 using Microsoft.Data.Sqlite;
-using System;
-using System.IO;
-using System.Threading;
 
 namespace CryBits.Client.Offline;
 

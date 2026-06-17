@@ -1,6 +1,3 @@
-using CryBits.Client;
-using System;
-
 namespace CryBits.Client;
 
 internal static class Program

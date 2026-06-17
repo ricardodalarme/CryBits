@@ -9,7 +9,6 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Formulas;
 using CryBits.Simulation.State;
-using System;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Simulation.Spawners;

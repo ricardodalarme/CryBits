@@ -5,7 +5,6 @@ using CryBits.Transport;
 using CryBits.Transport.Packets.Client;
 using CryBits.Host.Network.Senders;
 using CryBits.Simulation.Components;
-using System.Linq;
 using CryBits.Host.Core;
 using CryBits.Persistence.Repositories;
 

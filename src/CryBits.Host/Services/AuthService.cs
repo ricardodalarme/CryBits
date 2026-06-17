@@ -3,10 +3,8 @@ using CryBits.Transport;
 using CryBits.Transport.Packets.Client;
 using CryBits.Host.Core;
 using CryBits.Host.Network.Senders;
-using CryBits.Persistence;
 using CryBits.Persistence.Models;
 using CryBits.Persistence.Repositories;
-using System.Linq;
 using static CryBits.Definitions.Globals;
 using BcryptNet = BCrypt.Net.BCrypt;
 

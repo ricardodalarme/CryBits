@@ -2,7 +2,6 @@ using Arch.Buffer;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Core;
-using System;
 
 namespace CryBits.Client.Systems.Core;
 

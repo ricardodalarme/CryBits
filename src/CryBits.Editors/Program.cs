@@ -10,10 +10,6 @@ using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network.Handlers;
-using CryBits.Transport.Abstractions;
-using System;
-using System.Linq;
-using System.Threading;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Editors;

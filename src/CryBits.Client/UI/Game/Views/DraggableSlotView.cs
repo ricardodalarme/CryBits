@@ -7,7 +7,6 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
-using System;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
