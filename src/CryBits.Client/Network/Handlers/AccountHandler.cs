@@ -1,16 +1,11 @@
-using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.UI.Game;
-using CryBits.Client.UI.Game.Views;
+using CryBits.Client.UI;
 using CryBits.Client.UI.Menu;
-using CryBits.Client.UI.Menu.Views;
+using CryBits.Client.UI.Game;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Transport;
 using CryBits.Transport.Packets.Server;
-using OptionsView = CryBits.Client.UI.Game.Views.OptionsView;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -27,70 +22,37 @@ internal class AccountHandler(AudioManager audioManager, GameContext context, De
     [PacketHandler]
     internal void CreateCharacter(CreateCharacterPacket _)
     {
-        // Reset character-creation inputs
-        CreateCharacterView.NameTextBox.Text = string.Empty;
-        CreateCharacterView.GenderMaleCheckBox.Checked = true;
-        CreateCharacterView.GenderFemaleCheckBox.Checked = false;
-        CreateCharacterView.CurrentClass = 0;
-        CreateCharacterView.CurrentTexture = 0;
-
-        // Show character creation panel
-        MenuScreen.CloseMenus();
-        CreateCharacterView.CreateCharacterPanel.Visible = true;
+        MenuState.CurrentClass = 0;
+        MenuState.CurrentTexture = 0;
+        MenuEvents.FireCharacterCreateOpened();
     }
 
     [PacketHandler]
     internal void Characters(CharactersPacket packet)
     {
-        // Resize character list
-        SelectCharacterView.Characters = new SelectCharacterView.TempCharacter[packet.Characters.Length];
+        MenuState.Characters = new MenuState.TempCharacter[packet.Characters.Length];
 
-        for (byte i = 0; i < SelectCharacterView.Characters.Length; i++)
-        {
-            // Read character data
-            SelectCharacterView.Characters[i] = new SelectCharacterView.TempCharacter
+        for (byte i = 0; i < MenuState.Characters.Length; i++)
+            MenuState.Characters[i] = new MenuState.TempCharacter
             {
                 Name = packet.Characters[i].Name,
                 TextureNum = packet.Characters[i].TextureNum
             };
-        }
 
-        SelectCharacterView.UpdateButtonVisibility();
+        MenuEvents.FireCharactersUpdated();
     }
 
     [PacketHandler]
     internal void JoinGame(JoinGamePacket _)
     {
-        // Reset UI state and options
+        // Reset chat state
         Chat.Order = [];
         Chat.LinesFirst = 0;
         Chat.VisibilityTimer = Environment.TickCount64 + Chat.SleepTimer;
-        ChatView.MessageTextBox.Text = string.Empty;
-        OptionsView.SoundsCheckBox.Checked = Options.Instance.Sounds;
-        OptionsView.MusicsCheckBox.Checked = Options.Instance.Musics;
-        OptionsView.ChatCheckBox.Checked = Options.Instance.Chat;
-        OptionsView.MetricsCheckBox.Checked = Options.Instance.ShowMetrics;
-        OptionsView.TradeCheckBox.Checked = Options.Instance.Trade;
-        OptionsView.PartyCheckBox.Checked = Options.Instance.Party;
-        InformationView.Hide();
-
-        // Reset UI panels
-        CharacterView.Panel.Visible = false;
-        InventoryView.Panel.Visible = false;
-        OptionsView.Panel.Visible = false;
-        ChatView.Panel.Visible = false;
-        DropItemView.Panel.Visible = false;
-        PartyInvitationView.Panel.Visible = false;
-        TradeView.Panel.Visible = false;
-        TradeView.ConfirmOfferButton.Visible = true;
-        TradeView.AcceptOfferButton.Visible = false;
-        TradeView.DeclineOfferButton.Visible = false;
-        TradeView.OfferDisabledPanel.Visible = false;
-        ShopView.Panel.Visible = false;
-        ShopSellView.Panel.Visible = false;
 
         // Enter the game
         audioManager.StopMusic();
-        Screen.Current = Screens.Game;
+        GameState.CurrentScreen = ScreenType.Game;
+        MenuEvents.FireJoinGame();
     }
 }

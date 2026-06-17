@@ -1,61 +1,67 @@
 using CryBits.Client.Framework;
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Iguina;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Network.Senders;
+using Iguina;
+using Iguina.Entities;
+using Ent = Iguina.Entities.Entity;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class LoginView(AuthSender authSender) : IView
+internal sealed class LoginView(UISystem ui)
 {
-    internal static Panel LoginPanel => Tools.Panels["Connect"];
-    internal static TextBox UsernameTextBox => Tools.TextBoxes["Connect_Username"];
-    private static TextBox PasswordTextBox => Tools.TextBoxes["Connect_Password"];
-    internal static CheckBox SaveUsernameCheckBox => Tools.CheckBoxes["Connect_Save_Username"];
-    private static Button ConfirmButton => Tools.Buttons["Connect_Confirm"];
-    private static Button RegisterButton => Tools.Buttons["Register"];
+    private Panel? _panel;
+    private TextInput? _usernameInput;
+    private TextInput? _passwordInput;
+    private Checkbox? _saveUsernameCheckbox;
 
-    public void Bind()
+    public event Action? RegisterRequested;
+
+    public void Build(Panel root, ScreenData config)
     {
-        SaveUsernameCheckBox.OnMouseUp += OnSaveUsernameChanged;
-        ConfirmButton.OnMouseUp += OnConfirmPressed;
-        RegisterButton.OnMouseUp += OnRegisterPressed;
+        var (panel, reg) = MenuLoader.BuildScreen(ui, config, root);
+        _panel = panel;
+        _usernameInput = reg["Username"] as TextInput;
+        _passwordInput = reg["Password"] as TextInput;
+        _saveUsernameCheckbox = reg["SaveUsername"] as Checkbox;
+
+        if (Options.Instance.SaveUsername)
+            _usernameInput!.Value = Options.Instance.Username;
+        _saveUsernameCheckbox!.Checked = Options.Instance.SaveUsername;
+        _saveUsernameCheckbox.Events.OnChecked += OnSaveUsernameChanged;
+        _saveUsernameCheckbox.Events.OnUnchecked += OnSaveUsernameChanged;
+
+        ((Button)reg["LoginConfirm"]).Events.OnClick += OnConfirmClicked;
+        ((Button)reg["LoginRegister"]).Events.OnClick += _ => RegisterRequested?.Invoke();
     }
 
-    public void Unbind()
+    public void Destroy()
     {
-        SaveUsernameCheckBox.OnMouseUp -= OnSaveUsernameChanged;
-        ConfirmButton.OnMouseUp -= OnConfirmPressed;
-        RegisterButton.OnMouseUp -= OnRegisterPressed;
+        _panel?.RemoveSelf();
+        _panel = null;
+        _usernameInput = null;
+        _passwordInput = null;
+        _saveUsernameCheckbox = null;
     }
 
-    private void OnSaveUsernameChanged()
+    private void OnSaveUsernameChanged(Ent _)
     {
-        Options.Instance.SaveUsername = SaveUsernameCheckBox.Checked;
+        Options.Instance.SaveUsername = _saveUsernameCheckbox!.Checked;
+        Options.Instance.Username = Options.Instance.SaveUsername ? _usernameInput?.Value ?? string.Empty : string.Empty;
         OptionsRepository.Write();
     }
 
-    private void OnConfirmPressed()
+    private void OnConfirmClicked(Ent _)
     {
-        // Save username
-        Options.Instance.Username = UsernameTextBox.Text;
+        Options.Instance.Username = _usernameInput?.Value ?? string.Empty;
         OptionsRepository.Write();
 
         if (!Connection.Instance.TryConnect())
         {
-            Alert.Show("The server is currently unavailable.");
+            ui.MessageBoxes.ShowInfoMessageBox("Error", "The server is currently unavailable.", null, "OK");
             return;
         }
-
-        authSender.Connect(UsernameTextBox.Text, PasswordTextBox.Text);
-    }
-
-    private void OnRegisterPressed()
-    {
-        Connection.Instance.Disconnect();
-
-        MenuScreen.CloseMenus();
-        RegisterView.RegisterPanel.Visible = true;
+        AuthSender.Instance.Connect(_usernameInput?.Value ?? string.Empty, _passwordInput?.Value ?? string.Empty);
     }
 }

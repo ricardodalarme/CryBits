@@ -1,8 +1,8 @@
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Equipment;
 using CryBits.Client.Components.Movement;
+using CryBits.Client.UI.Game;
 using CryBits.Client.Spawners;
-using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
@@ -70,8 +70,8 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
         if (isLocal && context.LocalPlayer.Entity == Entity.Null)
         {
             context.LocalPlayer.Entity = entity;
-            BarsView.Update();
-            CharacterView.Update();
+            GameEvents.FireBarsUpdated();
+            GameEvents.FireCharacterUpdated();
         }
     }
 
@@ -101,7 +101,7 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
             vitals.Max[i] = packet.MaxVital[i];
         }
 
-        if (packet.NetworkId == context.LocalPlayer.Id) BarsView.Update();
+        if (packet.NetworkId == context.LocalPlayer.Id) GameEvents.FireBarsUpdated();
     }
 
     [PacketHandler]
@@ -164,14 +164,8 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
         level.ExpNeeded = packet.ExpNeeded;
         level.Points = packet.Points;
 
-        CharacterView.AddStrengthButton.Visible = level.Points > 0;
-        CharacterView.AddResistanceButton.Visible = level.Points > 0;
-        CharacterView.AddIntelligenceButton.Visible = level.Points > 0;
-        CharacterView.AddAgilityButton.Visible = level.Points > 0;
-        CharacterView.AddVitalityButton.Visible = level.Points > 0;
-
-        BarsView.Update();
-        CharacterView.Update();
+        GameEvents.FireBarsUpdated();
+        GameEvents.FireCharacterUpdated();
     }
 
     [PacketHandler]

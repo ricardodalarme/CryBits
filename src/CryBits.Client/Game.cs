@@ -4,6 +4,10 @@ using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Network.Transport;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Graphics;
+using CryBits.Client.Graphics.Renderers;
+using CryBits.Client.Iguina;
+using CryBits.Client.UI.Game;
+using CryBits.Client.UI.Menu;
 using CryBits.Client.Logic;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Handlers;
@@ -11,14 +15,12 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.Offline;
 using CryBits.Client.Systems;
 using CryBits.Client.UI;
-using CryBits.Client.UI.Game;
-using CryBits.Client.UI.Menu;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Persistence.Repositories;
 using System.Diagnostics;
 using static CryBits.Definitions.Globals;
-using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
+using Scr = CryBits.Client.UI.GameState;
 
 namespace CryBits.Client;
 
@@ -30,9 +32,11 @@ public sealed class Game : IDisposable
     private RenderPipeline? _renderPipeline;
     private InputManager? _inputManager;
     private SystemScheduler? _scheduler;
+    private IguinaUiRoot? _iguinaUi;
+    private MenuScreen? _iguinaMenuScreen;
+    private GameScreen? _iguinaGameScreen;
     private bool _working = true;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
-    private long _textboxTimer;
 
     public static short Fps { get; private set; }
     public static bool Working
@@ -59,7 +63,6 @@ public sealed class Game : IDisposable
     private void Initialize()
     {
         Directories.Create();
-        ToolsRepository.Instance.Read();
         OptionsRepository.Read();
         Renderer.Instance.Init();
 
@@ -78,8 +81,6 @@ public sealed class Game : IDisposable
 
         _connection.Start(onDisconnected: OnDisconnected);
 
-        new MenuScreen().Bind();
-        new GameScreen().Bind();
         Window.Instance.Bind();
         GameInput.Instance.Bind();
 
@@ -107,7 +108,28 @@ public sealed class Game : IDisposable
         _renderPipeline = RenderPipeline.Instance;
         _inputManager = InputManager.Instance;
 
+        _iguinaUi = new IguinaUiRoot(Renderer.Instance, _inputManager);
+        _iguinaMenuScreen = new MenuScreen(
+            _iguinaUi.System,
+            Renderer.Instance,
+            CharacterRenderer.Instance,
+            DefinitionCatalog.Instance);
+
+        _renderPipeline.IguinaUi = _iguinaUi;
+
+        _iguinaGameScreen = new GameScreen(
+            _iguinaUi.System,
+            Renderer.Instance,
+            CharacterRenderer.Instance,
+            EquipmentRenderer.Instance,
+            ItemRenderer.Instance,
+            GameContext.Instance,
+            DefinitionCatalog.Instance,
+            AudioManager.Instance,
+            _inputManager);
+
         Window.Instance.OpenMenu();
+        _iguinaMenuScreen?.ShowLogin();
     }
 
     private void Loop()
@@ -125,10 +147,26 @@ public sealed class Game : IDisposable
                 _inputManager?.BeginFrame();
                 Renderer.Instance.RenderWindow.DispatchEvents();
 
-                UpdateTextBox();
-
                 var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
                 _stopwatch.Restart();
+
+                // Show/hide Iguina screens based on current game screen state.
+                if (Scr.CurrentScreen == ScreenType.Menu)
+                {
+                    if (_iguinaGameScreen != null && _iguinaGameScreen.IsVisible)
+                        _iguinaGameScreen.Hide();
+                }
+                else
+                {
+                    if (_iguinaMenuScreen != null && _iguinaMenuScreen.IsVisible)
+                        _iguinaMenuScreen.Hide();
+                    if (_iguinaGameScreen != null && !_iguinaGameScreen.IsVisible)
+                        _iguinaGameScreen.Show();
+                }
+
+                // Update Iguina UI after input events are dispatched.
+                // Called after Show() so newly created entities get laid out immediately.
+                _iguinaUi?.Update(deltaTime);
 
                 _scheduler?.Update.BeforeUpdate(in deltaTime);
                 _scheduler?.Update.Update(in deltaTime);
@@ -152,20 +190,11 @@ public sealed class Game : IDisposable
         }
     }
 
-    private void UpdateTextBox()
-    {
-        if (_textboxTimer < Environment.TickCount64)
-        {
-            _textboxTimer = Environment.TickCount64 + 500;
-            TextBox.BlinkSignal = !TextBox.BlinkSignal;
-            TextBox.Focus();
-        }
-    }
-
     private void OnDisconnected()
     {
         GameContext.Instance.Reset();
         Window.Instance.OpenMenu();
+        _iguinaMenuScreen?.ShowLogin();
     }
 
     public void Dispose()

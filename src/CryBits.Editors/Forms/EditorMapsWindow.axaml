@@ -66,11 +66,14 @@
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuItem Header="Classes"   Click="butEditors_Classes_Click" />
-                        <MenuItem Header="Interface" Click="butEditors_Interface_Click" />
+                        <MenuItem Header="Iguina Layout" Click="butEditors_Interface_Click" />
                         <MenuItem Header="Items"     Click="butEditors_Items_Click" />
                         <MenuItem Header="NPCs"      Click="butEditors_NPCs_Click" />
                         <MenuItem Header="Shops"     Click="butEditors_Shops_Click" />
                         <MenuItem Header="Tiles"     Click="butEditors_Tiles_Click" />
+                        <Separator />
+                        <MenuItem Header="Iguina Layout" Click="butEditors_IguinaLayout_Click" />
+                        <MenuItem Header="Iguina Theme"  Click="butEditors_IguinaTheme_Click" />
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>

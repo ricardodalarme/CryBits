@@ -23,6 +23,6 @@ internal class ShopHandler
         // Open shop panel
         var shop = _catalog.Shops.Get(packet.Id);
         if (shop != null) ShopView.Open(shop);
-        else ShopView.Panel.Visible = false;
+        else ShopView.PanelVisible = false;
     }
 }

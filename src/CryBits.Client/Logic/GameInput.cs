@@ -1,8 +1,5 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game;
-using CryBits.Client.UI.Game.Views;
 using SFML.Window;
 
 namespace CryBits.Client.Logic;
@@ -20,7 +17,7 @@ internal class GameInput(PlayerSender playerSender, Chat chat)
     /// Call once at startup alongside other Bind() calls.
     /// </summary>
     public void Bind() =>
-        Screens.Game.OnKeyReleased += OnKeyReleased;
+        CryBits.Client.UI.GameState.GameKeyReleased += OnKeyReleased;
 
     private void OnKeyReleased(KeyEventArgs e)
     {
@@ -42,9 +39,7 @@ internal class GameInput(PlayerSender playerSender, Chat chat)
 
     private void UseHotbar(byte slot)
     {
-        if (TextBox.Focused != null) return;
-
         playerSender.HotbarUse(slot);
-        DropItemView.Panel.Visible = false;
+        CryBits.Client.UI.Game.Views.DropItemView.PanelVisible = false;
     }
 }

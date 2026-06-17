@@ -1,0 +1,269 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CryBits.Editors.Forms.EditorIguinaLayoutWindow"
+        Title="Iguina Layout Editor"
+        Width="1400" Height="850"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="8" RowDefinitions="Auto,Auto,Auto,*,Auto">
+
+        <!-- Row 0: Config file selector -->
+        <ComboBox x:Name="cmbFiles" Grid.Row="0" HorizontalAlignment="Stretch"
+                  Margin="0,0,0,2"
+                  SelectionChanged="cmbFiles_SelectionChanged"/>
+
+        <!-- Row 1: Screen selector + mode -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,8,200" Margin="0,0,0,4">
+            <ComboBox x:Name="cmbScreens" Grid.Column="0" HorizontalAlignment="Stretch"
+                      SelectionChanged="cmbScreens_SelectionChanged"/>
+            <ComboBox x:Name="cmbMode" Grid.Column="2" HorizontalAlignment="Stretch"
+                      SelectionChanged="cmbMode_SelectionChanged">
+                <ComboBoxItem Content="Iguina Preview"/>
+                <ComboBoxItem Content="Raw Json"/>
+            </ComboBox>
+        </Grid>
+
+        <!-- Main content area -->
+        <Grid Grid.Row="2" ColumnDefinitions="280,8,*,8,330">
+
+            <!-- Left: entity tree -->
+            <Border Grid.Column="0" BorderThickness="1"
+                    BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="8">
+                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                    <TextBlock Grid.Row="0" Text="Entities" FontWeight="Bold" Margin="0,0,0,6"/>
+
+                    <Grid Grid.Row="1" ColumnDefinitions="*,4,*" Margin="0,0,0,6">
+                        <Button x:Name="butAdd" Grid.Column="0" Content="Add"
+                                HorizontalAlignment="Stretch" Click="butAdd_Click"/>
+                        <Button x:Name="butRemove" Grid.Column="2" Content="Remove"
+                                HorizontalAlignment="Stretch" Click="butRemove_Click"/>
+                    </Grid>
+
+                    <TreeView x:Name="treEntities" Grid.Row="2"
+                              SelectionChanged="treEntities_SelectionChanged"
+                              Margin="0,0,0,6">
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate ItemsSource="{Binding Children}">
+                                <TextBlock Text="{Binding Header}"/>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+
+                    <Grid Grid.Row="3" ColumnDefinitions="*,4,*">
+                        <Button x:Name="butUp" Grid.Column="0" Content="Up"
+                                HorizontalAlignment="Stretch" Click="butUp_Click"/>
+                        <Button x:Name="butDown" Grid.Column="2" Content="Down"
+                                HorizontalAlignment="Stretch" Click="butDown_Click"/>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- Center: preview (mode 0) or raw JSON (mode 1) -->
+            <Grid Grid.Column="2">
+                <Border x:Name="previewBorder" Background="Black">
+                    <Image x:Name="imgPreview" Stretch="None"
+                           HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                </Border>
+                <Border x:Name="jsonBorder" IsVisible="False" Background="#1E1E1E">
+                    <ScrollViewer>
+                        <TextBox x:Name="txtRawJson" IsReadOnly="True"
+                                 FontFamily="Consolas" FontSize="11"
+                                 Foreground="#D4D4D4" Background="Transparent"
+                                 TextWrapping="NoWrap"
+                                 BorderThickness="0"/>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+
+            <!-- Right: properties -->
+            <Border Grid.Column="4" BorderThickness="1"
+                    BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="8">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Text="Properties" FontWeight="Bold" Margin="0,0,0,4"/>
+
+                    <ScrollViewer Grid.Row="1">
+                        <StackPanel Spacing="3">
+                            <TextBlock x:Name="lblNoSelection" Text="(select an entity)"
+                                       Foreground="{DynamicResource SemiSecondaryForeground}"
+                                       FontStyle="Italic" FontSize="11"/>
+
+                            <StackPanel x:Name="pnlProps" IsVisible="False" Spacing="3">
+
+                                <!-- Identity -->
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Type:" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="lblType" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="txtElemName" TextChanged="txtElemName_TextChanged"/>
+                                </Grid>
+
+                                <Separator Margin="0,4"/>
+
+                                <!-- Layout -->
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Anchor:" VerticalAlignment="Center"/>
+                                    <ComboBox x:Name="cmbAnchor" Grid.Column="1" HorizontalAlignment="Stretch"
+                                              SelectionChanged="cmbAnchor_SelectionChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="X:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numX" Minimum="-9999" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numX_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Y:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numY" Minimum="-9999" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numY_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Width:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numW" Minimum="0" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numW_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Height:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numH" Minimum="0" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numH_ValueChanged"/>
+                                </Grid>
+
+                                <Separator Margin="0,4"/>
+
+                                <!-- State -->
+                                <CheckBox x:Name="chkVisible" Content="Visible"
+                                          IsCheckedChanged="chkVisible_IsCheckedChanged"/>
+                                <CheckBox x:Name="chkEnabled" Content="Enabled"
+                                          IsCheckedChanged="chkEnabled_IsCheckedChanged"/>
+
+                                <Separator Margin="0,4"/>
+
+                                <!-- Texture -->
+                                <TextBlock Text="Texture" FontWeight="SemiBold" FontSize="11"/>
+                                <TextBox x:Name="txtTextureId" PlaceholderText="Texture path (e.g. Textures/Panels/1.png)"
+                                         TextChanged="txtTextureId_TextChanged"/>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Src X:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numSrcX" Minimum="0" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numSrcX_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Src Y:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numSrcY" Minimum="0" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numSrcY_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Src W:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numSrcW" Minimum="1" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numSrcW_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Src H:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numSrcH" Minimum="1" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numSrcH_ValueChanged"/>
+                                </Grid>
+
+                                <Separator Margin="0,4"/>
+
+                                <!-- Text properties (Paragraph/Label/Button/Checkbox) -->
+                                <TextBlock Text="Text" FontWeight="SemiBold" FontSize="11"/>
+                                <TextBox x:Name="txtText" PlaceholderText="Text content"
+                                         TextChanged="txtText_TextChanged"/>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Font size:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numFontSize" Minimum="1" Maximum="99" FormatString="0"
+                                                   ValueChanged="numFontSize_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Fill color:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="txtTextFillColor" PlaceholderText="RRGGBB (hex)"
+                                             TextChanged="txtTextFillColor_TextChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Outline color:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="txtTextOutlineColor" PlaceholderText="RRGGBB (hex)"
+                                             TextChanged="txtTextOutlineColor_TextChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Outline width:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numTextOutlineWidth" Minimum="0" Maximum="20" FormatString="0"
+                                                   ValueChanged="numTextOutlineWidth_ValueChanged"/>
+                                </Grid>
+
+                                <Separator Margin="0,4"/>
+
+                                <!-- TextInput-specific -->
+                                <TextBlock Text="TextInput" FontWeight="SemiBold" FontSize="11"/>
+                                <TextBox x:Name="txtPlaceholder" PlaceholderText="Placeholder text"
+                                         TextChanged="txtPlaceholder_TextChanged"/>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Max length:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numMaxLength" Minimum="0" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numMaxLength_ValueChanged"/>
+                                </Grid>
+                                <CheckBox x:Name="chkMasked" Content="Masked (password)"
+                                          IsCheckedChanged="chkMasked_IsCheckedChanged"/>
+
+                                <Separator Margin="0,4"/>
+
+                                <!-- Checkbox/Button-specific -->
+                                <CheckBox x:Name="chkChecked" Content="Checked"
+                                          IsCheckedChanged="chkChecked_IsCheckedChanged"/>
+
+                                <Separator Margin="0,4"/>
+
+                                <!-- Padding -->
+                                <TextBlock Text="Padding" FontWeight="SemiBold" FontSize="11"/>
+                                <Grid ColumnDefinitions="*,4,*">
+                                    <NumericUpDown x:Name="numPadL" Minimum="0" Maximum="999" FormatString="0"
+                                                   PlaceholderText="L" ValueChanged="numPadL_ValueChanged"/>
+                                    <NumericUpDown Grid.Column="2" x:Name="numPadR" Minimum="0" Maximum="999" FormatString="0"
+                                                   PlaceholderText="R" ValueChanged="numPadR_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="*,4,*">
+                                    <NumericUpDown x:Name="numPadT" Minimum="0" Maximum="999" FormatString="0"
+                                                   PlaceholderText="T" ValueChanged="numPadT_ValueChanged"/>
+                                    <NumericUpDown Grid.Column="2" x:Name="numPadB" Minimum="0" Maximum="999" FormatString="0"
+                                                   PlaceholderText="B" ValueChanged="numPadB_ValueChanged"/>
+                                </Grid>
+
+                                <Separator Margin="0,4"/>
+
+                                <!-- SlotGrid specifics -->
+                                <TextBlock Text="Slot Grid" FontWeight="SemiBold" FontSize="11"/>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Columns:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numCols" Minimum="1" Maximum="99" FormatString="0"
+                                                   ValueChanged="numCols_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Rows:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numRows" Minimum="1" Maximum="99" FormatString="0"
+                                                   ValueChanged="numRows_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Slot size:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numSlotSize" Minimum="8" Maximum="128" FormatString="0"
+                                                   ValueChanged="numSlotSize_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Padding:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numSlotPad" Minimum="0" Maximum="32" FormatString="0"
+                                                   ValueChanged="numSlotPad_ValueChanged"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Bottom: Save -->
+        <Button x:Name="butSave" Grid.Row="3" Content="Save Layout"
+                HorizontalAlignment="Stretch" Margin="0,6,0,0"
+                Click="butSave_Click"/>
+    </Grid>
+</Window>

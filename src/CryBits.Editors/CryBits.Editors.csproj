@@ -26,6 +26,7 @@
     <PackageReference Include="Semi.Avalonia.ColorPicker" />
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="Iguina" />
     <PackageReference Include="LiteNetLib" />
     <PackageReference Include="MessageBox.Avalonia" />
     <PackageReference Include="Semi.Avalonia" />
@@ -38,6 +39,7 @@
     <ProjectReference Include="../CryBits.Definitions/CryBits.Definitions.csproj" />
     <ProjectReference Include="../CryBits.Transport/CryBits.Transport.csproj" />
     <ProjectReference Include="../CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
+    <ProjectReference Include="../CryBits.Client/CryBits.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -230,13 +230,6 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             Name = "Starting Village",
             Moral = Moral.Pacific,
             Weather = new MapWeather { Type = Weather.Raining, Intensity = 2 },
-            Fog = new MapFog
-            {
-                Texture = 1,
-                SpeedX = 10,
-                SpeedY = 5,
-                Alpha = 100
-            }
         };
 
         var groundLayer = map.Layer[0];

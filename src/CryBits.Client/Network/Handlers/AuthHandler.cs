@@ -1,5 +1,4 @@
 using CryBits.Client.UI.Menu;
-using CryBits.Client.UI.Menu.Views;
 using CryBits.Definitions.Catalog;
 using CryBits.Transport;
 using CryBits.Transport.Packets.Server;
@@ -13,19 +12,14 @@ internal class AuthHandler
     [PacketHandler]
     internal void Alert(AlertPacket packet)
     {
-        // Show alert message
-        UI.Alert.Show(packet.Message);
+        MenuEvents.FireAlert(packet.Message);
     }
 
     [PacketHandler]
     internal void Connect(ConnectPacket _)
     {
-        // Reset client-side character selection state
-        SelectCharacterView.CurrentCharacter = 0;
+        MenuState.CurrentCharacter = 0;
         _catalog.Classes = [];
-
-        // Open character selection panel
-        MenuScreen.CloseMenus();
-        SelectCharacterView.SelectCharacterPanel.Visible = true;
+        MenuEvents.FireConnectSucceeded();
     }
 }

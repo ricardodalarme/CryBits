@@ -1,59 +1,64 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
+using CryBits.Client.Iguina;
 using CryBits.Client.Worlds;
+using Iguina;
+using Iguina.Entities;
+using Ent = Iguina.Entities.Entity;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class OptionsView(AudioManager audioManager, GameContext context) : IView
+internal sealed class OptionsView(UISystem ui)
 {
-    internal static Panel OptionsPanel => Tools.Panels["Options"];
-    internal static CheckBox SoundsCheckBox => Tools.CheckBoxes["Sounds"];
-    internal static CheckBox MusicsCheckBox => Tools.CheckBoxes["Musics"];
-    private static Button BackButton => Tools.Buttons["Options_Back"];
+    private Panel? _panel;
+    private Checkbox? _soundsCheckbox;
+    private Checkbox? _musicsCheckbox;
 
-    public void Bind()
+    public event Action? LoginRequested;
+
+    public void Build(Panel root, ScreenData config)
     {
-        SoundsCheckBox.OnMouseUp += OnSoundsChanged;
-        MusicsCheckBox.OnMouseUp += OnMusicsChanged;
-        BackButton.OnMouseUp += OnBackPressed;
+        var (panel, reg) = MenuLoader.BuildScreen(ui, config, root);
+        _panel = panel;
+        _soundsCheckbox = reg["Sounds"] as Checkbox;
+        _musicsCheckbox = reg["Musics"] as Checkbox;
+
+        _soundsCheckbox!.Checked = Options.Instance.Sounds;
+        _soundsCheckbox.Events.OnChecked += OnSoundsChanged;
+        _soundsCheckbox.Events.OnUnchecked += OnSoundsChanged;
+        _musicsCheckbox!.Checked = Options.Instance.Musics;
+        _musicsCheckbox.Events.OnChecked += OnMusicsChanged;
+        _musicsCheckbox.Events.OnUnchecked += OnMusicsChanged;
+
+        ((Button)reg["OptionsBack"]).Events.OnClick += _ => LoginRequested?.Invoke();
     }
 
-    public void Unbind()
+    public void Destroy()
     {
-        SoundsCheckBox.OnMouseUp -= OnSoundsChanged;
-        MusicsCheckBox.OnMouseUp -= OnMusicsChanged;
-        BackButton.OnMouseUp -= OnBackPressed;
+        _panel?.RemoveSelf();
+        _panel = null;
+        _soundsCheckbox = null;
+        _musicsCheckbox = null;
     }
 
-    private void OnSoundsChanged()
+    private void OnSoundsChanged(Ent _)
     {
-        Options.Instance.Sounds = !Options.Instance.Sounds;
-        if (!Options.Instance.Sounds) audioManager.StopAllSounds();
+        Options.Instance.Sounds = _soundsCheckbox!.Checked;
+        if (!Options.Instance.Sounds) AudioManager.Instance.StopAllSounds();
         OptionsRepository.Write();
     }
 
-    private void OnMusicsChanged()
+    private void OnMusicsChanged(Ent _)
     {
-        Options.Instance.Musics = !Options.Instance.Musics;
+        Options.Instance.Musics = _musicsCheckbox!.Checked;
         OptionsRepository.Write();
-
         if (!Options.Instance.Musics)
-            audioManager.StopMusic();
-        else if (Screen.Current == Screens.Menu)
-            audioManager.PlayMusic(Musics.Menu);
-        else if (Screen.Current == Screens.Game)
-            audioManager.PlayMusic(context.CurrentMap.Data.Music);
-    }
-
-    private void OnBackPressed()
-    {
-        Connection.Instance.Disconnect();
-
-        MenuScreen.CloseMenus();
-        LoginView.LoginPanel.Visible = true;
+            AudioManager.Instance.StopMusic();
+        else if (GameState.CurrentScreen == ScreenType.Menu)
+            AudioManager.Instance.PlayMusic(Musics.Menu);
+        else if (GameState.CurrentScreen == ScreenType.Game)
+            AudioManager.Instance.PlayMusic(GameContext.Instance.CurrentMap.Data.Music);
     }
 }

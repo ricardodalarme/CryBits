@@ -52,14 +52,6 @@
           "SQLitePCLRaw.core": "2.1.10"
         }
       },
-      "SFML.System": {
-        "type": "Transitive",
-        "resolved": "3.0.0",
-        "contentHash": "k6s8BB53Xrugmx25rmlZRoezAkSyjpxNPeIrFT5hUoDJ32XSj0bvJdTWomB6Aiph7nNaJrCnA/K0o1x0ZCPUYQ==",
-        "dependencies": {
-          "CSFML": "[3.0.0, 3.1.0)"
-        }
-      },
       "SQLitePCLRaw.bundle_e_sqlite3": {
         "type": "Transitive",
         "resolved": "2.1.10",
@@ -131,6 +123,15 @@
           "Microsoft.Data.Sqlite.Core": "9.0.0",
           "SQLitePCLRaw.bundle_e_sqlite3": "2.1.10",
           "SQLitePCLRaw.core": "2.1.10"
+        }
+      },
+      "SFML.System": {
+        "type": "CentralTransitive",
+        "requested": "[3.0.0, )",
+        "resolved": "3.0.0",
+        "contentHash": "k6s8BB53Xrugmx25rmlZRoezAkSyjpxNPeIrFT5hUoDJ32XSj0bvJdTWomB6Aiph7nNaJrCnA/K0o1x0ZCPUYQ==",
+        "dependencies": {
+          "CSFML": "[3.0.0, 3.1.0)"
         }
       }
     }

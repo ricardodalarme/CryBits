@@ -1,35 +1,49 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Characters;
+using Iguina.Entities;
+using ArchEntity = Arch.Core.Entity;
+using Ent = global::Iguina.Entities.Entity;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class BarsView
+internal sealed class BarsView
 {
-    private static Label HpValueLabel => Tools.Labels["Bars_HP_Value"];
-    private static Label MpValueLabel => Tools.Labels["Bars_MP_Value"];
-    private static Label ExpValueLabel => Tools.Labels["Bars_Exp_Value"];
-    private static ProgressBar HpBar => Tools.ProgressBars["Bars_HP_Bar"];
-    private static ProgressBar MpBar => Tools.ProgressBars["Bars_MP_Bar"];
-    private static ProgressBar ExpBar => Tools.ProgressBars["Bars_Exp_Bar"];
+    private readonly GameContext _context;
+    private ProgressBar? _hpBar;
+    private ProgressBar? _mpBar;
+    private ProgressBar? _expBar;
+    private Label? _hpLabel;
+    private Label? _mpLabel;
+    private Label? _expLabel;
 
-    public static void Update()
+    public BarsView(GameContext context) => _context = context;
+
+    public void Wire(Dictionary<string, Ent> reg)
     {
-        ref var vitals = ref GameContext.Instance.LocalPlayer.GetVitals();
+        _hpBar = reg["HP_Bar"] as ProgressBar;
+        _mpBar = reg["MP_Bar"] as ProgressBar;
+        _expBar = reg["EXP_Bar"] as ProgressBar;
+        _hpLabel = reg["HP_Value"] as Label;
+        _mpLabel = reg["MP_Value"] as Label;
+        _expLabel = reg["EXP_Value"] as Label;
+        Update();
+    }
+
+    public void Update()
+    {
+        if (_context.LocalPlayer.Entity == ArchEntity.Null) return;
+        ref var vitals = ref _context.LocalPlayer.GetVitals();
+        ref var level = ref _context.LocalPlayer.GetLevel();
         var current = vitals.Current;
         var max = vitals.Max;
-        ref var level = ref GameContext.Instance.LocalPlayer.GetLevel();
-
         var maxHp = max[(byte)Vital.Hp];
         var maxMp = max[(byte)Vital.Mp];
 
-        HpBar.SetValue(maxHp > 0 ? (float)current[(byte)Vital.Hp] / maxHp : 0f);
-        MpBar.SetValue(maxMp > 0 ? (float)current[(byte)Vital.Mp] / maxMp : 0f);
-        ExpBar.SetValue(level.ExpNeeded > 0 ? (float)level.Experience / level.ExpNeeded : 0f);
-
-        HpValueLabel.SetArguments(current[(byte)Vital.Hp], maxHp);
-        MpValueLabel.SetArguments(current[(byte)Vital.Mp], maxMp);
-        ExpValueLabel.SetArguments(level.Experience, level.ExpNeeded);
+        _hpBar!.Value = maxHp > 0 ? current[(byte)Vital.Hp] * 100 / maxHp : 0;
+        _mpBar!.Value = maxMp > 0 ? current[(byte)Vital.Mp] * 100 / maxMp : 0;
+        _expBar!.Value = level.ExpNeeded > 0 ? level.Experience * 100 / level.ExpNeeded : 0;
+        _hpLabel!.Text = $"HP: {current[(byte)Vital.Hp]}/{maxHp}";
+        _mpLabel!.Text = $"MP: {current[(byte)Vital.Mp]}/{maxMp}";
+        _expLabel!.Text = $"Exp: {level.Experience}/{level.ExpNeeded}";
     }
 }

@@ -598,8 +598,13 @@ internal partial class EditorMapsWindow : Window
     private void butEditors_Classes_Click(object? sender, RoutedEventArgs e) =>
         EditorClassesWindow.Open(this);
 
-    private void butEditors_Interface_Click(object? sender, RoutedEventArgs e) =>
-        EditorInterfaceWindow.Open(this);
+    private void butEditors_Interface_Click(object? sender, RoutedEventArgs e)
+    {
+        Hide();
+        var win = new EditorIguinaLayoutWindow();
+        win.Closed += (_, _) => Show();
+        win.Show();
+    }
 
     private void butEditors_Items_Click(object? sender, RoutedEventArgs e) =>
         EditorItemsWindow.Open(this);
@@ -611,6 +616,22 @@ internal partial class EditorMapsWindow : Window
 
     private void butEditors_Tiles_Click(object? sender, RoutedEventArgs e) =>
         EditorTilesWindow.Open(this);
+
+    private void butEditors_IguinaLayout_Click(object? sender, RoutedEventArgs e)
+    {
+        Hide();
+        var win = new EditorIguinaLayoutWindow();
+        win.Closed += (_, _) => Show();
+        win.Show();
+    }
+
+    private void butEditors_IguinaTheme_Click(object? sender, RoutedEventArgs e)
+    {
+        Hide();
+        var win = new EditorIguinaThemeWindow();
+        win.Closed += (_, _) => Show();
+        win.Show();
+    }
 
     private void butCopy_Click(object? sender, RoutedEventArgs e) => CopyTiles();
 

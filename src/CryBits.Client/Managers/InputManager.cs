@@ -1,4 +1,3 @@
-using CryBits.Client.Framework.Interfacily.Components;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -21,10 +20,13 @@ public class InputManager
     public event EventHandler<KeyEventArgs>? KeyPressed;
     public event EventHandler<KeyEventArgs>? KeyReleased;
     public event EventHandler<TextEventArgs>? TextEntered;
+    public event EventHandler<MouseWheelScrollEventArgs>? MouseWheelScrolled;
 
     // Edge-detection: keys pressed or released during the current frame.
     private readonly HashSet<Keyboard.Key> _pressedThisFrame = [];
     private readonly HashSet<Keyboard.Key> _releasedThisFrame = [];
+
+    private int _mouseWheelDelta;
 
     /// <summary>
     /// Clears per-frame edge state. Must be called once per frame, before DispatchEvents.
@@ -33,6 +35,7 @@ public class InputManager
     {
         _pressedThisFrame.Clear();
         _releasedThisFrame.Clear();
+        _mouseWheelDelta = 0;
     }
 
     public void BindEvents(RenderWindow window)
@@ -40,6 +43,11 @@ public class InputManager
         window.MouseButtonPressed += (s, e) => MouseButtonPressed?.Invoke(s, e);
         window.MouseButtonReleased += (s, e) => MouseButtonReleased?.Invoke(s, e);
         window.MouseMoved += (s, e) => MouseMoved?.Invoke(s, e);
+        window.MouseWheelScrolled += (s, e) =>
+        {
+            _mouseWheelDelta += (int)e.Delta;
+            MouseWheelScrolled?.Invoke(s, e);
+        };
         window.KeyPressed += (s, e) =>
         {
             _pressedThisFrame.Add(e.Code);
@@ -53,6 +61,13 @@ public class InputManager
         window.TextEntered += (s, e) => TextEntered?.Invoke(s, e);
     }
 
+    public int ConsumeMouseWheelDelta()
+    {
+        var delta = _mouseWheelDelta;
+        _mouseWheelDelta = 0;
+        return delta;
+    }
+
     /// <summary>
     /// Checks if a key is currently held down using layout-independent scancodes.
     /// Preferred for movement and game actions where physical key position matters.
@@ -62,7 +77,6 @@ public class InputManager
         if (!IsFocused) return false;
 
         // Disable game keyboard inputs when a text box is focused.
-        if (TextBox.Focused != null) return false;
 
         return Keyboard.IsScancodePressed(scancode);
     }
@@ -76,7 +90,6 @@ public class InputManager
         if (!IsFocused) return false;
 
         // Disable game keyboard inputs when a text box is focused.
-        if (TextBox.Focused != null) return false;
 
         return Keyboard.IsKeyPressed(key);
     }
@@ -98,10 +111,16 @@ public class InputManager
     public bool WasKeyPressed(Keyboard.Key key)
     {
         if (!IsFocused) return false;
-        if (TextBox.Focused != null) return false;
 
         return _pressedThisFrame.Contains(key);
     }
+
+    /// <summary>
+    /// Returns true if the key was pressed this frame, ignoring focus and textbox checks.
+    /// Use for UI systems (Iguina) that manage their own focus state.
+    /// </summary>
+    public bool WasKeyPressedRaw(Keyboard.Key key) =>
+        _pressedThisFrame.Contains(key);
 
     /// <summary>
     /// Returns true if the key was released (went up) during the current frame.
@@ -110,7 +129,6 @@ public class InputManager
     public bool WasKeyReleased(Keyboard.Key key)
     {
         if (!IsFocused) return false;
-        if (TextBox.Focused != null) return false;
 
         return _releasedThisFrame.Contains(key);
     }

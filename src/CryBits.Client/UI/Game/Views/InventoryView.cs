@@ -1,117 +1,108 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
-using CryBits.Definitions.Slots;
-using SFML.Window;
-using System.Drawing;
+using Iguina;
+using Iguina.Defs;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : IView
+internal sealed class InventoryView
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-    internal static Panel Panel => Tools.Panels["Menu_Inventory"];
-    private static SlotGrid Grid => Tools.SlotGrids["Inventory_Grid"];
+    private readonly UISystem _ui;
+    private readonly GameContext _context;
+    private readonly DefinitionCatalog _catalog;
+    private readonly ItemRenderer _itemRenderer;
+    private Panel? _panel;
+    private IguinaSlotGrid? _grid;
 
-    public void Bind()
+    public bool IsVisible => _panel?.Visible ?? false;
+    public void SetVisible(bool visible) { if (_panel != null) _panel.Visible = visible; }
+
+    public InventoryView(UISystem ui, GameContext context, DefinitionCatalog catalog, ItemRenderer itemRenderer)
     {
-        Grid.OnRenderSlot += OnRenderSlot;
-        Grid.OnMouseDown += OnGridMouseDown;
-        Grid.OnMouseUp += OnGridMouseUp;
-        Grid.OnMouseDoubleClick += OnGridMouseDoubleClick;
-        Grid.OnSlotHover += OnGridSlotHover;
-        Grid.OnSlotLeave += OnGridSlotLeave;
+        _ui = ui;
+        _context = context;
+        _catalog = catalog;
+        _itemRenderer = itemRenderer;
     }
 
-    public void Unbind()
+    public void Wire(System.Collections.Generic.Dictionary<string, global::Iguina.Entities.Entity> reg) { }
+    public void Build(Panel root)
     {
-        Grid.OnRenderSlot -= OnRenderSlot;
-        Grid.OnMouseDown -= OnGridMouseDown;
-        Grid.OnMouseUp -= OnGridMouseUp;
-        Grid.OnMouseDoubleClick -= OnGridMouseDoubleClick;
-        Grid.OnSlotHover -= OnGridSlotHover;
-        Grid.OnSlotLeave -= OnGridSlotLeave;
-    }
-
-    private void OnRenderSlot(int slot, Point pos)
-    {
-        ref var inv = ref context.LocalPlayer.GetInventory();
-        var item = _catalog.Items.Get(inv.Slots[slot] is ItemSlot s ? s.ItemId : Guid.Empty);
-        itemRenderer.DrawItem(item, inv.Slots[slot]?.Amount ?? 0, pos);
-    }
-
-    private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
-    {
-        ref var inv = ref context.LocalPlayer.GetInventory();
-        if (inv.Slots[slot]?.ItemId == Guid.Empty) return;
-
-        switch (e.Button)
+        // Inventory panel #12: 190x248 at (596, 310)
+        _panel = new Panel(_ui);
+        _panel.OverrideStyles.FillTextureStretched = new StretchedTexture
         {
-            case Mouse.Button.Right:
-                var item = _catalog.Items.Get(inv.Slots[slot]?.ItemId ?? Guid.Empty);
-                if (item?.Bind != BindOn.Pickup)
-                    // Sell the item if shop is open
-                    if (ShopView.Panel.Visible)
-                    {
-                        if (inv.Slots[slot]?.Amount != 1)
-                        {
-                            ShopSellView.InventorySlot = slot;
-                            ShopSellView.AmountTextBox.Text = string.Empty;
-                            ShopSellView.Panel.Visible = true;
-                        }
-                        else shopSender.ShopSell(slot, 1);
-                    }
-                    // Otherwise drop the item
-                    else if (!TradeView.Panel.Visible)
-                        if (inv.Slots[slot]?.Amount != 1)
-                        {
-                            DropItemView.InventorySlot = slot;
-                            DropItemView.AmountTextBox.Text = string.Empty;
-                            DropItemView.Panel.Visible = true;
-                        }
-                        else playerSender.DropItem(slot, 1);
+            TextureId = "Textures/Panels/12.png",
+            SourceRect = new Rectangle { Width = 190, Height = 248 }
+        };
+        _panel.Size.SetPixels(190, 248);
+        _panel.Anchor = Anchor.TopLeft;
+        _panel.Offset.SetPixels(596, 310);
+        _panel.Visible = false;
+        root.AddChild(_panel);
 
-                break;
-            // Select the item (start drag)
-            case Mouse.Button.Left:
-                GameScreen.InventoryChange = slot;
-                break;
+        // Grid: 5 columns x 6 rows, 32x32, padding 4 at (603, 340) → relative (7, 30)
+        _grid = new IguinaSlotGrid(_ui, 5, 6, 32, 4, 7, 30, _panel);
+
+        _grid.SlotRender += OnSlotRender;
+        _grid.SlotLeftClick += OnSlotLeftClick;
+        _grid.SlotRightClick += OnSlotRightClick;
+        _grid.SlotDoubleClick += OnSlotDoubleClick;
+        _grid.SlotHover += OnSlotHover;
+        _grid.SlotLeave += _ => UI.Game.Views.InformationView.Hide();
+    }
+
+    private void OnSlotRender(int slot)
+    {
+        if (_context.LocalPlayer.Entity == Arch.Core.Entity.Null) return;
+        ref var inv = ref _context.LocalPlayer.GetInventory();
+        var slotData = inv.Slots[slot];
+        if (slotData == null) return;
+        var item = _catalog.Items.Get(slotData.Value.ItemId);
+        if (item != null)
+        {
+            var rect = _grid!.GetSlotRect(slot);
+            _itemRenderer.DrawItem(item, slotData.Value.Amount, new System.Drawing.Point(rect.X, rect.Y));
         }
     }
 
-    private void OnGridMouseUp(short slot)
+    private void OnSlotLeftClick(int slot)
     {
-        if (GameScreen.InventoryChange == -1) return;
-
-        // Send inventory slot change to server.
-        playerSender.InventoryChange(GameScreen.InventoryChange, slot);
-        DropItemView.Panel.Visible = false;
+        ref var inv = ref _context.LocalPlayer.GetInventory();
+        if (inv.Slots[slot] == null) return;
+        CryBits.Client.UI.Game.GameScreen.InventoryChange = (short)slot;
     }
 
-    private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
+    private void OnSlotRightClick(int slot)
     {
-        if (slot <= 0) return;
-        if (context.LocalPlayer.GetInventory().Slots[slot]?.ItemId == Guid.Empty) return;
+        ref var inv = ref _context.LocalPlayer.GetInventory();
+        if (inv.Slots[slot] == null) return;
 
-        // Use item
-        playerSender.InventoryUse((byte)slot);
-        DropItemView.Panel.Visible = false;
+        var item = _catalog.Items.Get(inv.Slots[slot].Value.ItemId);
+        if (item?.Bind != BindOn.Pickup)
+            PlayerSender.Instance.DropItem((byte)slot, 1);
     }
 
-    private void OnGridSlotHover(short slot)
+    private void OnSlotDoubleClick(int slot)
     {
-        var item = _catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[slot]?.ItemId ?? Guid.Empty);
-        if (item == null) return;
-        string? additionalInfo = null;
-        if (ShopView.Panel.Visible && ShopView.OpenedShop?.FindBought(item.Id) != null)
-            additionalInfo = "Sale price: " + ShopView.OpenedShop.FindBought(item.Id).Price;
-        InformationView.Show(item.Id, Panel.Position + new Size(-186, 3), additionalInfo);
+        ref var inv = ref _context.LocalPlayer.GetInventory();
+        if (inv.Slots[slot] == null) return;
+
+        var item = _catalog.Items.Get(inv.Slots[slot].Value.ItemId);
+        if (item?.Bind == BindOn.Equip)
+            PlayerSender.Instance.InventoryUse((byte)slot);
     }
 
-    private static void OnGridSlotLeave(short slot) => InformationView.Hide();
+    private void OnSlotHover(int slot)
+    {
+        if (_context.LocalPlayer.Entity == Arch.Core.Entity.Null) return;
+        ref var inv = ref _context.LocalPlayer.GetInventory();
+        if (inv.Slots[slot] == null) return;
+        UI.Game.Views.InformationView.Show(inv.Slots[slot].Value.ItemId, System.Drawing.Point.Empty);
+    }
 }

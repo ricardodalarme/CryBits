@@ -1,54 +1,57 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Network;
+using CryBits.Client.Iguina;
 using CryBits.Client.Network.Senders;
+using Iguina;
+using Iguina.Entities;
+using Ent = Iguina.Entities.Entity;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class RegisterView(AuthSender authSender) : IView
+internal sealed class RegisterView(UISystem ui)
 {
-    internal static Panel RegisterPanel => Tools.Panels["Register"];
-    private static TextBox UsernameTextBox => Tools.TextBoxes["Register_Username"];
-    private static TextBox PasswordTextBox => Tools.TextBoxes["Register_Password"];
-    private static TextBox ConfirmPasswordTextBox => Tools.TextBoxes["Register_Password2"];
-    private static Button ConfirmButton => Tools.Buttons["Register_Confirm"];
-    private static Button LoginButton => Tools.Buttons["Connect"];
+    private Panel? _panel;
+    private TextInput? _registerUsernameInput;
+    private TextInput? _registerPasswordInput;
+    private TextInput? _registerConfirmInput;
 
-    public void Bind()
+    public event Action? LoginRequested;
+
+    public void Build(Panel root, ScreenData config)
     {
-        ConfirmButton.OnMouseUp += OnConfirmPressed;
-        LoginButton.OnMouseUp += OnLoginPressed;
+        var (panel, reg) = MenuLoader.BuildScreen(ui, config, root);
+        _panel = panel;
+        _registerUsernameInput = reg["RegisterUsername"] as TextInput;
+        _registerPasswordInput = reg["RegisterPassword"] as TextInput;
+        _registerConfirmInput = reg["RegisterConfirm"] as TextInput;
+
+        ((Button)reg["RegisterConfirmBtn"]).Events.OnClick += OnConfirmClicked;
+        ((Button)reg["RegisterBackBtn"]).Events.OnClick += _ => LoginRequested?.Invoke();
     }
 
-    public void Unbind()
+    public void Destroy()
     {
-        ConfirmButton.OnMouseUp -= OnConfirmPressed;
-        LoginButton.OnMouseUp -= OnLoginPressed;
+        _panel?.RemoveSelf();
+        _panel = null;
+        _registerUsernameInput = null;
+        _registerPasswordInput = null;
+        _registerConfirmInput = null;
     }
 
-    private void OnConfirmPressed()
+    private void OnConfirmClicked(Ent _)
     {
-        // Basic validation
-        if (PasswordTextBox.Text != ConfirmPasswordTextBox.Text)
+        var password = _registerPasswordInput?.Value ?? string.Empty;
+        var confirm = _registerConfirmInput?.Value ?? string.Empty;
+
+        if (password != confirm)
         {
-            Alert.Show("The password don't match.");
+            ui.MessageBoxes.ShowInfoMessageBox("Error", "The password don't match.", null, "OK");
             return;
         }
-
         if (!Connection.Instance.TryConnect())
         {
-            Alert.Show("The server is currently unavailable.");
+            ui.MessageBoxes.ShowInfoMessageBox("Error", "The server is currently unavailable.", null, "OK");
             return;
         }
-
-        authSender.Register(UsernameTextBox.Text, PasswordTextBox.Text);
-    }
-
-    private void OnLoginPressed()
-    {
-        Connection.Instance.Disconnect();
-
-        MenuScreen.CloseMenus();
-        LoginView.LoginPanel.Visible = true;
+        AuthSender.Instance.Register(_registerUsernameInput?.Value ?? string.Empty, password);
     }
 }

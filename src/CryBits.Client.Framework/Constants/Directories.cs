@@ -14,7 +14,7 @@ public static class Directories
     public static readonly DirectoryInfo Musics = new(Path.Combine(BaseDir, "Audio", "Musics"));
     public static readonly DirectoryInfo Fonts = new(Path.Combine(BaseDir, "Graphics", "Fonts"));
     public static readonly FileInfo Options = new(Path.Combine(BaseDir, "Data", "Options.json"));
-    public static readonly FileInfo ToolsData = new(Path.Combine(BaseDir, "Data", "Tools.json"));
+    public static readonly DirectoryInfo IguinaTheme = new(Path.Combine(BaseDir, "Data", "IguinaTheme"));
 
     public static readonly DirectoryInfo MapsData = new(Path.Combine(BaseDir, "Data", "Maps"));
     public static readonly DirectoryInfo Tiles = new(Path.Combine(BaseDir, "Data", "Tiles"));
@@ -51,9 +51,9 @@ public static class Directories
         Musics.Create();
         Fonts.Create();
         Options.Directory?.Create();
+        IguinaTheme.Create();
         MapsData.Create();
         Tiles.Create();
-        ToolsData.Directory?.Create();
         TexBackground.Directory?.Create();
         TexChat.Directory?.Create();
         TexEquipments.Directory?.Create();

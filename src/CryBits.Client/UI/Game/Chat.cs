@@ -1,6 +1,5 @@
 using CryBits.Client.Commands;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Definitions.Common;
@@ -60,7 +59,7 @@ internal class Chat
 
     public void AddText(string message, Color color)
     {
-        var boxWidth = Textures.Panels[ChatView.Panel.TextureNum].ToSize().Width - 16;
+        var boxWidth = Textures.Panels[8].ToSize().Width - 16;
 
         // Trim whitespace and measure
         message = message.Trim();
@@ -84,29 +83,25 @@ internal class Chat
 
     public void Type()
     {
-        var tool = ChatView.MessageTextBox;
-        var panel = ChatView.Panel;
+        // ChatView handles the visual toggle; this method processes the message
+        var isVisible = ChatView.IsInputVisible;
 
-        panel.Visible = !panel.Visible;
+        // Fire toggle event — ChatView will toggle panel + input
+        GameEvents.FireChatToggle();
 
-        if (panel.Visible)
+        if (!isVisible)
         {
             VisibilityTimer = Environment.TickCount64 + SleepTimer;
-            TextBox.Focused = tool;
             return;
         }
 
-        TextBox.Focused = null;
+        var input = ChatView.ChatInput;
+        if (input == null) return;
 
-        var message = tool.Text;
+        var message = input.Value;
+        input.Value = string.Empty;
 
-        if (message.Length < 3)
-        {
-            tool.Text = string.Empty;
-            return;
-        }
-
-        tool.Text = string.Empty;
+        if (message.Length < 3) return;
 
         if (!_dispatcher.TryDispatch(message))
             SendMessage(message);

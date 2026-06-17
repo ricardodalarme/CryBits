@@ -35,8 +35,8 @@ internal class AttackSystem(
 
         ref var state = ref World.Get<AttackComponent>(entity);
         if (state.AttackCountdown > 0f) return;
-        if (TradeView.Panel.Visible) return;
-        if (ShopView.Panel.Visible) return;
+        if (TradeView.PanelVisible) return;
+        if (ShopView.PanelVisible) return;
 
         state.AttackCountdown = AttackSpeed / 1000f;
         playerSender.PlayerAttack();

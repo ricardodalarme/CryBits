@@ -21,14 +21,14 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context, Defini
         var state = packet.State;
 
         // Set trade panel visibility
-        TradeView.Panel.Visible = packet.State;
+        TradeView.PanelVisible = packet.State;
 
         if (state)
         {
             // Reset trade buttons
-            TradeView.ConfirmOfferButton.Visible = true;
-            TradeAmountView.Panel.Visible = TradeView.AcceptOfferButton.Visible = TradeView.DeclineOfferButton.Visible = false;
-            TradeView.OfferDisabledPanel.Visible = false;
+            TradeView.ConfirmOfferButtonVisible = true;
+            TradeAmountView.PanelVisible = TradeView.AcceptOfferButtonVisible = TradeView.DeclineOfferButtonVisible = false;
+            TradeView.OfferDisabledPanelVisible = false;
 
             // Attach fresh trade state to the local player entity for the duration of this session.
             context.World.Add(context.LocalPlayer.Entity, new TradeComponent());
@@ -61,14 +61,14 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context, Defini
         {
             case TradeStatus.Accepted:
             case TradeStatus.Declined:
-                TradeView.ConfirmOfferButton.Visible = true;
-                TradeView.AcceptOfferButton.Visible = TradeView.DeclineOfferButton.Visible = false;
-                TradeView.OfferDisabledPanel.Visible = false;
+                TradeView.ConfirmOfferButtonVisible = true;
+                TradeView.AcceptOfferButtonVisible = TradeView.DeclineOfferButtonVisible = false;
+                TradeView.OfferDisabledPanelVisible = false;
                 break;
             case TradeStatus.Confirmed:
-                TradeView.ConfirmOfferButton.Visible = false;
-                TradeView.AcceptOfferButton.Visible = TradeView.DeclineOfferButton.Visible = true;
-                TradeView.OfferDisabledPanel.Visible = false;
+                TradeView.ConfirmOfferButtonVisible = false;
+                TradeView.AcceptOfferButtonVisible = TradeView.DeclineOfferButtonVisible = true;
+                TradeView.OfferDisabledPanelVisible = false;
                 break;
         }
     }
