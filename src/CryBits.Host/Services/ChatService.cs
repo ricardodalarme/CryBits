@@ -18,7 +18,7 @@ internal sealed class ChatService(WorldHost host)
             if (message[i] < 32 && message[i] > 126)
                 return;
 
-        host.CurrentTick?.Intents.Enqueue(
+        host.IntentFunnel.Submit(
             new ChatMessageIntent(entityId, message, (Message)packet.Type, packet.Addressee));
     }
 }

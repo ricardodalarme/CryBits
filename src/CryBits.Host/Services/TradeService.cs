@@ -12,38 +12,38 @@ internal sealed class TradeService(WorldHost host)
     [PacketHandler]
     internal void TradeInvite(EntityId entityId, TradeInvitePacket packet)
     {
-        host.CurrentTick?.Intents.Enqueue(new TradeInviteIntent(entityId, packet.PlayerName));
+        host.IntentFunnel.Submit(new TradeInviteIntent(entityId, packet.PlayerName));
     }
 
     [PacketHandler]
     internal void TradeAccept(EntityId entityId, TradeAcceptPacket _)
     {
-        host.CurrentTick?.Intents.Enqueue(new TradeAcceptIntent(entityId));
+        host.IntentFunnel.Submit(new TradeAcceptIntent(entityId));
     }
 
     [PacketHandler]
     internal void TradeDecline(EntityId entityId, TradeDeclinePacket _)
     {
-        host.CurrentTick?.Intents.Enqueue(new TradeDeclineIntent(entityId));
+        host.IntentFunnel.Submit(new TradeDeclineIntent(entityId));
     }
 
     [PacketHandler]
     internal void TradeLeave(EntityId entityId, TradeLeavePacket _)
     {
-        host.CurrentTick?.Intents.Enqueue(new TradeLeaveIntent(entityId));
+        host.IntentFunnel.Submit(new TradeLeaveIntent(entityId));
     }
 
     [PacketHandler]
     internal void TradeOffer(EntityId entityId, TradeOfferPacket packet)
     {
-        host.CurrentTick?.Intents.Enqueue(
+        host.IntentFunnel.Submit(
             new TradeOfferIntent(entityId, packet.Slot, packet.InventorySlot, packet.Amount));
     }
 
     [PacketHandler]
     internal void TradeOfferState(EntityId entityId, TradeOfferStatePacket packet)
     {
-        host.CurrentTick?.Intents.Enqueue(
+        host.IntentFunnel.Submit(
             new TradeOfferStateIntent(entityId, (TradeStatus)packet.State));
     }
 }

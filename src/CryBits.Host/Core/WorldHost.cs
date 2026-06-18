@@ -1,3 +1,4 @@
+using CryBits.Host.Ingress;
 using CryBits.Host.Network;
 using CryBits.Host.Scheduling;
 using CryBits.Simulation.Core;
@@ -15,6 +16,7 @@ internal sealed class WorldHost
     public TickPipeline Pipeline { get; }
     public SessionManager Sessions { get; }
     public PackageSender PackageSender { get; }
+    public IntentFunnel IntentFunnel { get; } = new();
     public Tick? CurrentTick { get; set; }
     public EntityRegistry Entities => Simulation.Entities;
     public Dictionary<Guid, MapState> Maps => Simulation.Maps;
@@ -45,6 +47,10 @@ internal sealed class WorldHost
         CurrentTick = tick;
 
         Transport.Poll();
+
+        var funnelIntents = IntentFunnel.Drain();
+        foreach (var intent in funnelIntents.All)
+            tick.Intents.Enqueue(intent);
         Pipeline.Execute(Simulation, tick);
 
         CurrentTick = null;

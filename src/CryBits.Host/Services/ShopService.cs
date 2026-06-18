@@ -11,19 +11,19 @@ internal sealed class ShopService(WorldHost host)
     [PacketHandler]
     internal void ShopBuy(EntityId entityId, ShopBuyPacket packet)
     {
-        host.CurrentTick?.Intents.Enqueue(new ShopBuyIntent(entityId, packet.Slot));
+        host.IntentFunnel.Submit(new ShopBuyIntent(entityId, packet.Slot));
     }
 
     [PacketHandler]
     internal void ShopSell(EntityId entityId, ShopSellPacket packet)
     {
-        host.CurrentTick?.Intents.Enqueue(
+        host.IntentFunnel.Submit(
             new ShopSellIntent(entityId, (byte)packet.Slot, packet.Amount));
     }
 
     [PacketHandler]
     internal void ShopClose(EntityId entityId, ShopClosePacket _)
     {
-        host.CurrentTick?.Intents.Enqueue(new ShopCloseIntent(entityId));
+        host.IntentFunnel.Submit(new ShopCloseIntent(entityId));
     }
 }
