@@ -1,8 +1,10 @@
+using MemoryPack;
+
 namespace CryBits;
 
 /// <summary>Mutable server configuration values. Loaded from <c>settings.json</c> at startup and persisted by the editor.</summary>
-[Serializable]
-public sealed class ServerConfig
+[MemoryPackable]
+public sealed partial class ServerConfig
 {
     public string GameName { get; set; } = "CryBits";
     public string WelcomeMessage { get; set; } = "Welcome to CryBits.";

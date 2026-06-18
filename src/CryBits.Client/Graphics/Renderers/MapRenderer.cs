@@ -30,8 +30,7 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
 
         var map = context.CurrentMap.Data;
         var sight = cameraManager.TileSight;
-        var tc = map.Color;
-        var tint = new Color(tc.R, tc.G, tc.B);
+        var tint = new Color((byte)(map.ColorArgb >> 16), (byte)(map.ColorArgb >> 8), (byte)map.ColorArgb);
 
         // --- Reset all batches for this frame ---------------------------------
         foreach (var va in _batches.Values)

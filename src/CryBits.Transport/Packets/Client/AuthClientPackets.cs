@@ -1,15 +1,17 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Client;
 
-[Serializable]
-public struct ConnectPacket : IClientPacket
+[MemoryPackable]
+public partial class ConnectPacket : IClientPacket
 {
     public string Username;
     public string Password;
     public bool IsClientAccess;
 }
 
-[Serializable]
-public struct RegisterPacket : IClientPacket
+[MemoryPackable]
+public partial class RegisterPacket : IClientPacket
 {
     public string Username;
     public string Password;

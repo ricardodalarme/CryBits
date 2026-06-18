@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Serialization">
-    <PackageVersion Include="System.Runtime.Serialization.Formatters" Version="10.0.9" />
+    <PackageVersion Include="MemoryPack" Version="1.21.4" />
   </ItemGroup>
 
   <ItemGroup Label="Host infrastructure">

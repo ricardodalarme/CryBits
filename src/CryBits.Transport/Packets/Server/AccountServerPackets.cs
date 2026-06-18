@@ -1,15 +1,17 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Server;
 
-[Serializable] public struct CreateCharacterPacket : IServerPacket;
+[MemoryPackable] public partial class CreateCharacterPacket : IServerPacket;
 
-[Serializable]
-public struct CharactersPacket : IServerPacket
+[MemoryPackable]
+public partial class CharactersPacket : IServerPacket
 {
     public PacketsTempCharacter[] Characters;
 }
 
-[Serializable]
-public struct PacketsTempCharacter
+[MemoryPackable]
+public partial struct PacketsTempCharacter
 {
     public string Name;
     public short TextureNum;

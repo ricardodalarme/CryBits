@@ -1,9 +1,10 @@
 using CryBits.Definitions.Characters;
+using MemoryPack;
 
 namespace CryBits.Transport.Packets.Client;
 
-[Serializable]
-public struct CreateCharacterPacket : IClientPacket
+[MemoryPackable]
+public partial class CreateCharacterPacket : IClientPacket
 {
     public string Name;
     public string ClassId;
@@ -11,16 +12,16 @@ public struct CreateCharacterPacket : IClientPacket
     public short TextureNum;
 }
 
-[Serializable]
-public struct CharacterUsePacket : IClientPacket
+[MemoryPackable]
+public partial class CharacterUsePacket : IClientPacket
 {
     public int CharacterIndex;
 }
 
-[Serializable] public struct CharacterCreatePacket : IClientPacket;
+[MemoryPackable] public partial class CharacterCreatePacket : IClientPacket;
 
-[Serializable]
-public struct CharacterDeletePacket : IClientPacket
+[MemoryPackable]
+public partial class CharacterDeletePacket : IClientPacket
 {
     public int CharacterIndex;
 }

@@ -2,6 +2,16 @@
   "version": 2,
   "dependencies": {
     "net10.0": {
+      "MemoryPack": {
+        "type": "Direct",
+        "requested": "[1.21.4, )",
+        "resolved": "1.21.4",
+        "contentHash": "wy3JTBNBsO8LfQcBvvYsWr3lm2Oakolrfu0UQ3oSJSEiD+7ye0GUhYTaXuYYBowqsXBXWD9gf2218ae0JRiYVQ==",
+        "dependencies": {
+          "MemoryPack.Core": "1.21.4",
+          "MemoryPack.Generator": "1.21.4"
+        }
+      },
       "SFML.Audio": {
         "type": "Direct",
         "requested": "[3.0.0, )",
@@ -33,16 +43,20 @@
           "SFML.System": "3.0.0"
         }
       },
-      "System.Runtime.Serialization.Formatters": {
-        "type": "Direct",
-        "requested": "[10.0.9, )",
-        "resolved": "10.0.9",
-        "contentHash": "PFO/7nkB3nTtYGye6rQ/thoMffpst3t0CIj5vgE4xbVc0hPzOSK/NmxMJniICtWq1BNvQsuQnMLrT72/WyantQ=="
-      },
       "CSFML": {
         "type": "Transitive",
         "resolved": "3.0.0",
         "contentHash": "iwzebpEjtHMmrBWrIZf7lo20PlzGCe4ifh5y/x0RwNE3pcUh4rdLkcnKwuxE+k6gHFbUehQ2/4GuiUB3i6v3Ww=="
+      },
+      "MemoryPack.Core": {
+        "type": "Transitive",
+        "resolved": "1.21.4",
+        "contentHash": "6RszGorZ0ejNmp37ZcboPBMvvPCuNW2jlrdQfcs/lMzE5b3pmPF6hsm/laDc34hRlbAST1ZxaX/DvYu2DF5sBQ=="
+      },
+      "MemoryPack.Generator": {
+        "type": "Transitive",
+        "resolved": "1.21.4",
+        "contentHash": "g14EsSS85yn0lHTi0J9ivqlZMf09A2iI51fmI+0KkzIzyCbWOBWPi5mdaY7YWmXprk12aYh9u/qfWHQUYthlwg=="
       },
       "Microsoft.Data.Sqlite.Core": {
         "type": "Transitive",
@@ -90,7 +104,7 @@
       "crybits.definitions": {
         "type": "Project",
         "dependencies": {
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
+          "MemoryPack": "[1.21.4, )"
         }
       },
       "crybits.persistence": {
@@ -98,7 +112,6 @@
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
           "Microsoft.Data.Sqlite": "[10.0.9, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )",
           "linq2db": "[6.3.0, )"
         }
       },
@@ -107,7 +120,7 @@
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
           "LiteNetLib": "[2.1.4, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
+          "MemoryPack": "[1.21.4, )"
         }
       },
       "linq2db": {

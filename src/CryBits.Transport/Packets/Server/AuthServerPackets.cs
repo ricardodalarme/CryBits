@@ -1,3 +1,5 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Server;
 
-[Serializable] public struct ConnectPacket : IServerPacket;
+[MemoryPackable] public partial class ConnectPacket : IServerPacket;

@@ -1,7 +1,9 @@
+using MemoryPack;
+
 namespace CryBits.Definitions.Maps;
 
-[Serializable]
-public class MapNpc
+[MemoryPackable]
+public partial class MapNpc
 {
     public Guid NpcId { get; set; }
     public byte Zone { get; set; }

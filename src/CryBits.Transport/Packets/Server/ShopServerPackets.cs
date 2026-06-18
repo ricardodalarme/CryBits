@@ -1,15 +1,16 @@
 using CryBits.Definitions.Shops;
+using MemoryPack;
 
 namespace CryBits.Transport.Packets.Server;
 
-[Serializable]
-public struct ShopsPacket : IServerPacket
+[MemoryPackable]
+public partial class ShopsPacket : IServerPacket
 {
     public Dictionary<Guid, Shop> List;
 }
 
-[Serializable]
-public struct ShopOpenPacket : IServerPacket
+[MemoryPackable]
+public partial class ShopOpenPacket : IServerPacket
 {
     public Guid Id;
 }

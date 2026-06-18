@@ -1,5 +1,7 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Client;
 
-[Serializable] public struct ShopBuyPacket : IClientPacket { public short Slot; }
-[Serializable] public struct ShopSellPacket : IClientPacket { public short Slot; public short Amount; }
-[Serializable] public struct ShopClosePacket : IClientPacket;
+[MemoryPackable] public partial class ShopBuyPacket : IClientPacket { public short Slot; }
+[MemoryPackable] public partial class ShopSellPacket : IClientPacket { public short Slot; public short Amount; }
+[MemoryPackable] public partial class ShopClosePacket : IClientPacket;

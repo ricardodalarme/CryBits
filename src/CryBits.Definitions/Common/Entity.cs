@@ -1,13 +1,22 @@
+using MemoryPack;
+
 namespace CryBits.Definitions.Common;
 
-[Serializable]
-public class Entity(Guid id) : IEquatable<Entity>
+[MemoryPackable]
+public partial class Entity : IEquatable<Entity>
 {
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
 
-    public Entity() : this(Guid.NewGuid())
+    [MemoryPackConstructor]
+    public Entity()
     {
+        Id = Guid.NewGuid();
+    }
+
+    public Entity(Guid id)
+    {
+        Id = id;
     }
 
     public override string ToString() => Name;

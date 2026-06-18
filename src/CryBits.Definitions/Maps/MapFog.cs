@@ -1,7 +1,9 @@
+using MemoryPack;
+
 namespace CryBits.Definitions.Maps;
 
-[Serializable]
-public class MapFog
+[MemoryPackable]
+public partial class MapFog
 {
     public byte Texture { get; set; }
     public sbyte SpeedX { get; set; }

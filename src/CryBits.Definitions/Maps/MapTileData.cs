@@ -1,9 +1,10 @@
+using MemoryPack;
 using System.Drawing;
 
 namespace CryBits.Definitions.Maps;
 
-[Serializable]
-public class MapTileData
+[MemoryPackable]
+public partial class MapTileData
 {
     public byte X { get; set; }
     public byte Y { get; set; }

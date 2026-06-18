@@ -1,13 +1,14 @@
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Utils;
+using MemoryPack;
 using System.Drawing;
 using System.Text.Json.Serialization;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Framework.Entities.Tile;
 
-[Serializable]
-public class Tile
+[MemoryPackable]
+public partial class Tile
 {
     /// <summary>Cached tile metadata arrays, indexed by tileset.</summary>
     public static Tile[] List = [];
@@ -21,6 +22,14 @@ public class Tile
     /// <summary>Tile metadata grid for this tileset.</summary>
     [JsonConverter(typeof(Array2DConverter<TileData>))]
     public TileData[,] Data { get; set; }
+
+    [MemoryPackConstructor]
+    public Tile()
+    {
+        Width = 0;
+        Height = 0;
+        Data = new TileData[0, 0];
+    }
 
     public Tile(Size textureSize)
     {

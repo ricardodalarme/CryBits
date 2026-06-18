@@ -1,7 +1,9 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Client;
 
-[Serializable]
-public struct MessagePacket : IClientPacket
+[MemoryPackable]
+public partial class MessagePacket : IClientPacket
 {
     public string Text;
     public byte Type;

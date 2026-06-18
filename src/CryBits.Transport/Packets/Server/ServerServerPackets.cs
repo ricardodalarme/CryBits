@@ -1,28 +1,29 @@
 using CryBits.Definitions.Classes;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Npcs;
+using MemoryPack;
 
 namespace CryBits.Transport.Packets.Server;
 
-[Serializable]
-public struct ClassesPacket : IServerPacket
+[MemoryPackable]
+public partial class ClassesPacket : IServerPacket
 {
     public Dictionary<Guid, Class> List;
 }
 
-[Serializable]
-public struct NpcsPacket : IServerPacket
+[MemoryPackable]
+public partial class NpcsPacket : IServerPacket
 {
     public Dictionary<Guid, Npc> List;
 }
 
-[Serializable]
-public struct ItemsPacket : IServerPacket
+[MemoryPackable]
+public partial class ItemsPacket : IServerPacket
 {
     public Dictionary<Guid, Item> List;
 }
-[Serializable]
-public struct JoinPacket : IServerPacket
+[MemoryPackable]
+public partial class JoinPacket : IServerPacket
 {
     public long PlayerId;
 }

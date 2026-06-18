@@ -1,11 +1,12 @@
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
+using MemoryPack;
 
 namespace CryBits.Definitions.Classes;
 
 /// <summary>Character class metadata (stats, textures and spawn info).</summary>
-[Serializable]
-public class Class : Entity
+[MemoryPackable]
+public partial class Class : Entity
 {
     public string Description { get; set; } = string.Empty;
     public IList<short> TextureMale { get; set; } = [];

@@ -2,16 +2,30 @@
   "version": 2,
   "dependencies": {
     "net10.0": {
-      "System.Runtime.Serialization.Formatters": {
-        "type": "Direct",
-        "requested": "[10.0.9, )",
-        "resolved": "10.0.9",
-        "contentHash": "PFO/7nkB3nTtYGye6rQ/thoMffpst3t0CIj5vgE4xbVc0hPzOSK/NmxMJniICtWq1BNvQsuQnMLrT72/WyantQ=="
+      "MemoryPack.Core": {
+        "type": "Transitive",
+        "resolved": "1.21.4",
+        "contentHash": "6RszGorZ0ejNmp37ZcboPBMvvPCuNW2jlrdQfcs/lMzE5b3pmPF6hsm/laDc34hRlbAST1ZxaX/DvYu2DF5sBQ=="
+      },
+      "MemoryPack.Generator": {
+        "type": "Transitive",
+        "resolved": "1.21.4",
+        "contentHash": "g14EsSS85yn0lHTi0J9ivqlZMf09A2iI51fmI+0KkzIzyCbWOBWPi5mdaY7YWmXprk12aYh9u/qfWHQUYthlwg=="
       },
       "crybits.definitions": {
         "type": "Project",
         "dependencies": {
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
+          "MemoryPack": "[1.21.4, )"
+        }
+      },
+      "MemoryPack": {
+        "type": "CentralTransitive",
+        "requested": "[1.21.4, )",
+        "resolved": "1.21.4",
+        "contentHash": "wy3JTBNBsO8LfQcBvvYsWr3lm2Oakolrfu0UQ3oSJSEiD+7ye0GUhYTaXuYYBowqsXBXWD9gf2218ae0JRiYVQ==",
+        "dependencies": {
+          "MemoryPack.Core": "1.21.4",
+          "MemoryPack.Generator": "1.21.4"
         }
       }
     }

@@ -1,9 +1,10 @@
 using CryBits.Definitions.Common;
+using MemoryPack;
 
 namespace CryBits.Definitions.Maps;
 
-[Serializable]
-public class MapAttribute
+[MemoryPackable]
+public partial class MapAttribute
 {
     public byte Type { get; set; }
     public string Data1 { get; set; } = string.Empty;

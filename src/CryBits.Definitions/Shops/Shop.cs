@@ -1,9 +1,10 @@
 using CryBits.Definitions.Common;
+using MemoryPack;
 
 namespace CryBits.Definitions.Shops;
 
-[Serializable]
-public class Shop : Entity
+[MemoryPackable]
+public partial class Shop : Entity
 {
     public Guid CurrencyId { get; set; }
 

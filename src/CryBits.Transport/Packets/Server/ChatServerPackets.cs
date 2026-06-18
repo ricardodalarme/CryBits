@@ -1,13 +1,15 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Server;
 
-[Serializable]
-public struct AlertPacket : IServerPacket
+[MemoryPackable]
+public partial class AlertPacket : IServerPacket
 {
     public string Message;
 }
 
-[Serializable]
-public struct MessagePacket : IServerPacket
+[MemoryPackable]
+public partial class MessagePacket : IServerPacket
 {
     public string Text;
     public int ColorArgb;

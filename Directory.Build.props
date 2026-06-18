@@ -4,7 +4,6 @@
     <Nullable>annotations</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     <Company>Ricardo Dalarme</Company>
     <Copyright>Copyright (c) 2026 Ricardo Dalarme</Copyright>
     <Description>ORPG Game Engine</Description>
@@ -13,8 +12,4 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugType>embedded</DebugType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Runtime.Serialization.Formatters" />
-  </ItemGroup>
 </Project>

@@ -1,12 +1,12 @@
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Utils;
-using System.Drawing;
+using MemoryPack;
 using System.Text.Json.Serialization;
 
 namespace CryBits.Definitions.Maps;
 
-[Serializable]
-public class Map : Entity
+[MemoryPackable]
+public partial class Map : Entity
 {
     /// <summary>Map dimensions in tiles.</summary>
     public const byte Width = 25;
@@ -21,7 +21,7 @@ public class Map : Entity
     public byte Panorama { get; set; }
     public string Music { get; set; }
 
-    public Color Color { get; set; } = Color.FromArgb(-1);
+    public int ColorArgb { get; set; } = -1;
 
     public MapWeather Weather { get; set; } = new();
     public MapFog Fog { get; set; } = new();

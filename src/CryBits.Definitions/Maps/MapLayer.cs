@@ -1,5 +1,6 @@
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Utils;
+using MemoryPack;
 using System.Text.Json.Serialization;
 
 namespace CryBits.Definitions.Maps;
@@ -7,8 +8,8 @@ namespace CryBits.Definitions.Maps;
 /// <summary>
 /// Represents a map layer and handles autotile calculations.
 /// </summary>
-[Serializable]
-public class MapLayer
+[MemoryPackable]
+public partial class MapLayer
 {
     public string Name { get; set; }
     public byte Type { get; set; }

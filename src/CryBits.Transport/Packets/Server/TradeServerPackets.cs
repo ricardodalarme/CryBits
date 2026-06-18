@@ -1,32 +1,34 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Server;
 
-[Serializable]
-public struct TradePacket : IServerPacket
+[MemoryPackable]
+public partial class TradePacket : IServerPacket
 {
     public bool State;
 }
 
-[Serializable]
-public struct TradeInvitationPacket : IServerPacket
+[MemoryPackable]
+public partial class TradeInvitationPacket : IServerPacket
 {
     public string PlayerInvitation;
 }
 
-[Serializable]
-public struct TradeStatePacket : IServerPacket
+[MemoryPackable]
+public partial class TradeStatePacket : IServerPacket
 {
     public byte State;
 }
 
-[Serializable]
-public struct TradeOfferPacket : IServerPacket
+[MemoryPackable]
+public partial class TradeOfferPacket : IServerPacket
 {
     public bool Own;
     public PacketsTradeOfferItem[] Items;
 }
 
-[Serializable]
-public struct PacketsTradeOfferItem
+[MemoryPackable]
+public partial struct PacketsTradeOfferItem
 {
     public Guid ItemId;
     public short Amount;

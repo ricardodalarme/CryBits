@@ -104,8 +104,8 @@ internal class MapProperties(Map map)
     [DefaultValue(255)]
     public byte HueRed
     {
-        get => Base.Color.R;
-        set => Base.Color = Color.FromArgb(Base.Color.A, value, Base.Color.G, Base.Color.B);
+        get => (byte)(Base.ColorArgb >> 16);
+        set => Base.ColorArgb = (Base.ColorArgb & ~(0xFF << 16)) | (value << 16);
     }
 
     [Category("Hue Overlay")]
@@ -113,8 +113,8 @@ internal class MapProperties(Map map)
     [DefaultValue(255)]
     public byte HueGreen
     {
-        get => Base.Color.G;
-        set => Base.Color = Color.FromArgb(Base.Color.A, Base.Color.R, value, Base.Color.B);
+        get => (byte)(Base.ColorArgb >> 8);
+        set => Base.ColorArgb = (Base.ColorArgb & ~(0xFF << 8)) | (value << 8);
     }
 
     [Category("Hue Overlay")]
@@ -122,8 +122,8 @@ internal class MapProperties(Map map)
     [DefaultValue(255)]
     public byte HueBlue
     {
-        get => Base.Color.B;
-        set => Base.Color = Color.FromArgb(Base.Color.A, Base.Color.R, Base.Color.G, value);
+        get => (byte)Base.ColorArgb;
+        set => Base.ColorArgb = (Base.ColorArgb & ~0xFF) | value;
     }
 
     //////////

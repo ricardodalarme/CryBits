@@ -1,13 +1,15 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Server;
 
-[Serializable]
-public struct PartyPacket : IServerPacket
+[MemoryPackable]
+public partial class PartyPacket : IServerPacket
 {
     public long[] MemberIds;
 }
 
-[Serializable]
-public struct PartyInvitationPacket : IServerPacket
+[MemoryPackable]
+public partial class PartyInvitationPacket : IServerPacket
 {
     public string PlayerInvitation;
 }

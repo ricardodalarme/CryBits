@@ -38,11 +38,15 @@
           "Microsoft.Extensions.Options": "10.0.9"
         }
       },
-      "System.Runtime.Serialization.Formatters": {
-        "type": "Direct",
-        "requested": "[10.0.9, )",
-        "resolved": "10.0.9",
-        "contentHash": "PFO/7nkB3nTtYGye6rQ/thoMffpst3t0CIj5vgE4xbVc0hPzOSK/NmxMJniICtWq1BNvQsuQnMLrT72/WyantQ=="
+      "MemoryPack.Core": {
+        "type": "Transitive",
+        "resolved": "1.21.4",
+        "contentHash": "6RszGorZ0ejNmp37ZcboPBMvvPCuNW2jlrdQfcs/lMzE5b3pmPF6hsm/laDc34hRlbAST1ZxaX/DvYu2DF5sBQ=="
+      },
+      "MemoryPack.Generator": {
+        "type": "Transitive",
+        "resolved": "1.21.4",
+        "contentHash": "g14EsSS85yn0lHTi0J9ivqlZMf09A2iI51fmI+0KkzIzyCbWOBWPi5mdaY7YWmXprk12aYh9u/qfWHQUYthlwg=="
       },
       "Microsoft.Data.Sqlite.Core": {
         "type": "Transitive",
@@ -337,7 +341,7 @@
       "crybits.definitions": {
         "type": "Project",
         "dependencies": {
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
+          "MemoryPack": "[1.21.4, )"
         }
       },
       "crybits.host": {
@@ -349,8 +353,7 @@
           "CryBits.Simulation": "[1.0.0, )",
           "CryBits.Transport": "[1.0.0, )",
           "LiteNetLib": "[2.1.4, )",
-          "Microsoft.Extensions.Hosting": "[10.0.9, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
+          "Microsoft.Extensions.Hosting": "[10.0.9, )"
         }
       },
       "crybits.persistence": {
@@ -358,15 +361,13 @@
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
           "Microsoft.Data.Sqlite": "[10.0.9, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )",
           "linq2db": "[6.3.0, )"
         }
       },
       "crybits.simulation": {
         "type": "Project",
         "dependencies": {
-          "CryBits.Definitions": "[1.0.0, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
+          "CryBits.Definitions": "[1.0.0, )"
         }
       },
       "crybits.transport": {
@@ -374,7 +375,7 @@
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
           "LiteNetLib": "[2.1.4, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
+          "MemoryPack": "[1.21.4, )"
         }
       },
       "BCrypt.Net-Next": {
@@ -394,6 +395,16 @@
         "requested": "[2.1.4, )",
         "resolved": "2.1.4",
         "contentHash": "KWlxvMw3Urpqj9joD96LRiK+LC62pQNs/zkXRJc+rHnxgkGp+vV703xzDrxRmv+V1YhCFfIGzs5nrVWtREIlyA=="
+      },
+      "MemoryPack": {
+        "type": "CentralTransitive",
+        "requested": "[1.21.4, )",
+        "resolved": "1.21.4",
+        "contentHash": "wy3JTBNBsO8LfQcBvvYsWr3lm2Oakolrfu0UQ3oSJSEiD+7ye0GUhYTaXuYYBowqsXBXWD9gf2218ae0JRiYVQ==",
+        "dependencies": {
+          "MemoryPack.Core": "1.21.4",
+          "MemoryPack.Generator": "1.21.4"
+        }
       },
       "Microsoft.Data.Sqlite": {
         "type": "CentralTransitive",

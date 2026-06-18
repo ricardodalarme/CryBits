@@ -106,7 +106,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
                     color = new Color(255, 255, 255, 150);
             }
             else
-                color = new Color(map.Color.R, map.Color.G, map.Color.B);
+                color = new Color((byte)(map.ColorArgb >> 16), (byte)(map.ColorArgb >> 8), (byte)map.ColorArgb);
 
             for (var x = beginX; x < Map.Width; x++)
                 for (var y = beginY; y < Map.Height; y++)

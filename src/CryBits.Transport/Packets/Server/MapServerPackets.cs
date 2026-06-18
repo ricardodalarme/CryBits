@@ -1,36 +1,37 @@
 using CryBits.Definitions.Maps;
+using MemoryPack;
 
 namespace CryBits.Transport.Packets.Server;
 
-[Serializable]
-public struct MapsPacket : IServerPacket
+[MemoryPackable]
+public partial class MapsPacket : IServerPacket
 {
     public Dictionary<Guid, Map> List;
 }
 
-[Serializable]
-public struct MapPacket : IServerPacket
+[MemoryPackable]
+public partial class MapPacket : IServerPacket
 {
     public Map Map;
 }
 
-[Serializable] public struct JoinMapPacket : IServerPacket;
+[MemoryPackable] public partial class JoinMapPacket : IServerPacket;
 
-[Serializable]
-public struct MapRevisionPacket : IServerPacket
+[MemoryPackable]
+public partial class MapRevisionPacket : IServerPacket
 {
     public Guid MapId;
     public short Revision;
 }
 
-[Serializable]
-public struct MapNpcsPacket : IServerPacket
+[MemoryPackable]
+public partial class MapNpcsPacket : IServerPacket
 {
     public PacketsMapNpc[] Npcs;
 }
 
-[Serializable]
-public struct MapNpcPacket : IServerPacket
+[MemoryPackable]
+public partial class MapNpcPacket : IServerPacket
 {
     public long InstanceId;
     public Guid NpcId;
@@ -39,8 +40,8 @@ public struct MapNpcPacket : IServerPacket
     public short[] Vital;
 }
 
-[Serializable]
-public struct MapNpcMovementPacket : IServerPacket
+[MemoryPackable]
+public partial class MapNpcMovementPacket : IServerPacket
 {
     public long InstanceId;
     public byte X, Y;
@@ -49,41 +50,41 @@ public struct MapNpcMovementPacket : IServerPacket
     public float Speed;
 }
 
-[Serializable]
-public struct MapNpcDirectionPacket : IServerPacket
+[MemoryPackable]
+public partial class MapNpcDirectionPacket : IServerPacket
 {
     public long InstanceId;
     public byte Direction;
 }
 
-[Serializable]
-public struct MapNpcVitalsPacket : IServerPacket
+[MemoryPackable]
+public partial class MapNpcVitalsPacket : IServerPacket
 {
     public long InstanceId;
     public short[] Vital;
 }
 
-[Serializable]
-public struct MapNpcDiedPacket : IServerPacket
+[MemoryPackable]
+public partial class MapNpcDiedPacket : IServerPacket
 {
     public long InstanceId;
 }
 
-[Serializable]
-public struct MapItemsPacket : IServerPacket
+[MemoryPackable]
+public partial class MapItemsPacket : IServerPacket
 {
     public PacketsMapItem[] Items;
 }
 
-[Serializable]
-public struct PacketsMapItem
+[MemoryPackable]
+public partial struct PacketsMapItem
 {
     public Guid ItemId;
     public byte X, Y;
 }
 
-[Serializable]
-public struct PacketsMapNpc
+[MemoryPackable]
+public partial struct PacketsMapNpc
 {
     public long InstanceId;
     public Guid NpcId;

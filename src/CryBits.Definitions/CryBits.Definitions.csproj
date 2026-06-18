@@ -10,4 +10,7 @@
     <OutputPath>../../Build/Definitions/</OutputPath>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MemoryPack" />
+  </ItemGroup>
 </Project>

@@ -1,7 +1,9 @@
+using MemoryPack;
+
 namespace CryBits.Definitions.Shops;
 
-[Serializable]
-public class ShopItem(Guid itemId, short amount, short price)
+[MemoryPackable]
+public partial class ShopItem(Guid itemId, short amount, short price)
 {
     public Guid ItemId { get; set; } = itemId;
     public short Amount { get; set; } = amount;

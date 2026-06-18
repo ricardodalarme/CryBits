@@ -27,7 +27,6 @@ using static CryBits.Editors.Logic.Utils;
 // Note: Globals.Grid (byte) and Avalonia.Controls.Grid (type) differ in kind
 using AvaloniaScrollEventArgs = Avalonia.Controls.Primitives.ScrollEventArgs;
 using SelectionChangedEventArgs = Avalonia.Controls.SelectionChangedEventArgs;
-using SystemColor = System.Drawing.Color;
 using SystemPoint = System.Drawing.Point;
 using SystemRect = System.Drawing.Rectangle;
 using SystemSize = System.Drawing.Size;
@@ -310,9 +309,9 @@ internal partial class EditorMapsWindow : Window
         cmbWeather.SelectedIndex = (int)map.Weather.Type;
         numWeatherIntensity.Value = map.Weather.Intensity;
 
-        numHueR.Value = map.Color.R;
-        numHueG.Value = map.Color.G;
-        numHueB.Value = map.Color.B;
+        numHueR.Value = (byte)(map.ColorArgb >> 16);
+        numHueG.Value = (byte)(map.ColorArgb >> 8);
+        numHueB.Value = (byte)map.ColorArgb;
 
         numLighting.Value = map.Lighting;
         numPanorama.Value = map.Panorama;
@@ -1204,22 +1203,31 @@ internal partial class EditorMapsWindow : Window
     private void numHueR_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         if (_loading || _selected == null) return;
-        var c = _selected.Color;
-        _selected.Color = SystemColor.FromArgb(c.A, (int)(e.NewValue ?? 255), c.G, c.B);
+        var argb = _selected.ColorArgb;
+        var a = (byte)(argb >> 24);
+        var g = (byte)(argb >> 8);
+        var b = (byte)argb;
+        _selected.ColorArgb = (a << 24) | ((int)(e.NewValue ?? 255) << 16) | (g << 8) | b;
     }
 
     private void numHueG_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         if (_loading || _selected == null) return;
-        var c = _selected.Color;
-        _selected.Color = SystemColor.FromArgb(c.A, c.R, (int)(e.NewValue ?? 255), c.B);
+        var argb = _selected.ColorArgb;
+        var a = (byte)(argb >> 24);
+        var r = (byte)(argb >> 16);
+        var b = (byte)argb;
+        _selected.ColorArgb = (a << 24) | (r << 16) | ((int)(e.NewValue ?? 255) << 8) | b;
     }
 
     private void numHueB_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         if (_loading || _selected == null) return;
-        var c = _selected.Color;
-        _selected.Color = SystemColor.FromArgb(c.A, c.R, c.G, (int)(e.NewValue ?? 255));
+        var argb = _selected.ColorArgb;
+        var a = (byte)(argb >> 24);
+        var r = (byte)(argb >> 16);
+        var g = (byte)(argb >> 8);
+        _selected.ColorArgb = (a << 24) | (r << 16) | (g << 8) | (int)(e.NewValue ?? 255);
     }
 
     private void numLighting_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)

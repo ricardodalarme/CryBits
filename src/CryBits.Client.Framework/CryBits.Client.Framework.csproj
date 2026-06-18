@@ -12,6 +12,7 @@
     <PackageReference Include="SFML.Audio" />
     <PackageReference Include="SFML.Graphics" />
     <PackageReference Include="SFML.Window" />
+    <PackageReference Include="MemoryPack" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,9 @@
+using MemoryPack;
+
 namespace CryBits.Definitions.Npcs;
 
-[Serializable]
-public class NpcDrop(Guid itemId, short amount, byte chance)
+[MemoryPackable]
+public partial class NpcDrop(Guid itemId, short amount, byte chance)
 {
     public Guid ItemId { get; set; } = itemId;
     public short Amount { get; set; } = amount;

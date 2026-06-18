@@ -1,25 +1,27 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Client;
 
-[Serializable]
-public struct TradeInvitePacket : IClientPacket
+[MemoryPackable]
+public partial class TradeInvitePacket : IClientPacket
 {
     public string PlayerName;
 }
 
-[Serializable] public struct TradeAcceptPacket : IClientPacket;
-[Serializable] public struct TradeDeclinePacket : IClientPacket;
-[Serializable] public struct TradeLeavePacket : IClientPacket;
+[MemoryPackable] public partial class TradeAcceptPacket : IClientPacket;
+[MemoryPackable] public partial class TradeDeclinePacket : IClientPacket;
+[MemoryPackable] public partial class TradeLeavePacket : IClientPacket;
 
-[Serializable]
-public struct TradeOfferPacket : IClientPacket
+[MemoryPackable]
+public partial class TradeOfferPacket : IClientPacket
 {
     public short Slot;
     public short InventorySlot;
     public short Amount;
 }
 
-[Serializable]
-public struct TradeOfferStatePacket : IClientPacket
+[MemoryPackable]
+public partial class TradeOfferStatePacket : IClientPacket
 {
     public byte State;
 }

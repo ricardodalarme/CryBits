@@ -1,11 +1,13 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Client;
 
-[Serializable]
-public struct PartyInvitePacket : IClientPacket
+[MemoryPackable]
+public partial class PartyInvitePacket : IClientPacket
 {
     public string PlayerName;
 }
 
-[Serializable] public struct PartyAcceptPacket : IClientPacket;
-[Serializable] public struct PartyDeclinePacket : IClientPacket;
-[Serializable] public struct PartyLeavePacket : IClientPacket;
+[MemoryPackable] public partial class PartyAcceptPacket : IClientPacket;
+[MemoryPackable] public partial class PartyDeclinePacket : IClientPacket;
+[MemoryPackable] public partial class PartyLeavePacket : IClientPacket;

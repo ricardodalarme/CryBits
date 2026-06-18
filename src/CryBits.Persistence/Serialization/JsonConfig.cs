@@ -10,6 +10,6 @@ public static class JsonConfig
         WriteIndented = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         PropertyNameCaseInsensitive = true,
-        Converters = { new ColorArgbConverter(), new PointConverter() }
+        Converters = { new PointConverter() }
     };
 }

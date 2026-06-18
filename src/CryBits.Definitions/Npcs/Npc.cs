@@ -1,10 +1,11 @@
 using CryBits.Definitions.Common;
+using MemoryPack;
 
 namespace CryBits.Definitions.Npcs;
 
 /// <summary>NPC metadata definition used by the game.</summary>
-[Serializable]
-public class Npc : Entity
+[MemoryPackable]
+public partial class Npc : Entity
 {
     public string SayMsg { get; set; } = string.Empty;
     public short Texture { get; set; }

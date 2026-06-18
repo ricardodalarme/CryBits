@@ -1,4 +1,6 @@
+using MemoryPack;
+
 namespace CryBits.Definitions.Slots;
 
-[Serializable]
-public record struct ItemSlot(Guid ItemId, short Amount);
+[MemoryPackable]
+public partial record struct ItemSlot(Guid ItemId, short Amount);

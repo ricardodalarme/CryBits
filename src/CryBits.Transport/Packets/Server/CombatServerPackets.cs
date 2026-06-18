@@ -1,7 +1,9 @@
+using MemoryPack;
+
 namespace CryBits.Transport.Packets.Server;
 
-[Serializable]
-public struct CombatAttackPacket : IServerPacket
+[MemoryPackable]
+public partial class CombatAttackPacket : IServerPacket
 {
     public long AttackerId;
     public long? VictimId;

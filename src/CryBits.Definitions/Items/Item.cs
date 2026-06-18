@@ -1,12 +1,13 @@
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
+using MemoryPack;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Definitions.Items;
 
 /// <summary>Game item definition.</summary>
-[Serializable]
-public class Item : Entity
+[MemoryPackable]
+public partial class Item : Entity
 {
     public string Description { get; set; } = string.Empty;
     public short Texture { get; set; }

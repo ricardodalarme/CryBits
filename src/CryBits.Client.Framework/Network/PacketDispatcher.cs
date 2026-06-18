@@ -7,8 +7,7 @@ namespace CryBits.Client.Framework.Network;
 
 /// <summary>
 /// Type-keyed dispatch table for server-to-client packets.
-/// BinaryFormatter embeds the concrete type, so packet.GetType() is the key —
-/// no byte prefix in the wire format.
+/// MemoryPack Union deserialization preserves the concrete type, so packet.GetType() is the key.
 /// </summary>
 public static class PacketDispatcher
 {
