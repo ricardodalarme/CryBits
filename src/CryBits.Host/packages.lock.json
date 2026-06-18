@@ -358,6 +358,13 @@
           "linq2db": "[6.3.0, )"
         }
       },
+      "crybits.protocol": {
+        "type": "Project",
+        "dependencies": {
+          "CryBits.Definitions": "[1.0.0, )",
+          "MemoryPack": "[1.21.4, )"
+        }
+      },
       "crybits.simulation": {
         "type": "Project",
         "dependencies": {
@@ -368,8 +375,7 @@
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
-          "LiteNetLib": "[2.1.4, )",
-          "MemoryPack": "[1.21.4, )"
+          "LiteNetLib": "[2.1.4, )"
         }
       },
       "linq2db": {

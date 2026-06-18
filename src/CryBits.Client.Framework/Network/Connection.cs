@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.Network.Transport;
+using CryBits.Transport;
 using CryBits.Transport.Abstractions;
-using LiteNetLib;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Framework.Network;
@@ -38,7 +38,7 @@ public class Connection
 
     public bool IsConnected => _transport.IsConnected;
 
-    public void Send(byte[] data, DeliveryMethod delivery) => _transport.Send(data, delivery);
+    public void Send(byte[] data, DeliveryChannel delivery) => _transport.Send(data, delivery);
 
     public bool TryConnect(string address, int port, string key)
     {

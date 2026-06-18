@@ -3,7 +3,7 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Npcs;
 using MemoryPack;
 
-namespace CryBits.Transport.Packets.Server;
+namespace CryBits.Protocol.Packets.Server;
 
 [MemoryPackable]
 public partial class ClassesPacket : IServerPacket

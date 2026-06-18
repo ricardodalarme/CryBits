@@ -1,10 +1,12 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/CryBits.Definitions/CryBits.Definitions.csproj" />
+    <Project Path="src/CryBits.Protocol/CryBits.Protocol.csproj" />
     <Project Path="src/CryBits.Transport/CryBits.Transport.csproj" />
     <Project Path="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
     <Project Path="src/CryBits.Client/CryBits.Client.csproj">
       <BuildDependency Project="src/CryBits.Definitions/CryBits.Definitions.csproj" />
+      <BuildDependency Project="src/CryBits.Protocol/CryBits.Protocol.csproj" />
       <BuildDependency Project="src/CryBits.Transport/CryBits.Transport.csproj" />
       <BuildDependency Project="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
       <BuildDependency Project="src/CryBits.Persistence/CryBits.Persistence.csproj" />
@@ -12,6 +14,7 @@
     </Project>
     <Project Path="src/CryBits.Editors/CryBits.Editors.csproj">
       <BuildDependency Project="src/CryBits.Definitions/CryBits.Definitions.csproj" />
+      <BuildDependency Project="src/CryBits.Protocol/CryBits.Protocol.csproj" />
       <BuildDependency Project="src/CryBits.Transport/CryBits.Transport.csproj" />
       <BuildDependency Project="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
     </Project>
@@ -19,6 +22,7 @@
     <Project Path="src/CryBits.Simulation/CryBits.Simulation.csproj" />
     <Project Path="src/CryBits.Host/CryBits.Host.csproj">
       <BuildDependency Project="src/CryBits.Definitions/CryBits.Definitions.csproj" />
+      <BuildDependency Project="src/CryBits.Protocol/CryBits.Protocol.csproj" />
       <BuildDependency Project="src/CryBits.Transport/CryBits.Transport.csproj" />
       <BuildDependency Project="src/CryBits.Persistence/CryBits.Persistence.csproj" />
       <BuildDependency Project="src/CryBits.Simulation/CryBits.Simulation.csproj" />
@@ -26,6 +30,7 @@
     <Project Path="src/CryBits.Server/CryBits.Server.csproj">
       <BuildDependency Project="src/CryBits.Host/CryBits.Host.csproj" />
       <BuildDependency Project="src/CryBits.Definitions/CryBits.Definitions.csproj" />
+      <BuildDependency Project="src/CryBits.Protocol/CryBits.Protocol.csproj" />
     </Project>
   </Folder>
 </Solution>

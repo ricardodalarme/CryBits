@@ -2,12 +2,12 @@ using CryBits.Definitions;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
-using CryBits.Transport.Packets.Server;
+using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using LiteNetLib;
 using CryBits.Simulation.State;
 using CryBits.Host.Core;
+using CryBits.Transport;
 
 namespace CryBits.Host.Network.Senders;
 
@@ -58,7 +58,7 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
             Vital = new short[(byte)Vital.Count]
         };
         for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = n == 0 ? vitals.Hp : vitals.Mp;
-        packageSender.ToMap(pos.MapId, packet, DeliveryMethod.ReliableUnordered);
+        packageSender.ToMap(pos.MapId, packet, DeliveryChannel.ReliableUnordered);
     }
 
     public void MapNpcMovement(EntityId entityId, byte movement)
@@ -78,7 +78,7 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
                 Direction = (byte)pos.Direction,
                 Movement = movement,
                 Speed = speed
-            }, DeliveryMethod.Sequenced);
+            }, DeliveryChannel.Sequenced);
     }
 
     public void MapNpcDirection(EntityId entityId)
@@ -86,7 +86,7 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
         var pos = entities.Get(entityId)!.Get<Position>()!;
         packageSender.ToMap(pos.MapId,
             new MapNpcDirectionPacket { InstanceId = entityId.Value, Direction = (byte)pos.Direction },
-            DeliveryMethod.Sequenced);
+            DeliveryChannel.Sequenced);
     }
 
     public void MapNpcVitals(EntityId entityId)
@@ -96,12 +96,12 @@ internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog c
         var pos = entity.Get<Position>()!;
         var packet = new MapNpcVitalsPacket { InstanceId = entityId.Value, Vital = new short[(byte)Vital.Count] };
         for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = n == 0 ? vitals.Hp : vitals.Mp;
-        packageSender.ToMap(pos.MapId, packet, DeliveryMethod.ReliableSequenced);
+        packageSender.ToMap(pos.MapId, packet, DeliveryChannel.ReliableSequenced);
     }
 
     public void MapNpcDied(Guid mapId, EntityId entityId)
     {
         packageSender.ToMap(mapId, new MapNpcDiedPacket { InstanceId = entityId.Value },
-            DeliveryMethod.ReliableUnordered);
+            DeliveryChannel.ReliableUnordered);
     }
 }

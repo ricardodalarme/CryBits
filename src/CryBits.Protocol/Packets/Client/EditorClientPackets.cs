@@ -5,7 +5,7 @@ using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
 using MemoryPack;
 
-namespace CryBits.Transport.Packets.Client;
+namespace CryBits.Protocol.Packets.Client;
 
 [MemoryPackable] public partial class WriteClassesPacket : IClientPacket { public Dictionary<Guid, Class> Classes; }
 [MemoryPackable] public partial class WriteMapsPacket : IClientPacket { public Dictionary<Guid, Map> Maps; }

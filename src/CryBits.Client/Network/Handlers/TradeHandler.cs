@@ -6,8 +6,8 @@ using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
-using CryBits.Transport;
-using CryBits.Transport.Packets.Server;
+using CryBits.Protocol;
+using CryBits.Protocol.Packets.Server;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Network.Handlers;

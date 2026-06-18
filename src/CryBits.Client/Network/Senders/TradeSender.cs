@@ -1,7 +1,7 @@
 using CryBits.Client.Framework.Network;
 using CryBits.Definitions.Common;
-using CryBits.Transport.Packets.Client;
-using LiteNetLib;
+using CryBits.Protocol.Packets.Client;
+using CryBits.Transport;
 
 namespace CryBits.Client.Network.Senders;
 
@@ -10,13 +10,13 @@ internal class TradeSender(PacketSender packetSender)
     public static TradeSender Instance { get; } = new(PacketSender.Instance);
 
     public void TradeInvite(string playerName) =>
-        packetSender.Packet(new TradeInvitePacket { PlayerName = playerName }, DeliveryMethod.ReliableUnordered);
+        packetSender.Packet(new TradeInvitePacket { PlayerName = playerName }, DeliveryChannel.ReliableUnordered);
 
-    public void TradeAccept() => packetSender.Packet(new TradeAcceptPacket(), DeliveryMethod.ReliableUnordered);
+    public void TradeAccept() => packetSender.Packet(new TradeAcceptPacket(), DeliveryChannel.ReliableUnordered);
 
-    public void TradeDecline() => packetSender.Packet(new TradeDeclinePacket(), DeliveryMethod.ReliableUnordered);
+    public void TradeDecline() => packetSender.Packet(new TradeDeclinePacket(), DeliveryChannel.ReliableUnordered);
 
-    public void TradeLeave() => packetSender.Packet(new TradeLeavePacket(), DeliveryMethod.ReliableUnordered);
+    public void TradeLeave() => packetSender.Packet(new TradeLeavePacket(), DeliveryChannel.ReliableUnordered);
 
     public void TradeOffer(short slot, short inventorySlot, short amount = 1) =>
         packetSender.Packet(

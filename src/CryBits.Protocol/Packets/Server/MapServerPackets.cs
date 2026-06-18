@@ -1,7 +1,7 @@
 using CryBits.Definitions.Maps;
 using MemoryPack;
 
-namespace CryBits.Transport.Packets.Server;
+namespace CryBits.Protocol.Packets.Server;
 
 [MemoryPackable]
 public partial class MapsPacket : IServerPacket

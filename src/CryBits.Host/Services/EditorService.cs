@@ -1,8 +1,8 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Transport;
-using CryBits.Transport.Packets.Client;
+using CryBits.Protocol;
+using CryBits.Protocol.Packets.Client;
 using CryBits.Host.Network.Senders;
 using CryBits.Simulation.Components;
 using CryBits.Host.Core;

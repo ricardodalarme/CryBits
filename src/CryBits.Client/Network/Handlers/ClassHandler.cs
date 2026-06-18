@@ -1,7 +1,7 @@
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Definitions.Catalog;
-using CryBits.Transport;
-using CryBits.Transport.Packets.Server;
+using CryBits.Protocol;
+using CryBits.Protocol.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 

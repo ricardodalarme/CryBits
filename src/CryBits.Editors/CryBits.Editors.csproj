@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../CryBits.Definitions/CryBits.Definitions.csproj" />
+    <ProjectReference Include="../CryBits.Protocol/CryBits.Protocol.csproj" />
     <ProjectReference Include="../CryBits.Transport/CryBits.Transport.csproj" />
     <ProjectReference Include="../CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
   </ItemGroup>

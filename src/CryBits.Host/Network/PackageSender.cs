@@ -1,28 +1,28 @@
-using CryBits.Transport;
-using CryBits.Transport.Packets.Server;
+using CryBits.Protocol;
+using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
-using LiteNetLib;
 using CryBits.Simulation.State;
 using CryBits.Host.Core;
 using CryBits.Transport.Abstractions;
+using CryBits.Transport;
 
 namespace CryBits.Host.Network;
 
 internal sealed class PackageSender(ITransport transport, SessionManager sessions, EntityRegistry entities)
 {
-    public void ToPlayer(Session session, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
+    public void ToPlayer(Session session, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
     {
         var bytes = PacketSerializer.Serialize(packet);
         transport.Send(session.Id, bytes, delivery);
     }
 
-    public void ToPlayer(EntityId entityId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
+    public void ToPlayer(EntityId entityId, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
     {
         var session = sessions.Get(entityId)!;
         ToPlayer(session, packet, delivery);
     }
 
-    public void ToAll(IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
+    public void ToAll(IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
     {
         var bytes = PacketSerializer.Serialize(packet);
 
@@ -30,7 +30,7 @@ internal sealed class PackageSender(ITransport transport, SessionManager session
             transport.Send(t.Id, bytes, delivery);
     }
 
-    public void ToAllBut(EntityId entityId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
+    public void ToAllBut(EntityId entityId, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
     {
         var bytes = PacketSerializer.Serialize(packet);
 
@@ -38,7 +38,7 @@ internal sealed class PackageSender(ITransport transport, SessionManager session
             transport.Send(t.Id, bytes, delivery);
     }
 
-    public void ToMap(Guid mapId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
+    public void ToMap(Guid mapId, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
     {
         var bytes = PacketSerializer.Serialize(packet);
 
@@ -51,7 +51,7 @@ internal sealed class PackageSender(ITransport transport, SessionManager session
         }
     }
 
-    public void ToMapBut(Guid mapId, EntityId entityId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
+    public void ToMapBut(Guid mapId, EntityId entityId, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
     {
         var bytes = PacketSerializer.Serialize(packet);
 

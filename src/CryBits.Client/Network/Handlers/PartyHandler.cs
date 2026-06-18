@@ -3,8 +3,8 @@ using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
-using CryBits.Transport;
-using CryBits.Transport.Packets.Server;
+using CryBits.Protocol;
+using CryBits.Protocol.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 

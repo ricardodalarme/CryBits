@@ -1,6 +1,5 @@
 using CryBits.Transport.Abstractions;
 using LiteNetLib;
-using static CryBits.Definitions.Globals;
 
 namespace CryBits.Transport.Udp;
 
@@ -16,15 +15,15 @@ public sealed class UdpTransport : ITransport
     public event Action<Guid>? OnDisconnected;
     public event Action<Guid, byte[]>? OnDataReceived;
 
-    public void Start(int port)
+    public void Start(int port, string gameName, byte maxPlayers)
     {
         _listener = new EventBasedNetListener();
         _device = new NetManager(_listener);
 
         _listener.ConnectionRequestEvent += request =>
         {
-            if (_device.ConnectedPeersCount < Config.MaxPlayers)
-                request.AcceptIfKey(Config.GameName);
+            if (_device.ConnectedPeersCount < maxPlayers)
+                request.AcceptIfKey(gameName);
             else
                 request.Reject();
         };
@@ -64,10 +63,10 @@ public sealed class UdpTransport : ITransport
 
     public void Poll() => _device?.PollEvents();
 
-    public void Send(Guid sessionId, byte[] data, DeliveryMethod delivery)
+    public void Send(Guid sessionId, byte[] data, DeliveryChannel delivery)
     {
         if (_peers.TryGetValue(sessionId, out var peer))
-            peer.Send(data, delivery);
+            peer.Send(data, (DeliveryMethod)delivery);
     }
 
     public void Disconnect(Guid sessionId)

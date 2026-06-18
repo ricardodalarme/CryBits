@@ -1,5 +1,5 @@
-using CryBits.Transport;
-using CryBits.Transport.Packets.Client;
+using CryBits.Protocol;
+using CryBits.Protocol.Packets.Client;
 using CryBits.Host.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;

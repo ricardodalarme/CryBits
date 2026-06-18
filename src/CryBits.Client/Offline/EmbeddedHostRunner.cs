@@ -13,6 +13,7 @@ using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using Microsoft.Data.Sqlite;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Offline;
 
@@ -50,7 +51,7 @@ public sealed class EmbeddedHostRunner : IDisposable
         var packageSender = new PackageSender(pair.Server, sessions, simulation.Entities);
         var pipeline = HostPipelineBuilder.Build(catalog);
         _host = new WorldHost(pair.Server, simulation, pipeline, sessions, packageSender);
-        pair.Server.Start(0);
+        pair.Server.Start(0, Config.GameName, 1);
 
         new WorldInitializer(_host, catalog).Initialize();
 

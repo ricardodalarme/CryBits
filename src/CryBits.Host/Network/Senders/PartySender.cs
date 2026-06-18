@@ -1,4 +1,4 @@
-using CryBits.Transport.Packets.Server;
+using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.State;
 

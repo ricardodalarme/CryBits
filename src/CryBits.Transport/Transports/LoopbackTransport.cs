@@ -1,5 +1,4 @@
 using CryBits.Transport.Abstractions;
-using LiteNetLib;
 using System.Threading.Channels;
 
 namespace CryBits.Transport.Transports;
@@ -23,7 +22,7 @@ public sealed class LoopbackServerTransport : ITransport
         _serverToClient = serverToClient;
     }
 
-    public void Start(int port)
+    public void Start(int port, string gameName, byte maxPlayers)
     {
         if (_running) return;
         _running = true;
@@ -43,7 +42,7 @@ public sealed class LoopbackServerTransport : ITransport
             OnDataReceived?.Invoke(LocalSessionId, bytes);
     }
 
-    public void Send(Guid sessionId, byte[] data, DeliveryMethod delivery)
+    public void Send(Guid sessionId, byte[] data, DeliveryChannel delivery)
     {
         _serverToClient.TryWrite(data);
     }
@@ -92,7 +91,7 @@ public sealed class LoopbackClientTransport : IClientTransport
             OnDataReceived?.Invoke(bytes);
     }
 
-    public void Send(byte[] data, DeliveryMethod delivery)
+    public void Send(byte[] data, DeliveryChannel delivery)
     {
         if (_connected)
             _clientToServer.TryWrite(data);

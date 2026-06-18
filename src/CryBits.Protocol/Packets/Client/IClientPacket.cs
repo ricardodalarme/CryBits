@@ -1,6 +1,6 @@
 using MemoryPack;
 
-namespace CryBits.Transport.Packets.Client;
+namespace CryBits.Protocol.Packets.Client;
 
 [MemoryPackable]
 [MemoryPackUnion(0, typeof(ConnectPacket))]

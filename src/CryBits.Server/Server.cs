@@ -46,8 +46,9 @@ internal sealed class Server(
         dataLoader.LoadAll();
         worldInitializer.Initialize();
 
-        transport.Start(CryBits.Definitions.Globals.Config.Port);
-        Console.WriteLine("Network started. Port: " + CryBits.Definitions.Globals.Config.Port);
+        var config = Definitions.Globals.Config;
+        transport.Start(config.Port, config.GameName, config.MaxPlayers);
+        Console.WriteLine("Network started. Port: " + Definitions.Globals.Config.Port);
 
         host.Pipeline.AddSystem(replicationService);
 

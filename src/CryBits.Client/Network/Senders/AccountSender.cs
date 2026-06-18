@@ -1,7 +1,7 @@
 using CryBits.Client.Framework.Network;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
-using CryBits.Transport.Packets.Client;
+using CryBits.Protocol.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 

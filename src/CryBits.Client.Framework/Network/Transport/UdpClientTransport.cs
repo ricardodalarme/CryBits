@@ -1,3 +1,4 @@
+using CryBits.Transport;
 using CryBits.Transport.Abstractions;
 using LiteNetLib;
 
@@ -58,8 +59,8 @@ public class UdpClientTransport : IClientTransport
 
     public void Poll() => _netManager.PollEvents();
 
-    public void Send(byte[] data, DeliveryMethod delivery)
+    public void Send(byte[] data, DeliveryChannel delivery)
     {
-        _peer?.Send(data, delivery);
+        _peer?.Send(data, (DeliveryMethod)delivery);
     }
 }

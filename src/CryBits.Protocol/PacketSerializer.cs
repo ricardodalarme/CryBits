@@ -1,6 +1,6 @@
 using MemoryPack;
 
-namespace CryBits.Transport;
+namespace CryBits.Protocol;
 
 public static class PacketSerializer
 {

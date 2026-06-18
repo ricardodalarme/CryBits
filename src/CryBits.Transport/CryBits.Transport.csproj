@@ -12,11 +12,6 @@
 
   <ItemGroup>
     <PackageReference Include="LiteNetLib" />
-    <PackageReference Include="MemoryPack" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../CryBits.Definitions/CryBits.Definitions.csproj" />
   </ItemGroup>
 
 </Project>

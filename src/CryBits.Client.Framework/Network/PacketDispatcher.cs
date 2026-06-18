@@ -1,5 +1,5 @@
-using CryBits.Transport;
-using CryBits.Transport.Packets.Server;
+using CryBits.Protocol;
+using CryBits.Protocol.Packets.Server;
 using System.Linq.Expressions;
 using System.Reflection;
 

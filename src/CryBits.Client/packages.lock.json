@@ -404,6 +404,7 @@
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
           "CryBits.Persistence": "[1.0.0, )",
+          "CryBits.Protocol": "[1.0.0, )",
           "CryBits.Transport": "[1.0.0, )",
           "MemoryPack": "[1.21.4, )",
           "SFML.Audio": "[3.0.0, )",
@@ -423,6 +424,7 @@
           "BCrypt.Net-Next": "[4.2.0, )",
           "CryBits.Definitions": "[1.0.0, )",
           "CryBits.Persistence": "[1.0.0, )",
+          "CryBits.Protocol": "[1.0.0, )",
           "CryBits.Simulation": "[1.0.0, )",
           "CryBits.Transport": "[1.0.0, )",
           "LiteNetLib": "[2.1.4, )",
@@ -437,6 +439,13 @@
           "linq2db": "[6.3.0, )"
         }
       },
+      "crybits.protocol": {
+        "type": "Project",
+        "dependencies": {
+          "CryBits.Definitions": "[1.0.0, )",
+          "MemoryPack": "[1.21.4, )"
+        }
+      },
       "crybits.simulation": {
         "type": "Project",
         "dependencies": {
@@ -447,8 +456,7 @@
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
-          "LiteNetLib": "[2.1.4, )",
-          "MemoryPack": "[1.21.4, )"
+          "LiteNetLib": "[2.1.4, )"
         }
       },
       "BCrypt.Net-Next": {

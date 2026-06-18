@@ -1,8 +1,8 @@
 using CryBits.Client.UI.Game.Views;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Transport;
-using CryBits.Transport.Packets.Server;
+using CryBits.Protocol;
+using CryBits.Protocol.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
