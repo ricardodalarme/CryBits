@@ -7,7 +7,7 @@ namespace CryBits.Server.Commands;
 internal sealed class DefineAccessCommand : IConsoleCommand
 {
     [Value(0, Required = true, MetaName = "playerName", HelpText = "The online player's username.")]
-    public string PlayerName { get; set; }
+    public string PlayerName { get; set; } = string.Empty;
 
     [Value(1, Required = true, MetaName = "accessLevel",
         HelpText = "Numeric access level (0 = Player, 1 = Editor, 2 = Admin).")]

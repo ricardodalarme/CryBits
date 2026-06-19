@@ -34,6 +34,7 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
         var pos = e.Get<Position>()!;
         var appearance = e.Get<PlayerAppearance>()!;
         var playerClass = catalog.Classes.Get(appearance.ClassId);
+        if (playerClass is null) return;
 
         vitals.Hp = vitals.MaxHp;
         vitals.Mp = vitals.MaxMp;

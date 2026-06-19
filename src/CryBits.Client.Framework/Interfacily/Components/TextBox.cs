@@ -62,7 +62,7 @@ public class TextBox : Component, IMouseUp
 
         // Traverse component tree to find first focusable textbox
         var stack = new Stack<List<Component>>();
-        stack.Push(Screen.Current?.Body);
+        if (Screen.Current?.Body is { } body) stack.Push(body);
         while (stack.Count != 0)
         {
             var top = stack.Pop();
@@ -84,9 +84,9 @@ public class TextBox : Component, IMouseUp
 
     public static void ChangeFocus()
     {
-        var parent = Focused?.Parent != null ? Focused?.Parent.Children : Screen.Current?.Body;
+        var parent = Focused?.Parent != null ? Focused.Parent.Children : Screen.Current?.Body;
 
-        if (parent == null || parent.Count == 0) return;
+        if (parent == null || parent.Count == 0 || Focused is null) return;
 
         // Advance focus to the next focusable TextBox.
         int index = parent.IndexOf(Focused), temp = index + 1;

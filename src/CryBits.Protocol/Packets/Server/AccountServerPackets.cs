@@ -7,12 +7,16 @@ namespace CryBits.Protocol.Packets.Server;
 [MemoryPackable]
 public partial class CharactersPacket : IServerPacket
 {
-    public PacketsTempCharacter[] Characters;
+    public PacketsTempCharacter[] Characters = [];
 }
 
 [MemoryPackable]
 public partial struct PacketsTempCharacter
 {
-    public string Name;
+    public string Name = string.Empty;
     public short TextureNum;
+
+    public PacketsTempCharacter()
+    {
+    }
 }

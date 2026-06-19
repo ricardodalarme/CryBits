@@ -6,7 +6,7 @@ namespace CryBits.Protocol.Packets.Server;
 [MemoryPackable]
 public partial class ShopsPacket : IServerPacket
 {
-    public Dictionary<Guid, Shop> List;
+    public Dictionary<Guid, Shop> List = [];
 }
 
 [MemoryPackable]

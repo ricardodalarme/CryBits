@@ -189,12 +189,12 @@ internal partial class EditorInterfaceWindow : Window
 
         // Add to canonical InterfaceNode tree
         var winNode = InterfaceData.Instance.Tree.Nodes[SelectedWindowIndex];
-        var newTreeNode = new InterfaceNode(newComp.ToString()) { Tag = newComp };
+        var newTreeNode = new InterfaceNode(newComp.ToString() ?? string.Empty) { Tag = newComp };
         winNode.Nodes.Add(newTreeNode);
 
         // Add to VM tree
         var newVM = new TreeItemVM
-        { Header = newComp.ToString(), Tag = newComp, SourceNode = newTreeNode, Parent = _rootVM };
+        { Header = newComp.ToString() ?? string.Empty, Tag = newComp, SourceNode = newTreeNode, Parent = _rootVM };
         _rootVM.Children.Add(newVM);
 
         pnlNew.IsVisible = false;

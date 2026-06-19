@@ -6,8 +6,8 @@ namespace CryBits.Protocol.Packets.Client;
 [MemoryPackable]
 public partial class CreateCharacterPacket : IClientPacket
 {
-    public string Name;
-    public string ClassId;
+    public string Name = string.Empty;
+    public string ClassId = string.Empty;
     public Gender Gender;
     public short TextureNum;
 }

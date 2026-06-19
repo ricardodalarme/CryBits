@@ -48,8 +48,9 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
                         if (attackerId == null || npcId == null) break;
                         var npcE = world.Entities.Get(npcId.Value)!;
                         var npcState = npcE.Get<NpcState>()!;
-                        var npcData = catalog.Npcs.Get(npcState.NpcDefId);
-                        if (npcData.Behaviour == Behaviour.ShopKeeper)
+                    var npcData = catalog.Npcs.Get(npcState.NpcDefId);
+                    if (npcData is null) break;
+                    if (npcData.Behaviour == Behaviour.ShopKeeper)
                         {
                             var shop = catalog.Shops.Get(npcData.ShopId);
                             if (shop != null) Open(world, attackerId.Value, shop);
@@ -94,6 +95,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
         var shopState = e.Get<ShopState>()!;
         var inv = e.Get<InventoryState>()!;
         var shop = catalog.Shops.Get(shopState.ShopId!.Value);
+        if (shop is null) return;
         var shopSold = shop.Sold[shopSoldIndex];
 
         if (shop.CurrencyId == Guid.Empty) return;
@@ -134,6 +136,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
         var inv = e.Get<InventoryState>()!;
 
         var shop = catalog.Shops.Get(shopState.ShopId!.Value);
+        if (shop is null) return;
 
         amount = Math.Min(amount, inv.Slots[inventorySlotIndex].Amount);
         var buy = shop.FindBought(inv.Slots[inventorySlotIndex].ItemId);

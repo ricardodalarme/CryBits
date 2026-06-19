@@ -20,7 +20,7 @@ internal class SelectCharacterView(AccountSender accountSender, CharacterRendere
     private static Picture SpritePicture => Tools.Pictures["SelectCharacter_Sprite"];
     private static Label NameLabel => Tools.Labels["SelectCharacter_Name"];
 
-    public static TempCharacter[] Characters;
+    public static TempCharacter[] Characters = [];
     public static int CurrentCharacter = 1;
 
     public struct TempCharacter
@@ -87,7 +87,7 @@ internal class SelectCharacterView(AccountSender accountSender, CharacterRendere
 
     public static bool UpdateButtonVisibility()
     {
-        var visibility = Characters != null && CurrentCharacter < Characters.Length;
+        var visibility = CurrentCharacter < Characters.Length;
         CreateButton.Visible = !visibility;
         DeleteButton.Visible = visibility;
         UseButton.Visible = visibility;
@@ -100,7 +100,7 @@ internal class SelectCharacterView(AccountSender accountSender, CharacterRendere
     private static void UpdateNameLabel()
     {
         var index = CurrentCharacter + 1;
-        var hasCharacter = Characters != null && CurrentCharacter < Characters.Length;
+        var hasCharacter = CurrentCharacter < Characters.Length;
         NameLabel.Text = hasCharacter
             ? $"({index}) {Characters[CurrentCharacter].Name}"
             : $"({index}) None";

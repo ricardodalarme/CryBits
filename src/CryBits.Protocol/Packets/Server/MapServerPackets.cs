@@ -6,13 +6,13 @@ namespace CryBits.Protocol.Packets.Server;
 [MemoryPackable]
 public partial class MapsPacket : IServerPacket
 {
-    public Dictionary<Guid, Map> List;
+    public Dictionary<Guid, Map> List = [];
 }
 
 [MemoryPackable]
 public partial class MapPacket : IServerPacket
 {
-    public Map Map;
+    public Map Map = new();
 }
 
 [MemoryPackable] public partial class JoinMapPacket : IServerPacket;
@@ -27,7 +27,7 @@ public partial class MapRevisionPacket : IServerPacket
 [MemoryPackable]
 public partial class MapNpcsPacket : IServerPacket
 {
-    public PacketsMapNpc[] Npcs;
+    public PacketsMapNpc[] Npcs = [];
 }
 
 [MemoryPackable]
@@ -37,7 +37,7 @@ public partial class MapNpcPacket : IServerPacket
     public Guid NpcId;
     public byte X, Y;
     public byte Direction;
-    public short[] Vital;
+    public short[] Vital = [];
 }
 
 [MemoryPackable]
@@ -61,7 +61,7 @@ public partial class MapNpcDirectionPacket : IServerPacket
 public partial class MapNpcVitalsPacket : IServerPacket
 {
     public long InstanceId;
-    public short[] Vital;
+    public short[] Vital = [];
 }
 
 [MemoryPackable]
@@ -73,7 +73,7 @@ public partial class MapNpcDiedPacket : IServerPacket
 [MemoryPackable]
 public partial class MapItemsPacket : IServerPacket
 {
-    public PacketsMapItem[] Items;
+    public PacketsMapItem[] Items = [];
 }
 
 [MemoryPackable]
@@ -90,5 +90,9 @@ public partial struct PacketsMapNpc
     public Guid NpcId;
     public byte X, Y;
     public byte Direction;
-    public short[] Vital;
+    public short[] Vital = [];
+
+    public PacketsMapNpc()
+    {
+    }
 }

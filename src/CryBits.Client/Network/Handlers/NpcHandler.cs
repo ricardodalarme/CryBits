@@ -48,6 +48,7 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
             var vitals = new short[(byte)Vital.Count];
             for (byte n = 0; n < (byte)Vital.Count; n++) vitals[n] = npc.Vital[n];
 
+            if (data is null) continue;
             var entity = NpcSpawner.Spawn(context.World, npc.InstanceId, data, npc.X, npc.Y, direction, vitals);
             context.RegisterNetworkEntity(npc.InstanceId, entity);
         }
@@ -68,6 +69,7 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
         var vitals = new short[(byte)Vital.Count];
         for (byte n = 0; n < (byte)Vital.Count; n++) vitals[n] = packet.Vital[n];
 
+        if (data is null) return;
         var entity = NpcSpawner.Spawn(context.World, packet.InstanceId, data, packet.X, packet.Y, direction, vitals);
         context.RegisterNetworkEntity(packet.InstanceId, entity);
     }

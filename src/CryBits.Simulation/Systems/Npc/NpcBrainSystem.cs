@@ -90,6 +90,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
         var npcData = catalog.Npcs.Get(npcState.NpcDefId);
+        if (npcData is null) return;
 
         if (npcData.Behaviour == Behaviour.AttackOnSight && !npcState.TargetId.HasValue)
             ScanForTarget(world, npcId, tick);
@@ -142,6 +143,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
         var npcData = catalog.Npcs.Get(npcState.NpcDefId);
+        if (npcData is null) return;
         var map = world.Maps.Get(pos.MapId)!;
 
         short distance;
@@ -181,6 +183,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
             var otherPos = otherE.Get<Position>();
             if (otherPos == null) continue;
             var otherData = catalog.Npcs.Get(otherNpcState.NpcDefId);
+            if (otherData is null) continue;
             if (npcData.IsAllied(otherData.Id)) continue;
 
             distance = (short)Math.Sqrt(Math.Pow(pos.X - otherPos.X, 2) +

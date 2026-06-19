@@ -58,8 +58,8 @@ internal class TileRenderer(Renderer renderer)
         switch ((TileAttribute)Client.Framework.Entities.Tile.Tile.List[textureNum].Data[tile.X, tile.Y].Attribute)
         {
             case TileAttribute.Block:
-                renderer.Draw(WinTile, Textures.Blank, x * Grid, y * Grid, 0, 0, Grid, Grid, new Color(225, 0, 0, 75));
-                renderer.DrawText(WinTile, "B", point.X, point.Y, Color.Red);
+                renderer.Draw(WinTile!, Textures.Blank, x * Grid, y * Grid, 0, 0, Grid, Grid, new Color(225, 0, 0, 75));
+                renderer.DrawText(WinTile!, "B", point.X, point.Y, Color.Red);
                 break;
         }
     }
@@ -79,7 +79,7 @@ internal class TileRenderer(Renderer renderer)
         for (byte i = 0; i < (byte)Direction.Count; i++)
         {
             var sourceY = Client.Framework.Entities.Tile.Tile.List[textureNum].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
-            renderer.Draw(WinTile, Textures.Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y,
+            renderer.Draw(WinTile!, Textures.Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y,
                 i * 8, sourceY, 6, 6);
         }
     }

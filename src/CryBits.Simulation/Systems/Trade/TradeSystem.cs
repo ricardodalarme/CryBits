@@ -201,20 +201,22 @@ public sealed class TradeSystem : ISimulationSystem
         var e = world.Entities.Get(entityId)!;
         var inv = e.Get<InventoryState>()!;
         var trade = e.Get<TradeState>()!;
+        var offer = trade.Offer;
+        if (offer is null) return;
 
         amount = Math.Min(amount, inv.Slots[inventorySlot].Amount);
 
         if (inventorySlot != 0)
         {
             for (byte i = 0; i < MaxInventory; i++)
-                if (trade.Offer[i].SlotNum == inventorySlot)
+                if (offer[i].SlotNum == inventorySlot)
                     return;
 
-            trade.Offer[slot].SlotNum = inventorySlot;
-            trade.Offer[slot].Amount = amount;
+            offer[slot].SlotNum = inventorySlot;
+            offer[slot].Amount = amount;
         }
         else
-            trade.Offer[slot] = new TradeSlot();
+            offer[slot] = new TradeSlot();
 
         world.Dirty.Mark<TradeState>(entityId);
         if (trade.Partner.HasValue) world.Dirty.Mark<TradeState>(trade.Partner.Value);
@@ -241,13 +243,13 @@ public sealed class TradeSystem : ISimulationSystem
                 var invFree = CountFreeSlots(inv);
                 var invitedFree = CountFreeSlots(invitedInv);
 
-                if (trade.Offer.Count(x => x.SlotNum != 0) > invitedFree)
+                if (trade.Offer is null || trade.Offer.Count(x => x.SlotNum != 0) > invitedFree)
                 {
                     tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = invitedAppearance.Name + " don't have enough space in their inventory to do this trade.", ColorArgb = ChatColors.Red });
                     break;
                 }
 
-                if (invitedTrade.Offer.Count(x => x.SlotNum != 0) > invFree)
+                if (invitedTrade.Offer is null || invitedTrade.Offer.Count(x => x.SlotNum != 0) > invFree)
                 {
                     tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = "You don't have enough space in your inventory to do this trade.", ColorArgb = ChatColors.Red });
                     break;
@@ -263,7 +265,7 @@ public sealed class TradeSystem : ISimulationSystem
                     {
                         var to = j == 0 ? entityId : invitedId.Value;
                         var toTrade = j == 0 ? trade : invitedTrade;
-                        if (toTrade.Offer[i].SlotNum > 0)
+                        if (toTrade.Offer is not null && toTrade.Offer[i].SlotNum > 0)
                             tick.Events.Emit(new ItemTakenEvent
                             {
                                 EntityId = to,

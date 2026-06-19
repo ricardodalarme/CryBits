@@ -87,6 +87,9 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
 
         // Spawn an ECS entity for every item the server reported.
         foreach (var itemData in packet.Items)
-            GroundItemSpawner.Spawn(world, _catalog.Items.Get(itemData.ItemId), itemData.X, itemData.Y);
+        {
+            var item = _catalog.Items.Get(itemData.ItemId);
+            if (item is not null) GroundItemSpawner.Spawn(world, item, itemData.X, itemData.Y);
+        }
     }
 }

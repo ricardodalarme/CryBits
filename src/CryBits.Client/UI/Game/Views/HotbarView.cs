@@ -47,7 +47,10 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
 
         var hotbarSlot = hotbar.Slots[slot];
         if (hotbarSlot is HotbarSlot { Slot: > 0, Type: SlotType.Item } h)
-            itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty), 1, pos);
+        {
+            var itemId = context.LocalPlayer.GetInventory().Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty;
+            if (_catalog.Items.Get(itemId) is { } item) itemRenderer.DrawItem(item, 1, pos);
+        }
     }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)

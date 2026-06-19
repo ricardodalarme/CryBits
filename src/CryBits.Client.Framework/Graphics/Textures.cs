@@ -35,7 +35,7 @@ public static class Textures
     private static List<Texture> LoadTextures(string directory, bool repeatable = false)
     {
         short i = 1;
-        var tempTex = new List<Texture> { null };
+        var tempTex = new List<Texture>(1) { null! };
 
         // Load sequentially numbered textures from the directory into the cache.
         while (File.Exists(Path.Combine(directory, i + Format)))

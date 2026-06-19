@@ -19,7 +19,7 @@ public partial class Map : Entity
     [JsonConverter(typeof(Array2DConverter<MapAttribute>))]
     public MapAttribute[,] Attribute { get; set; } = new MapAttribute[Width, Height];
     public byte Panorama { get; set; }
-    public string Music { get; set; }
+    public string Music { get; set; } = string.Empty;
 
     public int ColorArgb { get; set; } = -1;
 

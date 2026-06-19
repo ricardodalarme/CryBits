@@ -11,7 +11,7 @@ public partial class TradePacket : IServerPacket
 [MemoryPackable]
 public partial class TradeInvitationPacket : IServerPacket
 {
-    public string PlayerInvitation;
+    public string PlayerInvitation = string.Empty;
 }
 
 [MemoryPackable]
@@ -24,7 +24,7 @@ public partial class TradeStatePacket : IServerPacket
 public partial class TradeOfferPacket : IServerPacket
 {
     public bool Own;
-    public PacketsTradeOfferItem[] Items;
+    public PacketsTradeOfferItem[] Items = [];
 }
 
 [MemoryPackable]

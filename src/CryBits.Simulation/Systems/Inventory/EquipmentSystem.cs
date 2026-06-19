@@ -75,7 +75,7 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
         var oldItemId = equip.Slots[equipSlot];
         if (oldItemId == Guid.Empty) return;
         var oldItem = catalog.Items.Get(oldItemId);
-        if (oldItem?.Bind == BindOn.Equip) return;
+        if (oldItem is null || oldItem.Bind == BindOn.Equip) return;
 
         for (byte i = 0; i < (byte)Attribute.Count; i++)
             stats.Attribute[i] -= oldItem.EquipAttribute[i];

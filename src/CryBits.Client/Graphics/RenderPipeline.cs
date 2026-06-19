@@ -36,7 +36,7 @@ internal sealed class RenderPipeline(
         // Restore the default view before drawing UI so it renders at fixed screen positions.
         cameraManager.BeginUIDraw();
 
-        uiRenderer.DrawInterface(Screen.Current?.Body);
+        if (Screen.Current?.Body is { } body) uiRenderer.DrawInterface(body);
 
         if (Screen.Current == Screens.Game) uiRenderer.DrawChat();
 

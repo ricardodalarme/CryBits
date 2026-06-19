@@ -31,11 +31,15 @@ internal class DraggableSlotView(ItemRenderer itemRenderer, InputManager inputMa
         {
             var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[GameScreen.HotbarChange];
             if (hotbarSlot is HotbarSlot { Type: SlotType.Item } h)
-                itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty), 1, pos);
+            {
+                var itemId = context.LocalPlayer.GetInventory().Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty;
+                if (_catalog.Items.Get(itemId) is { } item) itemRenderer.DrawItem(item, 1, pos);
+            }
         }
         else if (GameScreen.InventoryChange > 0)
         {
-            itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange] is ItemSlot s ? s.ItemId : Guid.Empty), 1, pos);
+            var itemId = context.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange] is ItemSlot s ? s.ItemId : Guid.Empty;
+            if (_catalog.Items.Get(itemId) is { } item) itemRenderer.DrawItem(item, 1, pos);
         }
     }
 }

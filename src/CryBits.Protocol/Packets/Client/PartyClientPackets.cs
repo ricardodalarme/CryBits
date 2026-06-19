@@ -5,7 +5,7 @@ namespace CryBits.Protocol.Packets.Client;
 [MemoryPackable]
 public partial class PartyInvitePacket : IClientPacket
 {
-    public string PlayerName;
+    public string PlayerName = string.Empty;
 }
 
 [MemoryPackable] public partial class PartyAcceptPacket : IClientPacket;

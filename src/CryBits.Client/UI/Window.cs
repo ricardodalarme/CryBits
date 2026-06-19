@@ -39,7 +39,7 @@ internal class Window(InputManager inputManager, AudioManager audioManager)
         inputManager.TextEntered += OnTextEntered;
     }
 
-    public void OnClosed(object sender, EventArgs e)
+    public void OnClosed(object? sender, EventArgs e)
     {
         if (Screen.Current == Screens.Game)
             Connection.Instance.Disconnect();
@@ -47,7 +47,7 @@ internal class Window(InputManager inputManager, AudioManager audioManager)
             Client.Game.Working = false;
     }
 
-    private void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
+    private void OnMouseButtonPressed(object? sender, MouseButtonEventArgs e)
     {
         if (Environment.TickCount64 < _doubleClickTimer + DoubleClickIntervalMs)
             Screen.Current?.MouseDoubleClick(e);
@@ -55,7 +55,7 @@ internal class Window(InputManager inputManager, AudioManager audioManager)
             Screen.Current?.MouseDown(e);
     }
 
-    private void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
+    private void OnMouseButtonReleased(object? sender, MouseButtonEventArgs e)
     {
         _doubleClickTimer = Environment.TickCount64;
         Screen.Current?.MouseUp();
@@ -65,7 +65,7 @@ internal class Window(InputManager inputManager, AudioManager audioManager)
         GameScreen.HotbarChange = -1;
     }
 
-    private void OnMouseMoved(object sender, MouseMoveEventArgs e)
+    private void OnMouseMoved(object? sender, MouseMoveEventArgs e)
     {
         Mouse.X = e.Position.X;
         Mouse.Y = e.Position.Y;
@@ -73,7 +73,7 @@ internal class Window(InputManager inputManager, AudioManager audioManager)
         Screen.Current?.MouseMoved();
     }
 
-    private void OnKeyPressed(object sender, KeyEventArgs e)
+    private void OnKeyPressed(object? sender, KeyEventArgs e)
     {
         switch (e.Code)
         {
@@ -83,10 +83,10 @@ internal class Window(InputManager inputManager, AudioManager audioManager)
         }
     }
 
-    private void OnKeyReleased(object sender, KeyEventArgs e) =>
+    private void OnKeyReleased(object? sender, KeyEventArgs e) =>
         Screen.Current?.KeyReleased(e);
 
-    private void OnTextEntered(object sender, TextEventArgs e) =>
+    private void OnTextEntered(object? sender, TextEventArgs e) =>
         TextBox.Focused?.TextEntered(e);
 
     public void OpenMenu()

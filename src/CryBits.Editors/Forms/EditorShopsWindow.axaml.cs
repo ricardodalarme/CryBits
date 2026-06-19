@@ -28,7 +28,7 @@ internal partial class EditorShopsWindow : Window
         window.Show();
     }
 
-    private Shop _selected;
+    private Shop? _selected;
     private bool _addingToSold;
 
     public EditorShopsWindow(DefinitionCatalog catalog)

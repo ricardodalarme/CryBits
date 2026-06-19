@@ -42,8 +42,8 @@ internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer, Defini
     private void OnRenderSlot(int slot, Point pos)
     {
         if (OpenedShop == null || slot >= OpenedShop.Sold.Count) return;
-        var item = _catalog.Items.Get(OpenedShop.Sold[slot].ItemId);
-        itemRenderer.DrawItem(item, OpenedShop.Sold[slot].Amount, pos);
+        if (_catalog.Items.Get(OpenedShop.Sold[slot].ItemId) is { } item)
+            itemRenderer.DrawItem(item, OpenedShop.Sold[slot].Amount, pos);
     }
 
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)

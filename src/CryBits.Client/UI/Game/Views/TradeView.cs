@@ -52,11 +52,19 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
         ConfirmOfferButton.OnMouseUp -= OnConfirmOfferPressed;
     }
 
-    private void OnRenderOwnSlot(int slot, Point pos) =>
-        itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetTrade().Offer[slot]?.ItemId ?? Guid.Empty), context.LocalPlayer.GetTrade().Offer[slot]?.Amount ?? 0, pos);
+    private void OnRenderOwnSlot(int slot, Point pos)
+    {
+        var itemId = context.LocalPlayer.GetTrade().Offer[slot]?.ItemId ?? Guid.Empty;
+        if (_catalog.Items.Get(itemId) is { } item)
+            itemRenderer.DrawItem(item, context.LocalPlayer.GetTrade().Offer[slot]?.Amount ?? 0, pos);
+    }
 
-    private void OnRenderTheirSlot(int slot, Point pos) =>
-        itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetTrade().TheirOffer[slot]?.ItemId ?? Guid.Empty), context.LocalPlayer.GetTrade().TheirOffer[slot]?.Amount ?? 0, pos);
+    private void OnRenderTheirSlot(int slot, Point pos)
+    {
+        var itemId = context.LocalPlayer.GetTrade().TheirOffer[slot]?.ItemId ?? Guid.Empty;
+        if (_catalog.Items.Get(itemId) is { } item)
+            itemRenderer.DrawItem(item, context.LocalPlayer.GetTrade().TheirOffer[slot]?.Amount ?? 0, pos);
+    }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {

@@ -62,10 +62,11 @@ internal class CharacterView(GameContext context, PlayerSender playerSender, Equ
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        if (context.LocalPlayer.GetEquipment().Slots[slot] == null) return;
+        var equipSlot = context.LocalPlayer.GetEquipment().Slots[slot];
+        if (equipSlot == null) return;
 
         if (e.Button == Mouse.Button.Right)
-            if (context.LocalPlayer.GetEquipment().Slots[slot].Bind != BindOn.Equip)
+            if (equipSlot.Bind != BindOn.Equip)
                 playerSender.EquipmentRemove((byte)slot);
     }
 

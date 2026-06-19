@@ -9,7 +9,7 @@ internal static class ConsoleLoop
         while (!ct.IsCancellationRequested)
         {
             Console.Write("Execute: ");
-            dispatcher.Dispatch(Console.ReadLine());
+            dispatcher.Dispatch(Console.ReadLine() ?? string.Empty);
         }
     }
 }

@@ -44,7 +44,8 @@ internal sealed class PackageSender(ITransport transport, SessionManager session
 
         foreach (var t in sessions.Where(t => t.IsPlaying && t.Character.HasValue))
         {
-            var entity = entities.Get(t.Character.Value);
+            var characterId = t.Character!.Value;
+            var entity = entities.Get(characterId);
             var pos = entity?.Get<Position>();
             if (pos?.MapId == mapId)
                 transport.Send(t.Id, bytes, delivery);
@@ -57,7 +58,7 @@ internal sealed class PackageSender(ITransport transport, SessionManager session
 
         foreach (var t in sessions.Where(t => t.IsPlaying && t.Character.HasValue))
         {
-            var cid = t.Character.Value;
+            var cid = t.Character!.Value;
             if (cid.Equals(entityId)) continue;
 
             var entity = entities.Get(cid);

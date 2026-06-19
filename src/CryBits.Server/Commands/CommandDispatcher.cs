@@ -59,7 +59,7 @@ internal sealed class CommandDispatcher
         // Missing required argument or bad value — show usage for the matched verb
         var type = _commandTypes.FirstOrDefault(t =>
         {
-            var attr = (VerbAttribute)Attribute.GetCustomAttribute(t, typeof(VerbAttribute));
+            var attr = Attribute.GetCustomAttribute(t, typeof(VerbAttribute)) as VerbAttribute;
             return attr != null && attr.Name.Equals(verb, StringComparison.OrdinalIgnoreCase);
         });
 
@@ -73,7 +73,7 @@ internal sealed class CommandDispatcher
         Console.WriteLine($"     {"help",-20}  Lists all available commands.");
         foreach (var type in _commandTypes)
         {
-            var verb = (VerbAttribute)Attribute.GetCustomAttribute(type, typeof(VerbAttribute));
+            var verb = Attribute.GetCustomAttribute(type, typeof(VerbAttribute)) as VerbAttribute;
             if (verb != null)
                 Console.WriteLine($"     {verb.Name,-20}  {verb.HelpText}");
         }
@@ -83,7 +83,7 @@ internal sealed class CommandDispatcher
 
     private static string BuildUsage(Type type)
     {
-        var verb = (VerbAttribute)Attribute.GetCustomAttribute(type, typeof(VerbAttribute));
+        var verb = Attribute.GetCustomAttribute(type, typeof(VerbAttribute)) as VerbAttribute;
         var sb = new StringBuilder(verb!.Name);
 
         var props = type.GetProperties()

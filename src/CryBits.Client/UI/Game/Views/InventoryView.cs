@@ -41,8 +41,9 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
     private void OnRenderSlot(int slot, Point pos)
     {
         ref var inv = ref context.LocalPlayer.GetInventory();
-        var item = _catalog.Items.Get(inv.Slots[slot] is ItemSlot s ? s.ItemId : Guid.Empty);
-        itemRenderer.DrawItem(item, inv.Slots[slot]?.Amount ?? 0, pos);
+        var itemId = inv.Slots[slot] is ItemSlot s ? s.ItemId : Guid.Empty;
+        if (_catalog.Items.Get(itemId) is { } item)
+            itemRenderer.DrawItem(item, inv.Slots[slot]?.Amount ?? 0, pos);
     }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)

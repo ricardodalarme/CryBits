@@ -128,7 +128,10 @@ internal sealed class EditorService(
     internal void RequestMap(Session session, RequestMapPacket packet)
     {
         if (session.InEditor)
-            mapSender.Map(session, catalog.Maps.Get(packet.Id));
+        {
+            var map = catalog.Maps.Get(packet.Id);
+            if (map is not null) mapSender.Map(session, map);
+        }
         else
         {
             var entityId = session.Character!.Value;

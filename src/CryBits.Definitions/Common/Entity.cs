@@ -23,5 +23,5 @@ public partial class Entity : IEquatable<Entity>
 
     public override int GetHashCode() => Id.GetHashCode();
 
-    bool IEquatable<Entity>.Equals(Entity other) => other != null && other.Id.Equals(Id);
+    bool IEquatable<Entity>.Equals(Entity? other) => other != null && other.Id.Equals(Id);
 }
