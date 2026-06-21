@@ -403,6 +403,7 @@
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
+          "CryBits.Protocol": "[1.0.0, )",
           "MemoryPack": "[1.21.4, )"
         }
       },

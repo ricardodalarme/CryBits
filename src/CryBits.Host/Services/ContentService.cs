@@ -13,8 +13,6 @@ namespace CryBits.Host.Services;
 internal sealed class ContentService(
     AuthSender authSender,
     ContentSender contentSender,
-    MapSender mapSender,
-    PlayerSender playerSender,
     ContentRepository contentRepository,
     DefinitionCatalog catalog,
     WorldHost host)
@@ -55,13 +53,13 @@ internal sealed class ContentService(
             {
                 if (t.InEditor)
                 {
-                    mapSender.Map(t, tempMap.Data);
+                    contentSender.Map(t, tempMap.Data.Id);
                 }
                 else if (t.Character.HasValue)
                 {
                     var otherPos = host.Entities.Get(t.Character.Value)?.Get<Position>();
                     if (otherPos?.MapId == tempMap.Id)
-                        mapSender.Map(t, tempMap.Data);
+                        contentSender.Map(t, tempMap.Data.Id);
                 }
             }
         }
@@ -127,7 +125,7 @@ internal sealed class ContentService(
         if (session.InEditor)
         {
             var map = catalog.Maps.Get(packet.Id);
-            if (map is not null) mapSender.Map(session, map);
+            if (map is not null) contentSender.Map(session, map.Id);
         }
         else
         {
@@ -136,19 +134,16 @@ internal sealed class ContentService(
             var pos = state.Get<Position>()!;
             var mapInstance = host.Maps[pos.MapId];
 
-            if (packet.SendMap) mapSender.Map(session, mapInstance.Data);
-
-            mapSender.MapPlayers(entityId);
+            if (packet.SendMap) contentSender.Map(session, mapInstance.Data.Id);
 
             host.Entities.Get(entityId)?.Remove<MapLoadingTag>();
-            playerSender.JoinMap(entityId);
         }
     }
 
     [PacketHandler]
     internal void RequestMaps(Session session, RequestMapsPacket _)
     {
-        mapSender.Maps(session);
+        contentSender.Maps(session);
     }
 
     [PacketHandler]

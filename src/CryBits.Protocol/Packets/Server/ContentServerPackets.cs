@@ -8,6 +8,25 @@ using MemoryPack;
 namespace CryBits.Protocol.Packets.Server;
 
 [MemoryPackable]
+public partial class MapPacket : IServerPacket
+{
+    public Map Map = new();
+}
+
+[MemoryPackable]
+public partial class MapsPacket : IServerPacket
+{
+    public Dictionary<Guid, Map> List = [];
+}
+
+[MemoryPackable]
+public partial class MapRevisionPacket : IServerPacket
+{
+    public Guid MapId;
+    public short Revision;
+}
+
+[MemoryPackable]
 public partial class ClassesPacket : IServerPacket
 {
     public Dictionary<Guid, Class> List = [];
@@ -29,16 +48,4 @@ public partial class ItemsPacket : IServerPacket
 public partial class ShopsPacket : IServerPacket
 {
     public Dictionary<Guid, Shop> List = [];
-}
-
-[MemoryPackable]
-public partial class MapsPacket : IServerPacket
-{
-    public Dictionary<Guid, Map> List = [];
-}
-
-[MemoryPackable]
-public partial class MapPacket : IServerPacket
-{
-    public Map Map = new();
 }

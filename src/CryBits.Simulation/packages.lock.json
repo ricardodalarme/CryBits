@@ -27,6 +27,13 @@
         "dependencies": {
           "MemoryPack": "[1.21.4, )"
         }
+      },
+      "crybits.protocol": {
+        "type": "Project",
+        "dependencies": {
+          "CryBits.Definitions": "[1.0.0, )",
+          "MemoryPack": "[1.21.4, )"
+        }
       }
     }
   }

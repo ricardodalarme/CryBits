@@ -12,7 +12,6 @@ namespace CryBits.Host.Services;
 
 internal sealed class AuthService(
     AuthSender authSender,
-    MapSender mapSender,
     ContentSender contentSender,
     AccountSender accountSender,
     AccountRepository accountRepository,
@@ -63,7 +62,7 @@ internal sealed class AuthService(
             }
 
             session.InEditor = true;
-            mapSender.Maps(session);
+            contentSender.Maps(session);
             contentSender.Items(session);
             contentSender.Shops(session);
             contentSender.Classes(session);

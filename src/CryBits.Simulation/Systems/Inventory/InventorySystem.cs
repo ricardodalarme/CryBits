@@ -273,7 +273,6 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
         if (GiveItem(world, entityId, item, comp.Amount))
         {
-            tick.Events.Emit(new GroundItemRemovedEvent(tick.TickNumber, groundEntityId.Value, map.Id));
             world.Entities.Destroy(groundEntityId.Value);
             map.GroundItemIds.Remove(groundEntityId.Value);
         }

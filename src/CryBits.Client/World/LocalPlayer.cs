@@ -1,4 +1,3 @@
-using CryBits.Client.Components;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;

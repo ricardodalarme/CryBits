@@ -20,6 +20,10 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
+        // Remove stale combat events from previous tick
+        foreach (var state in world.All)
+            state.Remove<AttackHit>();
+
         foreach (var intent in tick.Intents.All)
         {
             if (intent is AttackIntent atk)
@@ -47,7 +51,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
             var (nextX, nextY) = pos.Direction.NextTile(pos.X, pos.Y);
             if (map.TileBlocked(pos.X, pos.Y, pos.Direction, world.Entities, false))
                 {
-                    MissAttack(tick, intent.SourceEntityId, pos, cooldown);
+                    MissAttack(world, intent.SourceEntityId);
                     return;
                 }
 
@@ -56,7 +60,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
 
             if (victimId == null)
             {
-                MissAttack(tick, intent.SourceEntityId, pos, cooldown);
+                MissAttack(world, intent.SourceEntityId);
                 return;
             }
         }
@@ -108,10 +112,9 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
             : (short)0;
         var netDamage = CombatFormulas.NetDamage(attackerDamage, victimDefense);
 
+        var victimPos = victimE.Get<Position>();
         if (netDamage > 0)
         {
-            tick.Events.Emit(new CombatAttackEvent(tick.TickNumber, attackerId, victimId, attackerPos.MapId, true));
-
             if (netDamage < victimVitals.Hp)
                 world.Update<Vitals>(victimId, v => v with { Hp = (short)(v.Hp - netDamage) });
             else
@@ -125,13 +128,13 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
                 }
             }
         }
-        else
-            tick.Events.Emit(new CombatAttackEvent(tick.TickNumber, attackerId, victimId, attackerPos.MapId, false));
+
+        world.Set(attackerId, new AttackHit(victimId.Value, victimPos?.X ?? 0, victimPos?.Y ?? 0));
     }
 
-    private static void MissAttack(Tick tick, EntityId entityId, Position pos, AttackCooldown cooldown)
+    private void MissAttack(World world, EntityId entityId)
     {
-        tick.Events.Emit(new CombatAttackEvent(tick.TickNumber, entityId, null, pos.MapId, false));
+        world.Set(entityId, new AttackHit(null));
     }
 
     private short GetWeaponDamage(EntityState e)

@@ -1,8 +1,10 @@
 using CryBits.Host;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
+using CryBits.Host.Replication;
 using CryBits.Host.Services;
 using CryBits.Persistence;
+using CryBits.Simulation;
 using CryBits.Transport.Abstractions;
 using LinqToDB.Data;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +17,7 @@ internal sealed class Server(
     DataLoader dataLoader,
     PacketDispatcher dispatcher,
     WorldInitializer worldInitializer,
-    ReplicationService replicationService,
+    KeyframeReplicator keyframeReplicator,
     CharacterService characterService,
     DataConnection dataConnection,
     IEnumerable<object> packetHandlers) : IHostedService
@@ -43,6 +45,7 @@ internal sealed class Server(
         Console.WriteLine("Database schema ensured.");
 
         Console.WriteLine("Creating world.");
+        ComponentTypes.RegisterDefault();
         dataLoader.LoadAll();
         worldInitializer.Initialize();
 
@@ -50,7 +53,7 @@ internal sealed class Server(
         transport.Start(config.Port, config.GameName, config.MaxPlayers);
         Console.WriteLine("Network started. Port: " + Definitions.Globals.Config.Port);
 
-        host.Pipeline.AddSystem(replicationService);
+        host.Pipeline.AddSystem(keyframeReplicator);
 
         foreach (var handler in packetHandlers)
             dispatcher.Register(handler);

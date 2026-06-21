@@ -4,9 +4,12 @@ using CryBits.Host;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
 using CryBits.Host.Network.Senders;
+using CryBits.Host.Replication;
 using CryBits.Host.Services;
 using CryBits.Persistence;
 using CryBits.Persistence.Repositories;
+using CryBits.Protocol.Serialization;
+using CryBits.Simulation;
 using CryBits.Simulation.Core;
 using CryBits.Transport.Transports;
 using LinqToDB;
@@ -46,6 +49,7 @@ public sealed class EmbeddedHostRunner : IDisposable
         var charRepo = new CharacterRepository(db);
 
         // Build simulation host
+        RegisterComponentTypes();
         var simulation = new World();
         var sessions = new SessionManager();
         var packageSender = new PackageSender(pair.Server, sessions, simulation.Entities);
@@ -62,25 +66,25 @@ public sealed class EmbeddedHostRunner : IDisposable
         var ss = _host.Sessions;
 
         var authSender = new AuthSender(ps, pair.Server);
-        var mapSender = new MapSender(ps, catalog, ss, es);
         var contentSender = new ContentSender(ps, catalog);
         var shopSender = new ShopSender(ps);
-        var npcSender = new NpcSender(ps, es);
         var accountSenderHost = new AccountSender(ps);
-        var playerSender = new PlayerSender(ps, es);
         var chatSender = new ChatSender(ps, es);
-        var combatSender = new CombatSender(ps);
 
         hostDispatcher.Register(new AuthService(
-            authSender, mapSender, contentSender,
+            authSender, contentSender,
             accountSenderHost, accountRepo, charRepo, _host));
 
-        hostDispatcher.Register(new CharacterService(
-            charRepo, authSender, playerSender, contentSender,
-            mapSender, accountSenderHost, chatSender, catalog, _host));
+        var keyframeEncoder = new KeyframeEncoder(simulation);
+        var eventFanout = new EventFanout(ss, chatSender, contentSender);
 
-        _host.Pipeline.AddSystem(new ReplicationService(
-            playerSender, npcSender, mapSender, combatSender, chatSender, ss));
+        hostDispatcher.Register(new CharacterService(
+            charRepo, authSender, contentSender,
+            accountSenderHost, chatSender, catalog, _host,
+            keyframeEncoder, pair.Server));
+
+        _host.Pipeline.AddSystem(new KeyframeReplicator(
+            simulation, ss, keyframeEncoder, eventFanout, pair.Server));
 
         // Start server tick loop
         _cts = new CancellationTokenSource();
@@ -102,6 +106,12 @@ public sealed class EmbeddedHostRunner : IDisposable
 
         // Create client-side connection over the loopback transport
         ClientConnection = new Connection(pair.Client);
+    }
+
+    private static void RegisterComponentTypes()
+    {
+        ComponentTypes.RegisterDefault();
+        ComponentTypeRegistry.Register<CryBits.Client.Components.NetworkId>(18);
     }
 
     public void Stop()

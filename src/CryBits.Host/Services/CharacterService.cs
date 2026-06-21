@@ -2,30 +2,34 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
+using CryBits.Host.Network.Senders;
+using CryBits.Host.Replication;
+using CryBits.Persistence.Repositories;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
-using CryBits.Host.Network.Senders;
-using CryBits.Persistence.Repositories;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Spawners;
+using CryBits.Simulation.State;
+using CryBits.Transport;
+using CryBits.Host.Core;
+using CryBits.Transport.Abstractions;
+using MemoryPack;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
-using CryBits.Simulation.State;
-using CryBits.Host.Core;
 
 namespace CryBits.Host.Services;
 
 internal sealed class CharacterService(
     CharacterRepository characterRepository,
     AuthSender authSender,
-    PlayerSender playerSender,
     ContentSender contentSender,
-    MapSender mapSender,
     AccountSender accountSender,
     ChatSender chatSender,
     DefinitionCatalog catalog,
-    WorldHost host)
+    WorldHost host,
+    KeyframeEncoder keyframeEncoder,
+    ITransport transport)
 {
     [PacketHandler]
     internal void CreateCharacter(Session session, CreateCharacterPacket packet)
@@ -142,8 +146,6 @@ internal sealed class CharacterService(
             WriteCharacterSave(session, entity);
         }
 
-        playerSender.PlayerLeave(entityId);
-
         var tickNum = host.CurrentTick?.TickNumber ?? 0;
         host.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent(tickNum, entityId));
 
@@ -218,20 +220,32 @@ internal sealed class CharacterService(
         host.Sessions.Register(entityId, session);
         session.Character = entityId;
 
-        playerSender.Join(entityId);
+        accountSender.Join(session, entityId);
         contentSender.Items(session);
         contentSender.Npcs(session);
         contentSender.Shops(session);
-        mapSender.Map(session, map.Data);
-        mapSender.MapPlayers(entityId);
-        playerSender.PlayerExperience(entityId);
-        playerSender.PlayerInventory(entityId);
-        playerSender.PlayerHotbar(entityId);
+        contentSender.Map(session, map.Data.Id);
+        contentSender.MapRevision(session, map.Data.Id);
 
-        var tickNum = host.CurrentTick?.TickNumber ?? 0;
-        host.CurrentTick?.Events.Emit(new PlayerWarpedEvent(tickNum, entityId, pos.MapId, pos.MapId, true));
+        var allOnMap = GetAllEntitiesOnMap(host.Entities, pos.MapId);
+        var keyframe = keyframeEncoder.Encode(pos.MapId, allOnMap);
+        var bytes = MemoryPackSerializer.Serialize<CryBits.Protocol.Packets.Server.IServerPacket>(keyframe);
+        transport.Send(session.Id, bytes, DeliveryChannel.ReliableOrdered);
 
-        playerSender.JoinGame(entityId);
+        host.Entities.Get(entityId)?.Remove<MapLoadingTag>();
+        accountSender.JoinGame(session);
         chatSender.Message(entityId, Config.WelcomeMessage, Color.Blue);
+    }
+
+    private static List<EntityId> GetAllEntitiesOnMap(EntityRegistry entities, Guid mapId)
+    {
+        var result = new List<EntityId>();
+        foreach (var state in entities.All)
+        {
+            var pos = state.Get<Position>();
+            if (pos != null && pos.MapId == mapId)
+                result.Add(state.Id);
+        }
+        return result;
     }
 }

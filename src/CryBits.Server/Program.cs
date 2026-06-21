@@ -3,6 +3,7 @@ using CryBits.Host;
 using CryBits.Host.Core;
 using CryBits.Host.Ingress;
 using CryBits.Host.Network;
+using CryBits.Host.Replication;
 using CryBits.Host.Network.Senders;
 using CryBits.Host.Services;
 using CryBits.Persistence;
@@ -89,19 +90,18 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<AccountSender>();
     services.AddSingleton<AuthSender>();
     services.AddSingleton<ChatSender>();
-    services.AddSingleton<CombatSender>();
     services.AddSingleton<ContentSender>();
-    services.AddSingleton<MapSender>();
-    services.AddSingleton<NpcSender>();
+    services.AddSingleton<ContentSender>();
     services.AddSingleton<PartySender>();
-    services.AddSingleton<PlayerSender>();
     services.AddSingleton<ShopSender>();
     services.AddSingleton<TradeSender>();
 
     services.AddSingleton<AuthService>();
     services.AddSingleton<CharacterService>();
     services.AddSingleton<ContentService>();
-    services.AddSingleton<ReplicationService>();
+    services.AddSingleton<KeyframeEncoder>();
+    services.AddSingleton<EventFanout>();
+    services.AddSingleton<KeyframeReplicator>();
     services.AddSingleton<IntentIngress>();
 
     services.AddSingleton<CommandDispatcher>();
