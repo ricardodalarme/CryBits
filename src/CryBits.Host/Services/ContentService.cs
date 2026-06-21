@@ -10,13 +10,10 @@ using CryBits.Persistence.Repositories;
 
 namespace CryBits.Host.Services;
 
-internal sealed class EditorService(
+internal sealed class ContentService(
     AuthSender authSender,
-    ClassSender classSender,
+    ContentSender contentSender,
     MapSender mapSender,
-    ItemSender itemSender,
-    NpcSender npcSender,
-    ShopSender shopSender,
     PlayerSender playerSender,
     ContentRepository contentRepository,
     DefinitionCatalog catalog,
@@ -35,7 +32,7 @@ internal sealed class EditorService(
         contentRepository.SaveAll(catalog.Classes.Values);
 
         foreach (var t in host.Sessions.Where(t => t != session))
-            classSender.Classes(t);
+            contentSender.Classes(t);
     }
 
     [PacketHandler]
@@ -83,7 +80,7 @@ internal sealed class EditorService(
         contentRepository.SaveAll(catalog.Npcs.Values);
 
         foreach (var t in host.Sessions.Where(t => t != session))
-            npcSender.Npcs(t);
+            contentSender.Npcs(t);
     }
 
     [PacketHandler]
@@ -99,7 +96,7 @@ internal sealed class EditorService(
         contentRepository.SaveAll(catalog.Items.Values);
 
         foreach (var t in host.Sessions.Where(t => t != session))
-            itemSender.Items(t);
+            contentSender.Items(t);
     }
 
     [PacketHandler]
@@ -115,13 +112,13 @@ internal sealed class EditorService(
         contentRepository.SaveAll(catalog.Shops.Values);
 
         foreach (var t in host.Sessions.Where(t => t != session))
-            shopSender.Shops(t);
+            contentSender.Shops(t);
     }
 
     [PacketHandler]
     internal void RequestClasses(Session session, RequestClassesPacket _)
     {
-        classSender.Classes(session);
+        contentSender.Classes(session);
     }
 
     [PacketHandler]
@@ -157,18 +154,18 @@ internal sealed class EditorService(
     [PacketHandler]
     internal void RequestNpcs(Session session, RequestNpcsPacket _)
     {
-        npcSender.Npcs(session);
+        contentSender.Npcs(session);
     }
 
     [PacketHandler]
     internal void RequestItems(Session session, RequestItemsPacket _)
     {
-        itemSender.Items(session);
+        contentSender.Items(session);
     }
 
     [PacketHandler]
     internal void RequestShops(Session session, RequestShopsPacket _)
     {
-        shopSender.Shops(session);
+        contentSender.Shops(session);
     }
 }

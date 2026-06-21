@@ -7,16 +7,14 @@ using CryBits.Client.UI.Game.Views;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Client.Worlds;
-using CryBits.Definitions.Catalog;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
 using OptionsView = CryBits.Client.UI.Game.Views.OptionsView;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class AccountHandler(AudioManager audioManager, GameContext context, DefinitionCatalog catalog)
+internal class AccountHandler(AudioManager audioManager, GameContext context)
 {
-    private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
     internal void Join(JoinPacket packet)
     {

@@ -1,23 +1,16 @@
 using CryBits.Definitions;
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
-using CryBits.Host.Core;
 using CryBits.Transport;
 
 namespace CryBits.Host.Network.Senders;
 
-internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog catalog, EntityRegistry entities)
+internal sealed class NpcSender(PackageSender packageSender, EntityRegistry entities)
 {
-    public void Npcs(Session session)
-    {
-        packageSender.ToPlayer(session, new NpcsPacket { List = catalog.Npcs });
-    }
-
     public void MapNpcs(EntityId entityId, MapState mapState)
     {
         var packet = new MapNpcsPacket { Npcs = new PacketsMapNpc[mapState.NpcIds.Count] };

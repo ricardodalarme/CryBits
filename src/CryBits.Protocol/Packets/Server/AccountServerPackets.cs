@@ -20,3 +20,11 @@ public partial struct PacketsTempCharacter
     {
     }
 }
+
+[MemoryPackable]
+public partial class JoinPacket : IServerPacket
+{
+    public long PlayerId;
+}
+
+[MemoryPackable] public partial class JoinGamePacket : IServerPacket;

@@ -89,9 +89,8 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<AccountSender>();
     services.AddSingleton<AuthSender>();
     services.AddSingleton<ChatSender>();
-    services.AddSingleton<ClassSender>();
     services.AddSingleton<CombatSender>();
-    services.AddSingleton<ItemSender>();
+    services.AddSingleton<ContentSender>();
     services.AddSingleton<MapSender>();
     services.AddSingleton<NpcSender>();
     services.AddSingleton<PartySender>();
@@ -101,7 +100,7 @@ builder.ConfigureServices((ctx, services) =>
 
     services.AddSingleton<AuthService>();
     services.AddSingleton<CharacterService>();
-    services.AddSingleton<EditorService>();
+    services.AddSingleton<ContentService>();
     services.AddSingleton<ReplicationService>();
     services.AddSingleton<IntentIngress>();
 
@@ -109,7 +108,7 @@ builder.ConfigureServices((ctx, services) =>
 
     services.AddSingleton<object>(sp => sp.GetRequiredService<AuthService>());
     services.AddSingleton<object>(sp => sp.GetRequiredService<CharacterService>());
-    services.AddSingleton<object>(sp => sp.GetRequiredService<EditorService>());
+    services.AddSingleton<object>(sp => sp.GetRequiredService<ContentService>());
     services.AddSingleton<object>(sp => sp.GetRequiredService<IntentIngress>());
 
     services.AddHostedService<Server>();

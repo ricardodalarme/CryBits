@@ -6,10 +6,8 @@ using CryBits.Protocol.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class AuthHandler
+internal class AuthHandler(DefinitionCatalog catalog)
 {
-    private readonly DefinitionCatalog _catalog;
-    public AuthHandler(DefinitionCatalog catalog) => _catalog = catalog;
     [PacketHandler]
     internal void Alert(AlertPacket packet)
     {
@@ -22,7 +20,7 @@ internal class AuthHandler
     {
         // Reset client-side character selection state
         SelectCharacterView.CurrentCharacter = 0;
-        _catalog.Classes = [];
+        catalog.Classes = [];
 
         // Open character selection panel
         MenuScreen.CloseMenus();

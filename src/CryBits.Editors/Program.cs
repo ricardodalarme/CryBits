@@ -37,7 +37,8 @@ internal static class Program
         clientTransport.Connect("localhost", Config.Port, Config.GameName);
         _ = new Connection(clientTransport);
         Connection.Instance.Start(onDisconnected: Leave);
-        PacketDispatcher.Register(new EditorHandler());
+        PacketDispatcher.Register(new AuthHandler());
+        PacketDispatcher.Register(new ContentHandler());
         AudioManager.Instance.LoadSounds();
 
         // Start the game loop on a background thread.

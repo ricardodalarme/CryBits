@@ -13,10 +13,7 @@ namespace CryBits.Host.Services;
 internal sealed class AuthService(
     AuthSender authSender,
     MapSender mapSender,
-    ItemSender itemSender,
-    ShopSender shopSender,
-    ClassSender classSender,
-    NpcSender npcSender,
+    ContentSender contentSender,
     AccountSender accountSender,
     AccountRepository accountRepository,
     CharacterRepository characterRepository,
@@ -67,10 +64,10 @@ internal sealed class AuthService(
 
             session.InEditor = true;
             mapSender.Maps(session);
-            itemSender.Items(session);
-            shopSender.Shops(session);
-            classSender.Classes(session);
-            npcSender.Npcs(session);
+            contentSender.Items(session);
+            contentSender.Shops(session);
+            contentSender.Classes(session);
+            contentSender.Npcs(session);
             authSender.Connect(session);
         }
         else
@@ -79,7 +76,7 @@ internal sealed class AuthService(
                 .GetSlots(session.Account.Username)
                 .Select(c => new Account.CharacterSlot { Name = c.Name, TextureNum = c.TextureNum })
                 .ToList();
-            classSender.Classes(session);
+            contentSender.Classes(session);
             accountSender.Characters(session);
 
             if (session.Account.Characters.Count == 0)
@@ -131,7 +128,7 @@ internal sealed class AuthService(
             Access = (byte)session.Account.AccessLevel
         });
 
-        classSender.Classes(session);
+        contentSender.Classes(session);
         accountSender.CreateCharacter(session);
     }
 }

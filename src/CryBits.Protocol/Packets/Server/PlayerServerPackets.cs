@@ -2,7 +2,6 @@ using MemoryPack;
 
 namespace CryBits.Protocol.Packets.Server;
 
-[MemoryPackable] public partial class JoinGamePacket : IServerPacket;
 [MemoryPackable]
 public partial class PlayerDataPacket : IServerPacket
 {

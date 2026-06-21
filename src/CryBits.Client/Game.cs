@@ -117,17 +117,16 @@ public sealed class Game : IDisposable
         var cat = DefinitionCatalog.Instance;
 
         PacketDispatcher.Register(new AuthHandler(cat));
-        PacketDispatcher.Register(new AccountHandler(audioManager, context, cat));
+        PacketDispatcher.Register(new AccountHandler(audioManager, context));
         PacketDispatcher.Register(new PlayerHandler(context, cat));
         PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager, cat, contentRepository));
         PacketDispatcher.Register(new NpcHandler(context, cat));
         PacketDispatcher.Register(new CombatHandler(context));
         PacketDispatcher.Register(new ChatHandler(Chat.Instance));
         PacketDispatcher.Register(new PartyHandler(IntentSender.Instance, context));
-        PacketDispatcher.Register(new TradeHandler(IntentSender.Instance, context, cat));
+        PacketDispatcher.Register(new TradeHandler(IntentSender.Instance, context));
+        PacketDispatcher.Register(new ContentHandler(cat));
         PacketDispatcher.Register(new ShopHandler(cat));
-        PacketDispatcher.Register(new ClassHandler(cat));
-        PacketDispatcher.Register(new ItemHandler(cat));
         AudioManager.Instance.LoadSounds();
 
         _scheduler = SystemScheduler.Instance;

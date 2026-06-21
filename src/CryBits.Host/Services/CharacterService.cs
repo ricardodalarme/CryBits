@@ -20,12 +20,9 @@ internal sealed class CharacterService(
     CharacterRepository characterRepository,
     AuthSender authSender,
     PlayerSender playerSender,
-    ItemSender itemSender,
-    NpcSender npcSender,
-    ShopSender shopSender,
+    ContentSender contentSender,
     MapSender mapSender,
     AccountSender accountSender,
-    ClassSender classSender,
     ChatSender chatSender,
     DefinitionCatalog catalog,
     WorldHost host)
@@ -117,7 +114,7 @@ internal sealed class CharacterService(
             return;
         }
 
-        classSender.Classes(session);
+        contentSender.Classes(session);
         accountSender.CreateCharacter(session);
     }
 
@@ -220,9 +217,9 @@ internal sealed class CharacterService(
         session.Character = entityId;
 
         playerSender.Join(entityId);
-        itemSender.Items(session);
-        npcSender.Npcs(session);
-        shopSender.Shops(session);
+        contentSender.Items(session);
+        contentSender.Npcs(session);
+        contentSender.Shops(session);
         mapSender.Map(session, map.Data);
         mapSender.MapPlayers(entityId);
         playerSender.PlayerExperience(entityId);

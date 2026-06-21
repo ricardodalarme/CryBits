@@ -2,7 +2,6 @@ using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
 using CryBits.Protocol;
@@ -13,9 +12,8 @@ using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class TradeHandler(IntentSender intentSender, GameContext context, DefinitionCatalog catalog)
+internal class TradeHandler(IntentSender intentSender, GameContext context)
 {
-    private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
     internal void Trade(TradePacket packet)
     {

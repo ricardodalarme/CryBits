@@ -63,22 +63,21 @@ public sealed class EmbeddedHostRunner : IDisposable
 
         var authSender = new AuthSender(ps, pair.Server);
         var mapSender = new MapSender(ps, catalog, ss, es);
-        var itemSender = new ItemSender(ps, catalog);
-        var shopSender = new ShopSender(ps, catalog);
-        var classSender = new ClassSender(ps, catalog);
-        var npcSender = new NpcSender(ps, catalog, es);
+        var contentSender = new ContentSender(ps, catalog);
+        var shopSender = new ShopSender(ps);
+        var npcSender = new NpcSender(ps, es);
         var accountSenderHost = new AccountSender(ps);
         var playerSender = new PlayerSender(ps, es);
         var chatSender = new ChatSender(ps, es);
         var combatSender = new CombatSender(ps);
 
         hostDispatcher.Register(new AuthService(
-            authSender, mapSender, itemSender, shopSender, classSender, npcSender,
+            authSender, mapSender, contentSender,
             accountSenderHost, accountRepo, charRepo, _host));
 
         hostDispatcher.Register(new CharacterService(
-            charRepo, authSender, playerSender, itemSender, npcSender,
-            shopSender, mapSender, accountSenderHost, classSender, chatSender, catalog, _host));
+            charRepo, authSender, playerSender, contentSender,
+            mapSender, accountSenderHost, chatSender, catalog, _host));
 
         _host.Pipeline.AddSystem(new ReplicationService(
             playerSender, npcSender, mapSender, combatSender, chatSender, ss));
