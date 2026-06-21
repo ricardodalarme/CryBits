@@ -3,6 +3,8 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using SFML.Window;
 using System.Drawing;
@@ -57,22 +59,35 @@ internal class CharacterView(GameContext context, PlayerSender playerSender, Equ
         AddVitalityButton.OnMouseUp -= OnAddVitalityPressed;
     }
 
-    private void OnRenderFace(Point pos) =>
-        characterRenderer.DrawFace(context.LocalPlayer.GetFaceComponent().TextureNum, pos);
+    private void OnRenderFace(Point pos)
+    {
+        var appearance = context.LocalPlayer.GetAppearance();
+        if (appearance != null)
+            characterRenderer.DrawFace(appearance.TextureNum, pos);
+    }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        var equipSlot = context.LocalPlayer.GetEquipment().Slots[slot];
-        if (equipSlot == null) return;
+        var equipment = context.LocalPlayer.GetEquipment();
+        if (equipment == null) return;
+
+        var equipSlot = equipment.Slots[slot];
+        if (equipSlot == Guid.Empty) return;
 
         if (e.Button == Mouse.Button.Right)
-            if (equipSlot.Bind != BindOn.Equip)
+        {
+            var item = DefinitionCatalog.Instance.Items.Get(equipSlot);
+            if (item == null || item.Bind != BindOn.Equip)
                 playerSender.EquipmentRemove((byte)slot);
+        }
     }
 
     private void OnGridSlotHover(short slot)
     {
-        var item = context.LocalPlayer.GetEquipment().Slots[slot];
+        var equipment = context.LocalPlayer.GetEquipment();
+        if (equipment == null) return;
+
+        var item = DefinitionCatalog.Instance.Items.Get(equipment.Slots[slot]);
         if (item == null) return;
         InformationView.Show(item.Id, Panel.Position + new Size(-186, 5));
     }
@@ -106,13 +121,22 @@ internal class CharacterView(GameContext context, PlayerSender playerSender, Equ
 
     public static void Update()
     {
-        NameLabel.SetArguments(GameContext.Instance.LocalPlayer.GetName());
-        LevelLabel.SetArguments(GameContext.Instance.LocalPlayer.GetLevel().Level);
-        StrengthLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Strength]);
-        ResistanceLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Resistance]);
-        IntelligenceLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Intelligence]);
-        AgilityLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Agility]);
-        VitalityLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Vitality]);
-        PointsLabel.SetArguments(GameContext.Instance.LocalPlayer.GetLevel().Points);
+        var local = GameContext.Instance.LocalPlayer;
+        NameLabel.SetArguments(local.GetName());
+        var level = local.GetLevel();
+        if (level != null)
+        {
+            LevelLabel.SetArguments(level.Level);
+            PointsLabel.SetArguments(level.Points);
+        }
+        var attrs = local.GetAttributes();
+        if (attrs != null)
+        {
+            StrengthLabel.SetArguments(attrs.Values[(byte)Attribute.Strength]);
+            ResistanceLabel.SetArguments(attrs.Values[(byte)Attribute.Resistance]);
+            IntelligenceLabel.SetArguments(attrs.Values[(byte)Attribute.Intelligence]);
+            AgilityLabel.SetArguments(attrs.Values[(byte)Attribute.Agility]);
+            VitalityLabel.SetArguments(attrs.Values[(byte)Attribute.Vitality]);
+        }
     }
 }

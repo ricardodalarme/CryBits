@@ -44,7 +44,7 @@ public sealed class HotbarSystem : ISimulationSystem
 
         hotbar.Slots[hotbarSlot].Type = type;
         hotbar.Slots[hotbarSlot].Slot = slot;
-        world.Dirty.Mark<HotbarState>(entityId);
+        world.MarkDirty<HotbarState>(entityId);
     }
 
     private void Change(World world, EntityId entityId, short slotOld, short slotNew)
@@ -53,7 +53,7 @@ public sealed class HotbarSystem : ISimulationSystem
         var hotbar = e.Get<HotbarState>()!;
 
         (hotbar.Slots[slotOld], hotbar.Slots[slotNew]) = (hotbar.Slots[slotNew], hotbar.Slots[slotOld]);
-        world.Dirty.Mark<HotbarState>(entityId);
+        world.MarkDirty<HotbarState>(entityId);
     }
 
     private void Use(World world, Tick tick, EntityId entityId, short hotbarSlot)
@@ -88,6 +88,6 @@ public sealed class HotbarSystem : ISimulationSystem
         if (foundSlot == null) return;
 
         hotbar.Slots[foundSlot.Value].Slot = slotNew;
-        world.Dirty.Mark<HotbarState>(entityId);
+        world.MarkDirty<HotbarState>(entityId);
     }
 }

@@ -130,9 +130,7 @@ public sealed class Game : IDisposable
                 var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
                 _stopwatch.Restart();
 
-                _scheduler?.Update.BeforeUpdate(in deltaTime);
-                _scheduler?.Update.Update(in deltaTime);
-                _scheduler?.Update.AfterUpdate(in deltaTime);
+                _scheduler?.Simulation.Update(deltaTime);
 
                 if (timer1000 < Environment.TickCount64)
                 {
@@ -171,7 +169,6 @@ public sealed class Game : IDisposable
     public void Dispose()
     {
         _working = false;
-        _scheduler?.Dispose();
         _hostRunner?.Stop();
         _hostRunner?.Dispose();
         _connection?.Disconnect();

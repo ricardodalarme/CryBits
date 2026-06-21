@@ -1,30 +1,17 @@
-using Arch.Core;
-using CryBits.Client.Components.Character;
-using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Core;
-using CryBits.Client.Components.Equipment;
-using CryBits.Client.Components.Hotbar;
-using CryBits.Client.Components.Inventory;
-using CryBits.Client.Components.Movement;
-using CryBits.Client.Components.Player;
+using CryBits.Client.Components;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Items;
-using SFML.Graphics;
-using Entity = Arch.Core.Entity;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 
 namespace CryBits.Client.Spawners;
 
-/// <summary>
-/// Creates a new player entity.
-/// </summary>
 internal static class PlayerSpawner
 {
-    /// <summary>
-    /// Spawns a remote player with the components shared by all players.
-    /// </summary>
-    public static Entity Spawn(
+    public static EntityId Spawn(
         World world,
         long networkId,
         string name,
@@ -39,28 +26,21 @@ internal static class PlayerSpawner
         var frameWidth = size.Width / Globals.AnimationAmountX;
         var frameHeight = size.Height / Globals.AnimationAmountY;
 
-        var vitalsComponent = new VitalsComponent();
-        vitals.CopyTo(vitalsComponent.Current, 0);
-        maxVitals.CopyTo(vitalsComponent.Max, 0);
-
-        return world.Create(
-            new NetworkIdComponent(networkId),
-            new NameComponent { Value = name, NameColor = Color.White },
-            new TransformComponent(x * Globals.Grid, y * Globals.Grid),
-            new SpriteComponent(texture),
-            new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
-            new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
-            new AttackComponent(),
-            new PlayerTagComponent(),
-            new CollidableComponent(),
-            vitalsComponent
-        );
+        return world.SpawnBuilder()
+            .With(new NetworkId { Value = networkId })
+            .With(new PlayerAppearance { Name = name, TextureNum = textureNum })
+            .With(new TransformComponent { X = x * Globals.Grid, Y = y * Globals.Grid })
+            .With(new SpriteComponent { Texture = texture })
+            .With(new AnimatedSpriteComponent { FrameWidth = frameWidth, FrameHeight = frameHeight, TimePerFrame = 0.25f, FrameCount = Globals.AnimationAmountX })
+            .With(new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond })
+            .With(new AttackComponent())
+            .With(new PlayerTag())
+            .With(new CollidableComponent())
+            .With(new Vitals { Hp = vitals[0], Mp = vitals[1], MaxHp = maxVitals[0], MaxMp = maxVitals[1] })
+            .Id;
     }
 
-    /// <summary>
-    /// Spawns the local player: calls <see cref="Spawn"/> then attaches local-only components.
-    /// </summary>
-    public static Entity SpawnLocal(
+    public static EntityId SpawnLocal(
         World world,
         long networkId,
         string name,
@@ -75,26 +55,19 @@ internal static class PlayerSpawner
     {
         var entity = Spawn(world, networkId, name, textureNum, vitals, maxVitals, x, y, direction);
 
-        // Override name colour for the local player.
-        ref var nameComponent = ref world.Get<NameComponent>(entity);
-        nameComponent.NameColor = Color.Yellow;
+        var equipmentSlots = new Guid[equipment.Length];
+        for (var i = 0; i < equipment.Length; i++)
+            equipmentSlots[i] = equipment[i]?.Id ?? Guid.Empty;
 
-        var attributesComponent = new AttributesComponent();
-        attributes.CopyTo(attributesComponent.Values, 0);
+        var attrComp = new AttributesComponent();
+        attributes.CopyTo(attrComp.Values, 0);
 
-        var equipmentComponent = new EquipmentComponent();
-        equipment.CopyTo(equipmentComponent.Slots, 0);
-
-        world.Add(
-            entity,
-            attributesComponent,
-            equipmentComponent,
-            new InventoryComponent(),
-            new HotbarComponent(),
-            new FaceComponent { TextureNum = textureNum },
-            new LevelComponent { Level = level },
-            new LocalPlayerTagComponent()
-        );
+        world.Set(entity, attrComp);
+        world.Set(entity, new EquipmentState { Slots = equipmentSlots });
+        world.Set(entity, new InventoryState());
+        world.Set(entity, new HotbarState());
+        world.Set(entity, new LevelComponent { Level = level });
+        world.Set(entity, new LocalPlayerTagComponent());
 
         return entity;
     }

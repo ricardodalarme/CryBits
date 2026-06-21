@@ -59,10 +59,10 @@ public static class NpcSpawner
         entity.Set(new NpcTag());
 
         map.NpcIds.Add(entityId);
-        world.Dirty.Mark<NpcState>(entityId);
-        world.Dirty.Mark<Position>(entityId);
-        world.Dirty.Mark<Vitals>(entityId);
-        world.Dirty.Mark<StatBlock>(entityId);
+        world.MarkDirty<NpcState>(entityId);
+        world.MarkDirty<Position>(entityId);
+        world.MarkDirty<Vitals>(entityId);
+        world.MarkDirty<StatBlock>(entityId);
 
         return entityId;
     }

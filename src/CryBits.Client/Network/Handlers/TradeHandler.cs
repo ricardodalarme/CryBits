@@ -1,4 +1,3 @@
-using CryBits.Client.Components.Trade;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
@@ -8,6 +7,7 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
+using CryBits.Simulation.Components;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Network.Handlers;
@@ -18,6 +18,10 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context, Defini
     [PacketHandler]
     internal void Trade(TradePacket packet)
     {
+        var playerEntity = context.LocalPlayer.Entity;
+        if (playerEntity is null) return;
+        var entity = playerEntity.Value;
+
         var state = packet.State;
 
         // Set trade panel visibility
@@ -31,12 +35,12 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context, Defini
             TradeView.OfferDisabledPanel.Visible = false;
 
             // Attach fresh trade state to the local player entity for the duration of this session.
-            context.World.Add(context.LocalPlayer.Entity, new TradeComponent());
+            context.World.Set(entity, new TradeState());
         }
         else
         {
             // Detach trade state — removal is the reset; no leftover data.
-            context.World.Remove<TradeComponent>(context.LocalPlayer.Entity);
+            context.World.Remove<TradeState>(entity);
         }
     }
 
@@ -77,12 +81,9 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context, Defini
     internal void TradeOffer(TradeOfferPacket packet)
     {
         // Read trade offer data
-        ref var trade = ref context.LocalPlayer.GetTrade();
-        if (packet.Own)
-            for (byte i = 0; i < MaxInventory; i++)
-                trade.Offer[i] = new ItemSlot(packet.Items[i].ItemId, packet.Items[i].Amount);
-        else
-            for (byte i = 0; i < MaxInventory; i++)
-                trade.TheirOffer[i] = new ItemSlot(packet.Items[i].ItemId, packet.Items[i].Amount);
+        var trade = context.LocalPlayer.GetTrade();
+        if (trade?.Offer == null) return;
+        for (byte i = 0; i < MaxInventory && i < trade.Offer.Length; i++)
+            trade.Offer[i] = new TradeSlot { SlotNum = (short)i, Amount = packet.Items[i].Amount };
     }
 }

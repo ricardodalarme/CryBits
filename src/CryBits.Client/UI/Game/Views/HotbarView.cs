@@ -1,5 +1,3 @@
-using Arch.Core;
-using CryBits.Client.Components.Hotbar;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
@@ -9,6 +7,7 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
+using CryBits.Simulation.Components;
 using SFML.Window;
 using System.Drawing;
 
@@ -42,29 +41,28 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
 
     private void OnRenderSlot(int slot, Point pos)
     {
-        if (context.LocalPlayer.Entity == Entity.Null) return;
-        if (!context.World.TryGet<HotbarComponent>(context.LocalPlayer.Entity, out var hotbar)) return;
+        if (context.LocalPlayer.Entity == null) return;
+        var hotbar = context.World.Get<HotbarState>(context.LocalPlayer.Entity.Value);
+        if (hotbar == null) return;
 
         var hotbarSlot = hotbar.Slots[slot];
         if (hotbarSlot is HotbarSlot { Slot: > 0, Type: SlotType.Item } h)
         {
-            var itemId = context.LocalPlayer.GetInventory().Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty;
+            var itemId = context.LocalPlayer.GetInventory()?.Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty;
             if (_catalog.Items.Get(itemId) is { } item) itemRenderer.DrawItem(item, 1, pos);
         }
     }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[slot];
+        var hotbarSlot = context.LocalPlayer.GetHotbar()?.Slots[slot];
         if (hotbarSlot is not HotbarSlot { Slot: not 0 }) return;
 
         switch (e.Button)
         {
-            // Drop or use hotbar slot (right-click)
             case Mouse.Button.Right:
                 playerSender.HotbarAdd(slot, 0, 0);
                 break;
-            // Select the hotbar slot (start drag)
             case Mouse.Button.Left:
                 GameScreen.HotbarChange = slot;
                 break;
@@ -79,20 +77,19 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
 
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
     {
-        var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[slot];
+        var hotbarSlot = context.LocalPlayer.GetHotbar()?.Slots[slot];
         if (hotbarSlot is not HotbarSlot { Slot: > 0 }) return;
 
-        // Use item from hotbar
         playerSender.HotbarUse((byte)slot);
         DropItemView.Panel.Visible = false;
     }
 
     private void OnGridSlotHover(short slot)
     {
-        var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[slot];
+        var hotbarSlot = context.LocalPlayer.GetHotbar()?.Slots[slot];
         if (hotbarSlot is HotbarSlot { Slot: > 0, Type: SlotType.Item } h)
         {
-            var item = _catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty);
+            var item = _catalog.Items.Get(context.LocalPlayer.GetInventory()?.Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty);
             if (item == null) return;
             InformationView.Show(item.Id, Panel.Position + new Size(0, 42));
         }

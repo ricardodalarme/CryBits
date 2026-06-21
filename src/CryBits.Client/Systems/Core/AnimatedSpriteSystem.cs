@@ -1,34 +1,26 @@
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Core;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Client.Systems.Core;
 
-/// <summary>
-/// Advances the animation frame timer for every entity that has an
-/// <see cref="AnimatedSpriteComponent"/>.
-/// </summary>
-internal sealed class AnimatedSpriteSystem(World world) : BaseSystem<World, float>(world)
+internal sealed class AnimatedSpriteSystem(World world) : IClientSystem
 {
-    private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<AnimatedSpriteComponent>();
-
-    public override void Update(in float deltaTime)
+    public void Update(float deltaTime)
     {
-        var dt = deltaTime;
-        World.Query(in _query, (ref AnimatedSpriteComponent anim) =>
+        foreach (var state in world.All)
         {
-            if (!anim.Playing) return;
+            var anim = state.Get<AnimatedSpriteComponent>();
+            if (anim == null || !anim.Playing) continue;
 
-            anim.Timer += dt;
-            if (anim.Timer < anim.TimePerFrame) return;
+            anim.Timer += deltaTime;
+            if (anim.Timer < anim.TimePerFrame) continue;
 
             anim.Timer -= anim.TimePerFrame;
             anim.CurrentFrameX++;
 
-            // Loop back to the start of the row.
             if (anim.CurrentFrameX >= anim.FrameCount)
                 anim.CurrentFrameX = 0;
-        });
+        }
     }
 }

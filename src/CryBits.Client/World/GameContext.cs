@@ -1,49 +1,36 @@
-using Arch.Core;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 
 namespace CryBits.Client.Worlds;
 
-/// <summary>
-/// Single-instance runtime state for the game client.
-/// </summary>
 internal sealed class GameContext
 {
-    /// <summary>Singleton instance of the game context.</summary>
     public static GameContext Instance { get; } = new();
 
-    /// <summary>All live game entities and their components.</summary>
-    public World World { get; } = World.Create();
+    public World World { get; } = new(enableDirtyTracking: false);
 
-    /// <summary>Current map instance.</summary>
     public ClientMap CurrentMap = null!;
 
-    /// <summary>Tracks the local player entity and components.</summary>
     public LocalPlayer LocalPlayer { get; set; }
 
-    private readonly Dictionary<long, Entity> _entityById = [];
+    private readonly Dictionary<long, EntityId> _entityById = [];
 
     internal GameContext()
     {
-        LocalPlayer = new LocalPlayer(World, Entity.Null);
+        LocalPlayer = new LocalPlayer(World, null);
     }
 
-    /// <summary>Registers a network entity so it can be found by ID in O(1).</summary>
-    public void RegisterNetworkEntity(long id, Entity entity) => _entityById[id] = entity;
+    public void RegisterNetworkEntity(long id, EntityId entity) => _entityById[id] = entity;
 
-    /// <summary>Removes a network entity registration (call before World.Destroy).</summary>
     public void UnregisterNetworkEntity(long id) => _entityById.Remove(id);
 
-    /// <summary>Returns the ECS entity with the given network ID, or Entity.Null if not found.</summary>
-    public Entity GetNetworkEntity(long id) => _entityById.TryGetValue(id, out var e) ? e : Entity.Null;
+    public EntityId? GetNetworkEntity(long id) => _entityById.TryGetValue(id, out var e) ? e : null;
 
-    /// <summary>
-    /// Fully reset world state on disconnect: destroys all entities,
-    /// clears map data, and zeroes out slot arrays.
-    /// </summary>
     public void Reset()
     {
         World.Clear();
         _entityById.Clear();
         CurrentMap = null!;
-        LocalPlayer = new LocalPlayer(World, Entity.Null);
+        LocalPlayer = new LocalPlayer(World, null);
     }
 }

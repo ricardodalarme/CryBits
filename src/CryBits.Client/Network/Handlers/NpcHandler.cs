@@ -1,7 +1,4 @@
-using Arch.Core;
-using CryBits.Client.Components.Character;
-using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Movement;
+using CryBits.Client.Components;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
@@ -9,6 +6,7 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
+using CryBits.Simulation.Components;
 using static CryBits.Definitions.Globals;
 using Direction = CryBits.Definitions.Common.Direction;
 using Movement = CryBits.Definitions.Common.Movement;
@@ -29,15 +27,16 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
     internal void MapNpcs(MapNpcsPacket packet)
     {
         // Destroy any existing NPC entities from the previous map.
-        var npcQuery = new QueryDescription().WithAll<NpcTagComponent, NetworkIdComponent>();
-        var toDestroy = new List<(long id, Entity e)>();
-        context.World.Query(in npcQuery, (Entity e, ref NetworkIdComponent nid) =>
-            toDestroy.Add((nid.Value, e)));
-        foreach (var (id, e) in toDestroy)
+        foreach (var state in context.World.All)
         {
-            context.UnregisterNetworkEntity(id);
-            context.World.Destroy(e);
+            if (state.Has<NpcTag>())
+            {
+                var nid = state.Get<NetworkId>();
+                if (nid is not null)
+                    context.UnregisterNetworkEntity(nid.Value);
+            }
         }
+        context.World.DestroyWhere(s => s.Has<NpcTag>());
 
         // Spawn new NPC entities for the current map.
         for (byte i = 0; i < packet.Npcs.Length; i++)
@@ -58,10 +57,10 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
     internal void MapNpc(MapNpcPacket packet)
     {
         var old = context.GetNetworkEntity(packet.InstanceId);
-        if (old != Entity.Null)
+        if (old is not null)
         {
             context.UnregisterNetworkEntity(packet.InstanceId);
-            context.World.Destroy(old);
+            context.World.Destroy(old.Value);
         }
 
         var data = _catalog.Npcs.Get(packet.NpcId);
@@ -78,9 +77,10 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
     internal void MapNpcMovement(MapNpcMovementPacket packet)
     {
         var npc = context.GetNetworkEntity(packet.InstanceId);
-        if (npc == Entity.Null) return;
+        if (npc is null) return;
 
-        ref var movement = ref context.World.Get<MovementComponent>(npc);
+        var movement = context.World.Get<MovementComponent>(npc.Value);
+        if (movement is null) return;
         byte prevX = movement.TileX, prevY = movement.TileY;
         movement.TileX = packet.X;
         movement.TileY = packet.Y;
@@ -107,9 +107,10 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
     {
         var npc = context.GetNetworkEntity(packet.InstanceId);
 
-        if (npc == Entity.Null) return;
+        if (npc is null) return;
 
-        ref var movement = ref context.World.Get<MovementComponent>(npc);
+        var movement = context.World.Get<MovementComponent>(npc.Value);
+        if (movement is null) return;
         movement.Direction = (Direction)packet.Direction;
         movement.OffsetX = 0f;
         movement.OffsetY = 0f;
@@ -119,21 +120,23 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
     internal void MapNpcVitals(MapNpcVitalsPacket packet)
     {
         var npc = context.GetNetworkEntity(packet.InstanceId);
+        if (npc is null) return;
 
         // Write vital changes directly to ECS.
-        ref var vitals = ref context.World.Get<VitalsComponent>(npc);
-        for (byte n = 0; n < (byte)Vital.Count; n++)
-            vitals.Current[n] = packet.Vital[n];
+        var vitals = context.World.Get<Vitals>(npc.Value);
+        if (vitals is null) return;
+        vitals.Hp = packet.Vital[(byte)Vital.Hp];
+        vitals.Mp = packet.Vital[(byte)Vital.Mp];
     }
 
     [PacketHandler]
     internal void MapNpcDied(MapNpcDiedPacket packet)
     {
         var entity = context.GetNetworkEntity(packet.InstanceId);
-        if (entity != Entity.Null)
+        if (entity is not null)
         {
             context.UnregisterNetworkEntity(packet.InstanceId);
-            context.World.Destroy(entity);
+            context.World.Destroy(entity.Value);
         }
     }
 }

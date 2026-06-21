@@ -1,62 +1,60 @@
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Core;
-using CryBits.Client.Components.Inventory;
-using CryBits.Client.Components.Map;
-using CryBits.Client.Components.Movement;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
+using CryBits.Simulation.Components;
 using SFML.Window;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Player;
 
-/// <summary>
-/// Handles the local player picking up ground items when Space is released.
-/// </summary>
-internal sealed class ItemPickupSystem(GameContext context, InputManager inputManager, PlayerSender playerSender) : BaseSystem<World, float>(context.World)
+internal sealed class ItemPickupSystem(
+    GameContext context,
+    InputManager inputManager,
+    PlayerSender playerSender) : IClientSystem
 {
-    private readonly QueryDescription _groundItemQuery = new QueryDescription().WithAll<GroundItemComponent, TransformComponent>();
-
     private const float ThrottleSecs = 0.250f;
-
-    private readonly GameContext _context = context;
-    private readonly PlayerSender _playerSender = playerSender;
-
-    /// <summary>Remaining cooldown in seconds before the next pickup can be sent.</summary>
     private float _cooldown;
 
-    public override void Update(in float dt)
+    public void Update(float dt)
     {
         if (_cooldown > 0f)
             _cooldown -= dt;
 
         if (!inputManager.WasKeyReleased(Keyboard.Key.Space)) return;
 
-        var entity = _context.LocalPlayer.Entity;
-        if (entity == Entity.Null || !World.IsAlive(entity)) return;
+        var entity = context.LocalPlayer.Entity;
+        if (entity is null || !context.World.IsAlive(entity.Value)) return;
         if (_cooldown > 0f) return;
 
-        // Confirm there is a ground item on the local player's current tile.
-        var myTile = World.Get<MovementComponent>(entity);
+        var myTile = context.World.Get<MovementComponent>(entity.Value);
+        if (myTile == null) return;
+
         var hasItem = false;
-        World.Query(in _groundItemQuery, (ref TransformComponent transform) =>
+        foreach (var state in context.World.All)
         {
+            var transform = state.Get<TransformComponent>();
+            if (transform == null) continue;
+            if (!state.Has<GroundItemComponent>()) continue;
+
             if (transform.X / Grid == myTile.TileX && transform.Y / Grid == myTile.TileY)
+            {
                 hasItem = true;
-        });
+                break;
+            }
+        }
 
         if (!hasItem) return;
 
-        // Confirm the local player has at least one free inventory slot.
-        ref var inventory = ref World.Get<InventoryComponent>(entity);
+        var inventory = context.World.Get<InventoryState>(entity.Value);
+        if (inventory == null) return;
+
         for (byte i = 0; i < MaxInventory; i++)
         {
-            if (inventory.Slots[i]?.ItemId != Guid.Empty) continue;
+            if (inventory.Slots[i].ItemId != Guid.Empty) continue;
 
-            // Free slot found — send the packet and start the cooldown.
-            _playerSender.CollectItem();
+            playerSender.CollectItem();
             _cooldown = ThrottleSecs;
             return;
         }

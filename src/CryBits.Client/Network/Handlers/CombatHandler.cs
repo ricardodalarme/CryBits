@@ -1,5 +1,4 @@
-using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Movement;
+using CryBits.Client.Components;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
 using CryBits.Protocol;
@@ -16,17 +15,22 @@ internal class CombatHandler(GameContext context)
         var attackerId = packet.AttackerId;
         var victimId = packet.VictimId;
         var attacker = context.GetNetworkEntity(attackerId);
+        if (attacker is null) return;
 
-        ref var state = ref context.World.Get<AttackComponent>(attacker);
-        state.AttackCountdown = AttackSpeed / 1000f;
+        var attack = context.World.Get<AttackComponent>(attacker.Value);
+        if (attack is null) return;
+        attack.AttackCountdown = AttackSpeed / 1000f;
 
         if (victimId is null) return;
 
         var victim = context.GetNetworkEntity(victimId.Value);
+        if (victim is null) return;
         var world = context.World;
-        ref var victimMovement = ref world.Get<MovementComponent>(victim);
+        var victimMovement = world.Get<MovementComponent>(victim.Value);
+        if (victimMovement is null) return;
         BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);
-        ref var damage = ref context.World.AddOrGet<HurtComponent>(victim);
-        damage.HurtCountdown = HurtComponent.Duration;
+        var hurt = world.AddOrGet<HurtComponent>(victim.Value);
+        if (hurt is null) return;
+        hurt.HurtCountdown = HurtComponent.Duration;
     }
 }

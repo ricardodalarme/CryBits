@@ -1,4 +1,3 @@
-using Arch.System;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Graphics;
 using CryBits.Client.Managers;
@@ -13,15 +12,6 @@ using CryBits.Client.Worlds;
 
 namespace CryBits.Client.Systems;
 
-/// <summary>
-/// Owns and initialises every ECS system group used by the client.
-///
-/// <see cref="GameLoop"/> drives <see cref="Update"/> each tick (simulation).
-/// <see cref="RenderPipeline"/> invokes the render groups in strict
-/// world-draw order, interleaving them with <c>MapRenderer</c> tile passes:
-///
-/// To add, remove, or reorder a system, edit only this class.
-/// </summary>
 internal sealed class SystemScheduler(
     GameContext context,
     InputManager inputManager,
@@ -38,58 +28,34 @@ internal sealed class SystemScheduler(
         CameraManager.Instance,
         Renderer.Instance);
 
-    /// <summary>
-    /// All dt-based simulation systems — ticked once per rendered frame by <see cref="GameLoop"/>.
-    /// </summary>
-    public Group<float> Update { get; } = new Group<float>(
-        "DeltaTimeSystems",
-        new FadeSystem(context.World),
-        new FogSystem(context.World),
-        new WeatherSimulationSystem(context),
-        new WeatherSpawnSystem(context),
-        new LightningSystem(context, audioManager),
-        new MovementInputSystem(context, inputManager, playerSender),
-        new ItemPickupSystem(context, inputManager, playerSender),
-        new MovementSystem(context.World),
-        new CameraSystem(context, cameraManager),
-        new CharacterAnimationControllerSystem(context.World),
-        new AnimatedSpriteSystem(context.World),
-        new AttackSystem(context, inputManager, playerSender),
-        new DamageDecaySystem(context.World)
-    );
+    public Client.Core.SystemScheduler Simulation { get; } = new();
+    public Client.Core.SystemScheduler Ground { get; } = new();
+    public Client.Core.SystemScheduler Fringe { get; } = new();
 
-    // ── Render phases ─────────────────────────────────────────────────────────
-    // Each group is invoked by RenderPipeline.InGame() at a specific point in
-    // the draw stack. Comments describe their position in the layer order.
-
-    /// <summary> Drawn after the ground tile layer.</summary>
-    public Group<int> GroundRender { get; } = new Group<int>(
-            "GroundRenderSystems",
-            new SpriteRenderSystem(context.World, renderer),
-            new CharacterRenderSystem(context.World, renderer)
-        );
-
-    /// <summary>Drawn after the fringe tile layer.</summary>
-    public Group<int> FringeRender { get; } = new Group<int>(
-            "FringeRenderSystems",
-            new VitalBarRenderSystem(context.World, renderer),
-            new WeatherRenderSystem(context.World, renderer),
-            new FogRenderSystem(context.World, renderer)
-        );
-
-    /// <summary>Call once before the main loop to let every system run its setup.</summary>
     public void Initialize()
     {
-        Update.Initialize();
-        GroundRender.Initialize();
-        FringeRender.Initialize();
-    }
+        Simulation
+            .AddSimulation(new FadeSystem(context.World))
+            .AddSimulation(new FogSystem(context.World))
+            .AddSimulation(new WeatherSimulationSystem(context))
+            .AddSimulation(new WeatherSpawnSystem(context))
+            .AddSimulation(new LightningSystem(context, audioManager))
+            .AddSimulation(new MovementInputSystem(context, inputManager, playerSender))
+            .AddSimulation(new ItemPickupSystem(context, inputManager, playerSender))
+            .AddSimulation(new MovementSystem(context.World))
+            .AddSimulation(new CameraSystem(context, cameraManager))
+            .AddSimulation(new CharacterAnimationControllerSystem(context.World))
+            .AddSimulation(new AnimatedSpriteSystem(context.World))
+            .AddSimulation(new AttackSystem(context, inputManager, playerSender))
+            .AddSimulation(new DamageDecaySystem(context.World));
 
-    /// <summary>Call once when the application exits to release system resources.</summary>
-    public void Dispose()
-    {
-        Update.Dispose();
-        GroundRender.Dispose();
-        FringeRender.Dispose();
+        Ground
+            .AddRender(new SpriteRenderSystem(context.World, renderer))
+            .AddRender(new CharacterRenderSystem(context.World, renderer));
+
+        Fringe
+            .AddRender(new VitalBarRenderSystem(context.World, renderer))
+            .AddRender(new WeatherRenderSystem(context.World, renderer))
+            .AddRender(new FogRenderSystem(context.World, renderer));
     }
 }

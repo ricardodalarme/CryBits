@@ -1,34 +1,27 @@
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Core;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
+using CryBits.Simulation.Core;
 using System.Drawing;
 
 namespace CryBits.Client.Systems.Core;
 
-/// <summary>
-/// Renders all entities that have a <see cref="TransformComponent"/> and a
-/// <see cref="SpriteComponent"/>, excluding character entities.
-/// Character entities (players, NPCs) carry a <see cref="AnimatedSpriteComponent"/> and are
-/// handled instead by <c>CharacterRenderSystem</c>, which adds Y-depth sorting and
-/// shadow rendering on top of the basic sprite draw.
-/// Draws in world space — the SFML view (set by CameraManager) handles panning.
-/// </summary>
-internal sealed class SpriteRenderSystem(World world, Renderer renderer) : BaseSystem<World, int>(world)
+internal sealed class SpriteRenderSystem(World world, Renderer renderer) : IClientRenderSystem
 {
-    private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<TransformComponent, SpriteComponent>()
-        .WithNone<AnimatedSpriteComponent>();
-
-    public override void Update(in int t)
+    public void Render()
     {
-        World.Query(in _query, (ref TransformComponent transform, ref SpriteComponent sprite) =>
+        foreach (var state in world.All)
         {
-            var source = sprite.SourceRect ?? new Rectangle(Point.Empty, sprite.Texture.ToSize());
+            var transform = state.Get<TransformComponent>();
+            var sprite = state.Get<SpriteComponent>();
+            if (transform == null || sprite == null) continue;
+            if (state.Has<AnimatedSpriteComponent>()) continue;
+
+            var source = sprite.SourceRect.HasValue ? sprite.SourceRect.Value : new Rectangle(Point.Empty, sprite.Texture.ToSize());
             var dest = source with { X = transform.X, Y = transform.Y };
 
             renderer.Draw(sprite.Texture, source, dest, sprite.Tint);
-        });
+        }
     }
 }

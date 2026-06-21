@@ -1,33 +1,26 @@
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Core;
-using CryBits.Client.Components.Map;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Map;
 
-/// <summary>
-/// Manages weather particle population: counts live particles and conditionally
-/// spawns one new particle per frame based on map weather intensity.
-/// </summary>
-internal sealed class WeatherSpawnSystem(GameContext context) : BaseSystem<World, float>(context.World)
+internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
 {
-    private readonly QueryDescription _particleQuery =
-        new QueryDescription().WithAll<WeatherParticleComponent>();
-
-    public override void Update(in float dt)
+    public void Update(float dt)
     {
         var weatherData = context.CurrentMap?.Data.Weather;
         if (weatherData == null || weatherData.Type == Weather.Normal) return;
 
         var type = weatherData.Type;
 
-        // Live count is accurate because WeatherSimulationSystem has already
-        // played back its CommandBuffer, removing off-screen entities.
         var activeCount = 0;
-        World.Query(in _particleQuery, _ => activeCount++);
+        foreach (var _ in context.World.All)
+        {
+            if (context.World.Get<WeatherParticleComponent>(_.Id) != null)
+                activeCount++;
+        }
 
         var maxParticles = type == Weather.Snowing ? MaxSnowParticles : MaxRainParticles;
         if (activeCount >= maxParticles) return;
@@ -36,7 +29,6 @@ internal sealed class WeatherSpawnSystem(GameContext context) : BaseSystem<World
         SpawnParticle(type);
     }
 
-    /// <summary>Creates a single new particle entity for the given weather type.</summary>
     private void SpawnParticle(Weather type)
     {
         int x, y;
@@ -70,6 +62,8 @@ internal sealed class WeatherSpawnSystem(GameContext context) : BaseSystem<World
                 return;
         }
 
-        World.Create(new TransformComponent(x, y), particle);
+        var id = context.World.Spawn();
+        context.World.Set(id, new TransformComponent { X = x, Y = y });
+        context.World.Set(id, particle);
     }
 }

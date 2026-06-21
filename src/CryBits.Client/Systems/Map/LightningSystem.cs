@@ -1,6 +1,5 @@
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Map;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Worlds;
@@ -9,37 +8,32 @@ using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Map;
 
-/// <summary>
-/// Manages the lightning flash lifecycle and thunder audio for thunderstorm maps.
-/// </summary>
-internal sealed class LightningSystem(GameContext context, AudioManager audioManager) : BaseSystem<World, float>(context.World)
+internal sealed class LightningSystem(GameContext context, AudioManager audioManager) : IClientSystem
 {
-    private readonly QueryDescription _lightningQuery =
-        new QueryDescription().WithAll<LightningComponent>();
-
     private static readonly string[] _thunderSounds = [Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4];
 
-    /// <summary>Seconds between each 10-unit lightning intensity decay step (25 ms).</summary>
     private const float LightningDecayInterval = 0.025f;
 
-    public override void Update(in float dt)
+    public void Update(float dt)
     {
         var weatherData = context.CurrentMap?.Data.Weather;
         if (weatherData == null || weatherData.Type == Weather.Normal) return;
 
-        var delta = dt;
-        World.Query(in _lightningQuery, (ref LightningComponent lightning) =>
+        foreach (var state in context.World.All)
         {
+            var lightning = state.Get<LightningComponent>();
+            if (lightning == null) continue;
+
             if (lightning.Intensity > 0)
             {
-                lightning.DecayAccumulator += delta;
+                lightning.DecayAccumulator += dt;
                 while (lightning.DecayAccumulator >= LightningDecayInterval)
                 {
                     lightning.DecayAccumulator -= LightningDecayInterval;
                     lightning.Intensity = lightning.Intensity > 10 ? (byte)(lightning.Intensity - 10) : (byte)0;
                 }
             }
-        });
+        }
 
         if (weatherData.Type == Weather.Thundering)
             TryThunder(weatherData.Intensity);
@@ -54,11 +48,14 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
 
         if (thunder < 3)
         {
-            World.Query(in _lightningQuery, (ref LightningComponent lightning) =>
+            foreach (var state in context.World.All)
             {
+                var lightning = state.Get<LightningComponent>();
+                if (lightning == null) continue;
+
                 lightning.Intensity = 190;
                 lightning.DecayAccumulator = 0f;
-            });
+            }
         }
     }
 }

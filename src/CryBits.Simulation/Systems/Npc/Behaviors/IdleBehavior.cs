@@ -16,7 +16,7 @@ public sealed class IdleBehavior : INpcBehavior
 
         var pos = entity.Get<Position>()!;
         pos.Direction = (Direction)Random.Shared.Next(0, 4);
-        world.Dirty.Mark<Position>(entity.Id);
+        world.MarkDirty<Position>(entity.Id);
         return null;
     }
 }

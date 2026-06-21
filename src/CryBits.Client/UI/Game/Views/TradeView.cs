@@ -54,22 +54,35 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
 
     private void OnRenderOwnSlot(int slot, Point pos)
     {
-        var itemId = context.LocalPlayer.GetTrade().Offer[slot]?.ItemId ?? Guid.Empty;
-        if (_catalog.Items.Get(itemId) is { } item)
-            itemRenderer.DrawItem(item, context.LocalPlayer.GetTrade().Offer[slot]?.Amount ?? 0, pos);
+        var trade = context.LocalPlayer.GetTrade();
+        var inv = context.LocalPlayer.GetInventory();
+        if (trade?.Offer == null || inv == null) return;
+        if (slot >= trade.Offer.Length) return;
+        var offer = trade.Offer[slot];
+        var inventorySlot = inv.Slots[offer.SlotNum];
+        if (_catalog.Items.Get(inventorySlot.ItemId) is { } item)
+            itemRenderer.DrawItem(item, offer.Amount, pos);
     }
 
     private void OnRenderTheirSlot(int slot, Point pos)
     {
-        var itemId = context.LocalPlayer.GetTrade().TheirOffer[slot]?.ItemId ?? Guid.Empty;
-        if (_catalog.Items.Get(itemId) is { } item)
-            itemRenderer.DrawItem(item, context.LocalPlayer.GetTrade().TheirOffer[slot]?.Amount ?? 0, pos);
+        var trade = context.LocalPlayer.GetTrade();
+        if (trade?.Offer == null) return;
+        if (slot >= trade.Offer.Length) return;
+        var offer = trade.Offer[slot];
+        var item = _catalog.Items.Get(Guid.Empty);
+        if (item != null)
+            itemRenderer.DrawItem(item, offer.Amount, pos);
     }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
         if (!Panel.Visible) return;
-        if (context.LocalPlayer.GetTrade().Offer[slot]?.ItemId == Guid.Empty) return;
+        var trade = context.LocalPlayer.GetTrade();
+        var inv = context.LocalPlayer.GetInventory();
+        if (trade?.Offer == null || inv == null) return;
+        if (slot >= trade.Offer.Length) return;
+        if (inv.Slots[trade.Offer[slot].SlotNum].ItemId == Guid.Empty) return;
 
         if (e.Button == Mouse.Button.Right) tradeSender.TradeOffer(slot, 0);
     }
@@ -78,8 +91,9 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
     {
         if (GameScreen.InventoryChange <= 0) return;
 
-        // Add item to trade
-        if (context.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange]?.Amount == 1)
+        var inv = context.LocalPlayer.GetInventory();
+        if (inv == null) return;
+        if (inv.Slots[GameScreen.InventoryChange].Amount == 1)
             tradeSender.TradeOffer(slot, GameScreen.InventoryChange);
         else
         {
@@ -103,9 +117,11 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
         OfferDisabledPanel.Visible = false;
         tradeSender.TradeOfferState(TradeStatus.Accepted);
 
-        ref var trade = ref context.LocalPlayer.GetTrade();
-        trade.Offer = new ItemSlot?[MaxInventory];
-        trade.TheirOffer = new ItemSlot?[MaxInventory];
+        var trade = context.LocalPlayer.GetTrade();
+        if (trade != null)
+        {
+            trade.Offer = new TradeSlot[MaxInventory];
+        }
     }
 
     private void OnDeclineOfferPressed()

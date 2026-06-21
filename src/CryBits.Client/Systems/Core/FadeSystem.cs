@@ -1,37 +1,37 @@
-using Arch.Buffer;
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Core;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 
 namespace CryBits.Client.Systems.Core;
 
-/// <summary>
-/// Fades entities that have a <see cref="FadeComponent"/> over time, then
-/// destroys them when fully transparent (Opacity reaches 0).
-/// Decrements <see cref="SpriteComponent.Tint"/> alpha by <see cref="FadeComponent.AmountPerTick"/> every <see cref="FadeComponent.IntervalSeconds"/> seconds.
-/// </summary>
-internal sealed class FadeSystem(World world) : BaseSystem<World, float>(world)
+internal sealed class FadeSystem(World world) : IClientSystem
 {
-    private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<SpriteComponent, FadeComponent>();
-    private readonly CommandBuffer _commandBuffer = new();
+    private readonly List<EntityId> _pendingDestroy = [];
 
-    public override void Update(in float deltaTime)
+    public void Update(float deltaTime)
     {
-        var dt = deltaTime;
+        _pendingDestroy.Clear();
 
-        World.Query(in _query, (Entity entity, ref FadeComponent fade, ref SpriteComponent sprite) =>
+        foreach (var state in world.All)
         {
-            fade.Timer -= dt;
-            if (fade.Timer > 0) return;
+            var sprite = state.Get<SpriteComponent>();
+            var fade = state.Get<FadeComponent>();
+            if (sprite == null || fade == null) continue;
 
-            sprite.Tint.A = (byte)Math.Max(0, sprite.Tint.A - fade.AmountPerTick);
+            fade.Timer -= deltaTime;
+            if (fade.Timer > 0) continue;
+
+            sprite.Tint = new SFML.Graphics.Color(
+                sprite.Tint.R, sprite.Tint.G, sprite.Tint.B,
+                (byte)Math.Max(0, sprite.Tint.A - fade.AmountPerTick));
             fade.Timer = fade.IntervalSeconds;
 
             if (sprite.Tint.A == 0)
-                _commandBuffer.Destroy(in entity);
-        });
+                _pendingDestroy.Add(state.Id);
+        }
 
-        _commandBuffer.Playback(World);
+        foreach (var id in _pendingDestroy)
+            world.Destroy(id);
     }
 }

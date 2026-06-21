@@ -1,7 +1,6 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Worlds;
-using CryBits.Definitions.Characters;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -16,20 +15,19 @@ internal class BarsView
 
     public static void Update()
     {
-        ref var vitals = ref GameContext.Instance.LocalPlayer.GetVitals();
-        var current = vitals.Current;
-        var max = vitals.Max;
-        ref var level = ref GameContext.Instance.LocalPlayer.GetLevel();
+        var vitals = GameContext.Instance.LocalPlayer.GetVitals();
+        var level = GameContext.Instance.LocalPlayer.GetLevel();
+        if (vitals == null || level == null) return;
 
-        var maxHp = max[(byte)Vital.Hp];
-        var maxMp = max[(byte)Vital.Mp];
+        var maxHp = vitals.MaxHp;
+        var maxMp = vitals.MaxMp;
 
-        HpBar.SetValue(maxHp > 0 ? (float)current[(byte)Vital.Hp] / maxHp : 0f);
-        MpBar.SetValue(maxMp > 0 ? (float)current[(byte)Vital.Mp] / maxMp : 0f);
+        HpBar.SetValue(maxHp > 0 ? (float)vitals.Hp / maxHp : 0f);
+        MpBar.SetValue(maxMp > 0 ? (float)vitals.Mp / maxMp : 0f);
         ExpBar.SetValue(level.ExpNeeded > 0 ? (float)level.Experience / level.ExpNeeded : 0f);
 
-        HpValueLabel.SetArguments(current[(byte)Vital.Hp], maxHp);
-        MpValueLabel.SetArguments(current[(byte)Vital.Mp], maxMp);
+        HpValueLabel.SetArguments(vitals.Hp, maxHp);
+        MpValueLabel.SetArguments(vitals.Mp, maxMp);
         ExpValueLabel.SetArguments(level.Experience, level.ExpNeeded);
     }
 }

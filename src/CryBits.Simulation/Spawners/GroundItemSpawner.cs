@@ -22,7 +22,7 @@ public static class GroundItemSpawner
         entity.Set(new GroundItemTag());
 
         map.GroundItemIds.Add(entityId);
-        world.Dirty.Mark<GroundItem>(entityId);
+        world.MarkDirty<GroundItem>(entityId);
         return entityId;
     }
 }

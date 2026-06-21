@@ -111,7 +111,7 @@ public sealed class TradeSystem : ISimulationSystem
         }
 
         invitedTrade.PendingInviterId = entityId;
-        world.Dirty.Mark<TradeState>(invitedId.Value);
+        world.MarkDirty<TradeState>(invitedId.Value);
     }
 
     private void Accept(World world, Tick tick, EntityId entityId)
@@ -154,10 +154,10 @@ public sealed class TradeSystem : ISimulationSystem
         }
 
         trade.Partner = invitedId.Value;
-        world.Dirty.Mark<TradeState>(entityId);
+        world.MarkDirty<TradeState>(entityId);
         var invitedTrade = invitedE.Get<TradeState>()!;
         invitedTrade.Partner = entityId;
-        world.Dirty.Mark<TradeState>(invitedId.Value);
+        world.MarkDirty<TradeState>(invitedId.Value);
         tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You have accepted " + invitedAppearance.Name + "'s trade request.", ColorArgb = ChatColors.White });
         tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = appearance.Name + " has accepted your trade request.", ColorArgb = ChatColors.White });
 
@@ -165,8 +165,8 @@ public sealed class TradeSystem : ISimulationSystem
         trade.Offer = new TradeSlot[MaxInventory];
         invitedTrade.Offer = new TradeSlot[MaxInventory];
 
-        world.Dirty.Mark<TradeState>(entityId);
-        world.Dirty.Mark<TradeState>(invitedId.Value);
+        world.MarkDirty<TradeState>(entityId);
+        world.MarkDirty<TradeState>(invitedId.Value);
     }
 
     private void Decline(World world, Tick tick, EntityId entityId)
@@ -178,7 +178,7 @@ public sealed class TradeSystem : ISimulationSystem
         var invitedId = trade.PendingInviterId;
         if (invitedId != null) tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = appearance.Name + " decline the trade.", ColorArgb = ChatColors.White });
         trade.PendingInviterId = null;
-        world.Dirty.Mark<TradeState>(entityId);
+        world.MarkDirty<TradeState>(entityId);
     }
 
     private void Leave(World world, Tick tick, EntityId entityId)
@@ -191,9 +191,9 @@ public sealed class TradeSystem : ISimulationSystem
         var partnerTrade = partnerE.Get<TradeState>()!;
 
         partnerTrade.Partner = null;
-        world.Dirty.Mark<TradeState>(trade.Partner.Value);
+        world.MarkDirty<TradeState>(trade.Partner.Value);
         trade.Partner = null;
-        world.Dirty.Mark<TradeState>(entityId);
+        world.MarkDirty<TradeState>(entityId);
     }
 
     private void Offer(World world, Tick tick, EntityId entityId, short slot, short inventorySlot, short amount)
@@ -218,8 +218,8 @@ public sealed class TradeSystem : ISimulationSystem
         else
             offer[slot] = new TradeSlot();
 
-        world.Dirty.Mark<TradeState>(entityId);
-        if (trade.Partner.HasValue) world.Dirty.Mark<TradeState>(trade.Partner.Value);
+        world.MarkDirty<TradeState>(entityId);
+        if (trade.Partner.HasValue) world.MarkDirty<TradeState>(trade.Partner.Value);
     }
 
     private void OfferState(World world, Tick tick, EntityId entityId, TradeStatus state)
@@ -292,13 +292,13 @@ public sealed class TradeSystem : ISimulationSystem
                         });
                 }
 
-                world.Dirty.Mark<InventoryState>(entityId);
-                world.Dirty.Mark<InventoryState>(invitedId.Value);
+                world.MarkDirty<InventoryState>(entityId);
+                world.MarkDirty<InventoryState>(invitedId.Value);
 
                 trade.Offer = new TradeSlot[MaxInventory];
                 invitedTrade.Offer = new TradeSlot[MaxInventory];
-                world.Dirty.Mark<TradeState>(invitedId.Value);
-                world.Dirty.Mark<TradeState>(entityId);
+                world.MarkDirty<TradeState>(invitedId.Value);
+                world.MarkDirty<TradeState>(entityId);
                 break;
 
             case TradeStatus.Declined:

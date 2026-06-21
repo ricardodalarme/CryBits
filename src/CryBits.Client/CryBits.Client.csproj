@@ -21,8 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Arch" />
-    <PackageReference Include="Arch.System" />
     <PackageReference Include="LiteNetLib" />
     <PackageReference Include="SFML.Audio" />
     <PackageReference Include="SFML.Graphics" />
@@ -36,5 +34,6 @@
     <ProjectReference Include="../CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
     <ProjectReference Include="../CryBits.Persistence/CryBits.Persistence.csproj" />
     <ProjectReference Include="../CryBits.Host/CryBits.Host.csproj" />
+    <ProjectReference Include="../CryBits.Simulation/CryBits.Simulation.csproj" />
   </ItemGroup>
 </Project>

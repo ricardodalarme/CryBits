@@ -1,10 +1,11 @@
-using CryBits.Client.Components.Party;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.State;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -13,21 +14,24 @@ internal class PartyHandler(PartySender partySender, GameContext context)
     [PacketHandler]
     internal void Party(PartyPacket packet)
     {
-        var entity = context.LocalPlayer.Entity;
+        var entityNullable = context.LocalPlayer.Entity;
+        if (entityNullable is null) return;
+        var entity = entityNullable.Value;
         var world = context.World;
 
         if (packet.MemberIds.Length == 0)
         {
             // No members — party disbanded or player left; drop the component.
-            if (world.Has<PartyComponent>(entity))
-                world.Remove<PartyComponent>(entity);
+            if (world.Has<PartyState>(entity))
+                world.Remove<PartyState>(entity);
             return;
         }
 
-        ref var party = ref world.AddOrGet(entity, new PartyComponent());
-        party.MemberIds = new long[packet.MemberIds.Length];
-        for (byte i = 0; i < party.MemberIds.Length; i++)
-            party.MemberIds[i] = packet.MemberIds[i];
+        var party = world.AddOrGet<PartyState>(entity);
+        if (party is null) return;
+        party.Members.Clear();
+        for (byte i = 0; i < packet.MemberIds.Length; i++)
+            party.Members.Add(new EntityId(packet.MemberIds[i]));
     }
 
     [PacketHandler]

@@ -1,38 +1,30 @@
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Core;
-using CryBits.Client.Components.Map;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
 using CryBits.Client.Graphics;
+using CryBits.Simulation.Core;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Map;
 
-/// <summary>
-/// Renders the map's fog overlay at a fixed screen position with no camera transform,
-/// so the fog follows the viewport rather than the world.
-///
-/// Queries the singleton fog entity (created by <see cref="Spawners.FogSpawner"/>)
-/// and draws its texture using the scroll offset accumulated by <see cref="FogSystem"/>
-/// as the source rect origin, producing the seamless infinite-panning illusion.
-/// </summary>
-internal sealed class FogRenderSystem(World world, Renderer renderer) : BaseSystem<World, int>(world)
+internal sealed class FogRenderSystem(World world, Renderer renderer) : IClientRenderSystem
 {
-    private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<SpriteComponent, FogComponent>();
-
-    public override void Update(in int t)
+    public void Render()
     {
         var screenDest = new Rectangle(0, 0, ScreenWidth, ScreenHeight);
 
-        World.Query(in _query, (ref SpriteComponent sprite, ref FogComponent fog) =>
+        foreach (var state in world.All)
         {
+            var sprite = state.Get<SpriteComponent>();
+            var fog = state.Get<FogComponent>();
+            if (sprite == null || fog == null) continue;
+
             var source = new Rectangle(
                 (int)fog.OffsetX,
                 (int)fog.OffsetY,
                 ScreenWidth,
                 ScreenHeight);
             renderer.Draw(sprite.Texture, source, screenDest, sprite.Tint);
-        });
+        }
     }
 }

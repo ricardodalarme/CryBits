@@ -33,7 +33,7 @@ public sealed class MovementSystem : ISimulationSystem
         if (pos.LoadingMap) return;
 
         pos.Direction = direction;
-        world.Dirty.Mark<Position>(entityId);
+        world.MarkDirty<Position>(entityId);
     }
 
     private void Move(World world, Tick tick, EntityId entityId, CommonMovement movement)
@@ -69,13 +69,13 @@ public sealed class MovementSystem : ISimulationSystem
                 }
             else
             {
-                world.Dirty.Mark<Position>(entityId);
+                world.MarkDirty<Position>(entityId);
                 return;
             }
         }
         else if (Map.OutLimit(nextX, nextY))
         {
-            world.Dirty.Mark<Position>(entityId);
+            world.MarkDirty<Position>(entityId);
             return;
         }
         else if (!map.TileBlocked(oldX, oldY, pos.Direction, world.Entities))
@@ -98,7 +98,7 @@ public sealed class MovementSystem : ISimulationSystem
         }
 
         if (oldX != pos.X || oldY != pos.Y)
-            world.Dirty.Mark<Position>(entityId);
+            world.MarkDirty<Position>(entityId);
     }
 
     private void Warp(World world, Tick tick, EntityId entityId, Guid mapId, byte x, byte y)
@@ -129,6 +129,6 @@ public sealed class MovementSystem : ISimulationSystem
                 NeedsMapData = needsMapData
             });
 
-        world.Dirty.Mark<Position>(entityId);
+        world.MarkDirty<Position>(entityId);
     }
 }

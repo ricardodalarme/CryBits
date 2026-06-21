@@ -120,7 +120,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
             if (netDamage < victimVitals.Hp)
             {
                 victimVitals.Hp -= netDamage;
-                world.Dirty.Mark<Vitals>(victimId);
+                world.MarkDirty<Vitals>(victimId);
             }
             else
             {

@@ -112,7 +112,7 @@ public sealed class PartySystem : ISimulationSystem
             var memberE = world.Entities.Get(memberId)!;
             var memberParty = memberE.Get<PartyState>()!;
             memberParty.Members.Add(entityId);
-            world.Dirty.Mark<PartyState>(memberId);
+            world.MarkDirty<PartyState>(memberId);
             if (memberId != inviterId.Value)
                 party.Members.Add(memberId);
         }
@@ -122,9 +122,9 @@ public sealed class PartySystem : ISimulationSystem
         party.PendingInviterId = null;
         tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You joined " + inviterAppearance.Name + "'s party.", ColorArgb = ChatColors.White });
         tick.Events.Emit(new ChatMessageEvent { RecipientId = inviterId.Value, Text = appearance.Name + " joined the party.", ColorArgb = ChatColors.White });
-        world.Dirty.Mark<PartyState>(entityId);
-        world.Dirty.Mark<PartyState>(inviterId.Value);
-        for (byte i = 0; i < party.Members.Count; i++) world.Dirty.Mark<PartyState>(party.Members[i]);
+        world.MarkDirty<PartyState>(entityId);
+        world.MarkDirty<PartyState>(inviterId.Value);
+        for (byte i = 0; i < party.Members.Count; i++) world.MarkDirty<PartyState>(party.Members[i]);
     }
 
     private void Decline(World world, Tick tick, EntityId entityId)
@@ -153,9 +153,9 @@ public sealed class PartySystem : ISimulationSystem
         }
 
         for (byte i = 0; i < party.Members.Count; i++)
-            world.Dirty.Mark<PartyState>(party.Members[i]);
+            world.MarkDirty<PartyState>(party.Members[i]);
 
         party.Members.Clear();
-        world.Dirty.Mark<PartyState>(entityId);
+        world.MarkDirty<PartyState>(entityId);
     }
 }

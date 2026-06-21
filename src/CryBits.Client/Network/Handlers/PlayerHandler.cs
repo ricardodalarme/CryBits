@@ -1,6 +1,4 @@
-using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Equipment;
-using CryBits.Client.Components.Movement;
+using CryBits.Client.Components;
 using CryBits.Client.Spawners;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
@@ -12,8 +10,9 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.State;
 using static CryBits.Definitions.Globals;
-using Entity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -28,12 +27,12 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
 
         // Destroy old entity if present (re-spawn on map transition).
         var old = context.GetNetworkEntity(packet.NetworkId);
-        if (old != Entity.Null)
+        if (old is not null)
         {
             return;
         }
 
-        Entity entity;
+        EntityId entity;
         if (isLocal)
         {
             var equipmentItems = new Item?[(byte)Equipment.Count];
@@ -67,7 +66,7 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
 
         context.RegisterNetworkEntity(packet.NetworkId, entity);
 
-        if (isLocal && context.LocalPlayer.Entity == Entity.Null)
+        if (isLocal && context.LocalPlayer.Entity is null)
         {
             context.LocalPlayer.Entity = entity;
             BarsView.Update();
@@ -79,8 +78,10 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
     internal void PlayerPosition(PlayerPositionPacket packet)
     {
         var entity = context.GetNetworkEntity(packet.NetworkId);
+        if (entity is null) return;
 
-        ref var movement = ref context.World.Get<MovementComponent>(entity);
+        var movement = context.World.Get<MovementComponent>(entity.Value);
+        if (movement is null) return;
         movement.TileX = packet.X;
         movement.TileY = packet.Y;
         movement.Direction = (Direction)packet.Direction;
@@ -93,13 +94,14 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
     internal void PlayerVitals(PlayerVitalsPacket packet)
     {
         var entity = context.GetNetworkEntity(packet.NetworkId);
+        if (entity is null) return;
 
-        ref var vitals = ref context.World.Get<VitalsComponent>(entity);
-        for (byte i = 0; i < (byte)Vital.Count; i++)
-        {
-            vitals.Current[i] = packet.Vital[i];
-            vitals.Max[i] = packet.MaxVital[i];
-        }
+        var vitals = context.World.Get<Vitals>(entity.Value);
+        if (vitals is null) return;
+        vitals.Hp = packet.Vital[(byte)Vital.Hp];
+        vitals.MaxHp = packet.MaxVital[(byte)Vital.Hp];
+        vitals.Mp = packet.Vital[(byte)Vital.Mp];
+        vitals.MaxMp = packet.MaxVital[(byte)Vital.Mp];
 
         if (packet.NetworkId == context.LocalPlayer.Id) BarsView.Update();
     }
@@ -108,20 +110,22 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
     internal void PlayerEquipments(PlayerEquipmentsPacket packet)
     {
         var entity = context.GetNetworkEntity(packet.NetworkId);
+        if (entity is null) return;
 
         // Update player's equipped items
-        ref var equipment = ref context.World.Get<EquipmentComponent>(entity);
-        for (byte i = 0; i < (byte)Equipment.Count; i++) equipment.Slots[i] = _catalog.Items.Get(packet.Equipments[i]);
+        var equipment = context.World.Get<EquipmentState>(entity.Value);
+        if (equipment is null) return;
+        for (byte i = 0; i < (byte)Equipment.Count; i++) equipment.Slots[i] = packet.Equipments[i];
     }
 
     [PacketHandler]
     internal void PlayerLeave(PlayerLeavePacket packet)
     {
         var entity = context.GetNetworkEntity(packet.NetworkId);
-        if (entity != Entity.Null)
+        if (entity is not null)
         {
             context.UnregisterNetworkEntity(packet.NetworkId);
-            context.World.Destroy(entity);
+            context.World.Destroy(entity.Value);
         }
     }
 
@@ -129,8 +133,10 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
     internal void PlayerMove(PlayerMovePacket packet)
     {
         var entity = context.GetNetworkEntity(packet.NetworkId);
+        if (entity is null) return;
 
-        ref var movement = ref context.World.Get<MovementComponent>(entity);
+        var movement = context.World.Get<MovementComponent>(entity.Value);
+        if (movement is null) return;
         movement.TileX = packet.X;
         movement.TileY = packet.Y;
         movement.Direction = (Direction)packet.Direction;
@@ -152,14 +158,18 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
     internal void PlayerDirection(PlayerDirectionPacket packet)
     {
         var entity = context.GetNetworkEntity(packet.NetworkId);
-        context.World.Get<MovementComponent>(entity).Direction = (Direction)packet.Direction;
+        if (entity is null) return;
+
+        var movement = context.World.Get<MovementComponent>(entity.Value);
+        if (movement is not null) movement.Direction = (Direction)packet.Direction;
     }
 
     [PacketHandler]
     internal void PlayerExperience(PlayerExperiencePacket packet)
     {
-        if (context.LocalPlayer.Entity == Entity.Null) return;
-        ref var level = ref context.LocalPlayer.GetLevel();
+        if (context.LocalPlayer.Entity is null) return;
+        var level = context.LocalPlayer.GetLevel();
+        if (level is null) return;
         level.Experience = packet.Experience;
         level.ExpNeeded = packet.ExpNeeded;
         level.Points = packet.Points;
@@ -177,8 +187,9 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
     [PacketHandler]
     internal void PlayerInventory(PlayerInventoryPacket packet)
     {
-        if (context.LocalPlayer.Entity == Entity.Null) return;
-        ref var inventory = ref context.LocalPlayer.GetInventory();
+        if (context.LocalPlayer.Entity is null) return;
+        var inventory = context.LocalPlayer.GetInventory();
+        if (inventory is null) return;
         for (byte i = 0; i < MaxInventory; i++)
             inventory.Slots[i] = new ItemSlot(packet.ItemIds[i], packet.Amounts[i]);
     }
@@ -186,8 +197,9 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
     [PacketHandler]
     internal void PlayerHotbar(PlayerHotbarPacket packet)
     {
-        if (context.LocalPlayer.Entity == Entity.Null) return;
-        ref var hotbar = ref context.LocalPlayer.GetHotbar();
+        if (context.LocalPlayer.Entity is null) return;
+        var hotbar = context.LocalPlayer.GetHotbar();
+        if (hotbar is null) return;
         for (byte i = 0; i < MaxHotbar; i++)
             hotbar.Slots[i] = new HotbarSlot((SlotType)packet.Types[i], packet.Slots[i]);
     }

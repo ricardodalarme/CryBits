@@ -80,7 +80,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
         if (pos.Direction != dir)
         {
             pos.Direction = dir;
-            world.Dirty.Mark<Position>(entity.Id);
+            world.MarkDirty<Position>(entity.Id);
         }
     }
 
@@ -113,14 +113,14 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
                     if (targetNpcState == null || targetPos.MapId != pos.MapId)
                     {
                         npcState.TargetId = null;
-                        world.Dirty.Mark<NpcState>(npcId);
+                        world.MarkDirty<NpcState>(npcId);
                     }
                 }
             }
             else
             {
                 npcState.TargetId = null;
-                world.Dirty.Mark<NpcState>(npcId);
+                world.MarkDirty<NpcState>(npcId);
             }
         }
 
@@ -132,7 +132,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
             if (npcData.Sight < distance)
             {
                 npcState.TargetId = null;
-                world.Dirty.Mark<NpcState>(npcId);
+                world.MarkDirty<NpcState>(npcId);
             }
         }
     }
@@ -159,7 +159,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
             if (distance <= npcData.Sight)
             {
                 npcState.TargetId = state.Id;
-                world.Dirty.Mark<NpcState>(npcId);
+                world.MarkDirty<NpcState>(npcId);
                 if (!string.IsNullOrEmpty(npcData.SayMsg))
                     tick.Events.Emit(new ChatMessageEvent
                     {
@@ -191,7 +191,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
             if (distance <= npcData.Sight)
             {
                 npcState.TargetId = otherNpcId;
-                world.Dirty.Mark<NpcState>(npcId);
+                world.MarkDirty<NpcState>(npcId);
                 return;
             }
         }

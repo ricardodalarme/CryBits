@@ -56,8 +56,8 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
             NeedsMapData = true
         });
 
-        world.Dirty.Mark<Vitals>(playerId.Value);
-        world.Dirty.Mark<Position>(playerId.Value);
+        world.MarkDirty<Vitals>(playerId.Value);
+        world.MarkDirty<Position>(playerId.Value);
     }
 
     private void HandleNpcDeath(World world, Tick tick, NpcDiedEvent died)

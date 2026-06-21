@@ -1,51 +1,42 @@
-using Arch.Core;
-using CryBits.Client.Components.Character;
-using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Core;
-using CryBits.Client.Components.Movement;
+using CryBits.Client.Components;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions;
 using CryBits.Definitions.Npcs;
-using SFML.Graphics;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 using Direction = CryBits.Definitions.Common.Direction;
 
 namespace CryBits.Client.Spawners;
 
-/// <summary>
-/// Creates a new NPC entity.
-/// </summary>
 internal static class NpcSpawner
 {
-    public static Entity Spawn(World world, long npcId, Npc data, byte x, byte y, Direction direction, short[] currentVitals)
+    public static EntityId Spawn(World world, long npcId, Npc data, byte x, byte y, Direction direction, short[] currentVitals)
     {
         var texture = Textures.Characters[data.Texture];
         var size = texture.ToSize();
         var frameWidth = size.Width / Globals.AnimationAmountX;
         var frameHeight = size.Height / Globals.AnimationAmountY;
 
-        var textColor = data.Behaviour switch
+        var vitals = new Vitals
         {
-            Behaviour.Friendly => Color.White,
-            Behaviour.AttackOnSight => Color.Red,
-            Behaviour.AttackWhenAttacked => new Color(228, 120, 51),
-            _ => Color.White
+            Hp = currentVitals[0],
+            MaxHp = data.Vital[0]
         };
+        if (currentVitals.Length > 1) vitals.Mp = currentVitals[1];
+        if (data.Vital.Length > 1) vitals.MaxMp = data.Vital[1];
 
-        var vitalsComponent = new VitalsComponent();
-        currentVitals.CopyTo(vitalsComponent.Current, 0);
-        data.Vital.CopyTo(vitalsComponent.Max, 0);
-
-        return world.Create(
-            new NetworkIdComponent(npcId),
-            new NameComponent { Value = data.Name, NameColor = textColor },
-            new TransformComponent(x * Globals.Grid, y * Globals.Grid),
-            new SpriteComponent(texture),
-            new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
-            new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
-            new AttackComponent(),
-            new NpcTagComponent(),
-            new CollidableComponent(),
-            vitalsComponent
-        );
+        return world.SpawnBuilder()
+            .With(new NetworkId { Value = npcId })
+            .With(new PlayerAppearance { Name = data.Name })
+            .With(new TransformComponent { X = x * Globals.Grid, Y = y * Globals.Grid })
+            .With(new SpriteComponent { Texture = texture })
+            .With(new AnimatedSpriteComponent { FrameWidth = frameWidth, FrameHeight = frameHeight, TimePerFrame = 0.25f, FrameCount = Globals.AnimationAmountX })
+            .With(new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond })
+            .With(new AttackComponent())
+            .With(new NpcTag())
+            .With(new CollidableComponent())
+            .With(vitals)
+            .Id;
     }
 }

@@ -17,11 +17,6 @@
     <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.9" />
   </ItemGroup>
 
-  <ItemGroup Label="ECS">
-    <PackageVersion Include="Arch" Version="2.1.0" />
-    <PackageVersion Include="Arch.System" Version="1.1.0" />
-  </ItemGroup>
-
   <ItemGroup Label="Serialization">
     <PackageVersion Include="MemoryPack" Version="1.21.4" />
   </ItemGroup>

@@ -22,7 +22,7 @@ public sealed class AggroSystem : ISimulationSystem
             if (npcState.TargetId == null)
             {
                 npcState.TargetId = attack.AttackerId;
-                world.Dirty.Mark<NpcState>(attack.VictimId.Value);
+                world.MarkDirty<NpcState>(attack.VictimId.Value);
             }
         }
     }

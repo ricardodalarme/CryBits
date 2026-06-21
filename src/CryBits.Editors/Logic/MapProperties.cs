@@ -2,7 +2,6 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Maps;
 using CryBits.Editors.Entities;
 using System.ComponentModel;
-using System.Drawing;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Editors.Logic;

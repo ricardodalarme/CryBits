@@ -52,7 +52,7 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
                 {
                     var victimStats = world.Entities.Get(victimId2.Value)!.Get<StatBlock>()!;
                     victimStats.Experience /= 10;
-                    world.Dirty.Mark<StatBlock>(victimId2.Value);
+                    world.MarkDirty<StatBlock>(victimId2.Value);
                 }
             }
 
@@ -77,7 +77,7 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
 
         stats.Attribute[attributeNum]++;
         stats.Points--;
-        world.Dirty.Mark<StatBlock>(entityId);
+        world.MarkDirty<StatBlock>(entityId);
     }
 
     private void GiveExperience(World world, EntityId entityId, int value)
@@ -121,7 +121,7 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
             expNeeded = LevelingFormulas.ExperienceNeeded(stats.Level, totalAttr, stats.Points);
         }
 
-        world.Dirty.Mark<StatBlock>(entityId);
+        world.MarkDirty<StatBlock>(entityId);
     }
 
     private void PartySplitXp(World world, EntityId entityId, int value)
@@ -151,11 +151,11 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
             experienceSum += givenExperience;
 
             GiveExperience(world, party.Members[i], givenExperience);
-            world.Dirty.Mark<StatBlock>(party.Members[i]);
+            world.MarkDirty<StatBlock>(party.Members[i]);
         }
 
         stats.Experience += value - experienceSum;
         CheckLevelUp(world, entityId);
-        world.Dirty.Mark<StatBlock>(entityId);
+        world.MarkDirty<StatBlock>(entityId);
     }
 }

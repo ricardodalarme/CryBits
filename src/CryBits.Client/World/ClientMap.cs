@@ -1,27 +1,24 @@
-using Arch.Core;
-using CryBits.Client.Components.Movement;
+using CryBits.Client.Components;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
+using CryBits.Simulation.Core;
+
 namespace CryBits.Client.Worlds;
 
-/// <summary>
-/// Runtime state for the current map: the static data from the server plus the live NPC entity array.
-/// </summary>
 internal class ClientMap(Map data, World world)
 {
-    private readonly QueryDescription _collidableQuery = new QueryDescription().WithAll<CollidableComponent, MovementComponent>();
-
     public readonly Map Data = data;
 
     private bool HasCollidable(byte x, byte y)
     {
-        var found = false;
-        world.Query(in _collidableQuery, (ref MovementComponent m) =>
+        foreach (var state in world.All)
         {
-            if (m.TileX == x && m.TileY == y)
-                found = true;
-        });
-        return found;
+            if (!state.Has<CollidableComponent>()) continue;
+            var movement = state.Get<MovementComponent>();
+            if (movement != null && movement.TileX == x && movement.TileY == y)
+                return true;
+        }
+        return false;
     }
 
     public bool TileBlocked(byte x, byte y, Direction direction)

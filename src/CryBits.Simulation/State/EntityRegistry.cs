@@ -16,5 +16,7 @@ public sealed class EntityRegistry
 
     public EntityState? Get(EntityId id) => _entities.GetValueOrDefault(id);
 
+    public void Clear() => _entities.Clear();
+
     public IEnumerable<EntityState> All => _entities.Values;
 }

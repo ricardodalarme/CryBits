@@ -17,6 +17,7 @@ internal sealed class ReplicationService(
 {
     public void Execute(World world, Tick tick)
     {
+        if (world.Dirty == null) return;
         foreach (var (entityId, componentType) in world.Dirty.All)
         {
             var entity = world.Entities.Get(entityId);

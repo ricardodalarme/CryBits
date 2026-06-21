@@ -24,16 +24,12 @@ internal sealed class RenderPipeline(
         UIRenderer.Instance,
         SystemScheduler.Instance);
 
-    /// <summary>
-    /// Render the current frame: clear, draw game world and UI, then present.
-    /// </summary>
     public void Present()
     {
         renderer.RenderWindow.Clear(Color.Black);
 
         InGame();
 
-        // Restore the default view before drawing UI so it renders at fixed screen positions.
         cameraManager.BeginUIDraw();
 
         if (Screen.Current?.Body is { } body) uiRenderer.DrawInterface(body);
@@ -47,24 +43,19 @@ internal sealed class RenderPipeline(
     {
         if (Screen.Current != Screens.Game) return;
 
-        // Apply the SFML view — all subsequent draws use world-space coordinates.
         cameraManager.BeginWorldDraw();
 
-        // Ground layer — panorama, tiles, then non-character world objects.
         mapRenderer.DrawPanorama();
         mapRenderer.DrawLayer((byte)Layer.Ground);
-        scheduler.GroundRender.Update(0);
+        scheduler.Ground.Render();
 
-        // Fringe tile layer,
         mapRenderer.DrawLayer((byte)Layer.Fringe);
 
-        // Fringe systems
-        scheduler.FringeRender.Update(0);
+        scheduler.Fringe.Render();
 
         mapRenderer.DrawMapName();
         uiRenderer.DrawParty();
 
-        // FPS/Latency overlays.
         if (Options.Instance.ShowMetrics) renderer.DrawText("FPS: " + Game.Fps, 176, 7, Color.White);
         if (Options.Instance.ShowMetrics) renderer.DrawText("Latency: " + Connection.Latency, 176, 19, Color.White);
     }

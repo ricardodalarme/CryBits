@@ -1,6 +1,4 @@
-using Arch.Core;
-using CryBits.Client.Components.Character;
-using CryBits.Client.Components.Map;
+using CryBits.Client.Components;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Spawners;
@@ -10,7 +8,7 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
-using Entity = Arch.Core.Entity;
+using CryBits.Simulation.Components;
 using CryBits.Persistence.Repositories;
 
 namespace CryBits.Client.Network.Handlers;
@@ -26,13 +24,10 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
 
         // Destroy entities for other players leaving this map (they'll re-spawn on PlayerData)
         var myEntity = context.LocalPlayer.Entity;
-        var toDestroy = new List<Entity>();
-        var playerQuery = new QueryDescription().WithAll<PlayerTagComponent>();
-        context.World.Query(in playerQuery, e =>
-        {
-            if (e != myEntity) toDestroy.Add(e);
-        });
-        foreach (var e in toDestroy) context.World.Destroy(e);
+        if (myEntity.HasValue)
+            context.World.DestroyWhere(s => s.Has<PlayerTag>() && s.Id != myEntity.Value);
+        else
+            context.World.DestroyWhere(s => s.Has<PlayerTag>());
 
         // Check whether the map data needs to be downloaded
         var map = contentRepository.Load<Map>(id);
@@ -81,9 +76,8 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
     {
         var world = context.World;
 
-        // Destroy all stale map-item entities instantly (no CommandBuffer needed)
-        var query = new QueryDescription().WithAll<GroundItemComponent>();
-        world.Destroy(in query);
+        // Destroy all stale map-item entities
+        world.DestroyWhere(s => s.Has<GroundItemComponent>());
 
         // Spawn an ECS entity for every item the server reported.
         foreach (var itemData in packet.Items)

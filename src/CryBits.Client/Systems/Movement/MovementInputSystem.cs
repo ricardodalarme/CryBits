@@ -1,9 +1,9 @@
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Movement;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
+using CryBits.Simulation.State;
 using SFML.Window;
 using static CryBits.Definitions.Globals;
 using Direction = CryBits.Definitions.Common.Direction;
@@ -11,46 +11,39 @@ using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Systems.Movement;
 
-/// <summary>
-/// Polls keyboard state to drive local-player movement.
-/// Runs every frame; uses an internal 30 ms throttle to match the original tick rate.
-/// </summary>
-internal class MovementInputSystem(GameContext context, InputManager inputManager, PlayerSender playerSender) : BaseSystem<World, float>(context.World)
+internal sealed class MovementInputSystem(GameContext context, InputManager inputManager, PlayerSender playerSender) : IClientSystem
 {
-    /// <summary>Minimum seconds between input polls — ~33 Hz.</summary>
     private const float ThrottleInterval = 0.030f;
 
     private float _inputThrottle;
 
-    public override void Update(in float t)
+    public void Update(float t)
     {
         var localPlayer = context.LocalPlayer;
         if (localPlayer is null) return;
 
         var entity = localPlayer.Entity;
-        if (entity == Entity.Null || !World.IsAlive(entity)) return;
+        if (entity == null || !context.World.IsAlive(entity.Value)) return;
 
-        // Throttle movement to ~33 Hz (matches legacy Me.Logic timer).
-        // Subtract instead of reset to preserve any accumulated overflow.
         _inputThrottle += t;
         if (_inputThrottle < ThrottleInterval) return;
         _inputThrottle -= ThrottleInterval;
 
-        CheckMovement(entity);
+        CheckMovement(entity.Value);
     }
 
-    private void CheckMovement(Entity entity)
+    private void CheckMovement(EntityId entity)
     {
-        ref var movement = ref World.Get<MovementComponent>(entity);
-        if (movement.MovementState != MovementState.Stopped) return;
+        var movement = context.World.Get<MovementComponent>(entity);
+        if (movement == null || movement.MovementState != MovementState.Stopped) return;
 
-        if (inputManager.IsScancodePressed(Keyboard.Scancode.Up)) Move(Direction.Up, ref movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Down)) Move(Direction.Down, ref movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Left)) Move(Direction.Left, ref movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Right)) Move(Direction.Right, ref movement);
+        if (inputManager.IsScancodePressed(Keyboard.Scancode.Up)) Move(Direction.Up, movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Down)) Move(Direction.Down, movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Left)) Move(Direction.Left, movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Right)) Move(Direction.Right, movement);
     }
 
-    private void Move(Direction direction, ref MovementComponent movement)
+    private void Move(Direction direction, MovementComponent movement)
     {
         movement.Direction = direction;
 

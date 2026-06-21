@@ -2,25 +2,6 @@
   "version": 2,
   "dependencies": {
     "net10.0": {
-      "Arch": {
-        "type": "Direct",
-        "requested": "[2.1.0, )",
-        "resolved": "2.1.0",
-        "contentHash": "Z9zxQztEvD/c2tsdW+LDm5E3Rd04JKeWRa6S0JOBfEFE7800+JLa7pgMAL6I/hvOY6q93QXvQ6Y+5E/TPc5Tfw==",
-        "dependencies": {
-          "Arch.LowLevel": "1.1.5",
-          "Collections.Pooled": "2.0.0-preview.27",
-          "CommunityToolkit.HighPerformance": "8.2.2",
-          "Microsoft.Extensions.ObjectPool": "7.0.0",
-          "ZeroAllocJobScheduler": "1.1.2"
-        }
-      },
-      "Arch.System": {
-        "type": "Direct",
-        "requested": "[1.1.0, )",
-        "resolved": "1.1.0",
-        "contentHash": "T2DupuBvUiOvtwEm5OCb/jm1zAMl6qUZDCqsNx0wXC9jc3dV3CYZBnccuCT0kO+bFh4mgIF965J/QlTnYirKnQ=="
-      },
       "LiteNetLib": {
         "type": "Direct",
         "requested": "[2.1.4, )",
@@ -57,24 +38,6 @@
           "CSFML": "[3.0.0, 3.1.0)",
           "SFML.System": "3.0.0"
         }
-      },
-      "Arch.LowLevel": {
-        "type": "Transitive",
-        "resolved": "1.1.5",
-        "contentHash": "kc6T2qAsgzdb5RV+RIqVQ33LROhgXmA5fZRUhXRK+AJ1J58NML1i2M6XTKIj1ISirCwuqgYnM4qYkhqGcngG1g==",
-        "dependencies": {
-          "CommunityToolkit.HighPerformance": "8.2.2"
-        }
-      },
-      "Collections.Pooled": {
-        "type": "Transitive",
-        "resolved": "2.0.0-preview.27",
-        "contentHash": "VS3uHc1GNamanS1i1hQ3PoZUddIagCswVMWvucAgqWwY2KVwgL2Q7raGu0hTqP/CWuROoq0RiNbIvu4ST1bMzg=="
-      },
-      "CommunityToolkit.HighPerformance": {
-        "type": "Transitive",
-        "resolved": "8.2.2",
-        "contentHash": "+zIp8d3sbtYaRbM6hqDs4Ui/z34j7DcUmleruZlYLE4CVxXq+MO8XJyIs42vzeTYFX+k0Iq1dEbBUnQ4z/Gnrw=="
       },
       "CSFML": {
         "type": "Transitive",
@@ -323,11 +286,6 @@
           "Microsoft.Extensions.Primitives": "10.0.9"
         }
       },
-      "Microsoft.Extensions.ObjectPool": {
-        "type": "Transitive",
-        "resolved": "7.0.0",
-        "contentHash": "udvKco0sAVgYGTBnHUb0tY9JQzJ/nPDiv/8PIyz69wl1AibeCDZOLVVI+6156dPfHmJH7ws5oUJRiW4ZmAvuuA=="
-      },
       "Microsoft.Extensions.Options": {
         "type": "Transitive",
         "resolved": "10.0.9",
@@ -394,11 +352,6 @@
         "resolved": "10.0.9",
         "contentHash": "s2PcxHK4IYQ6gmD3VSBkym9tWGkFisKjcjWBdl7a+n4Yy66ae4beJ1ZdjDp060SSll4W3Rt4H2LW87dWckv+QQ=="
       },
-      "ZeroAllocJobScheduler": {
-        "type": "Transitive",
-        "resolved": "1.1.2",
-        "contentHash": "PKu/zSvwV1fWxt8+CEW15O9OlQ2zB9UoeAaor/aJJ0QeTKxxSjigczYLoVPKjYLAQu3ddZQd7Z3zplVTtUgigQ=="
-      },
       "crybits.client.framework": {
         "type": "Project",
         "dependencies": {
@@ -455,7 +408,6 @@
       "crybits.transport": {
         "type": "Project",
         "dependencies": {
-          "CryBits.Definitions": "[1.0.0, )",
           "LiteNetLib": "[2.1.4, )"
         }
       },

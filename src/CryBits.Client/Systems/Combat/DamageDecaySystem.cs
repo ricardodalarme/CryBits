@@ -1,26 +1,29 @@
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Combat;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 
 namespace CryBits.Client.Systems.Combat;
 
-/// <summary>
-/// Translates high-level RPG character states into raw animation frames.
-/// Acts as the "Brain" controlling the "Muscles" (AnimatedSpriteComponent).
-/// </summary>
-internal sealed class DamageDecaySystem(World world) : BaseSystem<World, float>(world)
+internal sealed class DamageDecaySystem(World world) : IClientSystem
 {
-    private readonly QueryDescription _query = new QueryDescription().WithAll<HurtComponent>();
+    private readonly List<EntityId> _pendingRemove = [];
 
-    public override void Update(in float dt)
+    public void Update(float dt)
     {
-        var delta = dt;
+        _pendingRemove.Clear();
 
-        // Tick down hurt cooldown
-        World.Query(in _query, (Entity entity, ref HurtComponent damage) =>
+        foreach (var state in world.All)
         {
-            damage.HurtCountdown -= delta;
-            if (damage.HurtCountdown <= 0f) World.Remove<HurtComponent>(entity);
-        });
+            var damage = state.Get<HurtComponent>();
+            if (damage == null) continue;
+
+            damage.HurtCountdown -= dt;
+            if (damage.HurtCountdown <= 0f)
+                _pendingRemove.Add(state.Id);
+        }
+
+        foreach (var id in _pendingRemove)
+            world.Remove<HurtComponent>(id);
     }
 }

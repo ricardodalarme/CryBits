@@ -6,7 +6,6 @@ using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
-using CryBits.Definitions.Slots;
 using SFML.Window;
 using System.Drawing;
 
@@ -40,26 +39,27 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
 
     private void OnRenderSlot(int slot, Point pos)
     {
-        ref var inv = ref context.LocalPlayer.GetInventory();
-        var itemId = inv.Slots[slot] is ItemSlot s ? s.ItemId : Guid.Empty;
-        if (_catalog.Items.Get(itemId) is { } item)
-            itemRenderer.DrawItem(item, inv.Slots[slot]?.Amount ?? 0, pos);
+        var inv = context.LocalPlayer.GetInventory();
+        if (inv == null) return;
+        var s = inv.Slots[slot];
+        if (_catalog.Items.Get(s.ItemId) is { } item)
+            itemRenderer.DrawItem(item, s.Amount, pos);
     }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        ref var inv = ref context.LocalPlayer.GetInventory();
-        if (inv.Slots[slot]?.ItemId == Guid.Empty) return;
+        var inv = context.LocalPlayer.GetInventory();
+        if (inv == null) return;
+        if (inv.Slots[slot].ItemId == Guid.Empty) return;
 
         switch (e.Button)
         {
             case Mouse.Button.Right:
-                var item = _catalog.Items.Get(inv.Slots[slot]?.ItemId ?? Guid.Empty);
+                var item = _catalog.Items.Get(inv.Slots[slot].ItemId);
                 if (item?.Bind != BindOn.Pickup)
-                    // Sell the item if shop is open
                     if (ShopView.Panel.Visible)
                     {
-                        if (inv.Slots[slot]?.Amount != 1)
+                        if (inv.Slots[slot].Amount != 1)
                         {
                             ShopSellView.InventorySlot = slot;
                             ShopSellView.AmountTextBox.Text = string.Empty;
@@ -67,9 +67,8 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
                         }
                         else shopSender.ShopSell(slot, 1);
                     }
-                    // Otherwise drop the item
                     else if (!TradeView.Panel.Visible)
-                        if (inv.Slots[slot]?.Amount != 1)
+                        if (inv.Slots[slot].Amount != 1)
                         {
                             DropItemView.InventorySlot = slot;
                             DropItemView.AmountTextBox.Text = string.Empty;
@@ -78,7 +77,6 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
                         else playerSender.DropItem(slot, 1);
 
                 break;
-            // Select the item (start drag)
             case Mouse.Button.Left:
                 GameScreen.InventoryChange = slot;
                 break;
@@ -89,7 +87,6 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
     {
         if (GameScreen.InventoryChange == -1) return;
 
-        // Send inventory slot change to server.
         playerSender.InventoryChange(GameScreen.InventoryChange, slot);
         DropItemView.Panel.Visible = false;
     }
@@ -97,16 +94,18 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
     {
         if (slot <= 0) return;
-        if (context.LocalPlayer.GetInventory().Slots[slot]?.ItemId == Guid.Empty) return;
+        var inv = context.LocalPlayer.GetInventory();
+        if (inv == null || inv.Slots[slot].ItemId == Guid.Empty) return;
 
-        // Use item
         playerSender.InventoryUse((byte)slot);
         DropItemView.Panel.Visible = false;
     }
 
     private void OnGridSlotHover(short slot)
     {
-        var item = _catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[slot]?.ItemId ?? Guid.Empty);
+        var inv = context.LocalPlayer.GetInventory();
+        if (inv == null) return;
+        var item = _catalog.Items.Get(inv.Slots[slot].ItemId);
         if (item == null) return;
         string? additionalInfo = null;
         if (ShopView.Panel.Visible && ShopView.OpenedShop?.FindBought(item.Id) != null)

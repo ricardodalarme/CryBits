@@ -1,75 +1,61 @@
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Character;
-using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Core;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 using System.Drawing;
 using Color = SFML.Graphics.Color;
 using TextAlign = CryBits.Definitions.Common.TextAlign;
 
 namespace CryBits.Client.Systems.Character;
 
-/// <summary>
-/// Renders all character entities (players and NPCs) sorted by world-Y each frame,
-/// giving the correct top-down depth illusion without a true Z-buffer.
-///
-/// Draw order per character (back-to-front):
-///   1. Shadow — an oval beneath the sprite, aligned to the character's feet.
-///   2. Animated sprite — the current animation frame with damage tint applied.
-/// </summary>
-internal sealed class CharacterRenderSystem(World world, Renderer renderer) : BaseSystem<World, int>(world)
+internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IClientRenderSystem
 {
-    /// <summary>
-    /// Targets only character entities: must have all of the spatial/visual components
-    /// plus the shadow marker that distinguishes them from other sprite entities.
-    /// </summary>
-    private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent, NameComponent>();
+    private readonly List<(int Y, EntityId Entity)> _drawList = [];
 
-    // Reused every frame — avoids per-frame heap allocation from Y-sort.
-    private readonly List<(int Y, Entity Entity)> _drawList = [];
-
-    public override void Update(in int t)
+    public void Render()
     {
         _drawList.Clear();
 
-        // Collect all character entities with their Y coordinate for sorting.
-        World.Query(in _query, (Entity entity, ref TransformComponent transform) => _drawList.Add((transform.Y, entity)));
+        foreach (var state in world.All)
+        {
+            var transform = state.Get<TransformComponent>();
+            if (transform == null) continue;
+            if (!state.Has<SpriteComponent>()) continue;
+            if (!state.Has<AnimatedSpriteComponent>()) continue;
+            if (!state.Has<PlayerAppearance>()) continue;
 
-        // Sort ascending by Y so characters lower on screen (higher Y) appear in front.
+            _drawList.Add((transform.Y, state.Id));
+        }
+
         _drawList.Sort(static (a, b) => a.Y.CompareTo(b.Y));
 
         foreach (var (_, entity) in _drawList)
         {
-            ref var transform = ref World.Get<TransformComponent>(entity);
-            ref var sprite = ref World.Get<SpriteComponent>(entity);
-            ref var anim = ref World.Get<AnimatedSpriteComponent>(entity);
-            ref var name = ref World.Get<NameComponent>(entity);
+            var transform = world.Get<TransformComponent>(entity);
+            var sprite = world.Get<SpriteComponent>(entity);
+            var anim = world.Get<AnimatedSpriteComponent>(entity);
+            var name = world.Get<PlayerAppearance>(entity);
+            if (transform == null || sprite == null || anim == null || name == null) continue;
 
-            var isHurt = World.Has<HurtComponent>(entity);
+            var isHurt = world.Has<HurtComponent>(entity);
 
-            DrawShadow(ref transform, ref anim);
-            DrawSprite(ref transform, ref sprite, ref anim, isHurt);
-            DrawName(ref transform, ref anim, ref name);
+            DrawShadow(transform, anim);
+            DrawSprite(transform, sprite, anim, isHurt);
+            DrawName(transform, anim, name);
         }
     }
 
-    /// <summary>
-    /// Draws the shadow texture stretched to the sprite frame width and positioned at the
-    /// character's feet, preserving the same visual offset as the legacy renderer.
-    /// </summary>
     private void DrawShadow(
-        ref TransformComponent transform,
-        ref AnimatedSpriteComponent anim)
+        TransformComponent transform,
+        AnimatedSpriteComponent anim)
     {
         var texture = Textures.Shadow;
         var shadowSize = texture.ToSize();
         var source = new Rectangle(0, 0, shadowSize.Width, shadowSize.Height);
 
-        // Align shadow to the bottom of the sprite frame, shifted up by the shadow height.
-        // The +5 keeps it visually inside the character's feet rather than floating below.
         var dest = new Rectangle(
             transform.X,
             transform.Y + anim.FrameHeight - shadowSize.Height + 5,
@@ -79,15 +65,10 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
         renderer.Draw(texture, source, dest);
     }
 
-    /// <summary>
-    /// Draws the animated sprite frame, deriving the final tint at render time:
-    /// uses the damage colour when hurt while preserving <see cref="SpriteComponent.Tint"/>'s
-    /// alpha so <c>FadeSystem</c> dissolves and damage tint can coexist without conflict.
-    /// </summary>
     private void DrawSprite(
-        ref TransformComponent transform,
-        ref SpriteComponent sprite,
-        ref AnimatedSpriteComponent anim,
+        TransformComponent transform,
+        SpriteComponent sprite,
+        AnimatedSpriteComponent anim,
         bool isHurt)
     {
         var source = new Rectangle(
@@ -98,7 +79,6 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
 
         var dest = source with { X = transform.X, Y = transform.Y };
 
-        // Preserve FadeSystem-driven alpha when applying the damage colour.
         var tint = isHurt
             ? new Color(205, 125, 125, sprite.Tint.A)
             : sprite.Tint;
@@ -106,18 +86,13 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
         renderer.Draw(sprite.Texture, source, dest, tint);
     }
 
-    /// <summary>
-    /// Draws the character's name label centred above the sprite frame.
-    /// Position is derived from <see cref="AnimatedSpriteComponent"/> frame size
-    /// so no offset metadata needs to be stored on the entity.
-    /// </summary>
     private void DrawName(
-        ref TransformComponent transform,
-        ref AnimatedSpriteComponent anim,
-        ref NameComponent name)
+        TransformComponent transform,
+        AnimatedSpriteComponent anim,
+        PlayerAppearance appearance)
     {
         var x = transform.X + anim.FrameWidth / 2;
         var y = transform.Y - anim.FrameHeight / 2;
-        renderer.DrawText(name.Value, x, y, name.NameColor, TextAlign.Center);
+        renderer.DrawText(appearance.Name, x, y, Color.White, TextAlign.Center);
     }
 }

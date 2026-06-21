@@ -49,7 +49,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                         if (swap.SlotOld == swap.SlotNew) break;
                         if (trade?.Partner != null) break;
                         (inv.Slots[swap.SlotOld], inv.Slots[swap.SlotNew]) = (inv.Slots[swap.SlotNew], inv.Slots[swap.SlotOld]);
-                        world.Dirty.Mark<InventoryState>(swap.SourceEntityId);
+                        world.MarkDirty<InventoryState>(swap.SourceEntityId);
                         tick.Events.Emit(new InventorySwappedEvent
                         {
                             EntityId = swap.SourceEntityId,
@@ -147,7 +147,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
             inv.Slots[emptySlot.Value].Amount = item.Stackable ? amount : (byte)1;
         }
 
-        world.Dirty.Mark<InventoryState>(entityId);
+        world.MarkDirty<InventoryState>(entityId);
         return true;
     }
 
@@ -172,7 +172,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                     {
                         hotbar.Slots[h].Type = SlotType.None;
                         hotbar.Slots[h].Slot = 0;
-                        world.Dirty.Mark<HotbarState>(entityId);
+                        world.MarkDirty<HotbarState>(entityId);
                         break;
                     }
                 }
@@ -181,7 +181,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         else
             inv.Slots[slotIndex].Amount -= amount;
 
-        world.Dirty.Mark<InventoryState>(entityId);
+        world.MarkDirty<InventoryState>(entityId);
     }
 
     private void DropItem(World world, Tick tick, EntityId entityId, int slotIndex, short amount)
@@ -262,7 +262,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                 if (i == 0) vitals.Hp = current; else vitals.Mp = current;
             }
 
-            world.Dirty.Mark<Vitals>(entityId);
+            world.MarkDirty<Vitals>(entityId);
 
             if (vitals.Hp == 0)
                 tick.Events.Emit(new PlayerDiedEvent { EntityId = entityId });

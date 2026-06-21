@@ -37,7 +37,7 @@ public sealed class VitalsRegenSystem : ISimulationSystem
                 if (current > max) current = max;
                 if (v == 0) vitals.Hp = current; else vitals.Mp = current;
 
-                world.Dirty.Mark<Vitals>(state.Id);
+                world.MarkDirty<Vitals>(state.Id);
             }
         }
     }

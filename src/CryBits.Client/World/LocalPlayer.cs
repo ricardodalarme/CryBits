@@ -1,55 +1,34 @@
-using Arch.Core;
-using CryBits.Client.Components.Character;
-using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Equipment;
-using CryBits.Client.Components.Hotbar;
-using CryBits.Client.Components.Inventory;
-using CryBits.Client.Components.Party;
-using CryBits.Client.Components.Player;
-using CryBits.Client.Components.Trade;
+using CryBits.Client.Components;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.State;
 
 namespace CryBits.Client.Worlds;
 
-/// <summary>
-/// Tracks the local player entity (the "Me" character).
-/// Provides convenient access to the local player's entity and components.
-/// </summary>
-internal class LocalPlayer(World world, Entity entity)
+internal class LocalPlayer(World world, EntityId? entity)
 {
-    /// <summary>The local player entity. Entity.Null if not logged in.</summary>
-    public Entity Entity = entity;
+    public EntityId? Entity = entity;
 
-    /// <summary>Network ID of the local player.</summary>
     public long Id;
 
-    /// <summary>Convenient accessor for the local player's name.</summary>
     public string GetName() =>
-        Entity != Entity.Null ? world.Get<NameComponent>(Entity).Value : string.Empty;
+        Entity.HasValue ? world.Get<PlayerAppearance>(Entity.Value)?.Name ?? string.Empty : string.Empty;
 
-    /// <summary>Convenient accessor for VitalsComponent.</summary>
-    public ref VitalsComponent GetVitals() => ref world.Get<VitalsComponent>(Entity);
+    public Vitals? GetVitals() => Entity.HasValue ? world.Get<Vitals>(Entity.Value) : null;
 
-    /// <summary>Convenient accessor for InventoryComponent.</summary>
-    public ref InventoryComponent GetInventory() => ref world.Get<InventoryComponent>(Entity);
+    public InventoryState? GetInventory() => Entity.HasValue ? world.Get<InventoryState>(Entity.Value) : null;
 
-    /// <summary>Convenient accessor for HotbarComponent.</summary>
-    public ref HotbarComponent GetHotbar() => ref world.Get<HotbarComponent>(Entity);
+    public HotbarState? GetHotbar() => Entity.HasValue ? world.Get<HotbarState>(Entity.Value) : null;
 
-    /// <summary>Convenient accessor for LevelComponent.</summary>
-    public ref LevelComponent GetLevel() => ref world.Get<LevelComponent>(Entity);
+    public LevelComponent? GetLevel() => Entity.HasValue ? world.Get<LevelComponent>(Entity.Value) : null;
 
-    /// <summary>Convenient accessor for TradeComponent.</summary>
-    public ref TradeComponent GetTrade() => ref world.Get<TradeComponent>(Entity);
+    public TradeState? GetTrade() => Entity.HasValue ? world.Get<TradeState>(Entity.Value) : null;
 
-    /// <summary>Convenient accessor for AttributesComponent.</summary>
-    public ref AttributesComponent GetAttributes() => ref world.Get<AttributesComponent>(Entity);
+    public AttributesComponent? GetAttributes() => Entity.HasValue ? world.Get<AttributesComponent>(Entity.Value) : null;
 
-    /// <summary>Convenient accessor for EquipmentComponent.</summary>
-    public ref EquipmentComponent GetEquipment() => ref world.Get<EquipmentComponent>(Entity);
+    public EquipmentState? GetEquipment() => Entity.HasValue ? world.Get<EquipmentState>(Entity.Value) : null;
 
-    /// <summary>Convenient accessor for FaceComponent.</summary>
-    public ref FaceComponent GetFaceComponent() => ref world.Get<FaceComponent>(Entity);
+    public PartyState? GetParty() => Entity.HasValue ? world.Get<PartyState>(Entity.Value) : null;
 
-    /// <summary>Convenient accessor for PartyComponent.</summary>
-    public ref PartyComponent GetParty() => ref world.Get<PartyComponent>(Entity);
+    public PlayerAppearance? GetAppearance() => Entity.HasValue ? world.Get<PlayerAppearance>(Entity.Value) : null;
 }

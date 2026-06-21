@@ -1,26 +1,20 @@
-using Arch.Core;
-using Arch.System;
-using CryBits.Client.Components.Map;
+using CryBits.Client.Components;
+using CryBits.Client.Core;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Client.Systems.Map;
 
-/// <summary>
-/// Advances the scroll offset of the map's fog overlay each frame.
-/// Pairs with <see cref="FogRenderSystem"/>, which reads the accumulated
-/// offset to compute the source rect drawn to the screen.
-/// </summary>
-internal sealed class FogSystem(World world) : BaseSystem<World, float>(world)
+internal sealed class FogSystem(World world) : IClientSystem
 {
-    private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<FogComponent>();
-
-    public override void Update(in float deltaTime)
+    public void Update(float deltaTime)
     {
-        var dt = deltaTime;
-        World.Query(in _query, (ref FogComponent fog) =>
+        foreach (var state in world.All)
         {
-            fog.OffsetX += fog.SpeedX * dt;
-            fog.OffsetY += fog.SpeedY * dt;
-        });
+            var fog = state.Get<FogComponent>();
+            if (fog == null) continue;
+
+            fog.OffsetX += fog.SpeedX * deltaTime;
+            fog.OffsetY += fog.SpeedY * deltaTime;
+        }
     }
 }

@@ -67,7 +67,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
         var shopState = e.Get<ShopState>()!;
 
         shopState.ShopId = shop.Id;
-        world.Dirty.Mark<ShopState>(entityId);
+        world.MarkDirty<ShopState>(entityId);
     }
 
     private void Leave(World world, EntityId entityId)
@@ -78,7 +78,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
         if (shopState.ShopId == null) return;
 
         shopState.ShopId = null;
-        world.Dirty.Mark<ShopState>(entityId);
+        world.MarkDirty<ShopState>(entityId);
     }
 
     private static byte CountFreeSlots(InventoryState inv)

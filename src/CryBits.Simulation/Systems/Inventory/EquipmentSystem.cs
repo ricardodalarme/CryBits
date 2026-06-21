@@ -62,8 +62,8 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
             OldItemId = oldItem?.Id
         });
 
-        world.Dirty.Mark<EquipmentState>(entityId);
-        world.Dirty.Mark<StatBlock>(entityId);
+        world.MarkDirty<EquipmentState>(entityId);
+        world.MarkDirty<StatBlock>(entityId);
     }
 
     private void Unequip(World world, Tick tick, EntityId entityId, byte equipSlot)
@@ -89,7 +89,7 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
             OldItemId = oldItem.Id
         });
 
-        world.Dirty.Mark<EquipmentState>(entityId);
-        world.Dirty.Mark<StatBlock>(entityId);
+        world.MarkDirty<EquipmentState>(entityId);
+        world.MarkDirty<StatBlock>(entityId);
     }
 }

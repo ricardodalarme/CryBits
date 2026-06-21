@@ -1,14 +1,10 @@
-using CryBits.Client.Components.Character;
-using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Party;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
-using CryBits.Definitions.Characters;
-using ArchEntity = Arch.Core.Entity;
+using CryBits.Simulation.Components;
 using Color = SFML.Graphics.Color;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 
@@ -22,10 +18,6 @@ internal sealed class UIRenderer(
 {
     public static UIRenderer Instance { get; } = new(Renderer.Instance, ToolsRenderer.Instance, GameContext.Instance);
 
-    /// <summary>
-    /// Recursively render a tree of UI components.
-    /// </summary>
-    /// <param name="node">Top-level component list to render.</param>
     public void DrawInterface(List<Component> node)
     {
         foreach (var tool in node)
@@ -47,9 +39,6 @@ internal sealed class UIRenderer(
             }
     }
 
-    /// <summary>
-    /// Render chat messages and prompt if chat is not focused.
-    /// </summary>
     public void DrawChat()
     {
         var tool = ChatView.Panel;
@@ -67,32 +56,35 @@ internal sealed class UIRenderer(
                 Color.White);
     }
 
-    /// <summary>
-    /// Render the party member bars and names.
-    /// </summary>
     public void DrawParty()
     {
-        if (context.LocalPlayer.Entity == ArchEntity.Null) return;
+        if (context.LocalPlayer.Entity == null) return;
 
         var world = context.World;
-        if (!world.Has<PartyComponent>(context.LocalPlayer.Entity)) return;
-        var members = context.LocalPlayer.GetParty().MemberIds;
-        for (byte i = 0; i < members.Length; i++)
+        var party = context.LocalPlayer.GetParty();
+        if (party == null) return;
+
+        for (byte i = 0; i < party.Members.Count; i++)
         {
-            var entity = context.GetNetworkEntity(members[i]);
+            var entity = context.GetNetworkEntity(party.Members[i].Value);
             renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
             renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
-            if (entity != ArchEntity.Null)
+            if (entity != null)
             {
-                var vitals = world.Get<VitalsComponent>(entity);
-                if (vitals.Current[(byte)Vital.Hp] > 0)
-                    renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
-                        vitals.Current[(byte)Vital.Hp] * 82 / vitals.Max[(byte)Vital.Hp], 8);
-                if (vitals.Current[(byte)Vital.Mp] > 0)
-                    renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
-                        vitals.Current[(byte)Vital.Mp] * 82 / vitals.Max[(byte)Vital.Mp], 8);
+                var vitals = world.Get<Vitals>(entity.Value);
+                if (vitals != null)
+                {
+                    if (vitals.Hp > 0)
+                        renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
+                            vitals.Hp * 82 / vitals.MaxHp, 8);
+                    if (vitals.Mp > 0)
+                        renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
+                            vitals.Mp * 82 / vitals.MaxMp, 8);
+                }
             }
-            var name = world.Get<NameComponent>(entity).Value;
+            var name = entity != null
+                ? world.Get<PlayerAppearance>(entity.Value)?.Name ?? string.Empty
+                : string.Empty;
             renderer.DrawText(name, 10, 79 + 27 * i, Color.White);
         }
     }
