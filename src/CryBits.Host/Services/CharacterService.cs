@@ -144,7 +144,8 @@ internal sealed class CharacterService(
 
         playerSender.PlayerLeave(entityId);
 
-        host.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent { PlayerId = entityId });
+        var tickNum = host.CurrentTick?.TickNumber ?? 0;
+        host.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent(tickNum, entityId));
 
         host.Sessions.Unregister(entityId);
         host.Entities.Destroy(entityId);
@@ -227,13 +228,8 @@ internal sealed class CharacterService(
         playerSender.PlayerInventory(entityId);
         playerSender.PlayerHotbar(entityId);
 
-        host.CurrentTick?.Events.Emit(new PlayerWarpedEvent
-        {
-            PlayerId = entityId,
-            OldMapId = pos.MapId,
-            NewMapId = pos.MapId,
-            NeedsMapData = true
-        });
+        var tickNum = host.CurrentTick?.TickNumber ?? 0;
+        host.CurrentTick?.Events.Emit(new PlayerWarpedEvent(tickNum, entityId, pos.MapId, pos.MapId, true));
 
         playerSender.JoinGame(entityId);
         chatSender.Message(entityId, Config.WelcomeMessage, Color.Blue);

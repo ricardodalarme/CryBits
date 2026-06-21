@@ -1,9 +1,6 @@
+using MemoryPack;
+
 namespace CryBits.Simulation.Components;
 
-public sealed class LevelComponent
-{
-    public short Level { get; set; }
-    public int Experience { get; set; }
-    public short Points { get; set; }
-    public int ExpNeeded { get; set; }
-}
+[MemoryPackable]
+public sealed partial record class LevelComponent(short Level, int Experience = 0, short Points = 0, int ExpNeeded = 0);

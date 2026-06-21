@@ -64,20 +64,11 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
 
     private void Open(World world, EntityId entityId, Shop shop)
     {
-        var shopState = world.AddOrGet<ShopState>(entityId);
-        if (shopState is null) return;
-
-        shopState.ShopId = shop.Id;
-        world.MarkDirty<ShopState>(entityId);
+        world.Set(entityId, new ShopState(ShopId: shop.Id));
     }
 
     private void Leave(World world, EntityId entityId)
     {
-        var shopState = world.Get<ShopState>(entityId);
-        if (shopState == null || shopState.ShopId == null) return;
-
-        shopState.ShopId = null;
-        world.MarkDirty<ShopState>(entityId);
         world.Remove<ShopState>(entityId);
     }
 
@@ -106,21 +97,21 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
 
         if (currencySlot == null || inv.Slots[currencySlot.Value].Amount < shopSold.Price)
         {
-            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You don't have enough money to buy the item.", ColorArgb = ChatColors.Red });
+            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You don't have enough money to buy the item.", ChatColors.Red));
             return;
         }
 
         if (inv.CountFreeSlots() == 0 && inv.Slots[currencySlot.Value].Amount > shopSold.Price)
         {
-            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You don't have space in your bag.", ColorArgb = ChatColors.Red });
+            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You don't have space in your bag.", ChatColors.Red));
             return;
         }
 
         var soldItem = catalog.Items.Get(shopSold.ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
-        tick.Events.Emit(new ItemTakenEvent { EntityId = entityId, SlotIndex = (byte)currencySlot.Value, Amount = shopSold.Price });
-        tick.Events.Emit(new ItemGivenEvent { EntityId = entityId, ItemId = shopSold.ItemId, Amount = shopSold.Amount });
-        tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You bought " + shopSold.Price + "x " + soldItemName + ".", ColorArgb = ChatColors.Green });
+        tick.Events.Emit(new ItemTakenEvent(tick.TickNumber, entityId, (byte)currencySlot.Value, shopSold.Price));
+        tick.Events.Emit(new ItemGivenEvent(tick.TickNumber, entityId, shopSold.ItemId, shopSold.Amount));
+        tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You bought " + shopSold.Price + "x " + soldItemName + ".", ChatColors.Green));
     }
 
     private void Sell(World world, Tick tick, EntityId entityId, byte inventorySlotIndex, short amount)
@@ -139,21 +130,21 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
 
         if (buy == null)
         {
-            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The store doesn't buy this item", ColorArgb = ChatColors.Red });
+            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "The store doesn't buy this item", ChatColors.Red));
             return;
         }
 
         if (inv.CountFreeSlots() == 0 && inv.Slots[inventorySlotIndex].Amount > amount)
         {
-            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You don't have space in your bag.", ColorArgb = ChatColors.Red });
+            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You don't have space in your bag.", ChatColors.Red));
             return;
         }
 
         var soldItem = catalog.Items.Get(inv.Slots[inventorySlotIndex].ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
 
-        tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You sold " + amount + "x " + soldItemName + " for " + buy.Price * amount + ".", ColorArgb = ChatColors.Green });
-        tick.Events.Emit(new ItemTakenEvent { EntityId = entityId, SlotIndex = inventorySlotIndex, Amount = amount });
-        tick.Events.Emit(new ItemGivenEvent { EntityId = entityId, ItemId = shop.CurrencyId, Amount = (short)(buy.Price * amount) });
+        tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You sold " + amount + "x " + soldItemName + " for " + buy.Price * amount + ".", ChatColors.Green));
+        tick.Events.Emit(new ItemTakenEvent(tick.TickNumber, entityId, inventorySlotIndex, amount));
+        tick.Events.Emit(new ItemGivenEvent(tick.TickNumber, entityId, shop.CurrencyId, (short)(buy.Price * amount)));
     }
 }

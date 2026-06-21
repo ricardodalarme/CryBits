@@ -1,3 +1,6 @@
+using MemoryPack;
+
 namespace CryBits.Simulation.Components;
 
-public sealed class PlayerTag;
+[MemoryPackable]
+public sealed partial record class PlayerTag;

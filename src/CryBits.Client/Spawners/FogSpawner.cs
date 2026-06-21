@@ -15,8 +15,8 @@ internal static class FogSpawner
         if (fog.Texture == 0) return;
         var color = new Color(255, 255, 255, fog.Alpha);
         _ = world.SpawnBuilder()
-            .With(new SpriteComponent { Texture = Textures.Fogs[fog.Texture], Tint = color })
-            .With(new FogComponent { SpeedX = fog.SpeedX, SpeedY = fog.SpeedY })
+            .With(new SpriteComponent(Textures.Fogs[fog.Texture], null, color))
+            .With(new FogComponent(fog.SpeedX, fog.SpeedY, 0f, 0f))
             .Id;
     }
 }

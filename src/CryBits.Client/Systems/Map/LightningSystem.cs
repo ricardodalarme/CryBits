@@ -26,12 +26,14 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
 
             if (lightning.Intensity > 0)
             {
-                lightning.DecayAccumulator += dt;
-                while (lightning.DecayAccumulator >= LightningDecayInterval)
+                var newAccumulator = lightning.DecayAccumulator + dt;
+                var newIntensity = lightning.Intensity;
+                while (newAccumulator >= LightningDecayInterval)
                 {
-                    lightning.DecayAccumulator -= LightningDecayInterval;
-                    lightning.Intensity = lightning.Intensity > 10 ? (byte)(lightning.Intensity - 10) : (byte)0;
+                    newAccumulator -= LightningDecayInterval;
+                    newIntensity = newIntensity > 10 ? (byte)(newIntensity - 10) : (byte)0;
                 }
+                context.World.Set(state.Id, new LightningComponent(newIntensity, newAccumulator));
             }
         }
 
@@ -53,8 +55,7 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
                 var lightning = state.Get<LightningComponent>();
                 if (lightning == null) continue;
 
-                lightning.Intensity = 190;
-                lightning.DecayAccumulator = 0f;
+                context.World.Set(state.Id, new LightningComponent(190, 0f));
             }
         }
     }

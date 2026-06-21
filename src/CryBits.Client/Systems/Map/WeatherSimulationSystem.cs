@@ -2,6 +2,7 @@ using CryBits.Client.Components;
 using CryBits.Client.Core;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 using static CryBits.Definitions.Globals;
 
@@ -45,16 +46,19 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
             switch (type)
             {
                 case Weather.Raining or Weather.Thundering:
-                    transform.X += particle.Speed;
-                    transform.Y += particle.Speed;
+                    context.World.Set(state.Id, new TransformComponent(
+                        transform.X + particle.Speed,
+                        transform.Y + particle.Speed
+                    ));
                     break;
 
                 case Weather.Snowing:
-                    MoveSnow(particle, transform, snowMove);
+                    MoveSnow(context.World, state.Id, particle, transform, snowMove);
                     break;
             }
 
-            if (transform.X > ScreenWidth || transform.Y > ScreenHeight)
+            var newTransform = context.World.Get<TransformComponent>(state.Id) ?? transform;
+            if (newTransform.X > ScreenWidth || newTransform.Y > ScreenHeight)
                 _pendingDestroy.Add(state.Id);
         }
 
@@ -62,21 +66,17 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
             context.World.Destroy(id);
     }
 
-    private static void MoveSnow(WeatherParticleComponent p, TransformComponent t, bool xAxis)
+    private static void MoveSnow(World world, EntityId entityId, WeatherParticleComponent p, TransformComponent t, bool xAxis)
     {
         var difference = Random.Shared.Next(0, SnowMovement / 3);
         var x1 = p.Start + SnowMovement + difference;
         var x2 = p.Start - SnowMovement - difference;
 
-        if (x1 <= t.X) p.Back = true;
-        else if (x2 >= t.X) p.Back = false;
+        var newBack = x1 <= t.X ? true : x2 >= t.X ? false : p.Back;
+        var newY = t.Y + p.Speed;
+        var newX = xAxis ? (newBack ? t.X - 1 : t.X + 1) : t.X;
 
-        t.Y += p.Speed;
-
-        if (xAxis)
-        {
-            if (p.Back) t.X--;
-            else t.X++;
-        }
+        world.Set(entityId, p with { Back = newBack });
+        world.Set(entityId, new TransformComponent(newX, newY));
     }
 }

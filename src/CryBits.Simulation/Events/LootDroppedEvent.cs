@@ -1,11 +1,3 @@
 namespace CryBits.Simulation.Events;
 
-public sealed record LootDroppedEvent : SimEvent
-{
-    public Guid MapId { get; init; }
-    public byte X { get; init; }
-    public byte Y { get; init; }
-    public Guid ItemId { get; init; }
-    public short Amount { get; init; }
-    public long DespawnTick { get; init; }
-}
+public sealed partial record class LootDroppedEvent(long TickNumber, Guid MapId, byte X, byte Y, Guid ItemId, short Amount, long DespawnTick) : SimEvent(TickNumber);

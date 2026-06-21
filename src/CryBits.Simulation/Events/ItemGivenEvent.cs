@@ -2,9 +2,4 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Events;
 
-public sealed record ItemGivenEvent : SimEvent
-{
-    public EntityId EntityId { get; init; }
-    public Guid ItemId { get; init; }
-    public short Amount { get; init; }
-}
+public sealed partial record class ItemGivenEvent(long TickNumber, EntityId EntityId, Guid ItemId, short Amount) : SimEvent(TickNumber);

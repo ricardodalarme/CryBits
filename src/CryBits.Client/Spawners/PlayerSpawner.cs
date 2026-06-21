@@ -1,12 +1,15 @@
 using CryBits.Client.Components;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions;
+using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Items;
+using CryBits.Definitions.Slots;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 using SFML.Graphics;
+using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Spawners;
 
@@ -28,17 +31,17 @@ internal static class PlayerSpawner
         var frameHeight = size.Height / Globals.AnimationAmountY;
 
         return world.SpawnBuilder()
-            .With(new NetworkId { Value = networkId })
-            .With(new PlayerAppearance { Name = name, TextureNum = textureNum })
-            .With(new NameColorComponent { Value = SFML.Graphics.Color.White })
-            .With(new TransformComponent { X = x * Globals.Grid, Y = y * Globals.Grid })
-            .With(new SpriteComponent { Texture = texture })
-            .With(new AnimatedSpriteComponent { FrameWidth = frameWidth, FrameHeight = frameHeight, TimePerFrame = 0.25f, FrameCount = Globals.AnimationAmountX })
-            .With(new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond })
+            .With(new NetworkId(networkId))
+            .With(new PlayerAppearance(Name: name, ClassId: Guid.Empty, TextureNum: textureNum, Gender: Gender.Male))
+            .With(new NameColorComponent(SFML.Graphics.Color.White))
+            .With(new TransformComponent(x * Globals.Grid, y * Globals.Grid))
+            .With(new SpriteComponent(texture, null, SFML.Graphics.Color.White))
+            .With(new AnimatedSpriteComponent(frameWidth, frameHeight, Globals.AnimationAmountX, 0.25f, 0f, 0, 0, true))
+            .With(new MovementComponent(x, y, 0f, 0f, Globals.WalkSpeedPixelsPerSecond, MovementState.Stopped, direction))
             .With(new AttackComponent())
             .With(new PlayerTag())
             .With(new CollidableTag())
-            .With(new Vitals { Hp = vitals[0], Mp = vitals[1], MaxHp = maxVitals[0], MaxMp = maxVitals[1] })
+            .With(new Vitals(Hp: vitals[0], Mp: vitals[1], MaxHp: maxVitals[0], MaxMp: maxVitals[1]))
             .Id;
     }
 
@@ -57,21 +60,20 @@ internal static class PlayerSpawner
     {
         var entity = Spawn(world, networkId, name, textureNum, vitals, maxVitals, x, y, direction);
 
-        world.Set(entity, new NameColorComponent { Value = Color.Yellow });
+        world.Set(entity, new NameColorComponent(Color.Yellow));
 
         var equipmentSlots = new Guid[equipment.Length];
         for (var i = 0; i < equipment.Length; i++)
             equipmentSlots[i] = equipment[i]?.Id ?? Guid.Empty;
 
-        var levelComp = new LevelComponent { Level = level };
-        var attrs = new AttributesComponent();
-        attributes.CopyTo(attrs.Values, 0);
+        var attrsArray = new short[attributes.Length];
+        attributes.CopyTo(attrsArray, 0);
 
-        world.Set(entity, levelComp);
-        world.Set(entity, attrs);
-        world.Set(entity, new EquipmentState { Slots = equipmentSlots });
-        world.Set(entity, new InventoryState());
-        world.Set(entity, new HotbarState());
+        world.Set(entity, new LevelComponent(Level: level));
+        world.Set(entity, new AttributesComponent(attrsArray));
+        world.Set(entity, new EquipmentState(equipmentSlots));
+        world.Set(entity, new InventoryState(new ItemSlot[Globals.MaxInventory]));
+        world.Set(entity, new HotbarState(new HotbarSlot[Globals.MaxHotbar]));
         world.Set(entity, new LocalPlayerTag());
 
         return entity;

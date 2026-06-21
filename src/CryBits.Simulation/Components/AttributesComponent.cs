@@ -1,6 +1,6 @@
+using MemoryPack;
+
 namespace CryBits.Simulation.Components;
 
-public sealed class AttributesComponent
-{
-    public short[] Values { get; set; } = new short[(byte)CryBits.Definitions.Characters.Attribute.Count];
-}
+[MemoryPackable]
+public sealed partial record class AttributesComponent(short[] Values);

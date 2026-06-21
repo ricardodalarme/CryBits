@@ -1,11 +1,7 @@
 using CryBits.Definitions.Common;
+using MemoryPack;
 
 namespace CryBits.Simulation.Components;
 
-public sealed class Position
-{
-    public Guid MapId { get; set; }
-    public byte X { get; set; }
-    public byte Y { get; set; }
-    public Direction Direction { get; set; }
-}
+[MemoryPackable]
+public sealed partial record class Position(Guid MapId, byte X, byte Y, Direction Direction);

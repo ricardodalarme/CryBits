@@ -28,11 +28,10 @@ internal class PartyHandler(IntentSender intentSender, GameContext context)
             return;
         }
 
-        var party = world.AddOrGet<PartyState>(entity);
-        if (party is null) return;
-        party.Members.Clear();
+        var members = new List<EntityId>(packet.MemberIds.Length);
         for (byte i = 0; i < packet.MemberIds.Length; i++)
-            party.Members.Add(new EntityId(packet.MemberIds[i]));
+            members.Add(new EntityId(packet.MemberIds[i]));
+        world.Set(entity, new PartyState(members, null));
     }
 
     [PacketHandler]

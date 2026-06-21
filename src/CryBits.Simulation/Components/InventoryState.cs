@@ -1,12 +1,11 @@
 using CryBits.Definitions.Slots;
-using static CryBits.Definitions.Globals;
+using MemoryPack;
 
 namespace CryBits.Simulation.Components;
 
-public sealed class InventoryState
+[MemoryPackable]
+public sealed partial record class InventoryState(ItemSlot[] Slots)
 {
-    public ItemSlot[] Slots { get; set; } = new ItemSlot[MaxInventory];
-
     public byte CountFreeSlots()
     {
         byte count = 0;

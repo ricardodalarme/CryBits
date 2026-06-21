@@ -19,7 +19,7 @@ internal class CombatHandler(GameContext context)
 
         var attack = context.World.Get<AttackComponent>(attacker.Value);
         if (attack is null) return;
-        attack.AttackCountdown = AttackSpeed / 1000f;
+        context.World.Set(attacker.Value, new AttackComponent(AttackSpeed / 1000f));
 
         if (victimId is null) return;
 
@@ -29,8 +29,6 @@ internal class CombatHandler(GameContext context)
         var victimMovement = world.Get<MovementComponent>(victim.Value);
         if (victimMovement is null) return;
         BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);
-        var hurt = world.AddOrGet<HurtComponent>(victim.Value);
-        if (hurt is null) return;
-        hurt.HurtCountdown = HurtComponent.Duration;
+        world.Set(victim.Value, new HurtComponent(HurtComponent.Duration));
     }
 }

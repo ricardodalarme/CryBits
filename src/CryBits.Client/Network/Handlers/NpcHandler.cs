@@ -9,7 +9,7 @@ using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
 using static CryBits.Definitions.Globals;
 using Direction = CryBits.Definitions.Common.Direction;
-using Movement = CryBits.Definitions.Common.Movement;
+using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -38,13 +38,12 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
             var direction = (Direction)npc.Direction;
 
             if (data is null) continue;
-            var vitals = new Vitals
-            {
-                Hp = npc.Vital[(byte)Vital.Hp],
-                Mp = npc.Vital[(byte)Vital.Mp],
-                MaxHp = data.Vital[(byte)Vital.Hp],
-                MaxMp = data.Vital[(byte)Vital.Mp]
-            };
+            var vitals = new Vitals(
+                Hp: npc.Vital[(byte)Vital.Hp],
+                Mp: npc.Vital[(byte)Vital.Mp],
+                MaxHp: data.Vital[(byte)Vital.Hp],
+                MaxMp: data.Vital[(byte)Vital.Mp]
+            );
             var entity = NpcSpawner.Spawn(context.World, npc.InstanceId, data, npc.X, npc.Y, direction, vitals);
             context.RegisterNetworkEntity(npc.InstanceId, entity);
         }
@@ -64,13 +63,12 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
         var direction = (Direction)packet.Direction;
 
         if (data is null) return;
-        var vitals = new Vitals
-        {
-            Hp = packet.Vital[(byte)Vital.Hp],
-            Mp = packet.Vital[(byte)Vital.Mp],
-            MaxHp = data.Vital[(byte)Vital.Hp],
-            MaxMp = data.Vital[(byte)Vital.Mp]
-        };
+        var vitals = new Vitals(
+            Hp: packet.Vital[(byte)Vital.Hp],
+            Mp: packet.Vital[(byte)Vital.Mp],
+            MaxHp: data.Vital[(byte)Vital.Hp],
+            MaxMp: data.Vital[(byte)Vital.Mp]
+        );
         var entity = NpcSpawner.Spawn(context.World, packet.InstanceId, data, packet.X, packet.Y, direction, vitals);
         context.RegisterNetworkEntity(packet.InstanceId, entity);
     }
@@ -83,25 +81,23 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
 
         var movement = context.World.Get<MovementComponent>(npc.Value);
         if (movement is null) return;
-        byte prevX = movement.TileX, prevY = movement.TileY;
-        movement.TileX = packet.X;
-        movement.TileY = packet.Y;
-        movement.Direction = (Direction)packet.Direction;
-        movement.MovementState = (Movement)packet.Movement;
-        movement.SpeedPixelsPerSecond = packet.Speed;
-        movement.OffsetX = 0f;
-        movement.OffsetY = 0f;
 
-        // Prime the starting pixel offset when the tile actually changed so the
-        // movement system can interpolate back to zero.
-        if (prevX != movement.TileX || prevY != movement.TileY)
-            switch (movement.Direction)
+        var dir = (Direction)packet.Direction;
+        var offsetX = 0f;
+        var offsetY = 0f;
+
+        if (movement.TileX != packet.X || movement.TileY != packet.Y)
+            switch (dir)
             {
-                case Direction.Up: movement.OffsetY = Grid; break;
-                case Direction.Down: movement.OffsetY = -Grid; break;
-                case Direction.Right: movement.OffsetX = -Grid; break;
-                case Direction.Left: movement.OffsetX = Grid; break;
+                case Direction.Up: offsetY = Grid; break;
+                case Direction.Down: offsetY = -Grid; break;
+                case Direction.Right: offsetX = -Grid; break;
+                case Direction.Left: offsetX = Grid; break;
             }
+
+        context.World.Set(npc.Value, new MovementComponent(
+            packet.X, packet.Y, offsetX, offsetY, packet.Speed, (MovementState)packet.Movement, dir
+        ));
     }
 
     [PacketHandler]
@@ -113,9 +109,7 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
 
         var movement = context.World.Get<MovementComponent>(npc.Value);
         if (movement is null) return;
-        movement.Direction = (Direction)packet.Direction;
-        movement.OffsetX = 0f;
-        movement.OffsetY = 0f;
+        context.World.Set(npc.Value, movement with { Direction = (Direction)packet.Direction, OffsetX = 0f, OffsetY = 0f });
     }
 
     [PacketHandler]
@@ -124,11 +118,14 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
         var npc = context.GetNetworkEntity(packet.InstanceId);
         if (npc is null) return;
 
-        // Write vital changes directly to ECS.
         var vitals = context.World.Get<Vitals>(npc.Value);
         if (vitals is null) return;
-        vitals.Hp = packet.Vital[(byte)Vital.Hp];
-        vitals.Mp = packet.Vital[(byte)Vital.Mp];
+        context.World.Set(npc.Value, new Vitals(
+            Hp: packet.Vital[(byte)Vital.Hp],
+            Mp: packet.Vital[(byte)Vital.Mp],
+            MaxHp: vitals.MaxHp,
+            MaxMp: vitals.MaxMp
+        ));
     }
 
     [PacketHandler]

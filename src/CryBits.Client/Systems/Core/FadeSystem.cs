@@ -19,15 +19,21 @@ internal sealed class FadeSystem(World world) : IClientSystem
             var fade = state.Get<FadeComponent>();
             if (sprite == null || fade == null) continue;
 
-            fade.Timer -= deltaTime;
-            if (fade.Timer > 0) continue;
+            var newTimer = fade.Timer - deltaTime;
+            if (newTimer > 0)
+            {
+                world.Set(state.Id, fade with { Timer = newTimer });
+                continue;
+            }
 
-            sprite.Tint = new SFML.Graphics.Color(
-                sprite.Tint.R, sprite.Tint.G, sprite.Tint.B,
-                (byte)Math.Max(0, sprite.Tint.A - fade.AmountPerTick));
-            fade.Timer = fade.IntervalSeconds;
+            var newAlpha = (byte)Math.Max(0, sprite.Tint.A - fade.AmountPerTick);
+            world.Set(state.Id, sprite with
+            {
+                Tint = new SFML.Graphics.Color(sprite.Tint.R, sprite.Tint.G, sprite.Tint.B, newAlpha)
+            });
+            world.Set(state.Id, fade with { Timer = fade.IntervalSeconds });
 
-            if (sprite.Tint.A == 0)
+            if (newAlpha == 0)
                 _pendingDestroy.Add(state.Id);
         }
 

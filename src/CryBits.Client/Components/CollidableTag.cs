@@ -1,3 +1,3 @@
 namespace CryBits.Client.Components;
 
-public sealed class CollidableTag;
+public sealed record class CollidableTag;

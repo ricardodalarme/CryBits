@@ -31,13 +31,14 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
 
     private void SpawnParticle(Weather type)
     {
-        int x, y;
-        var particle = new WeatherParticleComponent { Type = type };
+        int x, y, speed;
+        int start = 0;
+        bool back = false;
 
         switch (type)
         {
             case Weather.Raining or Weather.Thundering:
-                particle.Speed = Random.Shared.Next(8, 13);
+                speed = Random.Shared.Next(8, 13);
                 if (Random.Shared.Next(2) == 0)
                 {
                     x = -32;
@@ -51,10 +52,10 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
                 break;
 
             case Weather.Snowing:
-                particle.Speed = Random.Shared.Next(1, 3);
-                particle.Start = Random.Shared.Next(-32, ScreenWidth);
-                particle.Back = Random.Shared.Next(2) != 0;
-                x = particle.Start;
+                speed = Random.Shared.Next(1, 3);
+                start = Random.Shared.Next(-32, ScreenWidth);
+                back = Random.Shared.Next(2) != 0;
+                x = start;
                 y = -32;
                 break;
 
@@ -63,7 +64,7 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
         }
 
         var id = context.World.Spawn();
-        context.World.Set(id, new TransformComponent { X = x, Y = y });
-        context.World.Set(id, particle);
+        context.World.Set(id, new TransformComponent(x, y));
+        context.World.Set(id, new WeatherParticleComponent(speed, start, back, type));
     }
 }

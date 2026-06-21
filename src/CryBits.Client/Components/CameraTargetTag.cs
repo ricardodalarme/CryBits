@@ -1,3 +1,3 @@
 namespace CryBits.Client.Components;
 
-public sealed class CameraTargetTag;
+public sealed record class CameraTargetTag;

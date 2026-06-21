@@ -14,9 +14,8 @@ public sealed class IdleBehavior : INpcBehavior
         if (npcData.Movement != MovementStyle.TurnRandomly) return null;
         if (Random.Shared.Next(0, 3) != 0) return null;
 
-        var pos = entity.Get<Position>()!;
-        pos.Direction = (Direction)Random.Shared.Next(0, 4);
-        world.MarkDirty<Position>(entity.Id);
+        var dir = (Direction)Random.Shared.Next(0, 4);
+        world.Update<Position>(entity.Id, p => p with { Direction = dir });
         return null;
     }
 }

@@ -12,6 +12,7 @@ using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.State;
+using MovementState = CryBits.Definitions.Common.Movement;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Network.Handlers;
@@ -82,12 +83,9 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
 
         var movement = context.World.Get<MovementComponent>(entity.Value);
         if (movement is null) return;
-        movement.TileX = packet.X;
-        movement.TileY = packet.Y;
-        movement.Direction = (Direction)packet.Direction;
-        movement.OffsetX = 0f;
-        movement.OffsetY = 0f;
-        movement.MovementState = Movement.Stopped;
+        context.World.Set(entity.Value, new MovementComponent(
+            packet.X, packet.Y, 0f, 0f, movement.SpeedPixelsPerSecond, MovementState.Stopped, (Direction)packet.Direction
+        ));
     }
 
     [PacketHandler]
@@ -98,10 +96,12 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
 
         var vitals = context.World.Get<Vitals>(entity.Value);
         if (vitals is null) return;
-        vitals.Hp = packet.Vital[(byte)Vital.Hp];
-        vitals.MaxHp = packet.MaxVital[(byte)Vital.Hp];
-        vitals.Mp = packet.Vital[(byte)Vital.Mp];
-        vitals.MaxMp = packet.MaxVital[(byte)Vital.Mp];
+        context.World.Set(entity.Value, new Vitals(
+            Hp: packet.Vital[(byte)Vital.Hp],
+            Mp: packet.Vital[(byte)Vital.Mp],
+            MaxHp: packet.MaxVital[(byte)Vital.Hp],
+            MaxMp: packet.MaxVital[(byte)Vital.Mp]
+        ));
 
         if (packet.NetworkId == context.LocalPlayer.Id) BarsView.Update();
     }
@@ -112,10 +112,11 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
         var entity = context.GetNetworkEntity(packet.NetworkId);
         if (entity is null) return;
 
-        // Update player's equipped items
         var equipment = context.World.Get<EquipmentState>(entity.Value);
         if (equipment is null) return;
-        for (byte i = 0; i < (byte)Equipment.Count; i++) equipment.Slots[i] = packet.Equipments[i];
+        var newSlots = (Guid[])equipment.Slots.Clone();
+        for (byte i = 0; i < (byte)Equipment.Count; i++) newSlots[i] = packet.Equipments[i];
+        context.World.Set(entity.Value, new EquipmentState(newSlots));
     }
 
     [PacketHandler]
@@ -137,21 +138,21 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
 
         var movement = context.World.Get<MovementComponent>(entity.Value);
         if (movement is null) return;
-        movement.TileX = packet.X;
-        movement.TileY = packet.Y;
-        movement.Direction = (Direction)packet.Direction;
-        movement.MovementState = (Movement)packet.Movement;
-        movement.SpeedPixelsPerSecond = packet.Speed;
-        movement.OffsetX = 0f;
-        movement.OffsetY = 0f;
 
-        switch (movement.Direction)
+        var dir = (Direction)packet.Direction;
+        var offsetX = 0f;
+        var offsetY = 0f;
+        switch (dir)
         {
-            case Direction.Up: movement.OffsetY = Grid; break;
-            case Direction.Down: movement.OffsetY = -Grid; break;
-            case Direction.Right: movement.OffsetX = -Grid; break;
-            case Direction.Left: movement.OffsetX = Grid; break;
+            case Direction.Up: offsetY = Grid; break;
+            case Direction.Down: offsetY = -Grid; break;
+            case Direction.Right: offsetX = -Grid; break;
+            case Direction.Left: offsetX = Grid; break;
         }
+
+        context.World.Set(entity.Value, new MovementComponent(
+            packet.X, packet.Y, offsetX, offsetY, packet.Speed, (MovementState)packet.Movement, dir
+        ));
     }
 
     [PacketHandler]
@@ -161,7 +162,8 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
         if (entity is null) return;
 
         var movement = context.World.Get<MovementComponent>(entity.Value);
-        if (movement is not null) movement.Direction = (Direction)packet.Direction;
+        if (movement is not null)
+            context.World.Set(entity.Value, movement with { Direction = (Direction)packet.Direction });
     }
 
     [PacketHandler]
@@ -170,15 +172,15 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
         if (context.LocalPlayer.Entity is null) return;
         var level = context.LocalPlayer.GetLevel();
         if (level is null) return;
-        level.Experience = packet.Experience;
-        level.ExpNeeded = packet.ExpNeeded;
-        level.Points = packet.Points;
+        context.World.Set(context.LocalPlayer.Entity.Value, new LevelComponent(
+            Level: level.Level, Experience: packet.Experience, Points: packet.Points, ExpNeeded: packet.ExpNeeded
+        ));
 
-        CharacterView.AddStrengthButton.Visible = level.Points > 0;
-        CharacterView.AddResistanceButton.Visible = level.Points > 0;
-        CharacterView.AddIntelligenceButton.Visible = level.Points > 0;
-        CharacterView.AddAgilityButton.Visible = level.Points > 0;
-        CharacterView.AddVitalityButton.Visible = level.Points > 0;
+        CharacterView.AddStrengthButton.Visible = packet.Points > 0;
+        CharacterView.AddResistanceButton.Visible = packet.Points > 0;
+        CharacterView.AddIntelligenceButton.Visible = packet.Points > 0;
+        CharacterView.AddAgilityButton.Visible = packet.Points > 0;
+        CharacterView.AddVitalityButton.Visible = packet.Points > 0;
 
         BarsView.Update();
         CharacterView.Update();
@@ -188,19 +190,19 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
     internal void PlayerInventory(PlayerInventoryPacket packet)
     {
         if (context.LocalPlayer.Entity is null) return;
-        var inventory = context.LocalPlayer.GetInventory();
-        if (inventory is null) return;
+        var invSlots = new ItemSlot[MaxInventory];
         for (byte i = 0; i < MaxInventory; i++)
-            inventory.Slots[i] = new ItemSlot(packet.ItemIds[i], packet.Amounts[i]);
+            invSlots[i] = new ItemSlot(packet.ItemIds[i], packet.Amounts[i]);
+        context.World.Set(context.LocalPlayer.Entity.Value, new InventoryState(invSlots));
     }
 
     [PacketHandler]
     internal void PlayerHotbar(PlayerHotbarPacket packet)
     {
         if (context.LocalPlayer.Entity is null) return;
-        var hotbar = context.LocalPlayer.GetHotbar();
-        if (hotbar is null) return;
+        var hotbarSlots = new HotbarSlot[MaxHotbar];
         for (byte i = 0; i < MaxHotbar; i++)
-            hotbar.Slots[i] = new HotbarSlot((SlotType)packet.Types[i], packet.Slots[i]);
+            hotbarSlots[i] = new HotbarSlot((SlotType)packet.Types[i], packet.Slots[i]);
+        context.World.Set(context.LocalPlayer.Entity.Value, new HotbarState(hotbarSlots));
     }
 }

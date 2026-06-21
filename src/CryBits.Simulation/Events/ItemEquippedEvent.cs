@@ -2,10 +2,4 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Events;
 
-public sealed record ItemEquippedEvent : SimEvent
-{
-    public EntityId PlayerId { get; init; }
-    public int EquipSlot { get; init; }
-    public Guid? ItemId { get; init; }
-    public Guid? OldItemId { get; init; }
-}
+public sealed partial record class ItemEquippedEvent(long TickNumber, EntityId PlayerId, int EquipSlot, Guid? ItemId, Guid? OldItemId) : SimEvent(TickNumber);

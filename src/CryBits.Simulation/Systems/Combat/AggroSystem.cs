@@ -20,10 +20,7 @@ public sealed class AggroSystem : ISimulationSystem
             if (npcState == null) continue;
 
             if (npcState.TargetId == null)
-            {
-                npcState.TargetId = attack.AttackerId;
-                world.MarkDirty<NpcState>(attack.VictimId.Value);
-            }
+                world.Update<NpcState>(attack.VictimId.Value, s => s with { TargetId = attack.AttackerId });
         }
     }
 }

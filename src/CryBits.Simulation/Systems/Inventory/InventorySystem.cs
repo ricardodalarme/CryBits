@@ -48,14 +48,10 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                         if (inv == null || inv.Slots[swap.SlotOld].ItemId == Guid.Empty) break;
                         if (swap.SlotOld == swap.SlotNew) break;
                         if (trade?.Partner != null) break;
-                        (inv.Slots[swap.SlotOld], inv.Slots[swap.SlotNew]) = (inv.Slots[swap.SlotNew], inv.Slots[swap.SlotOld]);
-                        world.MarkDirty<InventoryState>(swap.SourceEntityId);
-                        tick.Events.Emit(new InventorySwappedEvent
-                        {
-                            EntityId = swap.SourceEntityId,
-                            SlotOld = swap.SlotOld,
-                            SlotNew = swap.SlotNew
-                        });
+                        var newSlots = (ItemSlot[])inv.Slots.Clone();
+                        (newSlots[swap.SlotOld], newSlots[swap.SlotNew]) = (newSlots[swap.SlotNew], newSlots[swap.SlotOld]);
+                        world.Set(swap.SourceEntityId, new InventoryState(newSlots));
+                        tick.Events.Emit(new InventorySwappedEvent(tick.TickNumber, swap.SourceEntityId, swap.SlotOld, swap.SlotNew));
                         break;
                     }
             }
@@ -105,15 +101,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                         if (oldItem == null) continue;
                         if (!GiveItem(world, playerId.Value, oldItem, 1))
                         {
-                            tick.Events.Emit(new LootDroppedEvent
-                            {
-                                MapId = pos.MapId,
-                                X = pos.X,
-                                Y = pos.Y,
-                                ItemId = equip.OldItemId.Value,
-                                Amount = 1,
-                                DespawnTick = tick.TickNumber + GroundItemDespawnTicks
-                            });
+                            tick.Events.Emit(new LootDroppedEvent(tick.TickNumber, pos.MapId, pos.X, pos.Y, equip.OldItemId.Value, 1, tick.TickNumber + GroundItemDespawnTicks));
                         }
                         break;
                     }
@@ -142,15 +130,15 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         if (emptySlot == null) return false;
         if (amount == 0) amount = 1;
 
+        var newSlots = (ItemSlot[])inv.Slots.Clone();
         if (stackSlot != null && item.Stackable)
-            inv.Slots[stackSlot.Value].Amount += amount;
+            newSlots[stackSlot.Value] = newSlots[stackSlot.Value] with { Amount = (short)(newSlots[stackSlot.Value].Amount + amount) };
         else
         {
-            inv.Slots[emptySlot.Value].ItemId = item.Id;
-            inv.Slots[emptySlot.Value].Amount = item.Stackable ? amount : (byte)1;
+            newSlots[emptySlot.Value] = new ItemSlot(item.Id, item.Stackable ? amount : (byte)1);
         }
 
-        world.MarkDirty<InventoryState>(entityId);
+        world.Set(entityId, new InventoryState(newSlots));
         return true;
     }
 
@@ -163,29 +151,29 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
         if (amount <= 0) amount = 1;
 
-        if (amount == inv.Slots[slotIndex].Amount)
+        var newSlots = (ItemSlot[])inv.Slots.Clone();
+        if (amount == newSlots[slotIndex].Amount)
         {
-            inv.Slots[slotIndex].ItemId = Guid.Empty;
-            inv.Slots[slotIndex].Amount = 0;
+            newSlots[slotIndex] = new ItemSlot(Guid.Empty, 0);
 
             if (hotbar != null)
             {
-                for (var h = 0; h < hotbar.Slots.Length; h++)
+                var newHotbarSlots = (HotbarSlot[])hotbar.Slots.Clone();
+                for (var h = 0; h < newHotbarSlots.Length; h++)
                 {
-                    if (hotbar.Slots[h].Type == SlotType.Item && hotbar.Slots[h].Slot == slotIndex)
+                    if (newHotbarSlots[h].Type == SlotType.Item && newHotbarSlots[h].Slot == slotIndex)
                     {
-                        hotbar.Slots[h].Type = SlotType.None;
-                        hotbar.Slots[h].Slot = 0;
-                        world.MarkDirty<HotbarState>(entityId);
+                        newHotbarSlots[h] = newHotbarSlots[h] with { Type = SlotType.None, Slot = 0 };
+                        world.Set(entityId, new HotbarState(newHotbarSlots));
                         break;
                     }
                 }
             }
         }
         else
-            inv.Slots[slotIndex].Amount -= amount;
+            newSlots[slotIndex] = newSlots[slotIndex] with { Amount = (short)(newSlots[slotIndex].Amount - amount) };
 
-        world.MarkDirty<InventoryState>(entityId);
+        world.Set(entityId, new InventoryState(newSlots));
     }
 
     private void DropItem(World world, Tick tick, EntityId entityId, int slotIndex, short amount)
@@ -204,15 +192,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
         if (amount > inv.Slots[slotIndex].Amount) amount = inv.Slots[slotIndex].Amount;
 
-        tick.Events.Emit(new LootDroppedEvent
-        {
-            MapId = pos.MapId,
-            X = pos.X,
-            Y = pos.Y,
-            ItemId = inv.Slots[slotIndex].ItemId,
-            Amount = amount,
-            DespawnTick = tick.TickNumber + GroundItemDespawnTicks
-        });
+        tick.Events.Emit(new LootDroppedEvent(tick.TickNumber, pos.MapId, pos.X, pos.Y, inv.Slots[slotIndex].ItemId, amount, tick.TickNumber + GroundItemDespawnTicks));
         TakeItem(world, entityId, slotIndex, amount);
     }
 
@@ -231,33 +211,30 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
         if (level.Level < item.ReqLevel)
         {
-            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You do not have the level required to use this item.", ColorArgb = ChatColors.White });
+            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You do not have the level required to use this item.", ChatColors.White));
             return;
         }
 
         if (item.ReqClassId.HasValue && appearance.ClassId != item.ReqClassId.Value)
         {
-            tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You can not use this item.", ColorArgb = ChatColors.White });
+            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You can not use this item.", ChatColors.White));
             return;
         }
 
         if (item.Type == ItemType.Equipment)
         {
-            tick.Events.Emit(new ItemUsedEvent
-            {
-                PlayerId = entityId,
-                SlotIndex = slotIndex,
-                ItemId = item.Id
-            });
+            tick.Events.Emit(new ItemUsedEvent(tick.TickNumber, entityId, slotIndex, item.Id, false));
         }
         else if (item.Type == ItemType.Potion)
         {
             var hadEffect = false;
-            tick.Events.Emit(new XpAwardedEvent { EntityId = entityId, Amount = item.PotionExperience });
+            tick.Events.Emit(new XpAwardedEvent(tick.TickNumber, entityId, item.PotionExperience));
 
+            var newHp = vitals.Hp;
+            var newMp = vitals.Mp;
             for (byte i = 0; i < (byte)Vital.Count; i++)
             {
-                var current = i == 0 ? vitals.Hp : vitals.Mp;
+                var current = i == 0 ? newHp : newMp;
                 var max = i == 0 ? vitals.MaxHp : vitals.MaxMp;
 
                 if (current < max && item.PotionVital[i] != 0) hadEffect = true;
@@ -265,13 +242,13 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                 current += item.PotionVital[i];
                 if (current < 0) current = 0;
                 if (current > max) current = max;
-                if (i == 0) vitals.Hp = current; else vitals.Mp = current;
+                if (i == 0) newHp = (short)current; else newMp = (short)current;
             }
 
-            world.MarkDirty<Vitals>(entityId);
+            world.Set(entityId, new Vitals(Hp: newHp, Mp: newMp, MaxHp: vitals.MaxHp, MaxMp: vitals.MaxMp));
 
-            if (vitals.Hp == 0)
-                tick.Events.Emit(new PlayerDiedEvent { EntityId = entityId });
+            if (newHp == 0)
+                tick.Events.Emit(new PlayerDiedEvent(tick.TickNumber, entityId, null));
 
             if (item.PotionExperience > 0 || hadEffect) TakeItem(world, entityId, slotIndex, 1);
         }
@@ -296,7 +273,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
         if (GiveItem(world, entityId, item, comp.Amount))
         {
-            tick.Events.Emit(new GroundItemRemovedEvent { EntityId = groundEntityId.Value, MapId = map.Id });
+            tick.Events.Emit(new GroundItemRemovedEvent(tick.TickNumber, groundEntityId.Value, map.Id));
             world.Entities.Destroy(groundEntityId.Value);
             map.GroundItemIds.Remove(groundEntityId.Value);
         }

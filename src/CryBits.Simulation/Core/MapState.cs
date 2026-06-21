@@ -82,13 +82,8 @@ public sealed class MapState
                 {
                     var entityId = entities.Create();
                     var entity = entities.Get(entityId)!;
-                    entity.Set(new Position { MapId = Id, X = x, Y = y });
-                    entity.Set(new GroundItem
-                    {
-                        ItemDefId = new Guid(Data.Attribute[x, y].Data1),
-                        Amount = Data.Attribute[x, y].Data2,
-                        DespawnTick = -1
-                    });
+                    entity.Set(new Position(MapId: Id, X: x, Y: y, Direction: Direction.Down));
+                    entity.Set(new GroundItem(ItemDefId: new Guid(Data.Attribute[x, y].Data1), Amount: Data.Attribute[x, y].Data2));
                     GroundItemIds.Add(entityId);
                 }
     }

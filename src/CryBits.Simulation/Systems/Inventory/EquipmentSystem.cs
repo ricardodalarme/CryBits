@@ -29,12 +29,7 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
             var item = catalog.Items.Get(use.ItemId);
             if (item == null || item.Type != ItemType.Equipment) continue;
             Equip(world, tick, playerId.Value, item);
-            tick.Events.Emit(new ItemTakenEvent
-            {
-                EntityId = use.PlayerId,
-                SlotIndex = (byte)use.SlotIndex,
-                Amount = 1
-            });
+            tick.Events.Emit(new ItemTakenEvent(tick.TickNumber, use.PlayerId, (byte)use.SlotIndex, (short)1));
         }
     }
 
@@ -48,23 +43,20 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
         var oldItemId = equip.Slots[item.EquipType];
         var oldItem = oldItemId != Guid.Empty ? catalog.Items.Get(oldItemId) : null;
 
-        equip.Slots[item.EquipType] = item.Id;
+        var newSlots = (Guid[])equip.Slots.Clone();
+        newSlots[item.EquipType] = item.Id;
+
+        var newValues = (short[])attrs.Values.Clone();
         for (byte i = 0; i < (byte)Attribute.Count; i++)
-            attrs.Values[i] += item.EquipAttribute[i];
+            newValues[i] += item.EquipAttribute[i];
         if (oldItem != null)
             for (byte i = 0; i < (byte)Attribute.Count; i++)
-                attrs.Values[i] -= oldItem.EquipAttribute[i];
+                newValues[i] -= oldItem.EquipAttribute[i];
 
-        tick.Events.Emit(new ItemEquippedEvent
-        {
-            PlayerId = entityId,
-            EquipSlot = item.EquipType,
-            ItemId = item.Id,
-            OldItemId = oldItem?.Id
-        });
+        world.Set(entityId, new EquipmentState(newSlots));
+        world.Set(entityId, new AttributesComponent(newValues));
 
-        world.MarkDirty<EquipmentState>(entityId);
-        world.MarkDirty<AttributesComponent>(entityId);
+        tick.Events.Emit(new ItemEquippedEvent(tick.TickNumber, entityId, item.EquipType, item.Id, oldItem?.Id));
     }
 
     private void Unequip(World world, Tick tick, EntityId entityId, byte equipSlot)
@@ -79,19 +71,16 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
         var oldItem = catalog.Items.Get(oldItemId);
         if (oldItem is null || oldItem.Bind == BindOn.Equip) return;
 
+        var newValues = (short[])attrs.Values.Clone();
         for (byte i = 0; i < (byte)Attribute.Count; i++)
-            attrs.Values[i] -= oldItem.EquipAttribute[i];
-        equip.Slots[equipSlot] = Guid.Empty;
+            newValues[i] -= oldItem.EquipAttribute[i];
 
-        tick.Events.Emit(new ItemEquippedEvent
-        {
-            PlayerId = entityId,
-            EquipSlot = equipSlot,
-            ItemId = null,
-            OldItemId = oldItem.Id
-        });
+        var newSlots = (Guid[])equip.Slots.Clone();
+        newSlots[equipSlot] = Guid.Empty;
 
-        world.MarkDirty<EquipmentState>(entityId);
-        world.MarkDirty<AttributesComponent>(entityId);
+        world.Set(entityId, new EquipmentState(newSlots));
+        world.Set(entityId, new AttributesComponent(newValues));
+
+        tick.Events.Emit(new ItemEquippedEvent(tick.TickNumber, entityId, equipSlot, null, oldItem.Id));
     }
 }

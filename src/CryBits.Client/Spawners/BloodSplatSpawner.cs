@@ -17,9 +17,9 @@ internal static class BloodSplatSpawner
         var sourceRect = new Rectangle(frame * FrameSize, 0, FrameSize, FrameSize);
 
         return world.SpawnBuilder()
-            .With(new TransformComponent { X = tileX * Grid, Y = tileY * Grid })
-            .With(new SpriteComponent { Texture = Textures.Blood, SourceRect = sourceRect })
-            .With(new FadeComponent { IntervalSeconds = 0.1f, AmountPerTick = 1 })
+            .With(new TransformComponent(tileX * Grid, tileY * Grid))
+            .With(new SpriteComponent(Textures.Blood, sourceRect, SFML.Graphics.Color.White))
+            .With(new FadeComponent())
             .Id;
     }
 }
