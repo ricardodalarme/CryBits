@@ -33,7 +33,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         if (attackerE == null) return;
 
         var pos = attackerE.Get<Position>()!;
-        var map = world.Maps.Get(pos.MapId)!;
+        var map = world.Maps.Get(pos.MapId);
         if (map == null) return;
 
         if (attackerE.Get<TradeState>()?.Partner != null) return;
@@ -91,19 +91,20 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
     private void DealDamage(World world, Tick tick,
         EntityId attackerId, EntityId victimId, MapState map, AttackCooldown cooldown)
     {
-        var attackerE = world.Entities.Get(attackerId)!;
-        var victimE = world.Entities.Get(victimId)!;
+        var attackerE = world.Entities.Get(attackerId);
+        var victimE = world.Entities.Get(victimId);
+        if (attackerE == null || victimE == null) return;
         var attackerPos = attackerE.Get<Position>()!;
         var victimVitals = victimE.Get<Vitals>()!;
-        var attackerStats = attackerE.Get<StatBlock>()!;
-        var victimStats = victimE.Get<StatBlock>();
+        var attackerAttrs = attackerE.Get<AttributesComponent>()!;
+        var victimAttrs = victimE.Get<AttributesComponent>();
 
         cooldown.NextAllowedTick = tick.TickNumber;
 
         var weaponDamage = GetWeaponDamage(attackerE);
-        var attackerDamage = CombatFormulas.BaseDamage(attackerStats.Attribute[(byte)Attribute.Strength], weaponDamage);
-        var victimDefense = victimStats != null
-            ? CombatFormulas.BaseDefense(victimStats.Attribute[(byte)Attribute.Resistance])
+        var attackerDamage = CombatFormulas.BaseDamage(attackerAttrs.Values[(byte)Attribute.Strength], weaponDamage);
+        var victimDefense = victimAttrs != null
+            ? CombatFormulas.BaseDefense(victimAttrs.Values[(byte)Attribute.Resistance])
             : (short)0;
         var netDamage = CombatFormulas.NetDamage(attackerDamage, victimDefense);
 

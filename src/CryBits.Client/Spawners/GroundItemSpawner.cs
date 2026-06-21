@@ -1,6 +1,7 @@
 using CryBits.Client.Components;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Items;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using static CryBits.Definitions.Globals;
 
@@ -15,7 +16,7 @@ internal static class GroundItemSpawner
         _ = world.SpawnBuilder()
             .With(new TransformComponent { X = tileX * Grid, Y = tileY * Grid })
             .With(new SpriteComponent { Texture = texture })
-            .With(new GroundItemComponent { Item = item })
+            .With(new GroundItem { ItemDefId = item.Id, Amount = 1, DespawnTick = -1 })
             .Id;
     }
 }

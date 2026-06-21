@@ -46,14 +46,13 @@ public static class PlayerSpawner
             Gender = data.Gender
         });
 
-        var stats = new StatBlock
+        entity.Set(new LevelComponent
         {
             Level = data.Level,
             Experience = data.Experience,
-            Points = data.Points,
-            Attribute = (short[])data.Attributes.Clone()
-        };
-        entity.Set(stats);
+            Points = data.Points
+        });
+        entity.Set(new AttributesComponent { Values = (short[])data.Attributes.Clone() });
 
         var hp = data.Hp > 0 ? data.Hp : maxHp;
         var mp = data.Mp > 0 ? data.Mp : maxMp;
@@ -79,9 +78,6 @@ public static class PlayerSpawner
         entity.Set(hotbar);
 
         entity.Set(new AttackCooldown());
-        entity.Set(new TradeState());
-        entity.Set(new PartyState());
-        entity.Set(new ShopState());
         entity.Set(new PlayerTag());
 
         return entityId;
@@ -116,7 +112,8 @@ public static class PlayerSpawner
             Gender = gender
         });
 
-        entity.Set(new StatBlock { Level = 1, Attribute = (short[])@class.Attribute.Clone() });
+        entity.Set(new LevelComponent { Level = 1 });
+        entity.Set(new AttributesComponent { Values = (short[])@class.Attribute.Clone() });
         entity.Set(new Vitals { Hp = maxHp, Mp = maxMp, MaxHp = maxHp, MaxMp = maxMp });
 
         var inv = new InventoryState();
@@ -132,9 +129,6 @@ public static class PlayerSpawner
         entity.Set(hotbar);
 
         entity.Set(new AttackCooldown());
-        entity.Set(new TradeState());
-        entity.Set(new PartyState());
-        entity.Set(new ShopState());
         entity.Set(new PlayerTag());
 
         return entityId;

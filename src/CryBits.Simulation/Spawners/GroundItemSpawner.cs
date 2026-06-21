@@ -19,7 +19,6 @@ public static class GroundItemSpawner
 
         entity.Set(new Position { MapId = mapId, X = x, Y = y });
         entity.Set(new GroundItem { ItemDefId = itemDefId, Amount = amount, DespawnTick = despawnTick });
-        entity.Set(new GroundItemTag());
 
         map.GroundItemIds.Add(entityId);
         world.MarkDirty<GroundItem>(entityId);

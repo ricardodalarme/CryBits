@@ -36,10 +36,15 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
             var npc = packet.Npcs[i];
             var data = catalog.Npcs.Get(npc.NpcId);
             var direction = (Direction)npc.Direction;
-            var vitals = new short[(byte)Vital.Count];
-            for (byte n = 0; n < (byte)Vital.Count; n++) vitals[n] = npc.Vital[n];
 
             if (data is null) continue;
+            var vitals = new Vitals
+            {
+                Hp = npc.Vital[(byte)Vital.Hp],
+                Mp = npc.Vital[(byte)Vital.Mp],
+                MaxHp = data.Vital[(byte)Vital.Hp],
+                MaxMp = data.Vital[(byte)Vital.Mp]
+            };
             var entity = NpcSpawner.Spawn(context.World, npc.InstanceId, data, npc.X, npc.Y, direction, vitals);
             context.RegisterNetworkEntity(npc.InstanceId, entity);
         }
@@ -57,10 +62,15 @@ internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
 
         var data = catalog.Npcs.Get(packet.NpcId);
         var direction = (Direction)packet.Direction;
-        var vitals = new short[(byte)Vital.Count];
-        for (byte n = 0; n < (byte)Vital.Count; n++) vitals[n] = packet.Vital[n];
 
         if (data is null) return;
+        var vitals = new Vitals
+        {
+            Hp = packet.Vital[(byte)Vital.Hp],
+            Mp = packet.Vital[(byte)Vital.Mp],
+            MaxHp = data.Vital[(byte)Vital.Hp],
+            MaxMp = data.Vital[(byte)Vital.Mp]
+        };
         var entity = NpcSpawner.Spawn(context.World, packet.InstanceId, data, packet.X, packet.Y, direction, vitals);
         context.RegisterNetworkEntity(packet.InstanceId, entity);
     }

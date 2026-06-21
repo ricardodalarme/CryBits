@@ -12,20 +12,12 @@ namespace CryBits.Client.Spawners;
 
 internal static class NpcSpawner
 {
-    public static EntityId Spawn(World world, long npcId, Npc data, byte x, byte y, Direction direction, short[] currentVitals)
+    public static EntityId Spawn(World world, long npcId, Npc data, byte x, byte y, Direction direction, Vitals currentVitals)
     {
         var texture = Textures.Characters[data.Texture];
         var size = texture.ToSize();
         var frameWidth = size.Width / Globals.AnimationAmountX;
         var frameHeight = size.Height / Globals.AnimationAmountY;
-
-        var vitals = new Vitals
-        {
-            Hp = currentVitals[0],
-            MaxHp = data.Vital[0]
-        };
-        if (currentVitals.Length > 1) vitals.Mp = currentVitals[1];
-        if (data.Vital.Length > 1) vitals.MaxMp = data.Vital[1];
 
         var nameColor = data.Behaviour switch
         {
@@ -45,8 +37,8 @@ internal static class NpcSpawner
             .With(new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond })
             .With(new AttackComponent())
             .With(new NpcTag())
-            .With(new CollidableComponent())
-            .With(vitals)
+            .With(new CollidableTag())
+            .With(currentVitals)
             .Id;
     }
 }

@@ -93,13 +93,14 @@ internal sealed class PlayerSender(PackageSender packageSender, EntityRegistry e
 
     public void PlayerExperience(EntityId entityId)
     {
-        var stats = entities.Get(entityId)!.Get<StatBlock>()!;
+        var level = entities.Get(entityId)!.Get<LevelComponent>()!;
+        var attrs = entities.Get(entityId)!.Get<AttributesComponent>()!;
         short total = 0;
-        for (byte i = 0; i < (byte)CryBits.Definitions.Characters.Attribute.Count; i++) total += stats.Attribute[i];
-        var expNeeded = LevelingFormulas.ExperienceNeeded(stats.Level, total, stats.Points);
+        for (byte i = 0; i < (byte)CryBits.Definitions.Characters.Attribute.Count; i++) total += attrs.Values[i];
+        var expNeeded = LevelingFormulas.ExperienceNeeded(level.Level, total, (byte)level.Points);
         packageSender.ToPlayer(entityId,
             new PlayerExperiencePacket
-            { Experience = stats.Experience, ExpNeeded = expNeeded, Points = stats.Points });
+            { Experience = level.Experience, ExpNeeded = expNeeded, Points = (byte)level.Points });
     }
 
     public void PlayerEquipments(EntityId entityId)

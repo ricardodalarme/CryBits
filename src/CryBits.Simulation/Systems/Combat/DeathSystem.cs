@@ -29,7 +29,8 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
         var playerId = world.FindPlayer(died.EntityId);
         if (playerId == null) return;
 
-        var e = world.Entities.Get(playerId.Value)!;
+        var e = world.Entities.Get(playerId.Value);
+        if (e == null) return;
         var vitals = e.Get<Vitals>()!;
         var pos = e.Get<Position>()!;
         var appearance = e.Get<PlayerAppearance>()!;
@@ -46,7 +47,7 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
         pos.Y = playerClass.SpawnY;
 
         if (oldMapId != pos.MapId)
-            pos.LoadingMap = true;
+            world.Set(playerId.Value, new MapLoadingTag());
 
         tick.Events.Emit(new PlayerWarpedEvent
         {

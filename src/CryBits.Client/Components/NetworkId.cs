@@ -1,4 +1,4 @@
-namespace CryBits.Simulation.Components;
+namespace CryBits.Client.Components;
 
 public sealed class NetworkId
 {

@@ -13,7 +13,7 @@ internal class ClientMap(Map data, World world)
     {
         foreach (var state in world.All)
         {
-            if (!state.Has<CollidableComponent>()) continue;
+            if (!state.Has<CollidableTag>()) continue;
             var movement = state.Get<MovementComponent>();
             if (movement != null && movement.TileX == x && movement.TileY == y)
                 return true;

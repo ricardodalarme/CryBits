@@ -46,7 +46,8 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
                         var attackerId = world.FindPlayer(e.AttackerId);
                         var npcId = world.FindNpcInstance(e.NpcInstanceId);
                         if (attackerId == null || npcId == null) break;
-                        var npcE = world.Entities.Get(npcId.Value)!;
+                        var npcE = world.Entities.Get(npcId.Value);
+                        if (npcE == null) break;
                         var npcState = npcE.Get<NpcState>()!;
                     var npcData = catalog.Npcs.Get(npcState.NpcDefId);
                     if (npcData is null) break;
@@ -63,8 +64,8 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
 
     private void Open(World world, EntityId entityId, Shop shop)
     {
-        var e = world.Entities.Get(entityId)!;
-        var shopState = e.Get<ShopState>()!;
+        var shopState = world.AddOrGet<ShopState>(entityId);
+        if (shopState is null) return;
 
         shopState.ShopId = shop.Id;
         world.MarkDirty<ShopState>(entityId);
@@ -72,29 +73,22 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
 
     private void Leave(World world, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId)!;
-        var shopState = e.Get<ShopState>()!;
-
-        if (shopState.ShopId == null) return;
+        var shopState = world.Get<ShopState>(entityId);
+        if (shopState == null || shopState.ShopId == null) return;
 
         shopState.ShopId = null;
         world.MarkDirty<ShopState>(entityId);
-    }
-
-    private static byte CountFreeSlots(InventoryState inv)
-    {
-        byte count = 0;
-        for (var i = 0; i < inv.Slots.Length; i++)
-            if (inv.Slots[i].ItemId == Guid.Empty) count++;
-        return count;
+        world.Remove<ShopState>(entityId);
     }
 
     private void Buy(World world, Tick tick, EntityId entityId, short shopSoldIndex)
     {
-        var e = world.Entities.Get(entityId)!;
-        var shopState = e.Get<ShopState>()!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
+        var shopState = e.Get<ShopState>();
+        if (shopState?.ShopId == null) return;
         var inv = e.Get<InventoryState>()!;
-        var shop = catalog.Shops.Get(shopState.ShopId!.Value);
+        var shop = catalog.Shops.Get(shopState.ShopId.Value);
         if (shop is null) return;
         var shopSold = shop.Sold[shopSoldIndex];
 
@@ -116,7 +110,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
             return;
         }
 
-        if (CountFreeSlots(inv) == 0 && inv.Slots[currencySlot.Value].Amount > shopSold.Price)
+        if (inv.CountFreeSlots() == 0 && inv.Slots[currencySlot.Value].Amount > shopSold.Price)
         {
             tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You don't have space in your bag.", ColorArgb = ChatColors.Red });
             return;
@@ -131,11 +125,13 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
 
     private void Sell(World world, Tick tick, EntityId entityId, byte inventorySlotIndex, short amount)
     {
-        var e = world.Entities.Get(entityId)!;
-        var shopState = e.Get<ShopState>()!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
+        var shopState = e.Get<ShopState>();
+        if (shopState?.ShopId == null) return;
         var inv = e.Get<InventoryState>()!;
 
-        var shop = catalog.Shops.Get(shopState.ShopId!.Value);
+        var shop = catalog.Shops.Get(shopState.ShopId.Value);
         if (shop is null) return;
 
         amount = Math.Min(amount, inv.Slots[inventorySlotIndex].Amount);
@@ -147,7 +143,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
             return;
         }
 
-        if (CountFreeSlots(inv) == 0 && inv.Slots[inventorySlotIndex].Amount > amount)
+        if (inv.CountFreeSlots() == 0 && inv.Slots[inventorySlotIndex].Amount > amount)
         {
             tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You don't have space in your bag.", ColorArgb = ChatColors.Red });
             return;

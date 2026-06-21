@@ -89,7 +89,6 @@ public sealed class MapState
                         Amount = Data.Attribute[x, y].Data2,
                         DespawnTick = -1
                     });
-                    entity.Set(new GroundItemTag());
                     GroundItemIds.Add(entityId);
                 }
     }

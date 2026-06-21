@@ -21,10 +21,9 @@ internal class LocalPlayer(World world, EntityId? entity)
     public HotbarState? GetHotbar() => Entity.HasValue ? world.Get<HotbarState>(Entity.Value) : null;
 
     public LevelComponent? GetLevel() => Entity.HasValue ? world.Get<LevelComponent>(Entity.Value) : null;
+    public AttributesComponent? GetAttributes() => Entity.HasValue ? world.Get<AttributesComponent>(Entity.Value) : null;
 
     public TradeState? GetTrade() => Entity.HasValue ? world.Get<TradeState>(Entity.Value) : null;
-
-    public AttributesComponent? GetAttributes() => Entity.HasValue ? world.Get<AttributesComponent>(Entity.Value) : null;
 
     public EquipmentState? GetEquipment() => Entity.HasValue ? world.Get<EquipmentState>(Entity.Value) : null;
 
