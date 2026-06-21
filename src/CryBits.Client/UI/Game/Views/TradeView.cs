@@ -67,11 +67,12 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
     private void OnRenderTheirSlot(int slot, Point pos)
     {
         var trade = context.LocalPlayer.GetTrade();
-        if (trade?.Offer == null) return;
-        if (slot >= trade.Offer.Length) return;
-        var offer = trade.Offer[slot];
-        var item = _catalog.Items.Get(Guid.Empty);
-        if (item != null)
+        var inv = context.LocalPlayer.GetInventory();
+        if (trade?.TheirOffer == null || inv == null) return;
+        if (slot >= trade.TheirOffer.Length) return;
+        var offer = trade.TheirOffer[slot];
+        var inventorySlot = inv.Slots[offer.SlotNum];
+        if (_catalog.Items.Get(inventorySlot.ItemId) is { } item)
             itemRenderer.DrawItem(item, offer.Amount, pos);
     }
 

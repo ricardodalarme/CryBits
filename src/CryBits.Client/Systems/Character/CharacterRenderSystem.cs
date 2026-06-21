@@ -44,7 +44,8 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IC
 
             DrawShadow(transform, anim);
             DrawSprite(transform, sprite, anim, isHurt);
-            DrawName(transform, anim, name);
+            var nameColor = world.Get<NameColorComponent>(entity);
+            DrawName(transform, anim, name, nameColor);
         }
     }
 
@@ -89,10 +90,12 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IC
     private void DrawName(
         TransformComponent transform,
         AnimatedSpriteComponent anim,
-        PlayerAppearance appearance)
+        PlayerAppearance appearance,
+        NameColorComponent? nameColor)
     {
         var x = transform.X + anim.FrameWidth / 2;
         var y = transform.Y - anim.FrameHeight / 2;
-        renderer.DrawText(appearance.Name, x, y, Color.White, TextAlign.Center);
+        var color = nameColor?.Value ?? Color.White;
+        renderer.DrawText(appearance.Name, x, y, color, TextAlign.Center);
     }
 }

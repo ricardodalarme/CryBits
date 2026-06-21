@@ -15,6 +15,7 @@
   <ItemGroup Label="Database">
     <PackageVersion Include="linq2db" Version="6.3.0" />
     <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+    <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
   </ItemGroup>
 
   <ItemGroup Label="Serialization">

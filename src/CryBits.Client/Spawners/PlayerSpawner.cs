@@ -6,6 +6,7 @@ using CryBits.Definitions.Items;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
+using SFML.Graphics;
 
 namespace CryBits.Client.Spawners;
 
@@ -29,6 +30,7 @@ internal static class PlayerSpawner
         return world.SpawnBuilder()
             .With(new NetworkId { Value = networkId })
             .With(new PlayerAppearance { Name = name, TextureNum = textureNum })
+            .With(new NameColorComponent { Value = SFML.Graphics.Color.White })
             .With(new TransformComponent { X = x * Globals.Grid, Y = y * Globals.Grid })
             .With(new SpriteComponent { Texture = texture })
             .With(new AnimatedSpriteComponent { FrameWidth = frameWidth, FrameHeight = frameHeight, TimePerFrame = 0.25f, FrameCount = Globals.AnimationAmountX })
@@ -54,6 +56,8 @@ internal static class PlayerSpawner
         Direction direction)
     {
         var entity = Spawn(world, networkId, name, textureNum, vitals, maxVitals, x, y, direction);
+
+        world.Set(entity, new NameColorComponent { Value = Color.Yellow });
 
         var equipmentSlots = new Guid[equipment.Length];
         for (var i = 0; i < equipment.Length; i++)

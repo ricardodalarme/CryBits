@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="linq2db" />
     <PackageReference Include="Microsoft.Data.Sqlite" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,6 +6,7 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 using Direction = CryBits.Definitions.Common.Direction;
+using SFML.Graphics;
 
 namespace CryBits.Client.Spawners;
 
@@ -26,9 +27,18 @@ internal static class NpcSpawner
         if (currentVitals.Length > 1) vitals.Mp = currentVitals[1];
         if (data.Vital.Length > 1) vitals.MaxMp = data.Vital[1];
 
+        var nameColor = data.Behaviour switch
+        {
+            Behaviour.Friendly => Color.White,
+            Behaviour.AttackOnSight => Color.Red,
+            Behaviour.AttackWhenAttacked => new Color(228, 120, 51),
+            _ => Color.White
+        };
+
         return world.SpawnBuilder()
             .With(new NetworkId { Value = npcId })
             .With(new PlayerAppearance { Name = data.Name })
+            .With(new NameColorComponent { Value = nameColor })
             .With(new TransformComponent { X = x * Globals.Grid, Y = y * Globals.Grid })
             .With(new SpriteComponent { Texture = texture })
             .With(new AnimatedSpriteComponent { FrameWidth = frameWidth, FrameHeight = frameHeight, TimePerFrame = 0.25f, FrameCount = Globals.AnimationAmountX })

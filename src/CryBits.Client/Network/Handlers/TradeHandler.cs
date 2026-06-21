@@ -80,10 +80,19 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context, Defini
     [PacketHandler]
     internal void TradeOffer(TradeOfferPacket packet)
     {
-        // Read trade offer data
         var trade = context.LocalPlayer.GetTrade();
-        if (trade?.Offer == null) return;
-        for (byte i = 0; i < MaxInventory && i < trade.Offer.Length; i++)
-            trade.Offer[i] = new TradeSlot { SlotNum = (short)i, Amount = packet.Items[i].Amount };
+        if (trade == null) return;
+        if (packet.Own)
+        {
+            if (trade.Offer == null) trade.Offer = new TradeSlot[MaxInventory];
+            for (byte i = 0; i < MaxInventory && i < trade.Offer.Length; i++)
+                trade.Offer[i] = new TradeSlot { SlotNum = (short)i, Amount = packet.Items[i].Amount };
+        }
+        else
+        {
+            if (trade.TheirOffer == null) trade.TheirOffer = new TradeSlot[MaxInventory];
+            for (byte i = 0; i < MaxInventory && i < trade.TheirOffer.Length; i++)
+                trade.TheirOffer[i] = new TradeSlot { SlotNum = (short)i, Amount = packet.Items[i].Amount };
+        }
     }
 }
