@@ -5,30 +5,29 @@ using CryBits.Protocol.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
-internal class AccountSender(PacketSender packetSender, DefinitionCatalog catalog)
+internal class AccountSender(Connection connection, DefinitionCatalog catalog)
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-    public static AccountSender Instance { get; } = new(PacketSender.Instance, DefinitionCatalog.Instance);
+    public static AccountSender Instance { get; } = new(Connection.Instance, DefinitionCatalog.Instance);
 
     public void CreateCharacter(string name, bool isMale, short @class, short textureNum) =>
-        packetSender.Packet(new CreateCharacterPacket
+        connection.SendPacket(new CreateCharacterPacket
         {
             Name = name,
-            ClassId = _catalog.Classes.ElementAt(@class).Value.Id.ToString(),
+            ClassId = catalog.Classes.ElementAt(@class).Value.Id.ToString(),
             Gender = isMale ? Gender.Male : Gender.Female,
             TextureNum = textureNum
         });
 
     public void CharacterUse(int characterIndex) =>
-        packetSender.Packet(new CharacterUsePacket
+        connection.SendPacket(new CharacterUsePacket
         {
             CharacterIndex = characterIndex
         });
 
-    public void CharacterCreate() => packetSender.Packet(new CharacterCreatePacket());
+    public void CharacterCreate() => connection.SendPacket(new CharacterCreatePacket());
 
     public void CharacterDelete(int characterIndex) =>
-        packetSender.Packet(new CharacterDeletePacket
+        connection.SendPacket(new CharacterDeletePacket
         {
             CharacterIndex = characterIndex
         });

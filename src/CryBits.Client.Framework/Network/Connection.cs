@@ -1,4 +1,6 @@
 using CryBits.Client.Framework.Network.Transport;
+using CryBits.Protocol;
+using CryBits.Protocol.Packets.Client;
 using CryBits.Transport;
 using CryBits.Transport.Abstractions;
 using static CryBits.Definitions.Globals;
@@ -39,6 +41,11 @@ public class Connection
     public bool IsConnected => _transport.IsConnected;
 
     public void Send(byte[] data, DeliveryChannel delivery) => _transport.Send(data, delivery);
+
+    public void SendPacket<T>(T packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered) where T : IClientPacket
+    {
+        _transport.Send(PacketSerializer.Serialize(packet), delivery);
+    }
 
     public bool TryConnect(string address, int port, string key)
     {

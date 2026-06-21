@@ -4,10 +4,10 @@ using CryBits.Transport;
 
 namespace CryBits.Client.Network.Senders;
 
-internal class MapSender(PacketSender packetSender)
+internal class MapSender(Connection connection)
 {
-    public static MapSender Instance { get; } = new(PacketSender.Instance);
+    public static MapSender Instance { get; } = new(Connection.Instance);
 
     public void RequestMap(bool order) =>
-        packetSender.Packet(new RequestMapPacket { SendMap = order }, DeliveryChannel.ReliableUnordered);
+        connection.SendPacket(new RequestMapPacket { SendMap = order }, DeliveryChannel.ReliableUnordered);
 }

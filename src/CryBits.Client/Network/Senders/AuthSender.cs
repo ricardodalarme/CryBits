@@ -3,18 +3,18 @@ using CryBits.Protocol.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
-internal class AuthSender(PacketSender packetSender)
+internal class AuthSender(Connection connection)
 {
-    public static AuthSender Instance { get; } = new(PacketSender.Instance);
+    public static AuthSender Instance { get; } = new(Connection.Instance);
 
-    public void Connect(string username, string password) => packetSender.Packet(new ConnectPacket
+    public void Connect(string username, string password) => connection.SendPacket(new ConnectPacket
     {
         Username = username,
         Password = password,
         IsClientAccess = false
     });
 
-    public void Register(string username, string password) => packetSender.Packet(new RegisterPacket
+    public void Register(string username, string password) => connection.SendPacket(new RegisterPacket
     {
         Username = username,
         Password = password

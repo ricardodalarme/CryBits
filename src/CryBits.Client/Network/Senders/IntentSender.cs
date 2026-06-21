@@ -7,16 +7,16 @@ using MemoryPack;
 
 namespace CryBits.Client.Network.Senders;
 
-internal class IntentSender(PacketSender packetSender)
+internal class IntentSender(Connection connection)
 {
-    public static IntentSender Instance { get; } = new(PacketSender.Instance);
+    public static IntentSender Instance { get; } = new(Connection.Instance);
 
     public void Send(Intent intent)
     {
         var tag = IntentRegistry.GetTag(intent.GetType());
         if (tag == null) return;
         var data = MemoryPackSerializer.Serialize(intent.GetType(), intent);
-        packetSender.Packet(
+        connection.SendPacket(
             new IntentPacket { IntentTag = tag.Value, Data = data },
             DeliveryChannel.Sequenced);
     }
