@@ -1,6 +1,6 @@
 using CryBits.Definitions;
 
-namespace CryBits.Editors.Maps;
+namespace CryBits.Editors.Entities;
 
 public struct MapWeatherParticleInstance
 {

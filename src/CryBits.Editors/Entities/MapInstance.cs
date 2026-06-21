@@ -2,10 +2,11 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Maps;
+using CryBits.Editors.Maps;
 using static CryBits.Definitions.Globals;
 
 
-namespace CryBits.Editors.Maps;
+namespace CryBits.Editors.Entities;
 
 internal class MapInstance
 {

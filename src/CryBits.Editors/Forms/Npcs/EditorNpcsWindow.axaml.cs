@@ -16,7 +16,7 @@ using SFML.Graphics;
 using SFML.System;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
-namespace CryBits.Editors.Forms;
+namespace CryBits.Editors.Forms.Npcs;
 
 internal partial class EditorNpcsWindow : Window
 {

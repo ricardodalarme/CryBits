@@ -1,11 +1,11 @@
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions;
 using CryBits.Definitions.Maps;
-using CryBits.Editors.Maps;
+using CryBits.Editors.Entities;
 using PropertyModels.ComponentModel;
 using System.ComponentModel;
 
-namespace CryBits.Editors.Forms.MapEditor.Properties;
+namespace CryBits.Editors.Forms.Maps.Properties;
 
 internal class MapProperties(Map map) : MiniReactiveObject
 {
