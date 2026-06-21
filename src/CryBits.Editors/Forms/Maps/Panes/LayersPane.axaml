@@ -1,0 +1,153 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:semi="https://irihi.tech/semi"
+             x:Class="CryBits.Editors.Maps.LayersPane">
+    <ScrollViewer>
+        <StackPanel Spacing="4" Margin="4">
+
+            <!-- Layers group -->
+            <Border x:Name="grpLayersBorder"
+                    BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="4">
+                <Grid RowDefinitions="Auto,Auto,Auto">
+                    <TextBlock Grid.Row="0" Text="Layers" FontWeight="Bold" Margin="0,0,0,2" />
+                    <DataGrid x:Name="lstLayers" Grid.Row="1"
+                              IsReadOnly="False"
+                              CanUserReorderColumns="False"
+                              CanUserResizeColumns="False"
+                              CanUserSortColumns="False"
+                              GridLinesVisibility="Horizontal"
+                              Height="128"
+                              SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn Header=""     Binding="{Binding Visible}" Width="22" />
+                            <DataGridTextColumn    Header="Nº"   Binding="{Binding Index}"   Width="24" IsReadOnly="True" />
+                            <DataGridTextColumn    Header="Name" Binding="{Binding Name}"    Width="*"  IsReadOnly="True" />
+                            <DataGridTextColumn    Header="Type" Binding="{Binding TypeName}" Width="50" IsReadOnly="True" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="3" Margin="0,3,0,0">
+                        <Button Content="Add" x:Name="butLayers_Add" />
+                        <Button Content="Remove" x:Name="butLayers_Remove" />
+                        <Button Content="Edit" x:Name="butLayers_Edit" />
+                        <Separator Width="4" />
+                        <Button Content="↑" x:Name="butLayers_Up" />
+                        <Button Content="↓" x:Name="butLayers_Down" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Layer add/edit panel (hidden by default) -->
+            <Border x:Name="pnlLayerEdit"
+                    BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="8"
+                    IsVisible="False">
+                <StackPanel Spacing="4">
+                    <TextBlock x:Name="lblLayerEditTitle" Text="Add layer" FontWeight="Bold" />
+                    <TextBlock Text="Name:" />
+                    <TextBox x:Name="txtLayer_Name" MaxLength="12" />
+                    <TextBlock Text="Type:" Margin="0,4,0,0" />
+                    <ComboBox x:Name="cmbLayers_Type" HorizontalAlignment="Stretch" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4" Margin="0,4,0,0">
+                        <Button x:Name="butLayer_Ok" Grid.Column="0" Content="Add"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                        <Button Grid.Column="1" Content="Cancel"
+                                x:Name="butLayer_Cancel" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Zones panel -->
+            <Border x:Name="grpZones"
+                    BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="8"
+                    IsVisible="False">
+                <StackPanel Spacing="6">
+                    <TextBlock x:Name="lblZone" Text="Zone: None" FontWeight="Bold" />
+                    <ScrollBar x:Name="scrlZone"
+                               Orientation="Horizontal"
+                               Minimum="0" Maximum="20" Value="0" />
+                    <Button Content="Clear" x:Name="scrlZone_Clear"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <!-- Attributes panel -->
+            <Border x:Name="grpAttributes"
+                    BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="8"
+                    IsVisible="False">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Attribute" FontWeight="Bold" />
+                    <RadioButton x:Name="optA_Block"    Content="Block"              GroupName="Attr" IsChecked="True" />
+                    <RadioButton x:Name="optA_Warp"     Content="Warp"               GroupName="Attr" />
+                    <RadioButton x:Name="optA_Item"     Content="Item Spawn"         GroupName="Attr" />
+                    <RadioButton x:Name="optA_DirBlock" Content="Directional Block"  GroupName="Attr" />
+
+                    <Border x:Name="grpA_Warp"
+                            BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                            CornerRadius="4" Padding="6" IsVisible="False">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Warp to map:" />
+                            <ComboBox x:Name="cmbA_Warp_Map" HorizontalAlignment="Stretch" />
+                            <TextBlock Text="Direction:" />
+                            <ComboBox x:Name="cmbA_Warp_Direction" HorizontalAlignment="Stretch" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                <StackPanel Grid.Column="0" Spacing="2">
+                                    <TextBlock Text="X:" />
+                                    <NumericUpDown x:Name="numA_Warp_X" Minimum="0" Maximum="99" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="2">
+                                    <TextBlock Text="Y:" />
+                                    <NumericUpDown x:Name="numA_Warp_Y" Minimum="0" Maximum="99" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border x:Name="grpA_Item"
+                            BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                            CornerRadius="4" Padding="6" IsVisible="False">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Item:" />
+                            <ComboBox x:Name="cmbA_Item" HorizontalAlignment="Stretch" />
+                            <TextBlock Text="Amount:" />
+                            <NumericUpDown x:Name="numA_Item_Amount" Minimum="1" Maximum="32767" />
+                        </StackPanel>
+                    </Border>
+
+                    <Button Content="Clear All Attributes" x:Name="butAttributes_Clear"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                    <Button Content="Import from Tiles" x:Name="butAttributes_Import"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <!-- NPCs panel -->
+            <Border x:Name="grpNPCs"
+                    BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="8"
+                    IsVisible="False">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="NPCs" FontWeight="Bold" />
+                    <TextBlock Text="NPC:" />
+                    <ComboBox x:Name="cmbNPC" HorizontalAlignment="Stretch" />
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                        <TextBlock Grid.Column="0" Text="Zone:" VerticalAlignment="Center" />
+                        <NumericUpDown x:Name="numNPC_Zone" Grid.Column="1" Minimum="0" Maximum="20" />
+                    </Grid>
+                    <Button Content="Add" x:Name="butNPC_Add"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                    <ListBox x:Name="lstNPC" Height="180" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
+                        <Button Grid.Column="0" Content="Remove" x:Name="butNPC_Remove"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                        <Button Grid.Column="1" Content="Clear" x:Name="butNPC_Clear"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -32,6 +32,10 @@
     <PackageReference Include="Semi.Avalonia.DataGrid" />
     <PackageReference Include="SFML.Audio" />
     <PackageReference Include="SFML.Graphics" />
+    <PackageReference Include="bodong.Avalonia.PropertyGrid" />
+    <PackageReference Include="Dock.Avalonia" />
+    <PackageReference Include="Dock.Model.Avalonia" />
+    <PackageReference Include="Dock.Avalonia.Themes.Fluent" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,6 +3,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Avalonia.PropertyGrid.Controls;
 using Avalonia.Threading;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
@@ -16,15 +17,14 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Entities;
-using CryBits.Editors.Graphics.Renderers;
+using CryBits.Editors.Forms;
+using CryBits.Editors.Forms.MapEditor.Properties;
 using CryBits.Editors.Network;
 using SFML.Graphics;
 using SFML.System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using static CryBits.Editors.Logic.Utils;
-// Note: Globals.Grid (byte) and Avalonia.Controls.Grid (type) differ in kind
 using AvaloniaScrollEventArgs = Avalonia.Controls.Primitives.ScrollEventArgs;
 using SelectionChangedEventArgs = Avalonia.Controls.SelectionChangedEventArgs;
 using SystemPoint = System.Drawing.Point;
@@ -32,7 +32,7 @@ using SystemRect = System.Drawing.Rectangle;
 using SystemSize = System.Drawing.Size;
 using TextChangedEventArgs = Avalonia.Controls.TextChangedEventArgs;
 
-namespace CryBits.Editors.Forms;
+namespace CryBits.Editors.Maps;
 
 // Cross-platform replacement for System.Windows.Forms.MouseButtons
 internal enum MouseButtons
@@ -153,7 +153,7 @@ internal partial class EditorMapsWindow : Window
 
     // ── Private state ────────────────────────────────────────────────────────
     private Map? _selected;
-    private bool _loading;
+    private MapProperties? _mapProps;
     private bool _mapPressed;
     private bool _layerEditIsNew;
 
@@ -186,6 +186,61 @@ internal partial class EditorMapsWindow : Window
     // Layer view-models
     private List<LayerVm> _layerVms = [];
 
+    // ── Proxy properties for controls inside UserControls ──────────────────
+    // TileSheetPane
+    private ComboBox cmbTiles => tileSheetPane.CmbTiles;
+    private CheckBox chkAuto => tileSheetPane.ChkAuto;
+    private Avalonia.Controls.Image imgTile => tileSheetPane.ImgTile;
+    private ScrollBar scrlTileX => tileSheetPane.ScrlTileX;
+    private ScrollBar scrlTileY => tileSheetPane.ScrlTileY;
+
+    // MapCanvasPane
+    private Avalonia.Controls.Image imgMap => mapCanvasPane.ImgMap;
+    private ScrollBar scrlMapX => mapCanvasPane.ScrlMapX;
+    private ScrollBar scrlMapY => mapCanvasPane.ScrlMapY;
+
+    // LayersPane
+    private DataGrid lstLayers => layersPane.LstLayers;
+    private Border pnlLayerEdit => layersPane.PnlLayerEdit;
+    private TextBox txtLayer_Name => layersPane.TxtLayer_Name;
+    private ComboBox cmbLayers_Type => layersPane.CmbLayers_Type;
+    private TextBlock lblLayerEditTitle => layersPane.LblLayerEditTitle;
+    private Button butLayer_Ok => layersPane.ButLayer_Ok;
+    private Border grpZones => layersPane.GrpZones;
+    private TextBlock lblZone => layersPane.LblZone;
+    private ScrollBar scrlZone => layersPane.ScrlZone;
+    private Border grpAttributes => layersPane.GrpAttributes;
+    private RadioButton optA_Block => layersPane.OptA_Block;
+    private RadioButton optA_Warp => layersPane.OptA_Warp;
+    private RadioButton optA_Item => layersPane.OptA_Item;
+    private RadioButton optA_DirBlock => layersPane.OptA_DirBlock;
+    private Border grpA_Warp => layersPane.GrpA_Warp;
+    private ComboBox cmbA_Warp_Map => layersPane.CmbA_Warp_Map;
+    private ComboBox cmbA_Warp_Direction => layersPane.CmbA_Warp_Direction;
+    private NumericUpDown numA_Warp_X => layersPane.NumA_Warp_X;
+    private NumericUpDown numA_Warp_Y => layersPane.NumA_Warp_Y;
+    private Border grpA_Item => layersPane.GrpA_Item;
+    private ComboBox cmbA_Item => layersPane.CmbA_Item;
+    private NumericUpDown numA_Item_Amount => layersPane.NumA_Item_Amount;
+    private Border grpNPCs => layersPane.GrpNPCs;
+    private ComboBox cmbNPC => layersPane.CmbNPC;
+    private NumericUpDown numNPC_Zone => layersPane.NumNPC_Zone;
+    private ListBox lstNPC => layersPane.LstNPC;
+
+    // MapExplorerPane
+    private TextBox txtFilter => explorerPane.TxtFilter;
+    private ListBox lstMaps => explorerPane.LstMaps;
+
+    // PropertiesPane
+    private PropertyGrid prgMapProperties => propertiesPane!.PrgMapProperties;
+
+    // ── Fields for programmatically-created UserControls ─────────────────────
+    private TileSheetPane tileSheetPane = null!;
+    private MapCanvasPane mapCanvasPane = null!;
+    private LayersPane layersPane = null!;
+    private MapExplorerPane explorerPane = null!;
+    private PropertiesPane propertiesPane = null!;
+
     // ── Constructor ──────────────────────────────────────────────────────────
     public EditorMapsWindow(DefinitionCatalog catalog)
     {
@@ -193,37 +248,144 @@ internal partial class EditorMapsWindow : Window
         InitializeComponent();
         Instance = this;
 
-        // Layer type combo
-        foreach (var l in Enum.GetValues<Layer>())
-            cmbLayers_Type.Items.Add(l.ToString());
-
-        // Tile sheet combo
-        for (var i = 1; i < Textures.Tiles.Count; i++)
-            cmbTiles.Items.Add(i.ToString());
-        if (cmbTiles.Items.Count > 0) cmbTiles.SelectedIndex = 0;
-
-
-        foreach (var m in Enum.GetValues<Moral>())
-            cmbMoral.Items.Add(m.ToString());
-        foreach (var w in Enum.GetValues<Weather>())
-            cmbWeather.Items.Add(w.ToString());
-
-        // Zone scroll limit
-        scrlZone.Maximum = Globals.MaxZones;
-        numNPC_Zone.Maximum = Globals.MaxZones;
+        // Create UserControls and assign to Dock tools BEFORE InitLayout
+        // (Dock's ToolContentControl will pick up the Content during view creation)
+        tileSheetPane = new TileSheetPane();
+        layersPane = new LayersPane();
+        mapCanvasPane = new MapCanvasPane();
+        explorerPane = new MapExplorerPane();
+        propertiesPane = new PropertiesPane();
+        AssignContentToDockModels();
 
         // SFML offscreen render textures
         MapRenderer.Instance.WinMap = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
         MapRenderer.Instance.WinMapTile = new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
 
-        // 30 fps timer
+        // Timer (created here since the field is readonly)
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
         _timer.Tick += OnRenderTick;
-        _timer.Start();
+
+        // Wire events and init combos after the visual tree is ready
+        Loaded += OnLoaded;
+    }
+
+    private void AssignContentToDockModels()
+    {
+        if (DockControl?.Layout is not Dock.Model.Avalonia.Controls.RootDock root)
+            return;
+
+        void Walk(IList<Dock.Model.Core.IDockable>? dockables)
+        {
+            if (dockables == null) return;
+            foreach (var d in dockables)
+            {
+                switch (d)
+                {
+                    case Dock.Model.Avalonia.Controls.ToolDock td when td.VisibleDockables?.Count > 0:
+                        td.ActiveDockable = td.VisibleDockables[0];
+                        foreach (var t in td.VisibleDockables)
+                            AssignContent(t);
+                        break;
+                    case Dock.Model.Avalonia.Controls.DocumentDock dd when dd.VisibleDockables?.Count > 0:
+                        dd.ActiveDockable = dd.VisibleDockables[0];
+                        foreach (var doc in dd.VisibleDockables)
+                            AssignContent(doc);
+                        break;
+                    case Dock.Model.Avalonia.Controls.ProportionalDock pd:
+                        Walk(pd.VisibleDockables);
+                        break;
+                }
+            }
+        }
+
+        Walk(root.VisibleDockables);
+    }
+
+    private void AssignContent(Dock.Model.Core.IDockable dockable)
+    {
+        switch (dockable.Id)
+        {
+            case "TileSheet" when dockable is Dock.Model.Avalonia.Controls.Tool t:
+                t.Content = tileSheetPane; break;
+            case "Layers" when dockable is Dock.Model.Avalonia.Controls.Tool t:
+                t.Content = layersPane; break;
+            case "MapCanvas" when dockable is Dock.Model.Avalonia.Controls.Document doc:
+                doc.Content = mapCanvasPane; break;
+            case "MapExplorer" when dockable is Dock.Model.Avalonia.Controls.Tool t:
+                t.Content = explorerPane; break;
+            case "Properties" when dockable is Dock.Model.Avalonia.Controls.Tool t:
+                t.Content = propertiesPane; break;
+        }
+    }
+
+    private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        // Wire tile sheet events
+        tileSheetPane.CmbTiles.SelectionChanged += cmbTiles_SelectionChanged;
+        tileSheetPane.ChkAuto.IsCheckedChanged += chkAuto_IsCheckedChanged;
+        tileSheetPane.ImgTile.PointerPressed += imgTile_PointerPressed;
+        tileSheetPane.ImgTile.PointerMoved += imgTile_PointerMoved;
+        tileSheetPane.ScrlTileY.Scroll += scrlTileY_Scroll;
+        tileSheetPane.ScrlTileX.Scroll += scrlTileX_Scroll;
+
+        // Wire map canvas events
+        mapCanvasPane.ImgMap.PointerPressed += imgMap_PointerPressed;
+        mapCanvasPane.ImgMap.PointerReleased += imgMap_PointerReleased;
+        mapCanvasPane.ImgMap.PointerMoved += imgMap_PointerMoved;
+        mapCanvasPane.ScrlMapY.Scroll += scrlMapY_Scroll;
+        mapCanvasPane.ScrlMapX.Scroll += scrlMapX_Scroll;
+
+        // Wire layers events
+        layersPane.LstLayers.SelectionChanged += lstLayers_SelectionChanged;
+        layersPane.ButLayers_Add.Click += butLayers_Add_Click;
+        layersPane.ButLayers_Remove.Click += butLayers_Remove_Click;
+        layersPane.ButLayers_Edit.Click += butLayers_Edit_Click;
+        layersPane.ButLayers_Up.Click += butLayers_Up_Click;
+        layersPane.ButLayers_Down.Click += butLayers_Down_Click;
+        layersPane.ButLayer_Ok.Click += butLayer_Ok_Click;
+        layersPane.ButLayer_Cancel.Click += butLayer_Cancel_Click;
+        layersPane.ScrlZone.Scroll += scrlZone_Scroll;
+        layersPane.ScrlZone_Clear.Click += scrlZone_Clear_Click;
+        layersPane.OptA_Warp.IsCheckedChanged += optA_Warp_Changed;
+        layersPane.OptA_Item.IsCheckedChanged += optA_Item_Changed;
+        layersPane.CmbA_Warp_Map.SelectionChanged += cmbA_Warp_Map_SelectionChanged;
+        layersPane.CmbA_Warp_Direction.SelectionChanged += cmbA_Warp_Direction_SelectionChanged;
+        layersPane.NumA_Warp_X.ValueChanged += numA_Warp_X_ValueChanged;
+        layersPane.NumA_Warp_Y.ValueChanged += numA_Warp_Y_ValueChanged;
+        layersPane.CmbA_Item.SelectionChanged += cmbA_Item_SelectionChanged;
+        layersPane.NumA_Item_Amount.ValueChanged += numA_Item_Amount_ValueChanged;
+        layersPane.ButAttributes_Clear.Click += butAttributes_Clear_Click;
+        layersPane.ButAttributes_Import.Click += butAttributes_Import_Click;
+        layersPane.ButNPC_Add.Click += butNPC_Add_Click;
+        layersPane.ButNPC_Remove.Click += butNPC_Remove_Click;
+        layersPane.ButNPC_Clear.Click += butNPC_Clear_Click;
+
+        // Wire explorer events
+        explorerPane.TxtFilter.TextChanged += txtFilter_TextChanged;
+        explorerPane.ButNew.Click += butNew_Click;
+        explorerPane.ButRemove.Click += butRemove_Click;
+        explorerPane.LstMaps.SelectionChanged += lstMaps_SelectionChanged;
+
+        // Layer type combo
+        foreach (var l in Enum.GetValues<Layer>())
+            layersPane.CmbLayers_Type.Items.Add(l.ToString());
+
+        // Tile sheet combo
+        for (var i = 1; i < Textures.Tiles.Count; i++)
+            tileSheetPane.CmbTiles.Items.Add(i.ToString());
+        if (tileSheetPane.CmbTiles.Items.Count > 0)
+            tileSheetPane.CmbTiles.SelectedIndex = 0;
+
+        // Zone scroll limit
+        layersPane.ScrlZone.Maximum = Globals.MaxZones;
+        layersPane.NumNPC_Zone.Maximum = Globals.MaxZones;
+
+        // Start render timer
+        _timer!.Start();
 
         RefreshMapList();
 
-        // Set initial cached state (window is visible from this point)
+        // Set initial cached state
         _isOpen = true;
         _showAudio = butAudio.IsChecked == true;
         _showVisualization = butVisualization.IsChecked == true;
@@ -291,34 +453,19 @@ internal partial class EditorMapsWindow : Window
     private void SelectMap(Map map)
     {
         _selected = map;
-        _loading = true;
 
         // Warp map combo
         RefreshWarpMapCombo();
 
-        // Map properties
-        txtMapName.Text = map.Name;
-        cmbMoral.SelectedIndex = (int)map.Moral;
-        txtMapMusic.Text = map.Music;
+        // Bind map properties to PropertyGrid
+        if (_mapProps != null)
+            _mapProps.PropertyChanged -= OnMapPropertyChanged;
 
-        numFogTexture.Value = map.Fog.Texture;
-        numFogAlpha.Value = map.Fog.Alpha;
-        numFogSpeedX.Value = map.Fog.SpeedX;
-        numFogSpeedY.Value = map.Fog.SpeedY;
-
-        cmbWeather.SelectedIndex = (int)map.Weather.Type;
-        numWeatherIntensity.Value = map.Weather.Intensity;
-
-        numHueR.Value = (byte)(map.ColorArgb >> 16);
-        numHueG.Value = (byte)(map.ColorArgb >> 8);
-        numHueB.Value = (byte)map.ColorArgb;
-
-        numLighting.Value = map.Lighting;
-        numPanorama.Value = map.Panorama;
-
+        _mapProps = new MapProperties(map);
+        _mapProps.PropertyChanged += OnMapPropertyChanged;
+        prgMapProperties.DataContext = _mapProps;
 
         RefreshNpcList();
-
 
         MapInstance.Instance.UpdateWeatherType();
 
@@ -328,10 +475,13 @@ internal partial class EditorMapsWindow : Window
         // Update canvas bounds
         UpdateMapBounds();
 
-
         RefreshLayerList();
+    }
 
-        _loading = false;
+    private void OnMapPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MapProperties.Name))
+            RefreshMapList(_selected?.Id);
     }
 
     private void RefreshWarpMapCombo()
@@ -1138,108 +1288,6 @@ internal partial class EditorMapsWindow : Window
         _selected.Attribute[sel.X, sel.Y].Data3 = _aData3;
         _selected.Attribute[sel.X, sel.Y].Data4 = _aData4;
         _selected.Attribute[sel.X, sel.Y].Type = (byte)AttributeSelected();
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // MAP PROPERTIES PANEL  (replaces WinForms PropertyGrid)
-    // ─────────────────────────────────────────────────────────────────────────
-
-    private void txtMapName_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Name = txtMapName.Text ?? string.Empty;
-        RefreshMapList(_selected.Id);
-    }
-
-    private void cmbMoral_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Moral = (Moral)cmbMoral.SelectedIndex;
-    }
-
-    private void txtMapMusic_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Music = txtMapMusic.Text ?? string.Empty;
-    }
-
-    private void numFogTexture_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Fog.Texture = (byte)Math.Min(e.NewValue ?? 0, Textures.Fogs.Count - 1);
-    }
-
-    private void numFogAlpha_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Fog.Alpha = (byte)(e.NewValue ?? 0);
-    }
-
-    private void numFogSpeedX_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Fog.SpeedX = (sbyte)(e.NewValue ?? 0);
-    }
-
-    private void numFogSpeedY_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Fog.SpeedY = (sbyte)(e.NewValue ?? 0);
-    }
-
-    private void cmbWeather_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Weather.Type = (Weather)cmbWeather.SelectedIndex;
-        MapInstance.Instance.UpdateWeatherType();
-    }
-
-    private void numWeatherIntensity_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Weather.Intensity = (byte)Math.Min(e.NewValue ?? 0, Globals.MaxWeatherIntensity);
-    }
-
-    private void numHueR_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        var argb = _selected.ColorArgb;
-        var a = (byte)(argb >> 24);
-        var g = (byte)(argb >> 8);
-        var b = (byte)argb;
-        _selected.ColorArgb = (a << 24) | ((int)(e.NewValue ?? 255) << 16) | (g << 8) | b;
-    }
-
-    private void numHueG_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        var argb = _selected.ColorArgb;
-        var a = (byte)(argb >> 24);
-        var r = (byte)(argb >> 16);
-        var b = (byte)argb;
-        _selected.ColorArgb = (a << 24) | (r << 16) | ((int)(e.NewValue ?? 255) << 8) | b;
-    }
-
-    private void numHueB_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        var argb = _selected.ColorArgb;
-        var a = (byte)(argb >> 24);
-        var r = (byte)(argb >> 16);
-        var g = (byte)(argb >> 8);
-        _selected.ColorArgb = (a << 24) | (r << 16) | (g << 8) | (int)(e.NewValue ?? 255);
-    }
-
-    private void numLighting_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Lighting = (byte)(e.NewValue ?? 100);
-    }
-
-    private void numPanorama_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Panorama = (byte)Math.Min(e.NewValue ?? 0, Textures.Panoramas.Count - 1);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

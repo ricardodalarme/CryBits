@@ -1,5 +1,6 @@
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms;
+using CryBits.Editors.Maps;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
 

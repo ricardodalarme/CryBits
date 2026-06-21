@@ -1,0 +1,143 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:semi="https://irihi.tech/semi"
+        xmlns:apc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
+        xmlns:dock="using:Dock.Avalonia.Controls"
+        xmlns:dockFactory="using:Dock.Model.Avalonia"
+        xmlns:dockModel="using:Dock.Model.Avalonia.Controls"
+        x:Class="CryBits.Editors.Maps.EditorMapsWindow"
+        Title="CryBits Editor"
+        Width="1449" Height="735"
+        MinWidth="931" MinHeight="686"
+        CanResize="True"
+        WindowStartupLocation="CenterScreen">
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- Root grid: toolbar | content | statusbar                            -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- ────────────────────────────────────────────────────────────── -->
+        <!-- Row 0 – Toolbar (matches original tolStrip order)              -->
+        <!-- ────────────────────────────────────────────────────────────── -->
+        <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="4,2">
+
+            <!-- File -->
+            <Button x:Name="butSaveAll" Content="Save All" Click="butSaveAll_Click" Margin="0,0,2,0" />
+            <Button x:Name="butReload"  Content="Reload"   Click="butReload_Click"  Margin="0,0,2,0" />
+            <Separator Width="6" />
+
+            <!-- Mode (Normal / Attributes / Zones / NPCs — original order) -->
+            <ToggleButton x:Name="butMNormal"     Content="Normal"     IsChecked="True"  Click="butMNormal_Click"     Margin="0,0,2,0" />
+            <ToggleButton x:Name="butMAttributes" Content="Attributes" IsChecked="False" Click="butMAttributes_Click" Margin="0,0,2,0" />
+            <ToggleButton x:Name="butMZones"      Content="Zones"      IsChecked="False" Click="butMZones_Click"      Margin="0,0,2,0" />
+            <ToggleButton x:Name="butMNPCs"       Content="NPCs"       IsChecked="False" Click="butMNPCs_Click"       Margin="0,0,2,0" />
+            <Separator Width="6" />
+
+            <!-- Clipboard -->
+            <Button x:Name="butCut"   Content="Cut"   Click="butCut_Click"   IsEnabled="False" Margin="0,0,2,0" />
+            <Button x:Name="butCopy"  Content="Copy"  Click="butCopy_Click"  IsEnabled="False" Margin="0,0,2,0" />
+            <Button x:Name="butPaste" Content="Paste" Click="butPaste_Click" IsEnabled="False" Margin="0,0,2,0" />
+            <Separator Width="6" />
+
+            <!-- Draw tools -->
+            <ToggleButton x:Name="butPencil"    Content="Pencil"    IsChecked="True"  Click="butPencil_Click"    Margin="0,0,2,0" />
+            <ToggleButton x:Name="butRectangle" Content="Rectangle" IsChecked="False" Click="butRectangle_Click" Margin="0,0,2,0" />
+            <ToggleButton x:Name="butArea"      Content="Area"      IsChecked="False" Click="butArea_Click"      Margin="0,0,2,0" />
+            <ToggleButton x:Name="butDiscover"  Content="Discover"  IsChecked="False" Click="butDiscover_Click"  Margin="0,0,2,0" />
+            <Separator Width="6" />
+
+            <Button x:Name="butFill"   Content="Fill"   Click="butFill_Click"   Margin="0,0,2,0" />
+            <Button x:Name="butEraser" Content="Eraser" Click="butEraser_Click" Margin="0,0,2,0" />
+            <Separator Width="6" />
+
+            <!-- Zoom -->
+            <ToggleButton x:Name="butZoom_Normal" Content="1×" IsChecked="True"  Click="butZoom_Normal_Click"  Margin="0,0,2,0" />
+            <ToggleButton x:Name="butZoom_2x"     Content="2×" IsChecked="False" Click="butZoom_2x_Click"     Margin="0,0,2,0" />
+            <ToggleButton x:Name="butZoom_4x"     Content="4×" IsChecked="False" Click="butZoom_4x_Click"     Margin="0,0,2,0" />
+            <Separator Width="6" />
+
+            <!-- View -->
+            <ToggleButton x:Name="butVisualization" Content="Visualization" IsChecked="True"  Click="butVisualization_Click" Margin="0,0,2,0" />
+            <ToggleButton x:Name="butEdition"       Content="Edition"       IsChecked="False" Click="butEdition_Click"       Margin="0,0,2,0" />
+            <Separator Width="6" />
+            <ToggleButton x:Name="butGrid"  Content="Grid"  IsChecked="False" Click="butGrid_Click"  Margin="0,0,2,0" />
+            <ToggleButton x:Name="butAudio" Content="Audio" IsChecked="True"  Click="butAudio_Click" Margin="0,0,2,0" />
+            <Separator Width="6" />
+
+            <!-- Content editors dropdown -->
+            <Button Content="Content Editors ▾" Margin="0,0,4,0">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuItem Header="Classes"   Click="butEditors_Classes_Click" />
+                        <MenuItem Header="Interface" Click="butEditors_Interface_Click" />
+                        <MenuItem Header="Items"     Click="butEditors_Items_Click" />
+                        <MenuItem Header="NPCs"      Click="butEditors_NPCs_Click" />
+                        <MenuItem Header="Shops"     Click="butEditors_Shops_Click" />
+                        <MenuItem Header="Tiles"     Click="butEditors_Tiles_Click" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+        </WrapPanel>
+
+        <!-- ────────────────────────────────────────────────────────────── -->
+        <!-- Row 1 – Dock layout (inline UserControl content)               -->
+        <!-- ────────────────────────────────────────────────────────────── -->
+        <dock:DockControl x:Name="DockControl" Grid.Row="1"
+                          InitializeLayout="True" InitializeFactory="True">
+            <dock:DockControl.Factory>
+                <dockFactory:Factory />
+            </dock:DockControl.Factory>
+            <dockModel:RootDock Id="Root" IsCollapsable="False">
+                <dockModel:ProportionalDock Id="MainLayout" Orientation="Horizontal">
+
+                    <!-- Left panel: Tile Sheet (top) + Layers & Modes (bottom) -->
+                    <dockModel:ProportionalDock Id="LeftPanel" Proportion="0.22" Orientation="Vertical">
+                        <dockModel:ToolDock Id="TileSheetDock">
+                            <dockModel:Tool Id="TileSheet" Title="Tile Sheet" CanClose="False" />
+                        </dockModel:ToolDock>
+                        <dockModel:ProportionalDockSplitter Id="LeftSplitter" />
+                        <dockModel:ToolDock Id="LayersDock">
+                            <dockModel:Tool Id="Layers" Title="Layers &amp; Modes" CanClose="False" />
+                        </dockModel:ToolDock>
+                    </dockModel:ProportionalDock>
+                    <dockModel:ProportionalDockSplitter Id="LeftRightSplitter" />
+
+                    <!-- Center: Map Canvas -->
+                    <dockModel:DocumentDock Id="MapDock">
+                        <dockModel:Document Id="MapCanvas" Title="Map Canvas" CanClose="False" />
+                    </dockModel:DocumentDock>
+                    <dockModel:ProportionalDockSplitter Id="CenterRightSplitter" />
+
+                    <!-- Right panel: Map Explorer (top) + Properties (bottom) -->
+                    <dockModel:ProportionalDock Id="RightPanel" Proportion="0.22" Orientation="Vertical">
+                        <dockModel:ToolDock Id="ExplorerDock">
+                            <dockModel:Tool Id="MapExplorer" Title="Map Explorer" CanClose="False" />
+                        </dockModel:ToolDock>
+                        <dockModel:ProportionalDockSplitter Id="RightSplitter" />
+                        <dockModel:ToolDock Id="PropertiesDock">
+                            <dockModel:Tool Id="Properties" Title="Properties" CanClose="False" />
+                        </dockModel:ToolDock>
+                    </dockModel:ProportionalDock>
+
+                </dockModel:ProportionalDock>
+            </dockModel:RootDock>
+        </dock:DockControl>
+
+        <!-- ────────────────────────────────────────────────────────────── -->
+        <!-- Row 2 – Status bar (FPS | Revision | Position)                 -->
+        <!-- ────────────────────────────────────────────────────────────── -->
+        <Border Grid.Row="2"
+                BorderThickness="0,1,0,0" BorderBrush="{DynamicResource SemiBorderColor}"
+                Padding="6,3">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <TextBlock x:Name="lblFPS"      Text="FPS: —" />
+                <Separator Width="1" />
+                <TextBlock x:Name="lblRevision" Text="Revision: —" />
+                <Separator Width="1" />
+                <TextBlock x:Name="lblPosition" Text="Position: {0;0}" />
+            </StackPanel>
+        </Border>
+
+    </Grid>
+</Window>
