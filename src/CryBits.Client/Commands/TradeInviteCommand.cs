@@ -1,10 +1,11 @@
 using CryBits.Client.Network.Senders;
+using CryBits.Simulation.Intents;
 using SFML.Graphics;
 
 namespace CryBits.Client.Commands;
 
 /// <summary>Sends a trade invitation to another player. Usage: /trade &lt;name&gt;</summary>
-internal sealed class TradeInviteCommand(TradeSender tradeSender, Action<string, Color> writeLine)
+internal sealed class TradeInviteCommand(IntentSender intentSender, Action<string, Color> writeLine)
     : IChatCommand
 {
     public string Verb => "trade";
@@ -18,6 +19,6 @@ internal sealed class TradeInviteCommand(TradeSender tradeSender, Action<string,
             return;
         }
 
-        tradeSender.TradeInvite(args[0]);
+        intentSender.Send(new TradeInviteIntent(default, args[0]));
     }
 }

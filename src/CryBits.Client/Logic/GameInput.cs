@@ -3,6 +3,7 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
+using CryBits.Simulation.Intents;
 using SFML.Window;
 
 namespace CryBits.Client.Logic;
@@ -11,9 +12,9 @@ namespace CryBits.Client.Logic;
 /// Registers and handles keyboard shortcuts that are active during gameplay.
 /// Separated from UI Window handling so game-logic bindings live in the logic layer.
 /// </summary>
-internal class GameInput(PlayerSender playerSender, Chat chat)
+internal class GameInput(IntentSender intentSender, Chat chat)
 {
-    public static GameInput Instance { get; } = new(PlayerSender.Instance, Chat.Instance);
+    public static GameInput Instance { get; } = new(IntentSender.Instance, Chat.Instance);
 
     /// <summary>
     /// Subscribe to the game screen's key-released event.
@@ -44,7 +45,7 @@ internal class GameInput(PlayerSender playerSender, Chat chat)
     {
         if (TextBox.Focused != null) return;
 
-        playerSender.HotbarUse(slot);
+        intentSender.Send(new HotbarUseIntent(default, slot));
         DropItemView.Panel.Visible = false;
     }
 }

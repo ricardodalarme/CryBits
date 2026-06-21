@@ -8,12 +8,13 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Intents;
 using SFML.Window;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : IView
+internal class HotbarView(IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : IView
 {
     private readonly DefinitionCatalog _catalog = catalog;
     internal static Panel Panel => Tools.Panels["Hotbar"];
@@ -61,7 +62,7 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
         switch (e.Button)
         {
             case Mouse.Button.Right:
-                playerSender.HotbarAdd(slot, 0, 0);
+                intentSender.Send(new HotbarAddIntent(default, slot, default, 0));
                 break;
             case Mouse.Button.Left:
                 GameScreen.HotbarChange = slot;
@@ -71,8 +72,8 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
 
     private void OnGridMouseUp(short slot)
     {
-        if (GameScreen.HotbarChange >= 0) playerSender.HotbarChange(GameScreen.HotbarChange, slot);
-        if (GameScreen.InventoryChange > 0) playerSender.HotbarAdd(slot, (byte)SlotType.Item, GameScreen.InventoryChange);
+        if (GameScreen.HotbarChange >= 0) intentSender.Send(new HotbarSwapIntent(default, GameScreen.HotbarChange, slot));
+        if (GameScreen.InventoryChange > 0) intentSender.Send(new HotbarAddIntent(default, slot, SlotType.Item, GameScreen.InventoryChange));
     }
 
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
@@ -80,7 +81,7 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
         var hotbarSlot = context.LocalPlayer.GetHotbar()?.Slots[slot];
         if (hotbarSlot is not HotbarSlot { Slot: > 0 }) return;
 
-        playerSender.HotbarUse((byte)slot);
+        intentSender.Send(new HotbarUseIntent(default, (byte)slot));
         DropItemView.Panel.Visible = false;
     }
 

@@ -1,9 +1,15 @@
 using CryBits.Simulation.State;
+using MemoryPack;
 
 namespace CryBits.Simulation.Intents;
 
-public sealed record CollectItemIntent(EntityId SourceEntityId) : Intent(SourceEntityId);
-public sealed record DropItemIntent(EntityId SourceEntityId, byte SlotIndex, short Amount) : Intent(SourceEntityId);
-public sealed record InventoryUseIntent(EntityId SourceEntityId, int SlotIndex) : Intent(SourceEntityId);
-public sealed record InventorySwapIntent(EntityId SourceEntityId, short SlotOld, short SlotNew) : Intent(SourceEntityId);
-public sealed record EquipmentRemoveIntent(EntityId SourceEntityId, byte Slot) : Intent(SourceEntityId);
+[MemoryPackable]
+public sealed partial record CollectItemIntent(EntityId SourceEntityId) : Intent(SourceEntityId);
+[MemoryPackable]
+public sealed partial record DropItemIntent(EntityId SourceEntityId, byte SlotIndex, short Amount) : Intent(SourceEntityId);
+[MemoryPackable]
+public sealed partial record InventoryUseIntent(EntityId SourceEntityId, int SlotIndex) : Intent(SourceEntityId);
+[MemoryPackable]
+public sealed partial record InventorySwapIntent(EntityId SourceEntityId, short SlotOld, short SlotNew) : Intent(SourceEntityId);
+[MemoryPackable]
+public sealed partial record EquipmentRemoveIntent(EntityId SourceEntityId, byte Slot) : Intent(SourceEntityId);

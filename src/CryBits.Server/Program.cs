@@ -1,14 +1,17 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Host;
 using CryBits.Host.Core;
+using CryBits.Host.Ingress;
 using CryBits.Host.Network;
 using CryBits.Host.Network.Senders;
 using CryBits.Host.Services;
 using CryBits.Persistence;
 using CryBits.Persistence.Repositories;
+using CryBits.Protocol.Serialization;
 using CryBits.Server;
 using CryBits.Server.Commands;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Intents;
 using CryBits.Transport.Abstractions;
 using CryBits.Transport.Udp;
 using LinqToDB;
@@ -17,6 +20,32 @@ using LinqToDB.DataProvider.SQLite;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+IntentRegistry.Register<MoveIntent>(1);
+IntentRegistry.Register<AttackIntent>(2);
+IntentRegistry.Register<AddPointIntent>(3);
+IntentRegistry.Register<CollectItemIntent>(4);
+IntentRegistry.Register<DropItemIntent>(5);
+IntentRegistry.Register<InventorySwapIntent>(6);
+IntentRegistry.Register<InventoryUseIntent>(7);
+IntentRegistry.Register<EquipmentRemoveIntent>(8);
+IntentRegistry.Register<HotbarAddIntent>(9);
+IntentRegistry.Register<HotbarSwapIntent>(10);
+IntentRegistry.Register<HotbarUseIntent>(11);
+IntentRegistry.Register<ChatMessageIntent>(12);
+IntentRegistry.Register<PartyInviteIntent>(13);
+IntentRegistry.Register<PartyAcceptIntent>(14);
+IntentRegistry.Register<PartyDeclineIntent>(15);
+IntentRegistry.Register<PartyLeaveIntent>(16);
+IntentRegistry.Register<TradeInviteIntent>(17);
+IntentRegistry.Register<TradeAcceptIntent>(18);
+IntentRegistry.Register<TradeDeclineIntent>(19);
+IntentRegistry.Register<TradeLeaveIntent>(20);
+IntentRegistry.Register<TradeOfferIntent>(21);
+IntentRegistry.Register<TradeOfferStateIntent>(22);
+IntentRegistry.Register<ShopBuyIntent>(23);
+IntentRegistry.Register<ShopSellIntent>(24);
+IntentRegistry.Register<ShopCloseIntent>(25);
 
 var builder = Host.CreateDefaultBuilder(args);
 
@@ -52,6 +81,7 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton(sp => HostPipelineBuilder.Build(sp.GetRequiredService<DefinitionCatalog>()));
     services.AddSingleton<PackageSender>();
     services.AddSingleton<WorldHost>();
+    services.AddSingleton(sp => sp.GetRequiredService<WorldHost>().IntentFunnel);
     services.AddSingleton<WorldInitializer>();
 
     services.AddSingleton<PacketDispatcher>();
@@ -71,24 +101,16 @@ builder.ConfigureServices((ctx, services) =>
 
     services.AddSingleton<AuthService>();
     services.AddSingleton<CharacterService>();
-    services.AddSingleton<PlayerService>();
-    services.AddSingleton<ChatService>();
-    services.AddSingleton<PartyService>();
-    services.AddSingleton<TradeService>();
-    services.AddSingleton<ShopService>();
     services.AddSingleton<EditorService>();
     services.AddSingleton<ReplicationService>();
+    services.AddSingleton<IntentIngress>();
 
     services.AddSingleton<CommandDispatcher>();
 
     services.AddSingleton<object>(sp => sp.GetRequiredService<AuthService>());
     services.AddSingleton<object>(sp => sp.GetRequiredService<CharacterService>());
-    services.AddSingleton<object>(sp => sp.GetRequiredService<PlayerService>());
-    services.AddSingleton<object>(sp => sp.GetRequiredService<ChatService>());
-    services.AddSingleton<object>(sp => sp.GetRequiredService<PartyService>());
-    services.AddSingleton<object>(sp => sp.GetRequiredService<TradeService>());
-    services.AddSingleton<object>(sp => sp.GetRequiredService<ShopService>());
     services.AddSingleton<object>(sp => sp.GetRequiredService<EditorService>());
+    services.AddSingleton<object>(sp => sp.GetRequiredService<IntentIngress>());
 
     services.AddHostedService<Server>();
 });

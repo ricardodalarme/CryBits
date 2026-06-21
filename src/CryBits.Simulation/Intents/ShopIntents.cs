@@ -1,7 +1,11 @@
 using CryBits.Simulation.State;
+using MemoryPack;
 
 namespace CryBits.Simulation.Intents;
 
-public sealed record ShopBuyIntent(EntityId SourceEntityId, short Slot) : Intent(SourceEntityId);
-public sealed record ShopSellIntent(EntityId SourceEntityId, byte InventorySlot, short Amount) : Intent(SourceEntityId);
-public sealed record ShopCloseIntent(EntityId SourceEntityId) : Intent(SourceEntityId);
+[MemoryPackable]
+public sealed partial record ShopBuyIntent(EntityId SourceEntityId, short Slot) : Intent(SourceEntityId);
+[MemoryPackable]
+public sealed partial record ShopSellIntent(EntityId SourceEntityId, byte InventorySlot, short Amount) : Intent(SourceEntityId);
+[MemoryPackable]
+public sealed partial record ShopCloseIntent(EntityId SourceEntityId) : Intent(SourceEntityId);

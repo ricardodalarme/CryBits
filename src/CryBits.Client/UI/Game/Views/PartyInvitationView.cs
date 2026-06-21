@@ -1,10 +1,11 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
+using CryBits.Simulation.Intents;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class PartyInvitationView(PartySender partySender) : IView
+internal class PartyInvitationView(IntentSender intentSender) : IView
 {
     internal static Panel Panel => Tools.Panels["Party_Invitation"];
     private static Button AcceptButton => Tools.Buttons["Party_Yes"];
@@ -25,13 +26,13 @@ internal class PartyInvitationView(PartySender partySender) : IView
 
     private void OnAcceptPressed()
     {
-        partySender.PartyAccept();
+        intentSender.Send(new PartyAcceptIntent(default));
         Panel.Visible = false;
     }
 
     private void OnDeclinePressed()
     {
-        partySender.PartyDecline();
+        intentSender.Send(new PartyDeclineIntent(default));
         Panel.Visible = false;
     }
 

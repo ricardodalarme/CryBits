@@ -6,12 +6,13 @@ using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
+using CryBits.Simulation.Intents;
 using SFML.Window;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : IView
+internal class InventoryView(IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : IView
 {
     private readonly DefinitionCatalog _catalog = catalog;
     internal static Panel Panel => Tools.Panels["Menu_Inventory"];
@@ -65,7 +66,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
                             ShopSellView.AmountTextBox.Text = string.Empty;
                             ShopSellView.Panel.Visible = true;
                         }
-                        else shopSender.ShopSell(slot, 1);
+                        else intentSender.Send(new ShopSellIntent(default, (byte)slot, 1));
                     }
                     else if (!TradeView.Panel.Visible)
                         if (inv.Slots[slot].Amount != 1)
@@ -74,7 +75,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
                             DropItemView.AmountTextBox.Text = string.Empty;
                             DropItemView.Panel.Visible = true;
                         }
-                        else playerSender.DropItem(slot, 1);
+                        else intentSender.Send(new DropItemIntent(default, (byte)slot, 1));
 
                 break;
             case Mouse.Button.Left:
@@ -87,7 +88,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
     {
         if (GameScreen.InventoryChange == -1) return;
 
-        playerSender.InventoryChange(GameScreen.InventoryChange, slot);
+        intentSender.Send(new InventorySwapIntent(default, GameScreen.InventoryChange, slot));
         DropItemView.Panel.Visible = false;
     }
 
@@ -97,7 +98,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
         var inv = context.LocalPlayer.GetInventory();
         if (inv == null || inv.Slots[slot].ItemId == Guid.Empty) return;
 
-        playerSender.InventoryUse((byte)slot);
+        intentSender.Send(new InventoryUseIntent(default, (byte)slot));
         DropItemView.Panel.Visible = false;
     }
 

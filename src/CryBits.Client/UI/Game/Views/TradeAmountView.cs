@@ -1,10 +1,11 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
+using CryBits.Simulation.Intents;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeAmountView(TradeSender tradeSender) : IView
+internal class TradeAmountView(IntentSender intentSender) : IView
 {
     internal static Panel Panel => Tools.Panels["Trade_Amount"];
     internal static TextBox AmountTextBox => Tools.TextBoxes["Trade_Amount"];
@@ -32,7 +33,7 @@ internal class TradeAmountView(TradeSender tradeSender) : IView
             return;
         }
 
-        tradeSender.TradeOffer(TradeView.OwnSlot, TradeView.InventorySlot, amount);
+        intentSender.Send(new TradeOfferIntent(default, TradeView.OwnSlot, TradeView.InventorySlot, amount));
         Panel.Visible = false;
     }
 

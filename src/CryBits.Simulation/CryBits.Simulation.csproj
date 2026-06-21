@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MemoryPack" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../CryBits.Definitions/CryBits.Definitions.csproj" />
   </ItemGroup>
 

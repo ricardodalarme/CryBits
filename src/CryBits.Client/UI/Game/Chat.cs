@@ -4,6 +4,7 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Definitions.Common;
+using CryBits.Simulation.Intents;
 using SFML.Graphics;
 using static CryBits.Client.Framework.Utils.TextUtils;
 
@@ -11,11 +12,11 @@ namespace CryBits.Client.UI.Game;
 
 internal class Chat
 {
-    public static Chat Instance { get; } = new Chat(ChatSender.Instance);
+    public static Chat Instance { get; } = new Chat(IntentSender.Instance);
 
     private readonly ChatCommandDispatcher _dispatcher;
 
-    private readonly ChatSender chatSender;
+    private readonly IntentSender intentSender;
 
     // Rendering order for chat lines
     public static List<Structure> Order = [];
@@ -26,13 +27,13 @@ internal class Chat
     private const byte MaxLines = 50;
     public const short SleepTimer = 10000;
 
-    public Chat(ChatSender chatSender)
+    public Chat(IntentSender intentSender)
     {
-        this.chatSender = chatSender;
+        this.intentSender = intentSender;
         _dispatcher = new ChatCommandDispatcher(AddText)
-            .Register(new PartyInviteCommand(PartySender.Instance, AddText))
-            .Register(new PartyLeaveCommand(PartySender.Instance))
-            .Register(new TradeInviteCommand(TradeSender.Instance, AddText));
+            .Register(new PartyInviteCommand(IntentSender.Instance, AddText))
+            .Register(new PartyLeaveCommand(IntentSender.Instance))
+            .Register(new TradeInviteCommand(IntentSender.Instance, AddText));
     }
 
     /// <summary>Chat line record containing the displayed text and color.</summary>
@@ -117,7 +118,7 @@ internal class Chat
         switch (message[0])
         {
             case '\'':
-                chatSender.Message(message[1..], Message.Global);
+                intentSender.Send(new ChatMessageIntent(default, message[1..], Message.Global, null));
                 return;
             case '!':
                 var parts = message.Split(' ');
@@ -129,11 +130,11 @@ internal class Chat
 
                 var addressee = message.Substring(1, parts[0].Length - 1);
                 var content = message.Substring(parts[0].Length + 1);
-                chatSender.Message(content, Message.Private, addressee);
+                intentSender.Send(new ChatMessageIntent(default, content, Message.Private, addressee));
                 return;
             default:
                 // Default: map message
-                chatSender.Message(message, Message.Map);
+                intentSender.Send(new ChatMessageIntent(default, message, Message.Map, null));
                 break;
         }
     }

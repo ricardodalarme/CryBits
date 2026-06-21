@@ -5,12 +5,13 @@ using CryBits.Client.Network.Senders;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Shops;
+using CryBits.Simulation.Intents;
 using SFML.Window;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer, DefinitionCatalog catalog) : IView
+internal class ShopView(IntentSender intentSender, ItemRenderer itemRenderer, DefinitionCatalog catalog) : IView
 {
     private readonly DefinitionCatalog _catalog = catalog;
     internal static Panel Panel => Tools.Panels["Shop"];
@@ -51,7 +52,7 @@ internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer, Defini
         if (OpenedShop == null) return;
 
         // Purchase shop item.
-        shopSender.ShopBuy((byte)slot);
+        intentSender.Send(new ShopBuyIntent(default, slot));
     }
 
     private void OnClosePressed()
@@ -59,7 +60,7 @@ internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer, Defini
         Grid.ResetHover();
         InformationView.Hide();
         Panel.Visible = false;
-        shopSender.ShopClose();
+        intentSender.Send(new ShopCloseIntent(default));
     }
 
     private void OnGridSlotHover(short slot)

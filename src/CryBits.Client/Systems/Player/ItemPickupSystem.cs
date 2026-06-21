@@ -4,6 +4,7 @@ using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Intents;
 using SFML.Window;
 using static CryBits.Definitions.Globals;
 
@@ -12,7 +13,7 @@ namespace CryBits.Client.Systems.Player;
 internal sealed class ItemPickupSystem(
     GameContext context,
     InputManager inputManager,
-    PlayerSender playerSender) : IClientSystem
+    IntentSender intentSender) : IClientSystem
 {
     private const float ThrottleSecs = 0.250f;
     private float _cooldown;
@@ -54,7 +55,7 @@ internal sealed class ItemPickupSystem(
         {
             if (inventory.Slots[i].ItemId != Guid.Empty) continue;
 
-            playerSender.CollectItem();
+            intentSender.Send(new CollectItemIntent(default));
             _cooldown = ThrottleSecs;
             return;
         }

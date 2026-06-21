@@ -1,10 +1,11 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
+using CryBits.Simulation.Intents;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeInvitationView(TradeSender tradeSender) : IView
+internal class TradeInvitationView(IntentSender intentSender) : IView
 {
     internal static Panel Panel => Tools.Panels["Trade_Invitation"];
     private static Button AcceptButton => Tools.Buttons["Trade_Yes"];
@@ -25,13 +26,13 @@ internal class TradeInvitationView(TradeSender tradeSender) : IView
 
     private void OnAcceptPressed()
     {
-        tradeSender.TradeAccept();
+        intentSender.Send(new TradeAcceptIntent(default));
         Panel.Visible = false;
     }
 
     private void OnDeclinePressed()
     {
-        tradeSender.TradeDecline();
+        intentSender.Send(new TradeDeclineIntent(default));
         Panel.Visible = false;
     }
 

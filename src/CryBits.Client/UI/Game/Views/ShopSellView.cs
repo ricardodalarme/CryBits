@@ -1,10 +1,11 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
+using CryBits.Simulation.Intents;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ShopSellView(ShopSender shopSender) : IView
+internal class ShopSellView(IntentSender intentSender) : IView
 {
     internal static Panel Panel => Tools.Panels["Shop_Sell"];
     internal static TextBox AmountTextBox => Tools.TextBoxes["Shop_Sell_Amount"];
@@ -34,7 +35,7 @@ internal class ShopSellView(ShopSender shopSender) : IView
             return;
         }
 
-        shopSender.ShopSell(InventorySlot, amount);
+        intentSender.Send(new ShopSellIntent(default, (byte)InventorySlot, amount));
         Panel.Visible = false;
     }
 

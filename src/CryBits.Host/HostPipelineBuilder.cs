@@ -1,5 +1,6 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Systems.Chat;
 using CryBits.Simulation.Systems.Combat;
 using CryBits.Simulation.Systems.Inventory;
 using CryBits.Simulation.Systems.Movement;
@@ -31,6 +32,7 @@ internal static class HostPipelineBuilder
         pipeline.AddSystem(new HotbarSystem());
         pipeline.AddSystem(new TradeSystem());
         pipeline.AddSystem(new ShopSystem(catalog));
+        pipeline.AddSystem(new ChatSystem());
         pipeline.AddSystem(new PartySystem());
         pipeline.AddSystem(new NpcRespawnSystem(catalog));
         return pipeline;

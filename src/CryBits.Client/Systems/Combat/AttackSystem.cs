@@ -4,6 +4,7 @@ using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
+using CryBits.Simulation.Intents;
 using SFML.Window;
 using static CryBits.Definitions.Globals;
 
@@ -12,7 +13,7 @@ namespace CryBits.Client.Systems.Combat;
 internal sealed class AttackSystem(
     GameContext context,
     InputManager inputManager,
-    PlayerSender playerSender
+    IntentSender intentSender
 ) : IClientSystem
 {
     private const float ThrottleInterval = 0.030f;
@@ -38,6 +39,6 @@ internal sealed class AttackSystem(
         if (ShopView.Panel.Visible) return;
 
         state.AttackCountdown = AttackSpeed / 1000f;
-        playerSender.PlayerAttack();
+        intentSender.Send(new AttackIntent(default, null));
     }
 }

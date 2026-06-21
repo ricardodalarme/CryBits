@@ -402,7 +402,8 @@
       "crybits.simulation": {
         "type": "Project",
         "dependencies": {
-          "CryBits.Definitions": "[1.0.0, )"
+          "CryBits.Definitions": "[1.0.0, )",
+          "MemoryPack": "[1.21.4, )"
         }
       },
       "crybits.transport": {

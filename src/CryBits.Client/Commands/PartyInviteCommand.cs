@@ -1,10 +1,11 @@
 using CryBits.Client.Network.Senders;
+using CryBits.Simulation.Intents;
 using SFML.Graphics;
 
 namespace CryBits.Client.Commands;
 
 /// <summary>Sends a party invitation to another player. Usage: /party &lt;name&gt;</summary>
-internal sealed class PartyInviteCommand(PartySender partySender, Action<string, Color> writeLine)
+internal sealed class PartyInviteCommand(IntentSender intentSender, Action<string, Color> writeLine)
     : IChatCommand
 {
     public string Verb => "party";
@@ -18,6 +19,6 @@ internal sealed class PartyInviteCommand(PartySender partySender, Action<string,
             return;
         }
 
-        partySender.PartyInvite(args[0]);
+        intentSender.Send(new PartyInviteIntent(default, args[0]));
     }
 }

@@ -5,11 +5,12 @@ using CryBits.Client.Worlds;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class PartyHandler(PartySender partySender, GameContext context)
+internal class PartyHandler(IntentSender intentSender, GameContext context)
 {
     [PacketHandler]
     internal void Party(PartyPacket packet)
@@ -40,7 +41,7 @@ internal class PartyHandler(PartySender partySender, GameContext context)
         // Decline if player disabled party invites
         if (!Options.Instance.Party)
         {
-            partySender.PartyDecline();
+            intentSender.Send(new PartyDeclineIntent(default));
             return;
         }
 

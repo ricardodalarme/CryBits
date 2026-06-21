@@ -1,10 +1,11 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
+using CryBits.Simulation.Intents;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class DropItemView(PlayerSender playerSender) : IView
+internal class DropItemView(IntentSender intentSender) : IView
 {
     internal static Panel Panel => Tools.Panels["Drop"];
     internal static TextBox AmountTextBox => Tools.TextBoxes["Drop_Amount"];
@@ -34,7 +35,7 @@ internal class DropItemView(PlayerSender playerSender) : IView
             return;
         }
 
-        playerSender.DropItem(InventorySlot, amount);
+        intentSender.Send(new DropItemIntent(default, (byte)InventorySlot, amount));
         Panel.Visible = false;
     }
 

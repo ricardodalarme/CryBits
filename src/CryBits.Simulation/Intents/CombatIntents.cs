@@ -1,5 +1,7 @@
 using CryBits.Simulation.State;
+using MemoryPack;
 
 namespace CryBits.Simulation.Intents;
 
-public sealed record AttackIntent(EntityId SourceEntityId, EntityId? TargetId) : Intent(SourceEntityId);
+[MemoryPackable]
+public sealed partial record AttackIntent(EntityId SourceEntityId, EntityId? TargetId) : Intent(SourceEntityId);

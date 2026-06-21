@@ -6,13 +6,14 @@ using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
+using CryBits.Simulation.Intents;
 using SFML.Window;
 using System.Drawing;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class CharacterView(GameContext context, PlayerSender playerSender, EquipmentRenderer equipmentRenderer, CharacterRenderer characterRenderer) : IView
+internal class CharacterView(GameContext context, IntentSender intentSender, EquipmentRenderer equipmentRenderer, CharacterRenderer characterRenderer) : IView
 {
     internal static Panel Panel => Tools.Panels["Menu_Character"];
     private static SlotGrid Grid => Tools.SlotGrids["Equipment_Grid"];
@@ -78,7 +79,7 @@ internal class CharacterView(GameContext context, PlayerSender playerSender, Equ
         {
             var item = DefinitionCatalog.Instance.Items.Get(equipSlot);
             if (item == null || item.Bind != BindOn.Equip)
-                playerSender.EquipmentRemove((byte)slot);
+                intentSender.Send(new EquipmentRemoveIntent(default, (byte)slot));
         }
     }
 
@@ -96,29 +97,28 @@ internal class CharacterView(GameContext context, PlayerSender playerSender, Equ
 
     private void OnAddStrengthPressed()
     {
-        playerSender.AddPoint(Attribute.Strength);
+        intentSender.Send(new AddPointIntent(default, (byte)Attribute.Strength));
     }
 
     private void OnAddResistancePressed()
     {
-        playerSender.AddPoint(Attribute.Resistance);
+        intentSender.Send(new AddPointIntent(default, (byte)Attribute.Resistance));
     }
 
     private void OnAddIntelligencePressed()
     {
-        playerSender.AddPoint(Attribute.Intelligence);
+        intentSender.Send(new AddPointIntent(default, (byte)Attribute.Intelligence));
     }
 
     private void OnAddAgilityPressed()
     {
-        playerSender.AddPoint(Attribute.Agility);
+        intentSender.Send(new AddPointIntent(default, (byte)Attribute.Agility));
     }
 
     private void OnAddVitalityPressed()
     {
-        playerSender.AddPoint(Attribute.Vitality);
+        intentSender.Send(new AddPointIntent(default, (byte)Attribute.Vitality));
     }
-
     public static void Update()
     {
         var local = GameContext.Instance.LocalPlayer;

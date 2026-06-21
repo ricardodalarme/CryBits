@@ -3,6 +3,7 @@ using CryBits.Client.Core;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
+using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 using SFML.Window;
 using static CryBits.Definitions.Globals;
@@ -11,7 +12,7 @@ using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Systems.Movement;
 
-internal sealed class MovementInputSystem(GameContext context, InputManager inputManager, PlayerSender playerSender) : IClientSystem
+internal sealed class MovementInputSystem(GameContext context, InputManager inputManager, IntentSender intentSender) : IClientSystem
 {
     private const float ThrottleInterval = 0.030f;
 
@@ -51,7 +52,7 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
             ? MovementState.Moving
             : MovementState.Walking;
 
-        playerSender.PlayerMove(direction, desired);
+        intentSender.Send(new MoveIntent(default, direction, desired));
 
         if (context.CurrentMap.TileBlocked(movement.TileX, movement.TileY, direction)) return;
 

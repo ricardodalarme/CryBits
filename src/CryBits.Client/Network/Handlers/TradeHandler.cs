@@ -8,11 +8,12 @@ using CryBits.Definitions.Slots;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Intents;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class TradeHandler(TradeSender tradeSender, GameContext context, DefinitionCatalog catalog)
+internal class TradeHandler(IntentSender intentSender, GameContext context, DefinitionCatalog catalog)
 {
     private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
@@ -50,7 +51,7 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context, Defini
         // Decline if player disabled trade invitations
         if (!Options.Instance.Trade)
         {
-            tradeSender.TradeDecline();
+            intentSender.Send(new TradeDeclineIntent(default));
             return;
         }
 

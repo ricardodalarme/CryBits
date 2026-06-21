@@ -15,7 +15,7 @@ namespace CryBits.Client.Systems;
 internal sealed class SystemScheduler(
     GameContext context,
     InputManager inputManager,
-    PlayerSender playerSender,
+    IntentSender intentSender,
     AudioManager audioManager,
     CameraManager cameraManager,
     Renderer renderer)
@@ -23,7 +23,7 @@ internal sealed class SystemScheduler(
     public static SystemScheduler Instance { get; } = new(
         GameContext.Instance,
         InputManager.Instance,
-        PlayerSender.Instance,
+        IntentSender.Instance,
         AudioManager.Instance,
         CameraManager.Instance,
         Renderer.Instance);
@@ -40,13 +40,13 @@ internal sealed class SystemScheduler(
             .AddSimulation(new WeatherSimulationSystem(context))
             .AddSimulation(new WeatherSpawnSystem(context))
             .AddSimulation(new LightningSystem(context, audioManager))
-            .AddSimulation(new MovementInputSystem(context, inputManager, playerSender))
-            .AddSimulation(new ItemPickupSystem(context, inputManager, playerSender))
+            .AddSimulation(new MovementInputSystem(context, inputManager, intentSender))
+            .AddSimulation(new ItemPickupSystem(context, inputManager, intentSender))
             .AddSimulation(new MovementSystem(context.World))
             .AddSimulation(new CameraSystem(context, cameraManager))
             .AddSimulation(new CharacterAnimationControllerSystem(context.World))
             .AddSimulation(new AnimatedSpriteSystem(context.World))
-            .AddSimulation(new AttackSystem(context, inputManager, playerSender))
+            .AddSimulation(new AttackSystem(context, inputManager, intentSender))
             .AddSimulation(new DamageDecaySystem(context.World));
 
         Ground

@@ -80,12 +80,6 @@ public sealed class EmbeddedHostRunner : IDisposable
             charRepo, authSender, playerSender, itemSender, npcSender,
             shopSender, mapSender, accountSenderHost, classSender, chatSender, catalog, _host));
 
-        hostDispatcher.Register(new PlayerService(_host));
-        hostDispatcher.Register(new ChatService(_host));
-        hostDispatcher.Register(new PartyService(_host));
-        hostDispatcher.Register(new TradeService(_host));
-        hostDispatcher.Register(new ShopService(_host));
-
         _host.Pipeline.AddSystem(new ReplicationService(
             playerSender, npcSender, mapSender, combatSender, chatSender, ss));
 

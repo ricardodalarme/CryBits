@@ -7,13 +7,14 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Slots;
+using CryBits.Simulation.Intents;
 using SFML.Window;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : IView
+internal class TradeView(IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : IView
 {
     private readonly DefinitionCatalog _catalog = catalog;
     internal static Panel Panel => Tools.Panels["Trade"];
@@ -85,7 +86,7 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
         if (slot >= trade.Offer.Length) return;
         if (inv.Slots[trade.Offer[slot].SlotNum].ItemId == Guid.Empty) return;
 
-        if (e.Button == Mouse.Button.Right) tradeSender.TradeOffer(slot, 0);
+        if (e.Button == Mouse.Button.Right) intentSender.Send(new TradeOfferIntent(default, slot, 0, 0));
     }
 
     private void OnGridMouseUp(short slot)
@@ -95,7 +96,7 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
         var inv = context.LocalPlayer.GetInventory();
         if (inv == null) return;
         if (inv.Slots[GameScreen.InventoryChange].Amount == 1)
-            tradeSender.TradeOffer(slot, GameScreen.InventoryChange);
+            intentSender.Send(new TradeOfferIntent(default, slot, GameScreen.InventoryChange, 1));
         else
         {
             OwnSlot = slot;
@@ -107,7 +108,7 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
 
     private void OnClosePressed()
     {
-        tradeSender.TradeLeave();
+        intentSender.Send(new TradeLeaveIntent(default));
         Panel.Visible = false;
     }
 
@@ -116,7 +117,7 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
         ConfirmOfferButton.Visible = true;
         AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
         OfferDisabledPanel.Visible = false;
-        tradeSender.TradeOfferState(TradeStatus.Accepted);
+        intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Accepted));
 
         var trade = context.LocalPlayer.GetTrade();
         if (trade != null)
@@ -130,13 +131,13 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
         ConfirmOfferButton.Visible = true;
         AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
         OfferDisabledPanel.Visible = false;
-        tradeSender.TradeOfferState(TradeStatus.Declined);
+        intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Declined));
     }
 
     private void OnConfirmOfferPressed()
     {
         ConfirmOfferButton.Visible = AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
         OfferDisabledPanel.Visible = true;
-        tradeSender.TradeOfferState(TradeStatus.Confirmed);
+        intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Confirmed));
     }
 }
