@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CryBits.Editors.Maps.TileSheetPane">
+    <Grid RowDefinitions="Auto,Auto,*">
+        <ComboBox x:Name="cmbTiles" Grid.Row="0"
+                  HorizontalAlignment="Stretch"
+                  Margin="4,4,4,2" />
+        <CheckBox x:Name="chkAuto" Grid.Row="1"
+                  Content="Auto"
+                  Margin="8,0,0,2" />
+        <Grid Grid.Row="2" RowDefinitions="*,Auto" ColumnDefinitions="*,Auto" Margin="4,0,4,4">
+            <Border Grid.Row="0" Grid.Column="0" Background="Black" ClipToBounds="True">
+                <Image x:Name="imgTile"
+                       Stretch="None"
+                       HorizontalAlignment="Left" VerticalAlignment="Top" />
+            </Border>
+            <ScrollBar x:Name="scrlTileY" Grid.Row="0" Grid.Column="1"
+                       Orientation="Vertical"
+                       Minimum="0" Maximum="255" Value="0" />
+            <ScrollBar x:Name="scrlTileX" Grid.Row="1" Grid.Column="0"
+                       Orientation="Horizontal"
+                       Minimum="0" Maximum="0" Value="0" />
+        </Grid>
+    </Grid>
+</UserControl>

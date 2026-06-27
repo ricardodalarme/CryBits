@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CryBits.Editors.Maps.MapExplorerPane">
+    <Grid RowDefinitions="Auto,Auto,*">
+        <TextBox x:Name="txtFilter" Grid.Row="0"
+                 PlaceholderText="Filter maps…"
+                 Margin="4,4,4,2" />
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="4" Margin="4,0,4,2">
+            <Button x:Name="butNew"    Content="New" />
+            <Button x:Name="butRemove" Content="Remove" />
+        </StackPanel>
+        <ListBox x:Name="lstMaps" Grid.Row="2"
+                 SelectionMode="Single"
+                 Margin="4,0,4,4" />
+    </Grid>
+</UserControl>

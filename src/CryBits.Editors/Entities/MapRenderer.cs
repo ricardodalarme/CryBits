@@ -1,15 +1,14 @@
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
-using CryBits.Editors.Entities;
-using CryBits.Editors.Forms;
+using CryBits.Editors.Graphics;
 using SFML.Graphics;
 using System.Drawing;
 using static CryBits.Editors.Logic.Utils;
 using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
 
-namespace CryBits.Editors.Graphics.Renderers;
+namespace CryBits.Editors.Maps;
 
 internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 {

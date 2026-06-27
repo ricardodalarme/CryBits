@@ -2,10 +2,12 @@
     x:Class="CryBits.Editors.AvaloniaUI.App"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:semi="https://irihi.tech/semi">
+    xmlns:semi="https://irihi.tech/semi"
+    xmlns:dockTheme="using:Dock.Avalonia.Themes.Fluent">
     <Application.Styles>
         <semi:SemiTheme Locale="en-US" />
         <semi:ColorPickerSemiTheme />
         <StyleInclude Source="avares://Semi.Avalonia.DataGrid/Index.axaml" />
+        <dockTheme:DockFluentTheme />
     </Application.Styles>
 </Application>

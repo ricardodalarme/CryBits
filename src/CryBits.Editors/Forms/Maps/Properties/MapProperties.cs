@@ -1,14 +1,14 @@
 using CryBits.Client.Framework.Graphics;
+using CryBits.Definitions;
 using CryBits.Definitions.Maps;
-using CryBits.Editors.Entities;
+using CryBits.Editors.Maps;
+using PropertyModels.ComponentModel;
 using System.ComponentModel;
-using static CryBits.Definitions.Globals;
 
-namespace CryBits.Editors.Logic;
+namespace CryBits.Editors.Forms.MapEditor.Properties;
 
-internal class MapProperties(Map map)
+internal class MapProperties(Map map) : MiniReactiveObject
 {
-    // NPC data
     public readonly Map Base = map;
 
     /////////////
@@ -27,6 +27,14 @@ internal class MapProperties(Map map)
     {
         get => Base.Moral;
         set => Base.Moral = value;
+    }
+
+    [Category("General")]
+    [DefaultValue("")]
+    public string Music
+    {
+        get => Base.Music;
+        set => Base.Music = value;
     }
 
     /////////
@@ -75,10 +83,10 @@ internal class MapProperties(Map map)
     [Category("Weather")]
     [DisplayName("Weather Intensity")]
     [DefaultValue(0)]
-    public byte WeatherSpeedY
+    public byte WeatherIntensity
     {
         get => Base.Weather.Intensity;
-        set => Base.Weather.Intensity = Math.Min(value, MaxWeatherIntensity);
+        set => Base.Weather.Intensity = Math.Min(value, Globals.MaxWeatherIntensity);
     }
 
     [Category("Weather")]
@@ -134,14 +142,6 @@ internal class MapProperties(Map map)
     {
         get => Base.Lighting;
         set => Base.Lighting = value;
-    }
-
-    [Category("Misc")]
-    [DefaultValue(0)]
-    public string Music
-    {
-        get => Base.Music;
-        set => Base.Music = value;
     }
 
     [Category("Misc")]

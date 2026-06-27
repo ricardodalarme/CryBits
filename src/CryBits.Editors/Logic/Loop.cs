@@ -1,7 +1,6 @@
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Network;
-using CryBits.Editors.Entities;
-using CryBits.Editors.Forms;
+using CryBits.Editors.Maps;
 
 namespace CryBits.Editors.Logic;
 
