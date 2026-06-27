@@ -40,19 +40,20 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
 
     private void Equip(World world, Tick tick, EntityId entityId, Item item)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var equip = e.Get<EquipmentState>()!;
-        var stats = e.Get<StatBlock>()!;
+        var attrs = e.Get<AttributesComponent>()!;
 
         var oldItemId = equip.Slots[item.EquipType];
         var oldItem = oldItemId != Guid.Empty ? catalog.Items.Get(oldItemId) : null;
 
         equip.Slots[item.EquipType] = item.Id;
         for (byte i = 0; i < (byte)Attribute.Count; i++)
-            stats.Attribute[i] += item.EquipAttribute[i];
+            attrs.Values[i] += item.EquipAttribute[i];
         if (oldItem != null)
             for (byte i = 0; i < (byte)Attribute.Count; i++)
-                stats.Attribute[i] -= oldItem.EquipAttribute[i];
+                attrs.Values[i] -= oldItem.EquipAttribute[i];
 
         tick.Events.Emit(new ItemEquippedEvent
         {
@@ -63,14 +64,15 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
         });
 
         world.MarkDirty<EquipmentState>(entityId);
-        world.MarkDirty<StatBlock>(entityId);
+        world.MarkDirty<AttributesComponent>(entityId);
     }
 
     private void Unequip(World world, Tick tick, EntityId entityId, byte equipSlot)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var equip = e.Get<EquipmentState>()!;
-        var stats = e.Get<StatBlock>()!;
+        var attrs = e.Get<AttributesComponent>()!;
 
         var oldItemId = equip.Slots[equipSlot];
         if (oldItemId == Guid.Empty) return;
@@ -78,7 +80,7 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
         if (oldItem is null || oldItem.Bind == BindOn.Equip) return;
 
         for (byte i = 0; i < (byte)Attribute.Count; i++)
-            stats.Attribute[i] -= oldItem.EquipAttribute[i];
+            attrs.Values[i] -= oldItem.EquipAttribute[i];
         equip.Slots[equipSlot] = Guid.Empty;
 
         tick.Events.Emit(new ItemEquippedEvent
@@ -90,6 +92,6 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
         });
 
         world.MarkDirty<EquipmentState>(entityId);
-        world.MarkDirty<StatBlock>(entityId);
+        world.MarkDirty<AttributesComponent>(entityId);
     }
 }

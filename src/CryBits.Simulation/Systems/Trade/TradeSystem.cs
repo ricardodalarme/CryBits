@@ -55,10 +55,10 @@ public sealed class TradeSystem : ISimulationSystem
 
     private void Invite(World world, Tick tick, EntityId entityId, string targetName)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var appearance = e.Get<PlayerAppearance>()!;
         var pos = e.Get<Position>()!;
-        var trade = e.Get<TradeState>()!;
         var shop = e.Get<ShopState>();
 
         var invitedId = world.FindPlayer(targetName);
@@ -75,18 +75,19 @@ public sealed class TradeSystem : ISimulationSystem
             return;
         }
 
-        var invitedE = world.Entities.Get(invitedId.Value)!;
-        var invitedTrade = invitedE.Get<TradeState>()!;
+        var invitedE = world.Entities.Get(invitedId.Value);
+        if (invitedE == null) return;
+        var invitedTrade = invitedE.Get<TradeState>();
         var invitedPos = invitedE.Get<Position>()!;
         var invitedShop = invitedE.Get<ShopState>();
 
-        if (invitedTrade.Partner != null)
+        if (invitedTrade?.Partner != null)
         {
             tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player is already part of a trade.", ColorArgb = ChatColors.White });
             return;
         }
 
-        if (invitedTrade.PendingInviterId.HasValue)
+        if (invitedTrade?.PendingInviterId.HasValue == true)
         {
             tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player is analyzing an invitation of another trade.", ColorArgb = ChatColors.White });
             return;
@@ -110,21 +111,24 @@ public sealed class TradeSystem : ISimulationSystem
             return;
         }
 
-        invitedTrade.PendingInviterId = entityId;
+        var trade = world.AddOrGet<TradeState>(invitedId.Value);
+        if (trade == null) return;
+        trade.PendingInviterId = entityId;
         world.MarkDirty<TradeState>(invitedId.Value);
     }
 
     private void Accept(World world, Tick tick, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var appearance = e.Get<PlayerAppearance>()!;
         var pos = e.Get<Position>()!;
-        var trade = e.Get<TradeState>()!;
+        var trade = e.Get<TradeState>();
         var shop = e.Get<ShopState>();
 
-        var invitedId = trade.PendingInviterId;
+        var invitedId = trade?.PendingInviterId;
 
-        if (trade.Partner != null)
+        if (trade?.Partner != null)
         {
             tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You are already part of a trade.", ColorArgb = ChatColors.White });
             return;
@@ -136,7 +140,8 @@ public sealed class TradeSystem : ISimulationSystem
             return;
         }
 
-        var invitedE = world.Entities.Get(invitedId.Value)!;
+        var invitedE = world.Entities.Get(invitedId.Value);
+        if (invitedE == null) return;
         var invitedPos = invitedE.Get<Position>()!;
         var invitedAppearance = invitedE.Get<PlayerAppearance>()!;
         var invitedShop = invitedE.Get<ShopState>();
@@ -153,16 +158,20 @@ public sealed class TradeSystem : ISimulationSystem
             return;
         }
 
-        trade.Partner = invitedId.Value;
+        var myTrade = world.AddOrGet<TradeState>(entityId);
+        if (myTrade == null) return;
+        var invitedTrade = world.AddOrGet<TradeState>(invitedId.Value);
+        if (invitedTrade == null) return;
+
+        myTrade.Partner = invitedId.Value;
         world.MarkDirty<TradeState>(entityId);
-        var invitedTrade = invitedE.Get<TradeState>()!;
         invitedTrade.Partner = entityId;
         world.MarkDirty<TradeState>(invitedId.Value);
         tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You have accepted " + invitedAppearance.Name + "'s trade request.", ColorArgb = ChatColors.White });
         tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = appearance.Name + " has accepted your trade request.", ColorArgb = ChatColors.White });
 
-        trade.PendingInviterId = null;
-        trade.Offer = new TradeSlot[MaxInventory];
+        myTrade.PendingInviterId = null;
+        myTrade.Offer = new TradeSlot[MaxInventory];
         invitedTrade.Offer = new TradeSlot[MaxInventory];
 
         world.MarkDirty<TradeState>(entityId);
@@ -171,38 +180,44 @@ public sealed class TradeSystem : ISimulationSystem
 
     private void Decline(World world, Tick tick, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var appearance = e.Get<PlayerAppearance>()!;
-        var trade = e.Get<TradeState>()!;
+        var trade = e.Get<TradeState>();
+        if (trade == null) return;
 
         var invitedId = trade.PendingInviterId;
         if (invitedId != null) tick.Events.Emit(new ChatMessageEvent { RecipientId = invitedId.Value, Text = appearance.Name + " decline the trade.", ColorArgb = ChatColors.White });
-        trade.PendingInviterId = null;
-        world.MarkDirty<TradeState>(entityId);
+        world.Remove<TradeState>(entityId);
     }
 
     private void Leave(World world, Tick tick, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var trade = e.Get<TradeState>();
         if (trade == null || trade.Partner == null) return;
 
-        var partnerE = world.Entities.Get(trade.Partner.Value)!;
-        var partnerTrade = partnerE.Get<TradeState>()!;
-
-        partnerTrade.Partner = null;
-        world.MarkDirty<TradeState>(trade.Partner.Value);
+        var partnerTrade = world.Get<TradeState>(trade.Partner.Value);
+        if (partnerTrade != null)
+        {
+            partnerTrade.Partner = null;
+            world.MarkDirty<TradeState>(trade.Partner.Value);
+            world.Remove<TradeState>(trade.Partner.Value);
+        }
         trade.Partner = null;
         world.MarkDirty<TradeState>(entityId);
+        world.Remove<TradeState>(entityId);
     }
 
     private void Offer(World world, Tick tick, EntityId entityId, short slot, short inventorySlot, short amount)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var inv = e.Get<InventoryState>()!;
-        var trade = e.Get<TradeState>()!;
+        var trade = e.Get<TradeState>();
+        if (trade?.Offer == null) return;
         var offer = trade.Offer;
-        if (offer is null) return;
 
         amount = Math.Min(amount, inv.Slots[inventorySlot].Amount);
 
@@ -224,24 +239,28 @@ public sealed class TradeSystem : ISimulationSystem
 
     private void OfferState(World world, Tick tick, EntityId entityId, TradeStatus state)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var inv = e.Get<InventoryState>()!;
-        var trade = e.Get<TradeState>()!;
+        var trade = e.Get<TradeState>();
+        if (trade == null) return;
 
         var invitedId = trade.Partner;
         if (!invitedId.HasValue) return;
 
         var appearance = e.Get<PlayerAppearance>()!;
-        var invitedE = world.Entities.Get(invitedId.Value)!;
+        var invitedE = world.Entities.Get(invitedId.Value);
+        if (invitedE == null) return;
         var invitedInv = invitedE.Get<InventoryState>()!;
         var invitedAppearance = invitedE.Get<PlayerAppearance>()!;
-        var invitedTrade = invitedE.Get<TradeState>()!;
+        var invitedTrade = invitedE.Get<TradeState>();
+        if (invitedTrade == null) return;
 
         switch (state)
         {
             case TradeStatus.Accepted:
-                var invFree = CountFreeSlots(inv);
-                var invitedFree = CountFreeSlots(invitedInv);
+                var invFree = inv.CountFreeSlots();
+                var invitedFree = invitedInv.CountFreeSlots();
 
                 if (trade.Offer is null || trade.Offer.Count(x => x.SlotNum != 0) > invitedFree)
                 {
@@ -311,11 +330,4 @@ public sealed class TradeSystem : ISimulationSystem
         }
     }
 
-    private static byte CountFreeSlots(InventoryState inv)
-    {
-        byte count = 0;
-        for (var i = 0; i < inv.Slots.Length; i++)
-            if (inv.Slots[i].ItemId == Guid.Empty) count++;
-        return count;
-    }
 }

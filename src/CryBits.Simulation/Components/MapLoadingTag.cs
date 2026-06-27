@@ -1,3 +1,3 @@
 namespace CryBits.Simulation.Components;
 
-public sealed class GroundItemTag;
+public sealed class MapLoadingTag;

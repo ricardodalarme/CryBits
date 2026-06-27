@@ -37,7 +37,8 @@ public sealed class HotbarSystem : ISimulationSystem
 
     private void Add(World world, EntityId entityId, short hotbarSlot, SlotType type, short slot)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var hotbar = e.Get<HotbarState>()!;
 
         if (hotbarSlot >= hotbar.Slots.Length) return;
@@ -49,7 +50,8 @@ public sealed class HotbarSystem : ISimulationSystem
 
     private void Change(World world, EntityId entityId, short slotOld, short slotNew)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var hotbar = e.Get<HotbarState>()!;
 
         (hotbar.Slots[slotOld], hotbar.Slots[slotNew]) = (hotbar.Slots[slotNew], hotbar.Slots[slotOld]);
@@ -58,7 +60,8 @@ public sealed class HotbarSystem : ISimulationSystem
 
     private void Use(World world, Tick tick, EntityId entityId, short hotbarSlot)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var hotbar = e.Get<HotbarState>()!;
 
         switch (hotbar.Slots[hotbarSlot].Type)
@@ -72,7 +75,8 @@ public sealed class HotbarSystem : ISimulationSystem
 
     private void SyncInventorySwap(World world, EntityId entityId, short slotOld, short slotNew)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var hotbar = e.Get<HotbarState>()!;
 
         int? foundSlot = null;

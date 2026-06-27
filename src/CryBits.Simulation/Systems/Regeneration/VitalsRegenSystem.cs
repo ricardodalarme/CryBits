@@ -21,7 +21,7 @@ public sealed class VitalsRegenSystem : ISimulationSystem
             if (!state.Has<Vitals>()) continue;
 
             var vitals = state.Get<Vitals>()!;
-            var stats = state.Get<StatBlock>();
+            var attrs = state.Get<AttributesComponent>();
 
             for (byte v = 0; v < (byte)Vital.Count; v++)
             {
@@ -29,8 +29,8 @@ public sealed class VitalsRegenSystem : ISimulationSystem
                 var max = v == 0 ? vitals.MaxHp : vitals.MaxMp;
                 if (current >= max) continue;
 
-                var vitality = stats?.Attribute[(byte)Attribute.Vitality] ?? 0;
-                var intelligence = stats?.Attribute[(byte)Attribute.Intelligence] ?? 0;
+                var vitality = attrs?.Values[(byte)Attribute.Vitality] ?? 0;
+                var intelligence = attrs?.Values[(byte)Attribute.Intelligence] ?? 0;
 
                 var regen = VitalFormulas.VitalRegeneration((Vital)v, max, vitality, intelligence);
                 current += regen;

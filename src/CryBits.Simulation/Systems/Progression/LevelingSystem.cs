@@ -38,21 +38,22 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
                     if (killerId != null)
                     {
                         var victimId = world.FindPlayer(playerDied.EntityId);
-                        var xp = victimId != null
-                            ? world.Entities.Get(victimId.Value)!.Get<StatBlock>()!.Experience / 10
-                            : 0;
-
-                        if (xp > 0)
-                            GiveExperience(world, killerId.Value, xp);
+                        if (victimId != null)
+                        {
+                            var victimLevel = world.Get<LevelComponent>(victimId.Value);
+                            if (victimLevel != null && victimLevel.Experience / 10 > 0)
+                                GiveExperience(world, killerId.Value, victimLevel.Experience / 10);
+                        }
                     }
                 }
 
                 var victimId2 = world.FindPlayer(playerDied.EntityId);
                 if (victimId2 != null)
                 {
-                    var victimStats = world.Entities.Get(victimId2.Value)!.Get<StatBlock>()!;
-                    victimStats.Experience /= 10;
-                    world.MarkDirty<StatBlock>(victimId2.Value);
+                    var victimLevel = world.Get<LevelComponent>(victimId2.Value);
+                    if (victimLevel == null) continue;
+                    victimLevel.Experience /= 10;
+                    world.MarkDirty<LevelComponent>(victimId2.Value);
                 }
             }
 
@@ -70,74 +71,84 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
 
     private void AddPoint(World world, EntityId entityId, byte attributeNum)
     {
-        var e = world.Entities.Get(entityId)!;
-        var stats = e.Get<StatBlock>()!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
+        var level = e.Get<LevelComponent>()!;
+        var attrs = e.Get<AttributesComponent>()!;
 
-        if (stats.Points <= 0) return;
+        if (level.Points <= 0) return;
 
-        stats.Attribute[attributeNum]++;
-        stats.Points--;
-        world.MarkDirty<StatBlock>(entityId);
+        attrs.Values[attributeNum]++;
+        level.Points--;
+        world.MarkDirty<LevelComponent>(entityId);
+        world.MarkDirty<AttributesComponent>(entityId);
     }
 
     private void GiveExperience(World world, EntityId entityId, int value)
     {
-        var e = world.Entities.Get(entityId)!;
-        var stats = e.Get<StatBlock>()!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
+        var level = e.Get<LevelComponent>()!;
         var party = e.Get<PartyState>();
 
         if (party?.Members.Count > 0 && value > 0)
             PartySplitXp(world, entityId, value);
         else
-            stats.Experience += value;
+            level.Experience += value;
 
-        if (stats.Experience < 0) stats.Experience = 0;
+        if (level.Experience < 0) level.Experience = 0;
 
         CheckLevelUp(world, entityId);
     }
 
     private void CheckLevelUp(World world, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId)!;
-        var stats = e.Get<StatBlock>()!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
+        var level = e.Get<LevelComponent>()!;
+        var attrs = e.Get<AttributesComponent>()!;
 
         byte numLevel = 0;
 
         short totalAttr = 0;
-        for (byte i = 0; i < (byte)Attribute.Count; i++) totalAttr += stats.Attribute[i];
-        var expNeeded = LevelingFormulas.ExperienceNeeded(stats.Level, totalAttr, stats.Points);
+        for (byte i = 0; i < (byte)Attribute.Count; i++) totalAttr += attrs.Values[i];
+        var expNeeded = LevelingFormulas.ExperienceNeeded(level.Level, totalAttr, (byte)level.Points);
 
-        while (stats.Experience >= expNeeded)
+        while (level.Experience >= expNeeded)
         {
             numLevel++;
-            var expRest = stats.Experience - expNeeded;
+            var expRest = level.Experience - expNeeded;
 
-            stats.Level++;
-            stats.Points += Config.NumPoints;
-            stats.Experience = expRest;
+            level.Level++;
+            level.Points += Config.NumPoints;
+            level.Experience = expRest;
 
             totalAttr = 0;
-            for (byte i = 0; i < (byte)Attribute.Count; i++) totalAttr += stats.Attribute[i];
-            expNeeded = LevelingFormulas.ExperienceNeeded(stats.Level, totalAttr, stats.Points);
+            for (byte i = 0; i < (byte)Attribute.Count; i++) totalAttr += attrs.Values[i];
+            expNeeded = LevelingFormulas.ExperienceNeeded(level.Level, totalAttr, (byte)level.Points);
         }
 
-        world.MarkDirty<StatBlock>(entityId);
+        world.MarkDirty<LevelComponent>(entityId);
+        world.MarkDirty<AttributesComponent>(entityId);
     }
 
     private void PartySplitXp(World world, EntityId entityId, int value)
     {
-        var e = world.Entities.Get(entityId)!;
-        var stats = e.Get<StatBlock>()!;
-        var party = e.Get<PartyState>()!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
+        var level = e.Get<LevelComponent>()!;
+        var party = e.Get<PartyState>();
+        if (party == null) return;
 
         var diff = new double[party.Members.Count];
         double diffSum = 0;
 
         for (byte i = 0; i < party.Members.Count; i++)
         {
-            var memberE = world.Entities.Get(party.Members[i])!;
-            var memberStats = memberE.Get<StatBlock>()!;
-            var difference = Math.Abs(stats.Level - memberStats.Level);
+            var memberE = world.Entities.Get(party.Members[i]);
+            if (memberE == null) continue;
+            var memberLevel = memberE.Get<LevelComponent>()!;
+            var difference = Math.Abs(level.Level - memberLevel.Level);
             diff[i] = LevelingFormulas.PartyXpWeight(difference);
             diffSum += diff[i];
         }
@@ -151,11 +162,11 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
             experienceSum += givenExperience;
 
             GiveExperience(world, party.Members[i], givenExperience);
-            world.MarkDirty<StatBlock>(party.Members[i]);
+            world.MarkDirty<LevelComponent>(party.Members[i]);
         }
 
-        stats.Experience += value - experienceSum;
+        level.Experience += value - experienceSum;
         CheckLevelUp(world, entityId);
-        world.MarkDirty<StatBlock>(entityId);
+        world.MarkDirty<LevelComponent>(entityId);
     }
 }

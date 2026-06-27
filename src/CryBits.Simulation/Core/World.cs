@@ -75,6 +75,7 @@ public sealed class World
     public void Set<T>(EntityId id, T component) where T : class
     {
         Entities.Get(id)?.Set(component);
+        MarkDirty<T>(id);
     }
 
     public void Remove<T>(EntityId id) where T : class
@@ -91,6 +92,7 @@ public sealed class World
         {
             c = new T();
             state.Set(c);
+            MarkDirty<T>(id);
         }
         return c;
     }

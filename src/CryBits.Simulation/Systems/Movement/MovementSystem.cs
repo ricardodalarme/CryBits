@@ -26,11 +26,12 @@ public sealed class MovementSystem : ISimulationSystem
 
     private void ChangeDirection(World world, EntityId entityId, Direction direction)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var pos = e.Get<Position>()!;
 
         if (direction is < Direction.Up or > Direction.Right) return;
-        if (pos.LoadingMap) return;
+        if (e.Has<MapLoadingTag>()) return;
 
         pos.Direction = direction;
         world.MarkDirty<Position>(entityId);
@@ -38,7 +39,8 @@ public sealed class MovementSystem : ISimulationSystem
 
     private void Move(World world, Tick tick, EntityId entityId, CommonMovement movement)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var pos = e.Get<Position>()!;
         var map = world.Maps.Get(pos.MapId)!;
 
@@ -47,7 +49,7 @@ public sealed class MovementSystem : ISimulationSystem
         var link = world.Maps.Get(map.Data.LinkIds[(byte)pos.Direction]);
 
         if (movement is < CommonMovement.Walking or > CommonMovement.Moving) return;
-        if (pos.LoadingMap) return;
+        if (e.Has<MapLoadingTag>()) return;
 
         if (e.Has<PlayerTag>() && Map.OutLimit(nextX, nextY))
         {
@@ -103,7 +105,8 @@ public sealed class MovementSystem : ISimulationSystem
 
     private void Warp(World world, Tick tick, EntityId entityId, Guid mapId, byte x, byte y)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var pos = e.Get<Position>()!;
 
         var oldMapId = pos.MapId;
@@ -118,7 +121,7 @@ public sealed class MovementSystem : ISimulationSystem
 
         var needsMapData = oldMapId != map.Id;
         if (needsMapData)
-            pos.LoadingMap = true;
+            world.Set(entityId, new MapLoadingTag());
 
         if (e.Has<PlayerTag>())
             tick.Events.Emit(new PlayerWarpedEvent

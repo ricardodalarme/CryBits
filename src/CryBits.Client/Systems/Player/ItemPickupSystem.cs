@@ -37,7 +37,7 @@ internal sealed class ItemPickupSystem(
         {
             var transform = state.Get<TransformComponent>();
             if (transform == null) continue;
-            if (!state.Has<GroundItemComponent>()) continue;
+            if (!state.Has<GroundItem>()) continue;
 
             if (transform.X / Grid == myTile.TileX && transform.Y / Grid == myTile.TileY)
             {

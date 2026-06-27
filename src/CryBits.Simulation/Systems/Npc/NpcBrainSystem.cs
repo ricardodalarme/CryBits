@@ -86,7 +86,8 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
 
     private void UpdateTarget(World world, EntityId npcId, Tick tick)
     {
-        var e = world.Entities.Get(npcId)!;
+        var e = world.Entities.Get(npcId);
+        if (e == null) return;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
         var npcData = catalog.Npcs.Get(npcState.NpcDefId);
@@ -126,7 +127,8 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
 
         if (npcState.TargetId.HasValue)
         {
-            var targetE = world.Entities.Get(npcState.TargetId.Value)!;
+            var targetE = world.Entities.Get(npcState.TargetId.Value);
+            if (targetE == null) return;
             var targetPos = targetE.Get<Position>()!;
             var distance = Math.Sqrt(Math.Pow(pos.X - targetPos.X, 2) + Math.Pow(pos.Y - targetPos.Y, 2));
             if (npcData.Sight < distance)
@@ -139,12 +141,14 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
 
     private void ScanForTarget(World world, EntityId npcId, Tick tick)
     {
-        var e = world.Entities.Get(npcId)!;
+        var e = world.Entities.Get(npcId);
+        if (e == null) return;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
         var npcData = catalog.Npcs.Get(npcState.NpcDefId);
         if (npcData is null) return;
-        var map = world.Maps.Get(pos.MapId)!;
+        var map = world.Maps.Get(pos.MapId);
+        if (map == null) return;
 
         short distance;
 

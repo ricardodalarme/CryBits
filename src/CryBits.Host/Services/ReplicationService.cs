@@ -27,7 +27,7 @@ internal sealed class ReplicationService(
                 ReplicatePosition(world, entityId, entity.Get<Position>()!);
             else if (componentType == typeof(Vitals))
                 ReplicateVitals(world, entityId, entity);
-            else if (componentType == typeof(StatBlock))
+            else if (componentType == typeof(LevelComponent) || componentType == typeof(AttributesComponent))
                 ReplicateStats(world, entityId, entity);
             else if (componentType == typeof(InventoryState))
                 playerSender.PlayerInventory(entityId);
@@ -71,7 +71,7 @@ internal sealed class ReplicationService(
         var entity = world.Entities.Get(entityId);
         if (entity == null) return;
 
-        if (pos.LoadingMap) return;
+        if (entity.Has<MapLoadingTag>()) return;
 
         if (entity.Has<PlayerTag>())
             playerSender.PlayerMove(entityId, 1);

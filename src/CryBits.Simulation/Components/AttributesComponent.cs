@@ -1,4 +1,4 @@
-namespace CryBits.Client.Components;
+namespace CryBits.Simulation.Components;
 
 public sealed class AttributesComponent
 {

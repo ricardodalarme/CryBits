@@ -34,9 +34,11 @@ public sealed class PartySystem : ISimulationSystem
 
     private void Invite(World world, Tick tick, EntityId entityId, string targetName)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var appearance = e.Get<PlayerAppearance>()!;
-        var party = e.Get<PartyState>()!;
+        var party = world.AddOrGet<PartyState>(entityId);
+        if (party == null) return;
 
         var invitedId = world.FindPlayer(targetName);
 
@@ -52,16 +54,17 @@ public sealed class PartySystem : ISimulationSystem
             return;
         }
 
-        var invitedE = world.Entities.Get(invitedId.Value)!;
-        var invitedParty = invitedE.Get<PartyState>()!;
+        var invitedE = world.Entities.Get(invitedId.Value);
+        if (invitedE == null) return;
+        var invitedParty = invitedE.Get<PartyState>();
 
-        if (invitedParty.Members.Count != 0)
+        if (invitedParty?.Members.Count > 0)
         {
             tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player is already part of a party.", ColorArgb = ChatColors.White });
             return;
         }
 
-        if (invitedParty.PendingInviterId.HasValue)
+        if (invitedParty?.PendingInviterId.HasValue == true)
         {
             tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "The player is analyzing an invitation to another party.", ColorArgb = ChatColors.White });
             return;
@@ -73,14 +76,18 @@ public sealed class PartySystem : ISimulationSystem
             return;
         }
 
-        invitedParty.PendingInviterId = entityId;
+        var targetParty = world.AddOrGet<PartyState>(invitedId.Value);
+        if (targetParty == null) return;
+        targetParty.PendingInviterId = entityId;
     }
 
     private void Accept(World world, Tick tick, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var appearance = e.Get<PlayerAppearance>()!;
-        var party = e.Get<PartyState>()!;
+        var party = e.Get<PartyState>();
+        if (party == null) return;
 
         var inviterId = party.PendingInviterId;
 
@@ -96,8 +103,10 @@ public sealed class PartySystem : ISimulationSystem
             return;
         }
 
-        var inviterE = world.Entities.Get(inviterId.Value)!;
-        var inviterParty = inviterE.Get<PartyState>()!;
+        var inviterE = world.Entities.Get(inviterId.Value);
+        if (inviterE == null) return;
+        var inviterParty = inviterE.Get<PartyState>();
+        if (inviterParty == null) return;
         var inviterAppearance = inviterE.Get<PlayerAppearance>()!;
 
         if (inviterParty.Members.Count == Config.MaxPartyMembers - 1)
@@ -109,8 +118,8 @@ public sealed class PartySystem : ISimulationSystem
         for (byte i = 0; i < inviterParty.Members.Count; i++)
         {
             var memberId = inviterParty.Members[i];
-            var memberE = world.Entities.Get(memberId)!;
-            var memberParty = memberE.Get<PartyState>()!;
+            var memberParty = world.Get<PartyState>(memberId);
+            if (memberParty == null) continue;
             memberParty.Members.Add(entityId);
             world.MarkDirty<PartyState>(memberId);
             if (memberId != inviterId.Value)
@@ -129,33 +138,30 @@ public sealed class PartySystem : ISimulationSystem
 
     private void Decline(World world, Tick tick, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var appearance = e.Get<PlayerAppearance>()!;
-        var party = e.Get<PartyState>()!;
+        var party = e.Get<PartyState>();
+        if (party == null) return;
 
         var inviterId = party.PendingInviterId;
         if (inviterId != null) tick.Events.Emit(new ChatMessageEvent { RecipientId = inviterId.Value, Text = appearance.Name + " decline the party.", ColorArgb = ChatColors.White });
-        party.PendingInviterId = null;
+        world.Remove<PartyState>(entityId);
     }
 
     private void Leave(World world, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId)!;
-        var party = e.Get<PartyState>()!;
-
-        if (party.Members.Count == 0) return;
+        var party = world.Get<PartyState>(entityId);
+        if (party == null || party.Members.Count == 0) return;
 
         for (byte i = 0; i < party.Members.Count; i++)
         {
-            var memberE = world.Entities.Get(party.Members[i])!;
-            var memberParty = memberE.Get<PartyState>()!;
+            var memberParty = world.Get<PartyState>(party.Members[i]);
+            if (memberParty == null) continue;
             memberParty.Members.Remove(entityId);
+            world.MarkDirty<PartyState>(party.Members[i]);
         }
 
-        for (byte i = 0; i < party.Members.Count; i++)
-            world.MarkDirty<PartyState>(party.Members[i]);
-
-        party.Members.Clear();
-        world.MarkDirty<PartyState>(entityId);
+        world.Remove<PartyState>(entityId);
     }
 }

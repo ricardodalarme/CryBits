@@ -48,13 +48,8 @@ public static class NpcSpawner
             MaxMp = npcData.Vital[(byte)Vital.Mp]
         });
 
-        entity.Set(new StatBlock
-        {
-            Level = 1,
-            Experience = 0,
-            Points = 0,
-            Attribute = (short[])npcData.Attribute.Clone()
-        });
+        entity.Set(new LevelComponent { Level = 1 });
+        entity.Set(new AttributesComponent { Values = (short[])npcData.Attribute.Clone() });
         entity.Set(new AttackCooldown());
         entity.Set(new NpcTag());
 
@@ -62,7 +57,8 @@ public static class NpcSpawner
         world.MarkDirty<NpcState>(entityId);
         world.MarkDirty<Position>(entityId);
         world.MarkDirty<Vitals>(entityId);
-        world.MarkDirty<StatBlock>(entityId);
+        world.MarkDirty<LevelComponent>(entityId);
+        world.MarkDirty<AttributesComponent>(entityId);
 
         return entityId;
     }

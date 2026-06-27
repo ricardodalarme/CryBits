@@ -37,7 +37,7 @@ internal static class PlayerSpawner
             .With(new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond })
             .With(new AttackComponent())
             .With(new PlayerTag())
-            .With(new CollidableComponent())
+            .With(new CollidableTag())
             .With(new Vitals { Hp = vitals[0], Mp = vitals[1], MaxHp = maxVitals[0], MaxMp = maxVitals[1] })
             .Id;
     }
@@ -63,15 +63,16 @@ internal static class PlayerSpawner
         for (var i = 0; i < equipment.Length; i++)
             equipmentSlots[i] = equipment[i]?.Id ?? Guid.Empty;
 
-        var attrComp = new AttributesComponent();
-        attributes.CopyTo(attrComp.Values, 0);
+        var levelComp = new LevelComponent { Level = level };
+        var attrs = new AttributesComponent();
+        attributes.CopyTo(attrs.Values, 0);
 
-        world.Set(entity, attrComp);
+        world.Set(entity, levelComp);
+        world.Set(entity, attrs);
         world.Set(entity, new EquipmentState { Slots = equipmentSlots });
         world.Set(entity, new InventoryState());
         world.Set(entity, new HotbarState());
-        world.Set(entity, new LevelComponent { Level = level });
-        world.Set(entity, new LocalPlayerTagComponent());
+        world.Set(entity, new LocalPlayerTag());
 
         return entity;
     }

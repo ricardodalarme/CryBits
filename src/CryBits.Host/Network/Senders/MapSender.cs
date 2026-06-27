@@ -101,14 +101,15 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
         var appearance = entity.Get<PlayerAppearance>()!;
         var pos = entity.Get<Position>()!;
         var vitals = entity.Get<Vitals>()!;
-        var stats = entity.Get<StatBlock>()!;
+        var level = entity.Get<LevelComponent>()!;
+        var attrs = entity.Get<AttributesComponent>()!;
         var equip = entity.Get<EquipmentState>()!;
         var packet = new PlayerDataPacket
         {
             NetworkId = entityId.Value,
             Name = appearance.Name,
             TextureNum = appearance.TextureNum,
-            Level = stats.Level,
+            Level = level.Level,
             MapId = pos.MapId,
             X = pos.X,
             Y = pos.Y,
@@ -124,7 +125,7 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
             packet.MaxVital[n] = n == 0 ? vitals.MaxHp : vitals.MaxMp;
         }
 
-        for (byte n = 0; n < (byte)Attribute.Count; n++) packet.Attribute[n] = stats.Attribute[n];
+        for (byte n = 0; n < (byte)Attribute.Count; n++) packet.Attribute[n] = attrs.Values[n];
         for (byte n = 0; n < (byte)Equipment.Count; n++) packet.Equipment[n] = equip.Slots[n];
 
         return packet;

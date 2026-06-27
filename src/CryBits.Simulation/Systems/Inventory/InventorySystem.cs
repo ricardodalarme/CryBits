@@ -94,10 +94,12 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                     {
                         var playerId = world.FindPlayer(equip.PlayerId);
                         if (playerId == null) continue;
-                        var e = world.Entities.Get(playerId.Value)!;
+                        var e = world.Entities.Get(playerId.Value);
+                        if (e == null) continue;
                         var inv = e.Get<InventoryState>()!;
                         var pos = e.Get<Position>()!;
-                        var map = world.Maps.Get(pos.MapId)!;
+                        var map = world.Maps.Get(pos.MapId);
+                        if (map == null) continue;
 
                         var oldItem = catalog.Items.Get(equip.OldItemId.Value);
                         if (oldItem == null) continue;
@@ -123,7 +125,8 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
     {
         if (item == null) return false;
 
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return false;
         var inv = e.Get<InventoryState>()!;
 
         int? stackSlot = null;
@@ -153,7 +156,8 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
     private void TakeItem(World world, EntityId entityId, int slotIndex, short amount)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var hotbar = e.Get<HotbarState>();
         var inv = e.Get<InventoryState>()!;
 
@@ -186,7 +190,8 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
     private void DropItem(World world, Tick tick, EntityId entityId, int slotIndex, short amount)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var inv = e.Get<InventoryState>()!;
         var pos = e.Get<Position>()!;
         var trade = e.Get<TradeState>();
@@ -213,8 +218,9 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
     private void UseItem(World world, Tick tick, EntityId entityId, int slotIndex, ItemSlot slot)
     {
-        var e = world.Entities.Get(entityId)!;
-        var stats = e.Get<StatBlock>()!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
+        var level = e.Get<LevelComponent>()!;
         var vitals = e.Get<Vitals>()!;
         var appearance = e.Get<PlayerAppearance>()!;
         var trade = e.Get<TradeState>();
@@ -223,7 +229,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         if (item == null) return;
         if (trade?.Partner != null) return;
 
-        if (stats.Level < item.ReqLevel)
+        if (level.Level < item.ReqLevel)
         {
             tick.Events.Emit(new ChatMessageEvent { RecipientId = entityId, Text = "You do not have the level required to use this item.", ColorArgb = ChatColors.White });
             return;
@@ -273,14 +279,17 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
 
     private void CollectItem(World world, Tick tick, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId)!;
+        var e = world.Entities.Get(entityId);
+        if (e == null) return;
         var pos = e.Get<Position>()!;
-        var map = world.Maps.Get(pos.MapId)!;
+        var map = world.Maps.Get(pos.MapId);
+        if (map == null) return;
 
         var groundEntityId = map.FindGroundItemEntity(world.Entities, pos.X, pos.Y);
         if (groundEntityId == null) return;
 
-        var groundEntity = world.Entities.Get(groundEntityId.Value)!;
+        var groundEntity = world.Entities.Get(groundEntityId.Value);
+        if (groundEntity == null) return;
         var comp = groundEntity.Get<GroundItem>()!;
         var item = catalog.Items.Get(comp.ItemDefId);
         if (item == null) return;

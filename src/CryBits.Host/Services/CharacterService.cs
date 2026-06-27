@@ -155,13 +155,14 @@ internal sealed class CharacterService(
     {
         var pos = entity.Get<Position>();
         var appearance = entity.Get<PlayerAppearance>();
-        var stats = entity.Get<StatBlock>();
+        var level = entity.Get<LevelComponent>();
+        var attrs = entity.Get<AttributesComponent>();
         var vitals = entity.Get<Vitals>();
         var inv = entity.Get<InventoryState>();
         var equip = entity.Get<EquipmentState>();
         var hotbar = entity.Get<HotbarState>();
 
-        if (pos == null || appearance == null || stats == null || vitals == null ||
+        if (pos == null || appearance == null || level == null || attrs == null || vitals == null ||
             inv == null || equip == null || hotbar == null) return;
 
         var data = new Character
@@ -170,10 +171,10 @@ internal sealed class CharacterService(
             ClassId = appearance.ClassId,
             Gender = appearance.Gender,
             TextureNum = appearance.TextureNum,
-            Level = stats.Level,
-            Experience = stats.Experience,
-            Points = stats.Points,
-            Attributes = (short[])stats.Attribute.Clone(),
+            Level = level.Level,
+            Experience = level.Experience,
+            Points = (byte)level.Points,
+            Attributes = (short[])attrs.Values.Clone(),
             MapId = pos.MapId,
             X = pos.X,
             Y = pos.Y,

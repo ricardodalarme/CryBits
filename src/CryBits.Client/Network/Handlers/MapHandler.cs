@@ -1,4 +1,3 @@
-using CryBits.Client.Components;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Spawners;
@@ -77,7 +76,7 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         var world = context.World;
 
         // Destroy all stale map-item entities
-        world.DestroyWhere(s => s.Has<GroundItemComponent>());
+        world.DestroyWhere(s => s.Has<GroundItem>());
 
         // Spawn an ECS entity for every item the server reported.
         foreach (var itemData in packet.Items)

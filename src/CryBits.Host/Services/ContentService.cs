@@ -140,7 +140,7 @@ internal sealed class ContentService(
 
             mapSender.MapPlayers(entityId);
 
-            pos.LoadingMap = false;
+            host.Entities.Get(entityId)?.Remove<MapLoadingTag>();
             playerSender.JoinMap(entityId);
         }
     }
