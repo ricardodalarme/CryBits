@@ -8,6 +8,8 @@ using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Slots;
 using CryBits.Host.Core;
 using CryBits.Persistence.Repositories;
+using Microsoft.Extensions.Logging;
+using ZLogger;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using NpcDef = CryBits.Definitions.Npcs.Npc;
 using NpcDropDef = CryBits.Definitions.Npcs.NpcDrop;
@@ -19,9 +21,9 @@ namespace CryBits.Server.Commands;
 [Verb("seed",
     HelpText =
         "Seeds the server with starter items, NPCs, shops and a map. Skips if data already exists (use -f to overwrite).")]
-internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer worldInitializer) : IConsoleCommand
+internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer worldInitializer, ILogger<SeedCommand> logger) : IConsoleCommand
 {
-    public SeedCommand() : this(ServerContext.Catalog!, new WorldInitializer(ServerContext.Host!, ServerContext.Catalog!)) { }
+    public SeedCommand() : this(ServerContext.Catalog!, new WorldInitializer(ServerContext.Host!, ServerContext.Catalog!), ServerContext.LoggerFactory!.CreateLogger<SeedCommand>()) { }
 
     [Option('f', "force", HelpText = "Overwrite existing data even if it is already present.")]
     public bool Force { get; set; }
@@ -31,11 +33,11 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         if (!Force && (catalog.Items.Count > 0 || catalog.Npcs.Count > 0 || catalog.Shops.Count > 0 || catalog.Maps.Count > 0 ||
                        catalog.Classes.Count > 0))
         {
-            Console.WriteLine("[Seed] Data already exists. Run with -f / --force to overwrite.");
+            logger.ZLogInformation($"Seed skipped: data already exists (use --force to overwrite)");
             return;
         }
 
-        Console.WriteLine("[Seed] Seeding data...");
+        logger.ZLogInformation($"Seeding data");
 
         catalog.Items.Clear();
         catalog.Npcs.Clear();
@@ -148,7 +150,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         foreach (var item in new[] { gold, sword, armor, helmet, shield, amulet, healthPotion, manaPotion })
             catalog.Items[item.Id] = item;
 
-        Console.WriteLine($"[Seed] Created {catalog.Items.Count} items.");
+        logger.ZLogDebug($"Seeded {catalog.Items.Count} items");
 
         var generalStore = new ShopDef { Name = "General Store", CurrencyId = gold.Id };
         generalStore.Sold.Add(new ShopItemDef(healthPotion.Id, 1, 10));
@@ -159,7 +161,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         generalStore.Bought.Add(new ShopItemDef(sword.Id, 1, 5));
         catalog.Shops[generalStore.Id] = generalStore;
 
-        Console.WriteLine($"[Seed] Created {catalog.Shops.Count} shops.");
+        logger.ZLogDebug($"Seeded {catalog.Shops.Count} shops");
 
         var merchant = new NpcDef
         {
@@ -223,7 +225,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         foreach (var npc in new[] { merchant, goblin, snake })
             catalog.Npcs[npc.Id] = npc;
 
-        Console.WriteLine($"[Seed] Created {catalog.Npcs.Count} NPCs.");
+        logger.ZLogDebug($"Seeded {catalog.Npcs.Count} NPCs");
 
         var map = new Map
         {
@@ -250,7 +252,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         map.Npc.Add(new MapNpc { NpcId = snake.Id, Spawn = true, X = 18, Y = 12 });
         catalog.Maps[map.Id] = map;
 
-        Console.WriteLine($"[Seed] Created {catalog.Maps.Count} maps.");
+        logger.ZLogDebug($"Seeded {catalog.Maps.Count} maps");
 
         var warrior = new Class
         {
@@ -280,7 +282,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         warrior.Item.Add(new ItemSlot(healthPotion.Id, 3));
 
         catalog.Classes[warrior.Id] = warrior;
-        Console.WriteLine($"[Seed] Created class '{warrior.Name}'.");
+        logger.ZLogDebug($"Seeded class {warrior.Name}");
 
         var mage = new Class
         {
@@ -309,7 +311,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         mage.Item.Add(new ItemSlot(healthPotion.Id, 1));
 
         catalog.Classes[mage.Id] = mage;
-        Console.WriteLine($"[Seed] Created class '{mage.Name}'.");
+        logger.ZLogDebug($"Seeded class {mage.Name}");
 
         var store = new ContentRepository();
         var mapRepo = new MapRepository();
@@ -321,6 +323,6 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
 
         worldInitializer.Initialize();
 
-        Console.WriteLine("[Seed] All data written to disk. Done.");
+        logger.ZLogInformation($"Seed complete");
     }
 }

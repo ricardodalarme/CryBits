@@ -8,6 +8,8 @@ using CryBits.Host.Replication;
 using CryBits.Persistence.Repositories;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
+using Microsoft.Extensions.Logging;
+using ZLogger;
 
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
@@ -23,6 +25,7 @@ using static CryBits.Definitions.Globals;
 namespace CryBits.Host.Services;
 
 internal sealed class CharacterService(
+    ILogger<CharacterService> logger,
     CharacterRepository characterRepository,
     AuthSender authSender,
     ContentSender contentSender,
@@ -97,6 +100,7 @@ internal sealed class CharacterService(
 
         characterRepository.Save(session.Account!.Username, data);
 
+        logger.ZLogInformation($"Character {data.Name} created for account {session.Account.Username}");
         Join(session, data);
     }
 
@@ -131,6 +135,7 @@ internal sealed class CharacterService(
         if (packet.CharacterIndex < 0 || packet.CharacterIndex >= session.Account!.Characters.Count) return;
 
         var name = session.Account!.Characters[packet.CharacterIndex].Name;
+        logger.ZLogInformation($"Character {name} deleted for account {session.Account.Username}");
         authSender.Alert(session, "The character '" + name + "' has been deleted.", false);
         characterRepository.Delete(session.Account!.Username, name);
         session.Account!.Characters.RemoveAt(packet.CharacterIndex);
@@ -144,10 +149,14 @@ internal sealed class CharacterService(
         if (session?.Account == null) return;
 
         var entity = host.Entities.Get(entityId);
+        var playerName = entity?.Get<PlayerAppearance>()?.Name ?? "unknown";
         if (entity != null)
         {
             WriteCharacterSave(session, entity);
+            logger.ZLogDebug($"Player {playerName} saved to database");
         }
+
+        logger.ZLogInformation($"Player {playerName} left world");
 
         interestManager.RemoveObserver(entityId);
 
@@ -216,6 +225,7 @@ internal sealed class CharacterService(
 
     private void Join(Session session, Character data)
     {
+        logger.ZLogInformation($"Player {data.Name} joined world on map {data.MapId}");
         var entityId = PlayerSpawner.Spawn(host.Simulation, catalog, data);
         var state = host.Entities.Get(entityId)!;
         var pos = state.Get<Position>()!;

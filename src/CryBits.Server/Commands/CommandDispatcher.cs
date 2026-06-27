@@ -1,24 +1,21 @@
 using CommandLine;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using ZLogger;
 
 namespace CryBits.Server.Commands;
 
-internal sealed class CommandDispatcher
+internal sealed class CommandDispatcher(ILogger<CommandDispatcher> logger)
 {
     private readonly List<Type> _commandTypes = [];
-    private readonly Parser _parser;
-
-    public CommandDispatcher()
+    private readonly Parser _parser = new(settings =>
     {
-        _parser = new Parser(settings =>
-        {
-            settings.AutoVersion = false;
-            settings.AutoHelp = false;
-            settings.CaseSensitive = false;
-            settings.CaseInsensitiveEnumValues = true;
-            settings.HelpWriter = null; // suppress all auto-generated output
-        });
-    }
+        settings.AutoVersion = false;
+        settings.AutoHelp = false;
+        settings.CaseSensitive = false;
+        settings.CaseInsensitiveEnumValues = true;
+        settings.HelpWriter = null;
+    });
 
     public CommandDispatcher Register<T>() where T : IConsoleCommand, new()
     {
@@ -49,14 +46,13 @@ internal sealed class CommandDispatcher
     {
         var errorList = errors.ToList();
 
-        // Unknown verb
         if (errorList.Any(e => e is BadVerbSelectedError))
         {
+            logger.ZLogWarning($"Unknown command {verb} from admin");
             Console.WriteLine($"Unknown command '{verb}'. Type 'help' to see available commands.");
             return;
         }
 
-        // Missing required argument or bad value — show usage for the matched verb
         var type = _commandTypes.FirstOrDefault(t =>
         {
             var attr = Attribute.GetCustomAttribute(t, typeof(VerbAttribute)) as VerbAttribute;
@@ -64,7 +60,11 @@ internal sealed class CommandDispatcher
         });
 
         if (type != null)
-            Console.WriteLine("Usage: " + BuildUsage(type));
+        {
+            var usage = BuildUsage(type);
+            logger.ZLogWarning($"Invalid arguments for {verb}: {usage}");
+            Console.WriteLine("Usage: " + usage);
+        }
     }
 
     private void PrintHelp()

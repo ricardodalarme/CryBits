@@ -1,6 +1,8 @@
+using System.Reflection;
 using CryBits.Definitions.Catalog;
 using CryBits.Host;
 using CryBits.Host.Core;
+using CryBits.Host.Hosting;
 using CryBits.Host.Ingress;
 using CryBits.Host.Network;
 using CryBits.Host.Network.Senders;
@@ -21,6 +23,8 @@ using LinqToDB.DataProvider.SQLite;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using ZLogger;
 
 IntentRegistry.Register<MoveIntent>(1);
 IntentRegistry.Register<AttackIntent>(2);
@@ -52,6 +56,12 @@ var builder = Host.CreateDefaultBuilder(args);
 
 builder.ConfigureServices((ctx, services) =>
 {
+    services.AddLogging(logging =>
+    {
+        logging.AddConfiguration(ctx.Configuration.GetSection("Logging"));
+        logging.AddCryBitsLogging(enableRollingFile: true);
+    });
+
     services.AddSingleton<DefinitionCatalog>();
 
     // Database connection — single instance, WAL mode
@@ -118,6 +128,11 @@ builder.ConfigureServices((ctx, services) =>
 
 var app = builder.Build();
 
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+ServerContext.LoggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
+var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown";
+logger.ZLogInformation($"CryBits Server v{version} starting");
+
 var host = app.Services.GetRequiredService<WorldHost>();
 ServerContext.Host = host;
 ServerContext.Catalog = app.Services.GetRequiredService<DefinitionCatalog>();
@@ -126,19 +141,22 @@ var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) =>
 {
     e.Cancel = true;
-    Console.WriteLine("\r\n[Shutting down...]");
+    logger.ZLogInformation($"Server shutting down via Ctrl+C");
     cts.Cancel();
 };
 AppDomain.CurrentDomain.ProcessExit += (_, _) => cts.Cancel();
 AppDomain.CurrentDomain.UnhandledException += (_, e) =>
-    Console.WriteLine($"[Global Error] Unhandled exception: {e.ExceptionObject}");
+{
+    if (e.ExceptionObject is Exception ex)
+        logger.ZLogCritical(ex, $"Unhandled exception in AppDomain");
+};
 TaskScheduler.UnobservedTaskException += (_, e) =>
 {
-    Console.WriteLine($"[Global Error] Unobserved task exception: {e.Exception}");
+    logger.ZLogError(e.Exception, $"Unobserved task exception");
     e.SetObserved();
 };
 
-var dispatcher = new CommandDispatcher()
+var dispatcher = app.Services.GetRequiredService<CommandDispatcher>()
     .Register<DefineAccessCommand>()
     .Register<SeedCommand>();
 

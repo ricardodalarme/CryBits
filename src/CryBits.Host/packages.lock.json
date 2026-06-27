@@ -44,6 +44,17 @@
           "Microsoft.Extensions.Options": "10.0.9"
         }
       },
+      "ZLogger": {
+        "type": "Direct",
+        "requested": "[2.5.10, )",
+        "resolved": "2.5.10",
+        "contentHash": "KjQaJ1M3b7cuouXwxhX1CEyCqQ1mOlFslGe5lSELmDYIo5kemzi2Y23jeESqtXrNw+iLLN2+89qpm9Il/cG0bg==",
+        "dependencies": {
+          "Microsoft.Extensions.Logging": "8.0.0",
+          "System.IO.Hashing": "8.0.0",
+          "Utf8StringInterpolation": "1.3.1"
+        }
+      },
       "MemoryPack.Core": {
         "type": "Transitive",
         "resolved": "1.21.4",
@@ -342,6 +353,16 @@
         "type": "Transitive",
         "resolved": "10.0.9",
         "contentHash": "s2PcxHK4IYQ6gmD3VSBkym9tWGkFisKjcjWBdl7a+n4Yy66ae4beJ1ZdjDp060SSll4W3Rt4H2LW87dWckv+QQ=="
+      },
+      "System.IO.Hashing": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "ne1843evDugl0md7Fjzy6QjJrzsjh46ZKbhf8GwBXb5f/gw97J4bxMs0NQKifDuThh/f0bZ0e62NPl1jzTuRqA=="
+      },
+      "Utf8StringInterpolation": {
+        "type": "Transitive",
+        "resolved": "1.3.1",
+        "contentHash": "VIo1LtpoFvp5LlCDkTiQsKrjX+GMA7N37OEJoqHMhCOdIeNoi8uFocnwi8h3TklSySB3U4Y1+gThB00fJTnfGA=="
       },
       "crybits.definitions": {
         "type": "Project",

@@ -1,11 +1,14 @@
 using CommandLine;
 using CryBits.Definitions.Common;
+using Microsoft.Extensions.Logging;
+using ZLogger;
 
 namespace CryBits.Server.Commands;
 
 [Verb("defineaccess", HelpText = "Sets the access level for an online player.")]
-internal sealed class DefineAccessCommand : IConsoleCommand
+internal sealed class DefineAccessCommand(ILogger<DefineAccessCommand> logger) : IConsoleCommand
 {
+    public DefineAccessCommand() : this(ServerContext.LoggerFactory!.CreateLogger<DefineAccessCommand>()) { }
     [Value(0, Required = true, MetaName = "playerName", HelpText = "The online player's username.")]
     public string PlayerName { get; set; } = string.Empty;
 
@@ -18,11 +21,11 @@ internal sealed class DefineAccessCommand : IConsoleCommand
         var session = ServerContext.Host?.Sessions.Find(x => x.Account?.Username.Equals(PlayerName, StringComparison.OrdinalIgnoreCase) == true);
         if (session?.Account == null)
         {
-            Console.WriteLine("This player is either offline or doesn't exist.");
+            logger.ZLogWarning($"Access definition failed: player {PlayerName} not found");
             return;
         }
 
         session.Account.AccessLevel = (Access)Access;
-        Console.WriteLine($"{(Access)Access} access granted to {PlayerName}.");
+        logger.ZLogInformation($"{(Access)Access} access granted to {PlayerName}");
     }
 }

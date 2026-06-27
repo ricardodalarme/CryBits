@@ -20,6 +20,16 @@ using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Offline;
 
+using CryBits.Host.Scheduling;
+using Microsoft.Extensions.Logging;
+
+internal sealed class SilentLogger<T> : ILogger<T>
+{
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+    public bool IsEnabled(LogLevel logLevel) => false;
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) { }
+}
+
 public sealed class EmbeddedHostRunner : IDisposable
 {
     private WorldHost? _host;
@@ -36,7 +46,7 @@ public sealed class EmbeddedHostRunner : IDisposable
         // Load content definitions
         var contentRepo = new ContentRepository();
         var mapRepo = new MapRepository();
-        var dataLoader = new DataLoader(contentRepo, mapRepo, catalog);
+        var dataLoader = new DataLoader(contentRepo, mapRepo, catalog, new SilentLogger<DataLoader>());
         dataLoader.LoadAll();
 
         // SQLite database for account/character persistence
@@ -55,13 +65,13 @@ public sealed class EmbeddedHostRunner : IDisposable
         var sessions = new SessionManager();
         var packageSender = new PackageSender(pair.Server, sessions, simulation.Entities);
         var pipeline = HostPipelineBuilder.Build(catalog);
-        _host = new WorldHost(pair.Server, simulation, pipeline, sessions, packageSender);
+        _host = new WorldHost(pair.Server, simulation, pipeline, sessions, packageSender, new SilentLogger<TickDriver>());
         pair.Server.Start(0, Config.GameName, 1);
 
         new WorldInitializer(_host, catalog).Initialize();
 
         // Create an instance-based dispatcher and wire all host services
-        var hostDispatcher = new CryBits.Host.Network.PacketDispatcher();
+        var hostDispatcher = new CryBits.Host.Network.PacketDispatcher(new SilentLogger<CryBits.Host.Network.PacketDispatcher>());
         var ps = _host.PackageSender;
         var es = _host.Entities;
         var ss = _host.Sessions;
@@ -74,13 +84,14 @@ public sealed class EmbeddedHostRunner : IDisposable
 
         hostDispatcher.Register(new AuthService(
             authSender, contentSender,
-            accountSenderHost, accountRepo, charRepo, _host));
+            accountSenderHost, accountRepo, charRepo, _host, new SilentLogger<AuthService>()));
 
         var keyframeEncoder = new KeyframeEncoder(simulation);
         var eventFanout = new EventFanout(ss, chatSender, contentSender, pair.Server);
         var interestManager = new InterestManager(simulation);
 
         hostDispatcher.Register(new CharacterService(
+            new SilentLogger<CharacterService>(),
             charRepo, authSender, contentSender,
             accountSenderHost, chatSender, catalog, _host,
             keyframeEncoder, interestManager, pair.Server));

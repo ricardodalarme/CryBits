@@ -7,6 +7,7 @@ using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 using CryBits.Transport.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace CryBits.Host.Core;
 
@@ -26,14 +27,15 @@ internal sealed class WorldHost
     private readonly TickDriver _tickDriver;
 
     public WorldHost(ITransport transport, World simulation, TickPipeline pipeline,
-        SessionManager sessions, PackageSender packageSender)
+        SessionManager sessions, PackageSender packageSender,
+        ILogger<TickDriver> tickDriverLogger)
     {
         Transport = transport;
         Simulation = simulation;
         Pipeline = pipeline;
         Sessions = sessions;
         PackageSender = packageSender;
-        _tickDriver = new TickDriver(this);
+        _tickDriver = new TickDriver(this, tickDriverLogger);
     }
 
     public void StartTickLoop(CancellationToken ct)

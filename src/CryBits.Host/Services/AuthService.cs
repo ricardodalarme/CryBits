@@ -5,6 +5,8 @@ using CryBits.Persistence.Models;
 using CryBits.Persistence.Repositories;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
+using Microsoft.Extensions.Logging;
+using ZLogger;
 using static CryBits.Definitions.Globals;
 using BcryptNet = BCrypt.Net.BCrypt;
 
@@ -16,7 +18,8 @@ internal sealed class AuthService(
     AccountSender accountSender,
     AccountRepository accountRepository,
     CharacterRepository characterRepository,
-    WorldHost host)
+    WorldHost host,
+    ILogger<AuthService> logger)
 {
     [PacketHandler]
     internal void Connect(Session session, ConnectPacket packet)
@@ -34,6 +37,7 @@ internal sealed class AuthService(
 
         if (host.Sessions.Find(x => x.Account?.Username.Equals(user) == true) != null)
         {
+            logger.ZLogWarning($"Authentication blocked for {user}: already connected");
             authSender.Alert(session, "Someone already signed in to this account.");
             return;
         }
@@ -47,11 +51,14 @@ internal sealed class AuthService(
 
         if (!BcryptNet.Verify(password, session.Account.PasswordHash))
         {
+            logger.ZLogWarning($"Authentication failed for {user}: wrong password");
             authSender.Alert(session, "Password is incorrect.");
             return;
         }
 
         session.Account.AccessLevel = Access.Administrator;
+
+        logger.ZLogInformation($"Account {user} authenticated (session {session.Id})");
 
         if (editor)
         {
@@ -127,6 +134,7 @@ internal sealed class AuthService(
             Access = (byte)session.Account.AccessLevel
         });
 
+        logger.ZLogInformation($"Account {user} registered");
         contentSender.Classes(session);
         accountSender.CreateCharacter(session);
     }

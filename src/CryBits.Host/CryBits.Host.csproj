@@ -12,6 +12,7 @@
     <PackageReference Include="BCrypt.Net-Next" />
     <PackageReference Include="LiteNetLib" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="ZLogger" />
   </ItemGroup>
 
   <ItemGroup>

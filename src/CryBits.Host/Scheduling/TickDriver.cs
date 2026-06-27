@@ -1,13 +1,15 @@
 using CryBits.Host.Core;
 using CryBits.Simulation;
+using Microsoft.Extensions.Logging;
+using ZLogger;
 
 namespace CryBits.Host.Scheduling;
 
-internal sealed class TickDriver(WorldHost host)
+internal sealed class TickDriver(WorldHost host, ILogger<TickDriver> logger)
 {
     public async Task MainAsync(CancellationToken ct)
     {
-        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000 / SimulationConstants.TicksPerSecond));
+        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000.0 / SimulationConstants.TicksPerSecond));
         while (await timer.WaitForNextTickAsync(ct))
             try
             {
@@ -15,7 +17,7 @@ internal sealed class TickDriver(WorldHost host)
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Error] Main loop threw an exception: {ex}");
+                logger.ZLogError(ex, $"Tick loop threw an exception");
             }
     }
 }

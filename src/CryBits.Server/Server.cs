@@ -5,9 +5,12 @@ using CryBits.Host.Replication;
 using CryBits.Host.Services;
 using CryBits.Persistence;
 using CryBits.Simulation;
+using CryBits.Simulation.State;
 using CryBits.Transport.Abstractions;
 using LinqToDB.Data;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using ZLogger;
 
 namespace CryBits.Server;
 
@@ -20,7 +23,8 @@ internal sealed class Server(
     KeyframeReplicator keyframeReplicator,
     CharacterService characterService,
     DataConnection dataConnection,
-    IEnumerable<object> packetHandlers) : IHostedService
+    IEnumerable<object> packetHandlers,
+    ILogger<Server> logger) : IHostedService
 {
     private CancellationTokenSource? _cts;
 
@@ -36,28 +40,28 @@ internal sealed class Server(
  |______||_|    |_|  |_____/|_| \__||___/
                            2D orpg engine" + "\r\n");
 
-        Console.WriteLine("[Starting]");
+        logger.ZLogInformation($"Server starting");
 
         Directories.Create();
-        Console.WriteLine("Directories created.");
+        logger.ZLogDebug($"Directories created");
 
         SchemaBootstrap.EnsureCreated(dataConnection);
-        Console.WriteLine("Database schema ensured.");
+        logger.ZLogInformation($"Database schema ensured");
 
-        Console.WriteLine("Creating world.");
+        logger.ZLogInformation($"Creating world");
         ComponentTypes.RegisterDefault();
         dataLoader.LoadAll();
         worldInitializer.Initialize();
 
         var config = Definitions.Globals.Config;
         transport.Start(config.Port, config.GameName, config.MaxPlayers);
-        Console.WriteLine("Network started. Port: " + Definitions.Globals.Config.Port);
+        logger.ZLogInformation($"Network started on port {config.Port}");
 
         host.Pipeline.AddSystem(keyframeReplicator);
 
         foreach (var handler in packetHandlers)
             dispatcher.Register(handler);
-        Console.WriteLine($"PacketDispatcher: {dispatcher.Count} services registered.");
+        logger.ZLogDebug($"PacketDispatcher: {dispatcher.Count} services registered");
 
         transport.OnConnected += OnSessionConnected;
         transport.OnDisconnected += OnSessionDisconnected;
@@ -90,15 +94,18 @@ internal sealed class Server(
     private void OnSessionConnected(Guid sessionId)
     {
         host.Sessions.Add(new Session(sessionId));
+        logger.ZLogInformation($"Session {sessionId} connected");
     }
 
     private void OnSessionDisconnected(Guid sessionId)
     {
         var session = host.Sessions.Find(s => s.Id == sessionId);
-        if (session?.Character is { } characterId)
-            characterService.Leave(characterId);
+        EntityId? characterId = session?.Character;
+        if (characterId is { } cid)
+            characterService.Leave(cid);
         if (session != null)
             host.Sessions.Remove(session);
+        logger.ZLogInformation($"Session {sessionId} disconnected (character: {characterId?.Value ?? 0})");
     }
 
     private void OnSessionDataReceived(Guid sessionId, byte[] data)

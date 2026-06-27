@@ -2,12 +2,14 @@ using CryBits.Host.Core;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
 using CryBits.Simulation.State;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 using System.Reflection;
+using ZLogger;
 
 namespace CryBits.Host.Network;
 
-internal sealed class PacketDispatcher
+internal sealed class PacketDispatcher(ILogger<PacketDispatcher> logger)
 {
     private readonly Dictionary<Type, Action<Session, IClientPacket>> _handlers = [];
 
@@ -46,6 +48,10 @@ internal sealed class PacketDispatcher
         if (_handlers.TryGetValue(type, out var handler))
         {
             handler(session, packet);
+        }
+        else
+        {
+            logger.ZLogWarning($"Unknown packet tag {type.Name} from session {session.Id}");
         }
     }
 
