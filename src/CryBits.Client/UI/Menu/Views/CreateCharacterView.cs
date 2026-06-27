@@ -5,7 +5,6 @@ using CryBits.Client.Network.Senders;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using System.Drawing;
-using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.UI.Menu.Views;
 
@@ -163,6 +162,6 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
     {
         var textureNum = GetCurrentTextureNum();
         if (textureNum > 0)
-            characterRenderer.DrawCharacter(textureNum, pos, Direction.Down, AnimationStopped);
+            characterRenderer.DrawCharacter(textureNum, pos, Direction.Down, 1);
     }
 }

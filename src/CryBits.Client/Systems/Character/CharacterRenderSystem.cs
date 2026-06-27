@@ -2,6 +2,7 @@ using CryBits.Client.Components;
 using CryBits.Client.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
+using CryBits.Definitions.Characters;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
@@ -24,7 +25,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IC
             var transform = state.Get<TransformComponent>();
             if (transform == null) continue;
             if (!state.Has<SpriteComponent>()) continue;
-            if (!state.Has<AnimatedSpriteComponent>()) continue;
+            if (!state.Has<AnimationState>()) continue;
             if (!state.Has<PlayerAppearance>()) continue;
 
             _drawList.Add((transform.Y, state.Id));
@@ -36,22 +37,24 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IC
         {
             var transform = world.Get<TransformComponent>(entity);
             var sprite = world.Get<SpriteComponent>(entity);
-            var anim = world.Get<AnimatedSpriteComponent>(entity);
+            var anim = world.Get<AnimationState>(entity);
             var name = world.Get<PlayerAppearance>(entity);
             if (transform == null || sprite == null || anim == null || name == null) continue;
 
+            var sheet = SpriteSheet.Default;
+            var textureSize = sprite.Texture.ToSize();
+            var fw = sheet.FrameW(textureSize.Width);
+            var fh = sheet.FrameH(textureSize.Height);
             var isHurt = world.Has<HurtComponent>(entity);
 
-            DrawShadow(transform, anim);
-            DrawSprite(transform, sprite, anim, isHurt);
+            DrawShadow(transform, fw, fh);
+            DrawSprite(transform, sprite, anim, fw, fh, isHurt);
             var nameColor = world.Get<NameColorComponent>(entity);
-            DrawName(transform, anim, name, nameColor);
+            DrawName(transform, name, fw, fh, nameColor);
         }
     }
 
-    private void DrawShadow(
-        TransformComponent transform,
-        AnimatedSpriteComponent anim)
+    private void DrawShadow(TransformComponent transform, int frameW, int frameH)
     {
         var texture = Textures.Shadow;
         var shadowSize = texture.ToSize();
@@ -59,8 +62,8 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IC
 
         var dest = new Rectangle(
             transform.X,
-            transform.Y + anim.FrameHeight - shadowSize.Height + 5,
-            anim.FrameWidth,
+            transform.Y + frameH - shadowSize.Height + 5,
+            frameW,
             shadowSize.Height);
 
         renderer.Draw(texture, source, dest);
@@ -69,14 +72,16 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IC
     private void DrawSprite(
         TransformComponent transform,
         SpriteComponent sprite,
-        AnimatedSpriteComponent anim,
+        AnimationState anim,
+        int frameW,
+        int frameH,
         bool isHurt)
     {
         var source = new Rectangle(
-            anim.CurrentFrameX * anim.FrameWidth,
-            anim.CurrentFrameY * anim.FrameHeight,
-            anim.FrameWidth,
-            anim.FrameHeight);
+            anim.FrameX * frameW,
+            anim.FrameY * frameH,
+            frameW,
+            frameH);
 
         var dest = source with { X = transform.X, Y = transform.Y };
 
@@ -89,12 +94,13 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IC
 
     private void DrawName(
         TransformComponent transform,
-        AnimatedSpriteComponent anim,
         PlayerAppearance appearance,
+        int frameW,
+        int frameH,
         NameColorComponent? nameColor)
     {
-        var x = transform.X + anim.FrameWidth / 2;
-        var y = transform.Y - anim.FrameHeight / 2;
+        var x = transform.X + frameW / 2;
+        var y = transform.Y - frameH / 2;
         var color = nameColor?.Value ?? Color.White;
         renderer.DrawText(appearance.Name, x, y, color, TextAlign.Center);
     }

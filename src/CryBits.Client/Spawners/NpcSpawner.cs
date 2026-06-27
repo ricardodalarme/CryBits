@@ -17,9 +17,6 @@ internal static class NpcSpawner
     public static EntityId Spawn(World world, long npcId, Npc data, int x, int y, Direction direction, Vitals currentVitals)
     {
         var texture = Textures.Characters[data.Texture];
-        var size = texture.ToSize();
-        var frameWidth = size.Width / Globals.AnimationAmountX;
-        var frameHeight = size.Height / Globals.AnimationAmountY;
 
         var nameColor = data.Behaviour switch
         {
@@ -35,7 +32,7 @@ internal static class NpcSpawner
             .With(new NameColorComponent(nameColor))
             .With(new TransformComponent(x * Globals.Grid, y * Globals.Grid))
             .With(new SpriteComponent(texture, null, Color.White))
-            .With(new AnimatedSpriteComponent(frameWidth, frameHeight, Globals.AnimationAmountX, 0.25f, 0f, 0, 0, true))
+            .With(new AnimationState(0, 0, 0f, CharacterAnimation.Idle))
             .With(new MovementComponent(x, y, 0f, 0f, Globals.WalkSpeedPixelsPerSecond, MovementState.Stopped, direction))
             .With(new AttackComponent())
             .With(new NpcTag())

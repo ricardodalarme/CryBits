@@ -44,8 +44,7 @@ internal sealed class SystemScheduler(
             .AddSimulation(new ItemPickupSystem(context, inputManager, intentSender))
             .AddSimulation(new MovementSystem(context.World))
             .AddSimulation(new CameraSystem(context, cameraManager))
-            .AddSimulation(new CharacterAnimationControllerSystem(context.World))
-            .AddSimulation(new AnimatedSpriteSystem(context.World))
+            .AddSimulation(new CharacterAnimationSystem(context.World))
             .AddSimulation(new AttackHitSystem(context))
             .AddSimulation(new AttackSystem(context, inputManager, intentSender))
             .AddSimulation(new DamageDecaySystem(context.World));

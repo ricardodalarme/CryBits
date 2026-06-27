@@ -26,24 +26,6 @@ public static class Globals
     /// </summary>
     public const float RunSpeedPixelsPerSecond = 90f;
 
-    /// <summary>Animation row index for right-facing frames.</summary>
-    public const byte AnimationRight = 0;
-    /// <summary>Animation row index for stopped frame.</summary>
-    public const byte AnimationStopped = 1;
-    /// <summary>Animation row index for left-facing frames.</summary>
-    public const byte AnimationLeft = 2;
-    /// <summary>Animation row index used for attack frame.</summary>
-    public const byte AnimationAttack = 2;
-    /// <summary>Number of animation frames per axis.</summary>
-    public const byte AnimationAmountX = 3;
-    public const byte AnimationAmountY = 4;
-
-    /// <summary>Movement direction constants (tile offsets).</summary>
-    public const byte MovementUp = 3;
-    public const byte MovementDown = 0;
-    public const byte MovementLeft = 1;
-    public const byte MovementRight = 2;
-
     /// <summary>Screen width in pixels.</summary>
     public const short ScreenWidth = 800;
     /// <summary>Screen height in pixels.</summary>

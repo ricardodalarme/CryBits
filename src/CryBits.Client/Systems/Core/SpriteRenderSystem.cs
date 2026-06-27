@@ -16,7 +16,7 @@ internal sealed class SpriteRenderSystem(World world, Renderer renderer) : IClie
             var transform = state.Get<TransformComponent>();
             var sprite = state.Get<SpriteComponent>();
             if (transform == null || sprite == null) continue;
-            if (state.Has<AnimatedSpriteComponent>()) continue;
+            if (state.Has<AnimationState>()) continue;
 
             var source = sprite.SourceRect.HasValue ? sprite.SourceRect.Value : new Rectangle(Point.Empty, sprite.Texture.ToSize());
             var dest = source with { X = transform.X, Y = transform.Y };
