@@ -68,11 +68,11 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
         {
             var destiny = new Rectangle
             {
-                X = win.MapScrollX * -win.GridZoom,
-                Y = win.MapScrollY * -win.GridZoom,
+                X = win.MapScrollX * -Grid,
+                Y = win.MapScrollY * -Grid,
                 Size = Textures.Panoramas[map.Panorama].ToSize()
             };
-            renderer.Draw(WinMap!, Textures.Panoramas[map.Panorama], win.ZoomRect(destiny));
+            renderer.Draw(WinMap!, Textures.Panoramas[map.Panorama], destiny);
         }
     }
 
@@ -81,8 +81,8 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
         var win = EditorMapsWindow.Instance!;
         var scrollX = win.MapScrollX;
         var scrollY = win.MapScrollY;
-        var viewW = win.MapCanvasWidth / win.GridZoom + ChunkSize;
-        var viewH = win.MapCanvasHeight / win.GridZoom + ChunkSize;
+        var viewW = win.MapCanvasWidth / Grid + ChunkSize;
+        var viewH = win.MapCanvasHeight / Grid + ChunkSize;
 
         var startCx = scrollX / ChunkSize - 1;
         var startCy = scrollY / ChunkSize - 1;
@@ -105,12 +105,12 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
                         var worldX = cx * ChunkSize + tx;
                         var worldY = cy * ChunkSize + ty;
-                        var screenX = (worldX - scrollX) * win.GridZoom;
-                        var screenY = (worldY - scrollY) * win.GridZoom;
+                        var screenX = (worldX - scrollX) * Grid;
+                        var screenY = (worldY - scrollY) * Grid;
 
                         var source = new Rectangle(new Point(data.SourceX * Grid, data.SourceY * Grid), new Size(Grid, Grid));
                         renderer.Draw(WinMap!, Textures.Tiles[data.Texture], source,
-                            new Rectangle(new Point(screenX, screenY), new Size(win.GridZoom, win.GridZoom)));
+                            new Rectangle(new Point(screenX, screenY), new Size(Grid, Grid)));
                     }
                 }
             }
@@ -122,14 +122,14 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
             for (var cy = startCy; cy <= endCy; cy++)
             {
                 if (map.Chunks.ContainsKey(new ChunkCoord((short)cx, (short)cy))) continue;
-                var screenX = (cx * ChunkSize - scrollX) * win.GridZoom;
-                var screenY = (cy * ChunkSize - scrollY) * win.GridZoom;
+                var screenX = (cx * ChunkSize - scrollX) * Grid;
+                var screenY = (cy * ChunkSize - scrollY) * Grid;
                 for (var tx = 0; tx < 2; tx++)
                     for (var ty = 0; ty < 2; ty++)
                     {
-                        var x = screenX + tx * win.GridZoom * 16;
-                        var y = screenY + ty * win.GridZoom * 16;
-                        renderer.DrawRectangle(WinMap!, x, y, win.GridZoom * 16, win.GridZoom * 16,
+                        var x = screenX + tx * Grid * 16;
+                        var y = screenY + ty * Grid * 16;
+                        renderer.DrawRectangle(WinMap!, x, y, Grid * 16, Grid * 16,
                             (tx + ty) % 2 == 0 ? new Color(40, 40, 40, 120) : new Color(60, 60, 60, 120));
                     }
             }
@@ -164,8 +164,8 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
                         var worldX = cx * ChunkSize + tx;
                         var worldY = cy * ChunkSize + ty;
-                        var screenX = (worldX - scrollX) * win.GridZoom;
-                        var screenY = (worldY - scrollY) * win.GridZoom;
+                        var screenX = (worldX - scrollX) * Grid;
+                        var screenY = (worldY - scrollY) * Grid;
 
                         Color? color = null;
                         string? letter = null;
@@ -185,7 +185,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
                         if (color.HasValue)
                         {
                             renderer.Draw(WinMap!, Textures.Blank,
-                                new Rectangle(new Point(screenX, screenY), new Size(win.GridZoom, win.GridZoom)),
+                                new Rectangle(new Point(screenX, screenY), new Size(Grid, Grid)),
                                 color.Value);
                             if (letter != null)
                                 renderer.DrawText(WinMap!, letter, screenX, screenY, Color.White);
@@ -202,8 +202,8 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
         if (map.DefaultFog == null || map.DefaultFog.Texture <= 0 || !win.ShowVisualizationSafe) return;
 
         var textureSize = Textures.Fogs[map.DefaultFog.Texture].ToSize();
-        var tilesW = (win.MapCanvasWidth / win.GridZoom) / ChunkSize + 2;
-        var tilesH = (win.MapCanvasHeight / win.GridZoom) / ChunkSize + 2;
+        var tilesW = (win.MapCanvasWidth / Grid) / ChunkSize + 2;
+        var tilesH = (win.MapCanvasHeight / Grid) / ChunkSize + 2;
 
         for (var x = -1; x <= tilesW; x++)
             for (var y = -1; y <= tilesH; y++)
@@ -211,7 +211,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
                 var position = new Point(x * textureSize.Width + mapInstance.FogX,
                     y * textureSize.Height + mapInstance.FogY);
                 renderer.Draw(WinMap!, Textures.Fogs[map.DefaultFog.Texture],
-                    win.ZoomRect(new Rectangle(position, textureSize)),
+                    new Rectangle(position, textureSize),
                     new Color(255, 255, 255, map.DefaultFog.Alpha));
             }
     }
@@ -227,7 +227,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
         for (var i = 0; i < mapInstance.Weather.Length; i++)
             if (mapInstance.Weather[i].Visible)
                 renderer.Draw(WinMap!, Textures.Weather, new Rectangle(srcX, 0, 32, 32),
-                    win.ZoomRect(new Rectangle(mapInstance.Weather[i].X, mapInstance.Weather[i].Y, 32, 32)),
+                    new Rectangle(mapInstance.Weather[i].X, mapInstance.Weather[i].Y, 32, 32),
                     new Color(255, 255, 255, 150));
     }
 
@@ -237,8 +237,8 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
         Rectangle source = win.TileSource, destiny = new();
         var begin = new Point(win.MapSelection.X - win.MapScrollX, win.MapSelection.Y - win.MapScrollY);
 
-        destiny.Location = win.ZoomGrid(begin.X, begin.Y);
-        destiny.Size = new Size(source.Width / win.Zoom(), source.Height / win.Zoom());
+        destiny.Location = new Point(begin.X * Grid, begin.Y * Grid);
+        destiny.Size = new Size(source.Width, source.Height);
 
         if (win.ShowGrid)
         {
@@ -246,8 +246,8 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
             var scrollY = win.MapScrollY;
             var startCx = scrollX / ChunkSize - 1;
             var startCy = scrollY / ChunkSize - 1;
-            var endCx = (scrollX + win.MapCanvasWidth / win.GridZoom) / ChunkSize + 1;
-            var endCy = (scrollY + win.MapCanvasHeight / win.GridZoom) / ChunkSize + 1;
+            var endCx = (scrollX + win.MapCanvasWidth / Grid) / ChunkSize + 1;
+            var endCy = (scrollY + win.MapCanvasHeight / Grid) / ChunkSize + 1;
 
             for (var cx = startCx; cx <= endCx; cx++)
                 for (var cy = startCy; cy <= endCy; cy++)
@@ -256,9 +256,9 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
                         {
                             var worldX = cx * ChunkSize + tx;
                             var worldY = cy * ChunkSize + ty;
-                            var gx = (worldX - scrollX) * win.GridZoom;
-                            var gy = (worldY - scrollY) * win.GridZoom;
-                            renderer.DrawRectangle(WinMap!, gx, gy, win.GridZoom, win.GridZoom,
+                            var gx = (worldX - scrollX) * Grid;
+                            var gy = (worldY - scrollY) * Grid;
+                            renderer.DrawRectangle(WinMap!, gx, gy, Grid, Grid,
                                 new Color(25, 25, 25, 70));
                         }
         }
@@ -271,11 +271,11 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
                 for (var x = begin.X; x < begin.X + win.MapSelection.Width; x++)
                     for (var y = begin.Y; y < begin.Y + win.MapSelection.Height; y++)
                         renderer.Draw(WinMap!, Textures.Tiles[win.TileSheetIndex + 1], source,
-                            new Rectangle(win.ZoomGrid(x, y), destiny.Size));
+                            new Rectangle(new Point(x * Grid, y * Grid), destiny.Size));
         }
 
-        renderer.DrawRectangle(WinMap!, destiny.X, destiny.Y, win.MapSelection.Width * win.GridZoom,
-            win.MapSelection.Height * win.GridZoom);
+        renderer.DrawRectangle(WinMap!, destiny.X, destiny.Y, win.MapSelection.Width * Grid,
+            win.MapSelection.Height * Grid);
     }
 
     private void EditorMapsMapNpcs(Map map)
@@ -286,9 +286,9 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
         for (byte i = 0; i < map.Npc.Count; i++)
             if (map.Npc[i].Spawn)
             {
-                var position = new Point((map.Npc[i].X - win.MapScrollX) * win.GridZoom,
-                    (map.Npc[i].Y - win.MapScrollY) * win.GridZoom);
-                renderer.Draw(WinMap!, Textures.Blank, new Rectangle(position, new Size(win.GridZoom, win.GridZoom)),
+                var position = new Point((map.Npc[i].X - win.MapScrollX) * Grid,
+                    (map.Npc[i].Y - win.MapScrollY) * Grid);
+                renderer.Draw(WinMap!, Textures.Blank, new Rectangle(position, new Size(Grid, Grid)),
                     new Color(0, 220, 0, 150));
                 renderer.DrawText(WinMap!, (i + 1).ToString(), position.X + 10, position.Y + 10, Color.White);
             }

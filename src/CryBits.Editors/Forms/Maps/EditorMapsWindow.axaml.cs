@@ -23,11 +23,9 @@ using CryBits.Editors.Forms.Npcs;
 using CryBits.Editors.Forms.Shops;
 using CryBits.Editors.Forms.Tiles;
 using CryBits.Editors.Network;
-
 using SFML.Graphics;
 using SFML.System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using AvaloniaScrollEventArgs = Avalonia.Controls.Primitives.ScrollEventArgs;
 using SelectionChangedEventArgs = Avalonia.Controls.SelectionChangedEventArgs;
@@ -107,13 +105,9 @@ internal partial class EditorMapsWindow : Window
     public int TileSheetIndex => cmbTiles.SelectedIndex;
     public int TileScrollX => (int)scrlTileX.Value;
     public int TileScrollY => (int)scrlTileY.Value;
-    public int MapScrollX => (int)scrlMapX.Value;
-    public int MapScrollY => (int)scrlMapY.Value;
 
     public SystemPoint TileMouse { get; private set; }
 
-    public int MapCanvasWidth { get; } = 800;
-    public int MapCanvasHeight { get; } = 600;
     public int TileCanvasWidth { get; } = 282;
     public int TileCanvasHeight { get; } = 420;
 
@@ -141,8 +135,6 @@ internal partial class EditorMapsWindow : Window
 
     // Map canvas pane
     private Avalonia.Controls.Image imgMap => mapCanvasPane.ImgMap;
-    private ScrollBar scrlMapX => mapCanvasPane.ScrlMapX;
-    private ScrollBar scrlMapY => mapCanvasPane.ScrlMapY;
 
     // Layers pane (repurposed)
     private DataGrid lstLayers => layersPane.LstLayers;
@@ -181,6 +173,30 @@ internal partial class EditorMapsWindow : Window
 
     private readonly DispatcherTimer? _timer;
 
+    // PanAndZoom viewport — replaces old scroll/zoom
+    private Avalonia.Controls.PanAndZoom.ZoomBorder ZoomBorder => mapCanvasPane.ZoomBorder;
+    public int ViewportTileX => (int)(-ZoomBorder.OffsetX / (Grid * ZoomBorder.ZoomX));
+    public int ViewportTileY => (int)(-ZoomBorder.OffsetY / (Grid * ZoomBorder.ZoomY));
+    // Backward compat for MapRenderer
+    public int MapScrollX => ViewportTileX;
+    public int MapScrollY => ViewportTileY;
+    public int MapCanvasWidth
+    {
+        get
+        {
+            var w = (int)ZoomBorder.Bounds.Width;
+            return w > 0 ? w : 800;
+        }
+    }
+    public int MapCanvasHeight
+    {
+        get
+        {
+            var h = (int)ZoomBorder.Bounds.Height;
+            return h > 0 ? h : 600;
+        }
+    }
+
     public EditorMapsWindow(DefinitionCatalog catalog)
     {
         _catalog = catalog;
@@ -194,7 +210,7 @@ internal partial class EditorMapsWindow : Window
         propertiesPane = new PropertiesPane();
         AssignContentToDockModels();
 
-        MapRenderer.Instance.WinMap = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
+        MapRenderer.Instance.WinMap = new RenderTexture(new Vector2u(800, 600));
         MapRenderer.Instance.WinMapTile = new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -254,8 +270,6 @@ internal partial class EditorMapsWindow : Window
         mapCanvasPane.ImgMap.PointerPressed += imgMap_PointerPressed;
         mapCanvasPane.ImgMap.PointerReleased += imgMap_PointerReleased;
         mapCanvasPane.ImgMap.PointerMoved += imgMap_PointerMoved;
-        mapCanvasPane.ScrlMapY.Scroll += scrlMapY_Scroll;
-        mapCanvasPane.ScrlMapX.Scroll += scrlMapX_Scroll;
 
         layersPane.LstLayers.SelectionChanged += lstLayers_SelectionChanged;
         layersPane.ScrlZone.Scroll += scrlZone_Scroll;
@@ -283,8 +297,7 @@ internal partial class EditorMapsWindow : Window
         {
             if (layersPane.LstChunks.SelectedItem is ChunkCoord coord)
             {
-                scrlMapX.Value = coord.X * ChunkSize;
-                scrlMapY.Value = coord.Y * ChunkSize;
+                ZoomBorder.CenterOn(new Avalonia.Point(coord.X * ChunkSize * Grid, coord.Y * ChunkSize * Grid));
             }
         };
 
@@ -315,6 +328,19 @@ internal partial class EditorMapsWindow : Window
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
+        // Resize render target to match the viewport
+        var vw = (int)ZoomBorder.Bounds.Width;
+        var vh = (int)ZoomBorder.Bounds.Height;
+        if (vw > 0 && vh > 0)
+        {
+            var winMap = MapRenderer.Instance.WinMap;
+            if (winMap == null || winMap.Size.X != vw || winMap.Size.Y != vh)
+            {
+                winMap?.Dispose();
+                MapRenderer.Instance.WinMap = new RenderTexture(new Vector2u((uint)vw, (uint)vh));
+            }
+        }
+
         if (MapRenderer.Instance.WinMap != null && _selected != null)
         {
             MapRenderer.Instance.EditorMapsMap();
@@ -364,7 +390,6 @@ internal partial class EditorMapsWindow : Window
         RefreshNpcList();
         MapInstance.Instance.UpdateWeatherType();
         RefreshChunkList();
-        UpdateMapBounds();
     }
 
     private void OnMapPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -538,13 +563,9 @@ internal partial class EditorMapsWindow : Window
     private void butGrid_Click(object? sender, RoutedEventArgs e) { }
     private void butAudio_Click(object? sender, RoutedEventArgs e) => _showAudio = butAudio.IsChecked == true;
 
-    // Zoom handlers
-    private void butZoom_Normal_Click(object? sender, RoutedEventArgs e)
-    { butZoom_Normal.IsChecked = true; butZoom_2x.IsChecked = false; butZoom_4x.IsChecked = false; UpdateMapBounds(); }
-    private void butZoom_2x_Click(object? sender, RoutedEventArgs e)
-    { butZoom_Normal.IsChecked = false; butZoom_2x.IsChecked = true; butZoom_4x.IsChecked = false; UpdateMapBounds(); }
-    private void butZoom_4x_Click(object? sender, RoutedEventArgs e)
-    { butZoom_Normal.IsChecked = false; butZoom_2x.IsChecked = false; butZoom_4x.IsChecked = true; UpdateMapBounds(); }
+    // Zoom handlers (PanAndZoom native)
+    private void butZoomReset_Click(object? sender, RoutedEventArgs e) => ZoomBorder.ResetMatrix();
+    private void butZoomFit_Click(object? sender, RoutedEventArgs e) => ZoomBorder.AutoFit();
 
     private void butMNormal_Click(object? sender, RoutedEventArgs e) { ModesExclusive(butMNormal); ResetMapSelectionSize(); }
     private void butMAttributes_Click(object? sender, RoutedEventArgs e) { ModesExclusive(butMAttributes); }
@@ -604,46 +625,44 @@ internal partial class EditorMapsWindow : Window
                 tiles[x, y] = new DefinitionsTileData(0, 0, 0, false, new NoAttribute());
         _selected.Chunks[coord] = new MapChunk(cx, cy, 1, tiles);
         RefreshChunkList();
-        UpdateMapBounds();
     }
 
     private void butChunkLeft_Click(object? sender, RoutedEventArgs e)
     {
-        var cx = (short)(MapScrollX / ChunkSize - 1);
-        var cy = (short)(MapScrollY / ChunkSize);
+        var cx = (short)(ViewportTileX / ChunkSize - 1);
+        var cy = (short)(ViewportTileY / ChunkSize);
         AddChunkAt(cx, cy);
     }
 
     private void butChunkRight_Click(object? sender, RoutedEventArgs e)
     {
-        var cx = (short)(MapScrollX / ChunkSize + 1);
-        var cy = (short)(MapScrollY / ChunkSize);
+        var cx = (short)(ViewportTileX / ChunkSize + 1);
+        var cy = (short)(ViewportTileY / ChunkSize);
         AddChunkAt(cx, cy);
     }
 
     private void butChunkUp_Click(object? sender, RoutedEventArgs e)
     {
-        var cx = (short)(MapScrollX / ChunkSize);
-        var cy = (short)(MapScrollY / ChunkSize - 1);
+        var cx = (short)(ViewportTileX / ChunkSize);
+        var cy = (short)(ViewportTileY / ChunkSize - 1);
         AddChunkAt(cx, cy);
     }
 
     private void butChunkDown_Click(object? sender, RoutedEventArgs e)
     {
-        var cx = (short)(MapScrollX / ChunkSize);
-        var cy = (short)(MapScrollY / ChunkSize + 1);
+        var cx = (short)(ViewportTileX / ChunkSize);
+        var cy = (short)(ViewportTileY / ChunkSize + 1);
         AddChunkAt(cx, cy);
     }
 
     private void butDeleteChunk_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        var cx = (short)(MapScrollX / ChunkSize);
-        var cy = (short)(MapScrollY / ChunkSize);
+        var cx = (short)(ViewportTileX / ChunkSize);
+        var cy = (short)(ViewportTileY / ChunkSize);
         var coord = new ChunkCoord(cx, cy);
         _selected.Chunks.Remove(coord);
         RefreshChunkList();
-        UpdateMapBounds();
     }
 
     // ── LAYER TOGGLE ──────────────────────────────────────────────────
@@ -718,8 +737,8 @@ internal partial class EditorMapsWindow : Window
 
     private void UpdateMapMouse(double px, double py)
     {
-        var x = (int)(px / GridZoom) + MapScrollX;
-        var y = (int)(py / GridZoom) + MapScrollY;
+        var x = (int)(px / Grid) + ViewportTileX;
+        var y = (int)(py / Grid) + ViewportTileY;
         _mapMouse = new SystemPoint(x, y);
     }
 
@@ -772,8 +791,8 @@ internal partial class EditorMapsWindow : Window
 
     private bool MapRectangle(double px, double py, bool left)
     {
-        var x = (int)(px / GridZoom) + MapScrollX;
-        var y = (int)(py / GridZoom) + MapScrollY;
+        var x = (int)(px / Grid) + ViewportTileX;
+        var y = (int)(py / Grid) + ViewportTileY;
         if (!left) return false;
         if (!IsToolEnabled(butRectangle) && !IsToolEnabled(butArea)) return false;
         if (!_mapPressed) _defMapSelection.Size = new SystemSize(1, 1);
@@ -1049,35 +1068,9 @@ internal partial class EditorMapsWindow : Window
     public SystemRect TileSource => new(TilesSelection.X * Grid, TilesSelection.Y * Grid,
         TilesSelection.Width * Grid, TilesSelection.Height * Grid);
 
-    public byte Zoom()
-    {
-        if (butZoom_2x.IsChecked == true) return 2;
-        if (butZoom_4x.IsChecked == true) return 4;
-        return 1;
-    }
 
-    public byte GridZoom => (byte)(Grid / Zoom());
-
-    public SystemRect ZoomRect(SystemRect value) => new(value.X / Zoom(), value.Y / Zoom(), value.Width / Zoom(), value.Height / Zoom());
-    public SystemPoint ZoomGrid(int x, int y) => new(x * GridZoom, y * GridZoom);
 
     public bool IsLayerVisible(int index) => (Layer)index == _paintLayer;
-
-    private void UpdateMapBounds()
-    {
-        if (_selected == null || _selected.Chunks.Count == 0) return;
-
-        var minX = _selected.Chunks.Keys.Min(c => c.X);
-        var maxX = _selected.Chunks.Keys.Max(c => c.X);
-        var minY = _selected.Chunks.Keys.Min(c => c.Y);
-        var maxY = _selected.Chunks.Keys.Max(c => c.Y);
-
-        const int margin = 2;
-        scrlMapX.Minimum = (minX - margin) * ChunkSize;
-        scrlMapX.Maximum = (maxX + margin + 1) * ChunkSize;
-        scrlMapY.Minimum = (minY - margin) * ChunkSize;
-        scrlMapY.Maximum = (maxY + margin + 1) * ChunkSize;
-    }
 
     private void ResetMapSelectionSize() => _defMapSelection.Size = new SystemSize(1, 1);
     private static bool IsToolEnabled(ToggleButton btn) => btn.IsEnabled && btn.IsChecked == true;

@@ -36,6 +36,7 @@
     <PackageReference Include="Dock.Avalonia" />
     <PackageReference Include="Dock.Model.Avalonia" />
     <PackageReference Include="Dock.Avalonia.Themes.Fluent" />
+    <PackageReference Include="PanAndZoom" />
   </ItemGroup>
 
   <ItemGroup>

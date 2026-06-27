@@ -100,6 +100,15 @@
           "DialogHost.Avalonia": "0.12.1-nightly.0.1"
         }
       },
+      "PanAndZoom": {
+        "type": "Direct",
+        "requested": "[12.0.0.1, )",
+        "resolved": "12.0.0.1",
+        "contentHash": "M1aIfqmZR8bskdCT0vlC4A8ysBu3F0Qou8uWaqKJnu74cDR3Wp2UEtx2a/YTwp5UZjfDjXruqNNiAQ9+dsxb+g==",
+        "dependencies": {
+          "Avalonia": "12.0.0"
+        }
+      },
       "Semi.Avalonia": {
         "type": "Direct",
         "requested": "[12.0.3, )",

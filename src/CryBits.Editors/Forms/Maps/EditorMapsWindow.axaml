@@ -51,10 +51,9 @@
             <Button x:Name="butEraser" Content="Eraser" Click="butEraser_Click" Margin="0,0,2,0" />
             <Separator Width="6" />
 
-            <!-- Zoom -->
-            <ToggleButton x:Name="butZoom_Normal" Content="1×" IsChecked="True"  Click="butZoom_Normal_Click"  Margin="0,0,2,0" />
-            <ToggleButton x:Name="butZoom_2x"     Content="2×" IsChecked="False" Click="butZoom_2x_Click"     Margin="0,0,2,0" />
-            <ToggleButton x:Name="butZoom_4x"     Content="4×" IsChecked="False" Click="butZoom_4x_Click"     Margin="0,0,2,0" />
+            <!-- Zoom (PanAndZoom native) -->
+            <Button x:Name="butZoomReset" Content="Reset" Click="butZoomReset_Click" Margin="0,0,2,0" />
+            <Button x:Name="butZoomFit"   Content="Fit"   Click="butZoomFit_Click"   Margin="0,0,2,0" />
             <Separator Width="6" />
 
             <!-- Chunks -->

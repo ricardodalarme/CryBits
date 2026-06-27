@@ -1,17 +1,18 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:paz="using:Avalonia.Controls.PanAndZoom"
              x:Class="CryBits.Editors.Maps.MapCanvasPane">
-    <Grid RowDefinitions="*,Auto" ColumnDefinitions="*,Auto">
-        <Border Grid.Row="0" Grid.Column="0" Background="Black" ClipToBounds="True">
-            <Image x:Name="imgMap"
-                   Stretch="None"
+    <Grid>
+        <paz:ZoomBorder x:Name="zoomBorder"
+                        Stretch="None"
+                        EnablePan="True"
+                        EnableZoom="True"
+                        ZoomSpeed="1.2"
+                        Background="Black"
+                        ClipToBounds="True"
+                        Focusable="True">
+            <Image x:Name="imgMap" Stretch="None"
                    HorizontalAlignment="Left" VerticalAlignment="Top" />
-        </Border>
-        <ScrollBar x:Name="scrlMapY" Grid.Row="0" Grid.Column="1"
-                   Orientation="Vertical"
-                   Minimum="0" Maximum="255" Value="0" />
-        <ScrollBar x:Name="scrlMapX" Grid.Row="1" Grid.Column="0"
-                   Orientation="Horizontal"
-                   Minimum="0" Maximum="0" Value="0" />
+        </paz:ZoomBorder>
     </Grid>
 </UserControl>
