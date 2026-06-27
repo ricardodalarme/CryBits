@@ -4,7 +4,7 @@ using MemoryPack;
 namespace CryBits.Definitions.Shops;
 
 [MemoryPackable]
-public partial class Shop : Entity
+public partial record class Shop : Definition
 {
     public Guid CurrencyId { get; set; }
 

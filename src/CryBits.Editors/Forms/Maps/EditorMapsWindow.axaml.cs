@@ -1224,7 +1224,7 @@ internal partial class EditorMapsWindow : Window
 
     private void cmbA_Warp_Map_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (cmbA_Warp_Map.SelectedItem is Map m) _aData1 = m.GetId().ToString();
+        if (cmbA_Warp_Map.SelectedItem is Map m) _aData1 = m.Id.ToString();
     }
 
     private void cmbA_Warp_Direction_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -1244,7 +1244,7 @@ internal partial class EditorMapsWindow : Window
 
     private void cmbA_Item_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (cmbA_Item.SelectedItem is Item item) _aData1 = item.GetId().ToString();
+        if (cmbA_Item.SelectedItem is Item item) _aData1 = item.Id.ToString();
     }
 
     private void numA_Item_Amount_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)

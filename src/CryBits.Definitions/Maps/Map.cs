@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace CryBits.Definitions.Maps;
 
 [MemoryPackable]
-public partial class Map : Entity
+public partial record class Map : Definition
 {
     /// <summary>Map dimensions in tiles.</summary>
     public const byte Width = 25;

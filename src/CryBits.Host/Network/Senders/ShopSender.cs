@@ -9,6 +9,6 @@ internal sealed class ShopSender(PackageSender packageSender)
 {
     public void ShopOpen(EntityId entityId, Shop shop)
     {
-        packageSender.ToPlayer(entityId, new ShopOpenPacket { Id = shop.GetId() });
+        packageSender.ToPlayer(entityId, new ShopOpenPacket { Id = shop.Id });
     }
 }

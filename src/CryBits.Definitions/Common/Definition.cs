@@ -3,25 +3,25 @@ using MemoryPack;
 namespace CryBits.Definitions.Common;
 
 [MemoryPackable]
-public partial class Entity : IEquatable<Entity>
+public partial record class Definition : IEquatable<Definition>
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
 
     [MemoryPackConstructor]
-    public Entity()
+    public Definition()
     {
         Id = Guid.NewGuid();
     }
 
-    public Entity(Guid id)
+    public Definition(Guid id)
     {
         Id = id;
     }
 
-    public override string ToString() => Name;
+    public override sealed string ToString() => Name;
 
     public override int GetHashCode() => Id.GetHashCode();
 
-    bool IEquatable<Entity>.Equals(Entity? other) => other != null && other.Id.Equals(Id);
+    bool IEquatable<Definition>.Equals(Definition? other) => other != null && other.Id.Equals(Id);
 }

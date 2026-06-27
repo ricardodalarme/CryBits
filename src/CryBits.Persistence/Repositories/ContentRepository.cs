@@ -8,7 +8,7 @@ public class ContentRepository()
 {
     private const string Format = ".json";
 
-    public T? Load<T>(Guid id) where T : Entity
+    public T? Load<T>(Guid id) where T : Definition
     {
         var path = PathFor<T>(id);
         if (!File.Exists(path)) return null;
@@ -17,7 +17,7 @@ public class ContentRepository()
         return JsonSerializer.Deserialize<T>(json, JsonConfig.Options);
     }
 
-    public IEnumerable<T> LoadAll<T>() where T : Entity
+    public IEnumerable<T> LoadAll<T>() where T : Definition
     {
         var dir = DirectoryFor<T>();
         if (!dir.Exists) yield break;
@@ -30,7 +30,7 @@ public class ContentRepository()
         }
     }
 
-    public void Save<T>(T entity) where T : Entity
+    public void Save<T>(T entity) where T : Definition
     {
         var dir = DirectoryFor<T>();
         if (!dir.Exists) dir.Create();
@@ -39,15 +39,15 @@ public class ContentRepository()
         File.WriteAllText(PathFor<T>(entity.Id), json);
     }
 
-    public void SaveAll<T>(IEnumerable<T> entities) where T : Entity
+    public void SaveAll<T>(IEnumerable<T> entities) where T : Definition
     {
         foreach (var entity in entities)
             Save(entity);
     }
 
-    public DirectoryInfo DirectoryFor<T>() where T : Entity =>
+    public DirectoryInfo DirectoryFor<T>() where T : Definition =>
         new(Path.Combine(Directories.Content.FullName, typeof(T).Name));
 
-    private string PathFor<T>(Guid id) where T : Entity =>
+    private string PathFor<T>(Guid id) where T : Definition =>
         Path.Combine(DirectoryFor<T>().FullName, id.ToString()) + Format;
 }

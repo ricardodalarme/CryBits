@@ -5,7 +5,7 @@ namespace CryBits.Definitions.Npcs;
 
 /// <summary>NPC metadata definition used by the game.</summary>
 [MemoryPackable]
-public partial class Npc : Entity
+public partial record class Npc : Definition
 {
     public string SayMsg { get; set; } = string.Empty;
     public short Texture { get; set; }
