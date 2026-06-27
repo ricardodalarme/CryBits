@@ -30,14 +30,6 @@ internal sealed class PackageSender(ITransport transport, SessionManager session
             transport.Send(t.Id, bytes, delivery);
     }
 
-    public void ToAllBut(EntityId entityId, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
-    {
-        var bytes = PacketSerializer.Serialize(packet);
-
-        foreach (var t in sessions.Where(t => t.IsPlaying && t.Character.HasValue && !t.Character.Value.Equals(entityId)))
-            transport.Send(t.Id, bytes, delivery);
-    }
-
     public void ToMap(Guid mapId, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
     {
         var bytes = PacketSerializer.Serialize(packet);
@@ -46,22 +38,6 @@ internal sealed class PackageSender(ITransport transport, SessionManager session
         {
             var characterId = t.Character!.Value;
             var entity = entities.Get(characterId);
-            var pos = entity?.Get<Position>();
-            if (pos?.MapId == mapId)
-                transport.Send(t.Id, bytes, delivery);
-        }
-    }
-
-    public void ToMapBut(Guid mapId, EntityId entityId, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
-    {
-        var bytes = PacketSerializer.Serialize(packet);
-
-        foreach (var t in sessions.Where(t => t.IsPlaying && t.Character.HasValue))
-        {
-            var cid = t.Character!.Value;
-            if (cid.Equals(entityId)) continue;
-
-            var entity = entities.Get(cid);
             var pos = entity?.Get<Position>();
             if (pos?.MapId == mapId)
                 transport.Send(t.Id, bytes, delivery);
