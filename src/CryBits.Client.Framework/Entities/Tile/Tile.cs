@@ -1,8 +1,6 @@
 using CryBits.Definitions.Common;
-using CryBits.Definitions.Utils;
 using MemoryPack;
 using System.Drawing;
-using System.Text.Json.Serialization;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Framework.Entities.Tile;
@@ -20,7 +18,6 @@ public partial class Tile
     public byte Height { get; set; }
 
     /// <summary>Tile metadata grid for this tileset.</summary>
-    [JsonConverter(typeof(Array2DConverter<TileData>))]
     public TileData[,] Data { get; set; }
 
     [MemoryPackConstructor]

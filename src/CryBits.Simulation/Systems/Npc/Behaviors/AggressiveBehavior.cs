@@ -36,16 +36,16 @@ public sealed class AggressiveBehavior : INpcBehavior
         if (dx >= dy)
         {
             if (pos.X != target.X)
-                return new MoveIntent(entityId, pos.X > target.X ? Direction.Left : Direction.Right, CryBits.Definitions.Common.Movement.Walking);
+                return new MoveIntent(entityId, pos.X > target.X ? Direction.Left : Direction.Right, Definitions.Common.Movement.Walking);
             if (pos.Y != target.Y)
-                return new MoveIntent(entityId, pos.Y > target.Y ? Direction.Up : Direction.Down, CryBits.Definitions.Common.Movement.Walking);
+                return new MoveIntent(entityId, pos.Y > target.Y ? Direction.Up : Direction.Down, Definitions.Common.Movement.Walking);
         }
         else
         {
             if (pos.Y != target.Y)
-                return new MoveIntent(entityId, pos.Y > target.Y ? Direction.Up : Direction.Down, CryBits.Definitions.Common.Movement.Walking);
+                return new MoveIntent(entityId, pos.Y > target.Y ? Direction.Up : Direction.Down, Definitions.Common.Movement.Walking);
             if (pos.X != target.X)
-                return new MoveIntent(entityId, pos.X > target.X ? Direction.Left : Direction.Right, CryBits.Definitions.Common.Movement.Walking);
+                return new MoveIntent(entityId, pos.X > target.X ? Direction.Left : Direction.Right, Definitions.Common.Movement.Walking);
         }
 
         return null;

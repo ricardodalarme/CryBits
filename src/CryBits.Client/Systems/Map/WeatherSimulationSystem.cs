@@ -2,9 +2,12 @@ using CryBits.Client.Components;
 using CryBits.Client.Core;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 using static CryBits.Definitions.Globals;
+using MapDef = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Client.Systems.Map;
 
@@ -16,14 +19,27 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
 
     private float _snowMoveAccumulator;
 
-    private Weather _lastWeatherType = Weather.Normal;
+    private WeatherType _lastWeatherType = WeatherType.None;
+
+    private WeatherType GetEffectiveWeather(MapDef map)
+    {
+        var playerId = context.LocalPlayer.Entity;
+        if (playerId == null) return map.DefaultWeather;
+        var pos = context.World.Get<Position>(playerId.Value);
+        if (pos == null) return map.DefaultWeather;
+        var chunkCoord = ChunkGrid.FromPosition(pos.X, pos.Y);
+        if (map.Chunks.TryGetValue(chunkCoord, out var chunk) && chunk.WeatherOverride.HasValue)
+            return chunk.WeatherOverride.Value;
+        return map.DefaultWeather;
+    }
 
     public void Update(float dt)
     {
-        var weatherData = context.CurrentMap?.Data.Weather;
-        if (weatherData == null || weatherData.Type == Weather.Normal) return;
+        var map = context.CurrentMap?.Data;
+        if (map == null) return;
 
-        var type = weatherData.Type;
+        var type = GetEffectiveWeather(map);
+        if (type == WeatherType.None) return;
 
         if (type != _lastWeatherType)
         {
@@ -45,14 +61,14 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
 
             switch (type)
             {
-                case Weather.Raining or Weather.Thundering:
+                case WeatherType.Rain or WeatherType.Thunder:
                     context.World.Set(state.Id, new TransformComponent(
                         transform.X + particle.Speed,
                         transform.Y + particle.Speed
                     ));
                     break;
 
-                case Weather.Snowing:
+                case WeatherType.Snow:
                     MoveSnow(context.World, state.Id, particle, transform, snowMove);
                     break;
             }

@@ -2,6 +2,8 @@ using CryBits.Definitions.Catalog;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
+using CryBits.Simulation.Spatial;
+using CryBits.Simulation.State;
 using CryBits.Simulation.Spawners;
 
 namespace CryBits.Simulation.Systems.Inventory;
@@ -17,22 +19,17 @@ public sealed class GroundItemSystem(DefinitionCatalog catalog) : ISimulationSys
                     loot.ItemId, loot.Amount, loot.DespawnTick);
         }
 
-        foreach (var map in world.Maps.Values)
+        var toDestroy = new List<EntityId>();
+        foreach (var state in world.Entities.All)
         {
-            if (!map.HasPlayers(world.Entities)) continue;
+            var groundItem = state.Get<GroundItem>();
+            if (groundItem == null || groundItem.DespawnTick < 0) continue;
 
-            for (var i = map.GroundItemIds.Count - 1; i >= 0; i--)
-            {
-                var entity = world.Entities.Get(map.GroundItemIds[i]);
-                var groundItem = entity?.Get<GroundItem>();
-                if (groundItem == null || groundItem.DespawnTick < 0) continue;
-
-                if (tick.TickNumber >= groundItem.DespawnTick)
-                {
-                    world.Entities.Destroy(map.GroundItemIds[i]);
-                    map.GroundItemIds.RemoveAt(i);
-                }
-            }
+            if (tick.TickNumber >= groundItem.DespawnTick)
+                toDestroy.Add(state.Id);
         }
+
+        foreach (var id in toDestroy)
+            world.Destroy(id);
     }
 }

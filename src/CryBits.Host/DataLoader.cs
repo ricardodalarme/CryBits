@@ -10,12 +10,13 @@ namespace CryBits.Host;
 
 public sealed class DataLoader(
     ContentRepository contentRepository,
+    MapRepository mapRepository,
     DefinitionCatalog catalog)
 {
     public void LoadAll()
     {
         Console.WriteLine("Loading maps.");
-        catalog.Maps = contentRepository.LoadAll<Map>().ToDictionary(m => m.Id, m => m);
+        catalog.Maps = mapRepository.LoadAllMaps().ToDictionary(m => m.Id, m => m);
         Console.WriteLine("Loading classes.");
         catalog.Classes = contentRepository.LoadAll<Class>().ToDictionary(c => c.Id, c => c);
         Console.WriteLine("Loading npcs.");

@@ -1,36 +1,33 @@
-using CryBits.Client.Components;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
-using CryBits.Simulation.Core;
+using CryBits.Simulation.Spatial;
 
 namespace CryBits.Client.Worlds;
 
-internal class ClientMap(Map data, World world)
+internal class ClientMap(Map data)
 {
     public readonly Map Data = data;
 
-    private bool HasCollidable(byte x, byte y)
+    public bool TileBlocked(int x, int y, Direction direction)
     {
-        foreach (var state in world.All)
-        {
-            if (!state.Has<CollidableTag>()) continue;
-            var movement = state.Get<MovementComponent>();
-            if (movement != null && movement.TileX == x && movement.TileY == y)
-                return true;
-        }
-        return false;
+        var dir = direction;
+        var nextX = dir == Direction.Right ? x + 1 : dir == Direction.Left ? x - 1 : x;
+        var nextY = dir == Direction.Down ? y + 1 : dir == Direction.Up ? y - 1 : y;
+
+        return IsTileBlocked(Data, nextX, nextY);
     }
 
-    public bool TileBlocked(byte x, byte y, Direction direction)
+    private static bool IsTileBlocked(Map map, int x, int y)
     {
-        var (nextX, nextY) = direction.NextTile(x, y);
-
-        if (Map.OutLimit(nextX, nextY)) return Data.LinkIds[(byte)direction] == Guid.Empty;
-
-        if (Data.Attribute[nextX, nextY].Type == (byte)TileAttribute.Block) return true;
-        if (Data.Attribute[nextX, nextY].Block[(byte)direction.Reverse()]) return true;
-        if (Data.Attribute[x, y].Block[(byte)direction]) return true;
-        if (HasCollidable(nextX, nextY)) return true;
-        return false;
+        var chunkCoord = ChunkGrid.FromPosition(x, y);
+        if (!map.Chunks.TryGetValue(chunkCoord, out var chunk))
+            return true;
+        if (chunk?.Tiles == null)
+            return true;
+        var localX = x - chunkCoord.X * ChunkGrid.ChunkSize;
+        var localY = y - chunkCoord.Y * ChunkGrid.ChunkSize;
+        if (localX < 0 || localX >= ChunkGrid.ChunkSize || localY < 0 || localY >= ChunkGrid.ChunkSize)
+            return true;
+        return chunk.Tiles[localX, localY].IsBlocked;
     }
 }

@@ -228,27 +228,24 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         var map = new Map
         {
             Name = "Starting Village",
-            Moral = Moral.Pacific,
-            Weather = new MapWeather { Type = Weather.Raining, Intensity = 2 },
-            Fog = new MapFog
-            {
-                Texture = 1,
-                SpeedX = 10,
-                SpeedY = 5,
-                Alpha = 100
-            }
+            Moral = Moral.Dangerous,
+            DefaultWeather = WeatherType.Rain,
+            DefaultFog = new FogConfig(1, 10, 5, 100)
         };
 
-        var groundLayer = map.Layer[0];
-        for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-            {
-                groundLayer.Tile[x, y].Texture = 1;
-                groundLayer.Tile[x, y].X = 0;
-                groundLayer.Tile[x, y].Y = 0;
-            }
+        // Create 5 chunks forming a cross: middle (0,0), top, left, right, bottom
+        // Each filled with texture 4, row 0, different columns 0-4
+        (short cx, short cy, byte col)[] chunks = [(0, 0, 0), (0, -1, 1), (-1, 0, 2), (1, 0, 3), (0, 1, 4)];
+        foreach (var (cx, cy, col) in chunks)
+        {
+            var tiles = new TileData[32, 32];
+            for (int x = 0; x < 32; x++)
+                for (int y = 0; y < 32; y++)
+                    tiles[x, y] = new TileData(Texture: 4, SourceX: col, SourceY: 0, IsAutoTile: false, Attribute: new NoAttribute());
+            map.Chunks[new ChunkCoord(cx, cy)] = new MapChunk(cx, cy, 1, tiles);
+        }
 
-        map.Npc.Add(new MapNpc { NpcId = merchant.Id, Spawn = true, X = 12, Y = 9 });
+        map.Npc.Add(new MapNpc { NpcId = merchant.Id, Spawn = true, X = 5, Y = 9 });
         map.Npc.Add(new MapNpc { NpcId = goblin.Id, Spawn = true, X = 20, Y = 15 });
         map.Npc.Add(new MapNpc { NpcId = snake.Id, Spawn = true, X = 18, Y = 12 });
         catalog.Maps[map.Id] = map;
@@ -315,10 +312,11 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         Console.WriteLine($"[Seed] Created class '{mage.Name}'.");
 
         var store = new ContentRepository();
+        var mapRepo = new MapRepository();
         store.SaveAll(catalog.Items.Values);
         store.SaveAll(catalog.Npcs.Values);
         store.SaveAll(catalog.Shops.Values);
-        store.SaveAll(catalog.Maps.Values);
+        mapRepo.SaveAllMaps(catalog.Maps.Values);
         store.SaveAll(catalog.Classes.Values);
 
         worldInitializer.Initialize();

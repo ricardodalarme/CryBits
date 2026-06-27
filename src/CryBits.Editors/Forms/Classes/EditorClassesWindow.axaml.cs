@@ -121,8 +121,8 @@ internal partial class EditorClassesWindow : Window
         numAgility.Value = cls.Attribute[(byte)Attribute.Agility];
         numVitality.Value = cls.Attribute[(byte)Attribute.Vitality];
 
-        numSpawn_X.Maximum = Map.Width - 1;
-        numSpawn_Y.Maximum = Map.Height - 1;
+        numSpawn_X.Maximum = 999;
+        numSpawn_Y.Maximum = 999;
         numSpawn_X.Value = cls.SpawnX;
         numSpawn_Y.Value = cls.SpawnY;
 
@@ -373,13 +373,13 @@ internal partial class EditorClassesWindow : Window
     private void numSpawn_X_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         if (_loading || _selected == null) return;
-        _selected.SpawnX = (byte)(e.NewValue ?? 0);
+        _selected.SpawnX = (int)(e.NewValue ?? 0);
     }
 
     private void numSpawn_Y_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         if (_loading || _selected == null) return;
-        _selected.SpawnY = (byte)(e.NewValue ?? 0);
+        _selected.SpawnY = (int)(e.NewValue ?? 0);
     }
 
     // ──────────────────────────────────────────────────────────

@@ -44,9 +44,9 @@ public static class Globals
     public const byte MovementLeft = 1;
     public const byte MovementRight = 2;
 
-    /// <summary>Screen width in pixels (Map.Width * Grid = 25 * 32).</summary>
+    /// <summary>Screen width in pixels.</summary>
     public const short ScreenWidth = 800;
-    /// <summary>Screen height in pixels (Map.Height * Grid = 19 * 32).</summary>
+    /// <summary>Screen height in pixels.</summary>
     public const short ScreenHeight = 608;
 
     /// <summary>Maximum rain particle count for weather effects.</summary>

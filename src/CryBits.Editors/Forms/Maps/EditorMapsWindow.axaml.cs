@@ -6,13 +6,10 @@ using Avalonia.Media.Imaging;
 using Avalonia.PropertyGrid.Controls;
 using Avalonia.Threading;
 using CryBits.Client.Framework;
-using CryBits.Client.Framework.Audio;
-using CryBits.Client.Framework.Entities.Tile;
+using DefinitionsTileData = CryBits.Definitions.Maps.TileData;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions;
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Common;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
@@ -26,11 +23,12 @@ using CryBits.Editors.Forms.Npcs;
 using CryBits.Editors.Forms.Shops;
 using CryBits.Editors.Forms.Tiles;
 using CryBits.Editors.Network;
+
 using SFML.Graphics;
 using SFML.System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using static CryBits.Editors.Logic.Utils;
 using AvaloniaScrollEventArgs = Avalonia.Controls.Primitives.ScrollEventArgs;
 using SelectionChangedEventArgs = Avalonia.Controls.SelectionChangedEventArgs;
 using SystemPoint = System.Drawing.Point;
@@ -40,45 +38,26 @@ using TextChangedEventArgs = Avalonia.Controls.TextChangedEventArgs;
 
 namespace CryBits.Editors.Maps;
 
-// Cross-platform replacement for System.Windows.Forms.MouseButtons
-internal enum MouseButtons
-{
-    None,
-    Left,
-    Right
-}
+internal enum MouseButtons { None, Left, Right }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// Layer view-model for the DataGrid
-// ──────────────────────────────────────────────────────────────────────────────
 internal sealed class LayerVm : INotifyPropertyChanged
 {
     private bool _visible = true;
     public int Index { get; init; }
     public string Name { get; init; } = string.Empty;
     public string TypeName { get; init; } = string.Empty;
-
-    public bool Visible
-    {
-        get => _visible;
-        set
-        {
-            _visible = value;
-            OnPropertyChanged();
-        }
-    }
-
+    public bool Visible { get => _visible; set { _visible = value; OnPropertyChanged(); } }
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string? n = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+    private void OnPropertyChanged([CallerMemberName] string? n = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
 }
 
 internal partial class EditorMapsWindow : Window
 {
+    private const int Grid = Globals.Grid;
+    private const int ChunkSize = 32;
+
     private readonly DefinitionCatalog _catalog;
 
-    /// <summary>Opens the Maps editor as the primary window (no parent).</summary>
     public static void Open()
     {
         Dispatcher.UIThread.Post(() =>
@@ -88,7 +67,6 @@ internal partial class EditorMapsWindow : Window
         });
     }
 
-    /// <summary>Opens the Maps editor from another parent window, hiding the parent while open.</summary>
     public static void Open(Window parent)
     {
         Dispatcher.UIThread.Post(async () =>
@@ -100,28 +78,17 @@ internal partial class EditorMapsWindow : Window
         });
     }
 
-    // ── Public static accessors consumed by Renders.cs ────────────────────────
     public static EditorMapsWindow? Instance { get; private set; }
 
-    // ── Thread-safe cached state (readable from the game-loop thread) ─────────
-    // Volatile ensures the game-loop thread always sees the latest value written
-    // by the UI thread without needing a lock.
     private volatile bool _isOpen;
     private volatile bool _showAudio;
     private volatile bool _showVisualization;
 
-    /// <summary>True while the window is open; safe to read from any thread.</summary>
     public bool IsOpen => _isOpen;
-
-    /// <summary>Audio toggle state; safe to read from any thread.</summary>
     public bool ShowAudioSafe => _showAudio;
-
-    /// <summary>Visualisation toggle state; safe to read from any thread.</summary>
     public bool ShowVisualizationSafe => _showVisualization;
 
-    // Tool states (read by Renders – UI thread only)
     public bool ModeNormal => butMNormal.IsChecked == true;
-    public bool ModeZones => butMZones.IsChecked == true;
     public bool ModeAttributes => butMAttributes.IsChecked == true;
     public bool ModeNPCs => butMNPCs.IsChecked == true;
 
@@ -134,7 +101,6 @@ internal partial class EditorMapsWindow : Window
     public bool ShowEdition => butEdition.IsChecked == true;
     public bool ShowVisualization => butVisualization.IsChecked == true;
     public bool ShowAudio => butAudio.IsChecked == true;
-    public bool DirBlockMode => optA_DirBlock.IsChecked == true;
 
     public bool AutoTile => chkAuto.IsChecked == true;
 
@@ -146,83 +112,46 @@ internal partial class EditorMapsWindow : Window
 
     public SystemPoint TileMouse { get; private set; }
 
-    // Map canvas size (used by Renders to size WinMapRT)
     public int MapCanvasWidth { get; } = 800;
     public int MapCanvasHeight { get; } = 600;
-
-    // Tile canvas size
     public int TileCanvasWidth { get; } = 282;
     public int TileCanvasHeight { get; } = 420;
 
-    // Convenience accessor for Renders.cs
     public Map? SelectedMap => _selected;
 
-    // ── Private state ────────────────────────────────────────────────────────
     private Map? _selected;
     private MapProperties? _mapProps;
     private bool _mapPressed;
-    private bool _layerEditIsNew;
-
-    // lstLayers is auto-generated by Avalonia source generator from AXAML x:Name
+    private Layer _paintLayer = Layer.Ground;
 
     private SystemPoint _mapMouse;
     private SystemRect _defTilesSelection = new(0, 0, 1, 1);
     private SystemRect _defMapSelection = new(0, 0, 1, 1);
 
-    private string _aData1 = string.Empty;
-    private short _aData2;
-    private short _aData3;
-    private short _aData4;
+    private DefinitionsTileData[,]? _clipboardData;
+    private SystemRect _clipboardArea;
+    private Layer _clipboardLayer;
 
-    private CopyStruct _tilesCopy;
-
-    private struct CopyStruct
-    {
-        public SystemRect Area;
-        public MapLayer[]? Data;
-    }
-
-    // Render bitmaps
-    private WriteableBitmap? _mapBitmap;
-    private WriteableBitmap? _tileBitmap;
-
-
-    private readonly DispatcherTimer? _timer;
-
-    // Layer view-models
-    private List<LayerVm> _layerVms = [];
-
-    // ── Proxy properties for controls inside UserControls ──────────────────
-    // TileSheetPane
+    // Tile sheet pane
     private ComboBox cmbTiles => tileSheetPane.CmbTiles;
     private CheckBox chkAuto => tileSheetPane.ChkAuto;
     private Avalonia.Controls.Image imgTile => tileSheetPane.ImgTile;
     private ScrollBar scrlTileX => tileSheetPane.ScrlTileX;
     private ScrollBar scrlTileY => tileSheetPane.ScrlTileY;
 
-    // MapCanvasPane
+    // Map canvas pane
     private Avalonia.Controls.Image imgMap => mapCanvasPane.ImgMap;
     private ScrollBar scrlMapX => mapCanvasPane.ScrlMapX;
     private ScrollBar scrlMapY => mapCanvasPane.ScrlMapY;
 
-    // LayersPane
+    // Layers pane (repurposed)
     private DataGrid lstLayers => layersPane.LstLayers;
-    private Border pnlLayerEdit => layersPane.PnlLayerEdit;
-    private TextBox txtLayer_Name => layersPane.TxtLayer_Name;
-    private ComboBox cmbLayers_Type => layersPane.CmbLayers_Type;
-    private TextBlock lblLayerEditTitle => layersPane.LblLayerEditTitle;
-    private Button butLayer_Ok => layersPane.ButLayer_Ok;
-    private Border grpZones => layersPane.GrpZones;
-    private TextBlock lblZone => layersPane.LblZone;
-    private ScrollBar scrlZone => layersPane.ScrlZone;
     private Border grpAttributes => layersPane.GrpAttributes;
     private RadioButton optA_Block => layersPane.OptA_Block;
     private RadioButton optA_Warp => layersPane.OptA_Warp;
     private RadioButton optA_Item => layersPane.OptA_Item;
-    private RadioButton optA_DirBlock => layersPane.OptA_DirBlock;
     private Border grpA_Warp => layersPane.GrpA_Warp;
     private ComboBox cmbA_Warp_Map => layersPane.CmbA_Warp_Map;
-    private ComboBox cmbA_Warp_Direction => layersPane.CmbA_Warp_Direction;
     private NumericUpDown numA_Warp_X => layersPane.NumA_Warp_X;
     private NumericUpDown numA_Warp_Y => layersPane.NumA_Warp_Y;
     private Border grpA_Item => layersPane.GrpA_Item;
@@ -233,29 +162,31 @@ internal partial class EditorMapsWindow : Window
     private NumericUpDown numNPC_Zone => layersPane.NumNPC_Zone;
     private ListBox lstNPC => layersPane.LstNPC;
 
-    // MapExplorerPane
+    // Map explorer pane
     private TextBox txtFilter => explorerPane.TxtFilter;
     private ListBox lstMaps => explorerPane.LstMaps;
 
-    // PropertiesPane
+    // Properties pane
     private PropertyGrid prgMapProperties => propertiesPane!.PrgMapProperties;
 
-    // ── Fields for programmatically-created UserControls ─────────────────────
+    // Chunk navigation
+    private RadioButton butLayerGround => layersPane.OptA_Block;  // reused UI elements
+    private RadioButton butLayerFringe => layersPane.OptA_Warp;
+
     private TileSheetPane tileSheetPane = null!;
     private MapCanvasPane mapCanvasPane = null!;
     private LayersPane layersPane = null!;
     private MapExplorerPane explorerPane = null!;
     private PropertiesPane propertiesPane = null!;
 
-    // ── Constructor ──────────────────────────────────────────────────────────
+    private readonly DispatcherTimer? _timer;
+
     public EditorMapsWindow(DefinitionCatalog catalog)
     {
         _catalog = catalog;
         InitializeComponent();
         Instance = this;
 
-        // Create UserControls and assign to Dock tools BEFORE InitLayout
-        // (Dock's ToolContentControl will pick up the Content during view creation)
         tileSheetPane = new TileSheetPane();
         layersPane = new LayersPane();
         mapCanvasPane = new MapCanvasPane();
@@ -263,23 +194,18 @@ internal partial class EditorMapsWindow : Window
         propertiesPane = new PropertiesPane();
         AssignContentToDockModels();
 
-        // SFML offscreen render textures
         MapRenderer.Instance.WinMap = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
         MapRenderer.Instance.WinMapTile = new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
 
-        // Timer (created here since the field is readonly)
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
         _timer.Tick += OnRenderTick;
 
-        // Wire events and init combos after the visual tree is ready
         Loaded += OnLoaded;
     }
 
     private void AssignContentToDockModels()
     {
-        if (DockControl?.Layout is not Dock.Model.Avalonia.Controls.RootDock root)
-            return;
-
+        if (DockControl?.Layout is not Dock.Model.Avalonia.Controls.RootDock root) return;
         void Walk(IList<Dock.Model.Core.IDockable>? dockables)
         {
             if (dockables == null) return;
@@ -289,13 +215,11 @@ internal partial class EditorMapsWindow : Window
                 {
                     case Dock.Model.Avalonia.Controls.ToolDock td when td.VisibleDockables?.Count > 0:
                         td.ActiveDockable = td.VisibleDockables[0];
-                        foreach (var t in td.VisibleDockables)
-                            AssignContent(t);
+                        foreach (var t in td.VisibleDockables) AssignContent(t);
                         break;
                     case Dock.Model.Avalonia.Controls.DocumentDock dd when dd.VisibleDockables?.Count > 0:
                         dd.ActiveDockable = dd.VisibleDockables[0];
-                        foreach (var doc in dd.VisibleDockables)
-                            AssignContent(doc);
+                        foreach (var doc in dd.VisibleDockables) AssignContent(doc);
                         break;
                     case Dock.Model.Avalonia.Controls.ProportionalDock pd:
                         Walk(pd.VisibleDockables);
@@ -303,7 +227,6 @@ internal partial class EditorMapsWindow : Window
                 }
             }
         }
-
         Walk(root.VisibleDockables);
     }
 
@@ -311,22 +234,16 @@ internal partial class EditorMapsWindow : Window
     {
         switch (dockable.Id)
         {
-            case "TileSheet" when dockable is Dock.Model.Avalonia.Controls.Tool t:
-                t.Content = tileSheetPane; break;
-            case "Layers" when dockable is Dock.Model.Avalonia.Controls.Tool t:
-                t.Content = layersPane; break;
-            case "MapCanvas" when dockable is Dock.Model.Avalonia.Controls.Document doc:
-                doc.Content = mapCanvasPane; break;
-            case "MapExplorer" when dockable is Dock.Model.Avalonia.Controls.Tool t:
-                t.Content = explorerPane; break;
-            case "Properties" when dockable is Dock.Model.Avalonia.Controls.Tool t:
-                t.Content = propertiesPane; break;
+            case "TileSheet" when dockable is Dock.Model.Avalonia.Controls.Tool t: t.Content = tileSheetPane; break;
+            case "Layers" when dockable is Dock.Model.Avalonia.Controls.Tool t: t.Content = layersPane; break;
+            case "MapCanvas" when dockable is Dock.Model.Avalonia.Controls.Document doc: doc.Content = mapCanvasPane; break;
+            case "MapExplorer" when dockable is Dock.Model.Avalonia.Controls.Tool t: t.Content = explorerPane; break;
+            case "Properties" when dockable is Dock.Model.Avalonia.Controls.Tool t: t.Content = propertiesPane; break;
         }
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        // Wire tile sheet events
         tileSheetPane.CmbTiles.SelectionChanged += cmbTiles_SelectionChanged;
         tileSheetPane.ChkAuto.IsCheckedChanged += chkAuto_IsCheckedChanged;
         tileSheetPane.ImgTile.PointerPressed += imgTile_PointerPressed;
@@ -334,28 +251,18 @@ internal partial class EditorMapsWindow : Window
         tileSheetPane.ScrlTileY.Scroll += scrlTileY_Scroll;
         tileSheetPane.ScrlTileX.Scroll += scrlTileX_Scroll;
 
-        // Wire map canvas events
         mapCanvasPane.ImgMap.PointerPressed += imgMap_PointerPressed;
         mapCanvasPane.ImgMap.PointerReleased += imgMap_PointerReleased;
         mapCanvasPane.ImgMap.PointerMoved += imgMap_PointerMoved;
         mapCanvasPane.ScrlMapY.Scroll += scrlMapY_Scroll;
         mapCanvasPane.ScrlMapX.Scroll += scrlMapX_Scroll;
 
-        // Wire layers events
         layersPane.LstLayers.SelectionChanged += lstLayers_SelectionChanged;
-        layersPane.ButLayers_Add.Click += butLayers_Add_Click;
-        layersPane.ButLayers_Remove.Click += butLayers_Remove_Click;
-        layersPane.ButLayers_Edit.Click += butLayers_Edit_Click;
-        layersPane.ButLayers_Up.Click += butLayers_Up_Click;
-        layersPane.ButLayers_Down.Click += butLayers_Down_Click;
-        layersPane.ButLayer_Ok.Click += butLayer_Ok_Click;
-        layersPane.ButLayer_Cancel.Click += butLayer_Cancel_Click;
         layersPane.ScrlZone.Scroll += scrlZone_Scroll;
         layersPane.ScrlZone_Clear.Click += scrlZone_Clear_Click;
         layersPane.OptA_Warp.IsCheckedChanged += optA_Warp_Changed;
         layersPane.OptA_Item.IsCheckedChanged += optA_Item_Changed;
         layersPane.CmbA_Warp_Map.SelectionChanged += cmbA_Warp_Map_SelectionChanged;
-        layersPane.CmbA_Warp_Direction.SelectionChanged += cmbA_Warp_Direction_SelectionChanged;
         layersPane.NumA_Warp_X.ValueChanged += numA_Warp_X_ValueChanged;
         layersPane.NumA_Warp_Y.ValueChanged += numA_Warp_Y_ValueChanged;
         layersPane.CmbA_Item.SelectionChanged += cmbA_Item_SelectionChanged;
@@ -366,32 +273,31 @@ internal partial class EditorMapsWindow : Window
         layersPane.ButNPC_Remove.Click += butNPC_Remove_Click;
         layersPane.ButNPC_Clear.Click += butNPC_Clear_Click;
 
-        // Wire explorer events
         explorerPane.TxtFilter.TextChanged += txtFilter_TextChanged;
         explorerPane.ButNew.Click += butNew_Click;
         explorerPane.ButRemove.Click += butRemove_Click;
         explorerPane.LstMaps.SelectionChanged += lstMaps_SelectionChanged;
 
-        // Layer type combo
-        foreach (var l in Enum.GetValues<Layer>())
-            layersPane.CmbLayers_Type.Items.Add(l.ToString());
+        // Wire chunk list selection
+        layersPane.LstChunks.SelectionChanged += (_, _) =>
+        {
+            if (layersPane.LstChunks.SelectedItem is ChunkCoord coord)
+            {
+                scrlMapX.Value = coord.X * ChunkSize;
+                scrlMapY.Value = coord.Y * ChunkSize;
+            }
+        };
 
-        // Tile sheet combo
         for (var i = 1; i < Textures.Tiles.Count; i++)
             tileSheetPane.CmbTiles.Items.Add(i.ToString());
         if (tileSheetPane.CmbTiles.Items.Count > 0)
             tileSheetPane.CmbTiles.SelectedIndex = 0;
 
-        // Zone scroll limit
         layersPane.ScrlZone.Maximum = Globals.MaxZones;
         layersPane.NumNPC_Zone.Maximum = Globals.MaxZones;
 
-        // Start render timer
         _timer!.Start();
-
         RefreshMapList();
-
-        // Set initial cached state
         _isOpen = true;
         _showAudio = butAudio.IsChecked == true;
         _showVisualization = butVisualization.IsChecked == true;
@@ -407,32 +313,26 @@ internal partial class EditorMapsWindow : Window
         base.OnClosed(e);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // RENDER TICK
-    // ─────────────────────────────────────────────────────────────────────────
-
     private void OnRenderTick(object? sender, EventArgs e)
     {
-        // Map canvas
         if (MapRenderer.Instance.WinMap != null && _selected != null)
         {
             MapRenderer.Instance.EditorMapsMap();
             SfmlRenderBlit.Blit(MapRenderer.Instance.WinMap, ref _mapBitmap, imgMap);
         }
-
-        // Tile canvas (only in Normal mode)
         if (MapRenderer.Instance.WinMapTile != null && ModeNormal)
         {
             MapRenderer.Instance.EditorMapsTile();
             SfmlRenderBlit.Blit(MapRenderer.Instance.WinMapTile, ref _tileBitmap, imgTile);
         }
-
         UpdateStatusBar();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // MAP LIST
-    // ─────────────────────────────────────────────────────────────────────────
+    // Render bitmaps
+    private WriteableBitmap? _mapBitmap;
+    private WriteableBitmap? _tileBitmap;
+
+    // ── MAP LIST ───────────────────────────────────────────────────────
 
     private void RefreshMapList(Guid? keepId = null)
     {
@@ -440,12 +340,9 @@ internal partial class EditorMapsWindow : Window
         var filtered = _catalog.Maps.Values
             .Where(m => m.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
-
         lstMaps.ItemsSource = filtered;
-
         if (keepId.HasValue)
             lstMaps.SelectedItem = filtered.FirstOrDefault(m => m.Id == keepId.Value);
-
         if (lstMaps.SelectedItem == null && filtered.Count > 0)
             lstMaps.SelectedIndex = 0;
     }
@@ -459,29 +356,15 @@ internal partial class EditorMapsWindow : Window
     private void SelectMap(Map map)
     {
         _selected = map;
-
-        // Warp map combo
         RefreshWarpMapCombo();
-
-        // Bind map properties to PropertyGrid
-        if (_mapProps != null)
-            _mapProps.PropertyChanged -= OnMapPropertyChanged;
-
+        if (_mapProps != null) _mapProps.PropertyChanged -= OnMapPropertyChanged;
         _mapProps = new MapProperties(map);
         _mapProps.PropertyChanged += OnMapPropertyChanged;
         prgMapProperties.DataContext = _mapProps;
-
         RefreshNpcList();
-
         MapInstance.Instance.UpdateWeatherType();
-
-        // Auto-tile maths
-        map.Update();
-
-        // Update canvas bounds
+        RefreshChunkList();
         UpdateMapBounds();
-
-        RefreshLayerList();
     }
 
     private void OnMapPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -495,14 +378,11 @@ internal partial class EditorMapsWindow : Window
         cmbA_Warp_Map.Items.Clear();
         foreach (var m in _catalog.Maps.Values) cmbA_Warp_Map.Items.Add(m);
         if (cmbA_Warp_Map.Items.Count > 0) cmbA_Warp_Map.SelectedIndex = 0;
-        numA_Warp_X.Maximum = Map.Width - 1;
-        numA_Warp_Y.Maximum = Map.Height - 1;
+        numA_Warp_X.Maximum = 999;
+        numA_Warp_Y.Maximum = 999;
     }
 
-    private void txtFilter_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        RefreshMapList(_selected?.Id);
-    }
+    private void txtFilter_TextChanged(object? sender, TextChangedEventArgs e) => RefreshMapList(_selected?.Id);
 
     private void butNew_Click(object? sender, RoutedEventArgs e)
     {
@@ -514,36 +394,28 @@ internal partial class EditorMapsWindow : Window
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        if (_catalog.Maps.Count == 1)
-        {
-            MessageBox.Show("It must have at least one map registered.");
-            return;
-        }
-
+        if (_catalog.Maps.Count == 1) { MessageBox.Show("It must have at least one map registered."); return; }
         _catalog.Maps.Remove(_selected.Id);
         _selected = null;
         RefreshMapList();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // STATUS BAR
-    // ─────────────────────────────────────────────────────────────────────────
+    // ── STATUS BAR ─────────────────────────────────────────────────────
 
     private void UpdateStatusBar()
     {
-        var rev = _selected?.Revision.ToString() ?? "—";
         lblFPS.Text = $"FPS: {Program.Fps}";
-        lblRevision.Text = $"Revision: {rev}";
-        lblPosition.Text = $"Position: {{{_mapMouse.X};{_mapMouse.Y}}}";
+        var cx = _mapMouse.X / ChunkSize;
+        var cy = _mapMouse.Y / ChunkSize;
+        var lx = ((_mapMouse.X % ChunkSize) + ChunkSize) % ChunkSize;
+        var ly = ((_mapMouse.Y % ChunkSize) + ChunkSize) % ChunkSize;
+        lblPosition.Text = $"Chunk: ({cx},{cy}) Tile: ({lx},{ly}) World: ({_mapMouse.X},{_mapMouse.Y})";
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // TOOLBAR HANDLERS
-    // ─────────────────────────────────────────────────────────────────────────
+    // ── TOOLBAR ────────────────────────────────────────────────────────
 
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
-        foreach (var map in _catalog.Maps.Values) ++map.Revision;
         PackageSender.Instance.WriteMaps();
         MessageBox.Show("All maps has been saved");
     }
@@ -552,82 +424,99 @@ internal partial class EditorMapsWindow : Window
     {
         if (_selected == null) return;
         PackageSender.Instance.RequestMap(_selected);
-        RefreshLayerList();
-        _selected.Update();
     }
 
-    // Drawing tools — mutual exclusion
     private void butPencil_Click(object? sender, RoutedEventArgs e)
     {
-        if (butPencil.IsChecked == true)
-        {
-            butRectangle.IsChecked = false;
-            butArea.IsChecked = false;
-            butDiscover.IsChecked = false;
-        }
+        if (butPencil.IsChecked == true) { butRectangle.IsChecked = false; butArea.IsChecked = false; butDiscover.IsChecked = false; }
         else butPencil.IsChecked = true;
-
         ResetMapSelectionSize();
     }
 
     private void butRectangle_Click(object? sender, RoutedEventArgs e)
     {
-        if (butRectangle.IsChecked == true)
-        {
-            butPencil.IsChecked = false;
-            butArea.IsChecked = false;
-            butDiscover.IsChecked = false;
-        }
+        if (butRectangle.IsChecked == true) { butPencil.IsChecked = false; butArea.IsChecked = false; butDiscover.IsChecked = false; }
         else butRectangle.IsChecked = true;
-
         ResetMapSelectionSize();
     }
 
     private void butArea_Click(object? sender, RoutedEventArgs e)
     {
-        if (butArea.IsChecked == true)
-        {
-            butPencil.IsChecked = false;
-            butRectangle.IsChecked = false;
-            butDiscover.IsChecked = false;
-        }
+        if (butArea.IsChecked == true) { butPencil.IsChecked = false; butRectangle.IsChecked = false; butDiscover.IsChecked = false; }
         else butArea.IsChecked = true;
-
         ResetMapSelectionSize();
     }
 
     private void butDiscover_Click(object? sender, RoutedEventArgs e)
     {
-        if (butDiscover.IsChecked == true)
-        {
-            butPencil.IsChecked = false;
-            butRectangle.IsChecked = false;
-            butArea.IsChecked = false;
-        }
+        if (butDiscover.IsChecked == true) { butPencil.IsChecked = false; butRectangle.IsChecked = false; butArea.IsChecked = false; }
         else butDiscover.IsChecked = true;
-
         ResetMapSelectionSize();
     }
 
     private void butFill_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        var layer = SelectedLayerIndex();
-        if (layer < 0) return;
-        for (var x = 0; x < Map.Width; x++)
-            for (var y = 0; y < Map.Height; y++)
-                _selected.Layer[layer].Tile[x, y] = MakeSetTile();
-        _selected.Update();
+        var sel = MapSelection;
+        for (var x = sel.X; x < sel.X + sel.Width; x++)
+            for (var y = sel.Y; y < sel.Y + sel.Height; y++)
+                PaintTile(x, y, MakeSetTile());
     }
 
     private void butEraser_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        var layer = SelectedLayerIndex();
-        if (layer < 0) return;
-        for (var x = 0; x < Map.Width; x++)
-            for (var y = 0; y < Map.Height; y++)
-                _selected.Layer[layer].Tile[x, y] = new MapTileData();
+        var sel = MapSelection;
+        var empty = new DefinitionsTileData(0, 0, 0, false, new NoAttribute());
+        for (var x = sel.X; x < sel.X + sel.Width; x++)
+            for (var y = sel.Y; y < sel.Y + sel.Height; y++)
+                PaintTile(x, y, empty);
+    }
+
+    private void butCopy_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_selected == null) return;
+        var sel = MapSelection;
+        if (sel.Width <= 0 || sel.Height <= 0) return;
+        var w = Math.Abs(sel.Width);
+        var h = Math.Abs(sel.Height);
+        var tiles = new DefinitionsTileData[w, h];
+        for (var x = 0; x < w; x++)
+            for (var y = 0; y < h; y++)
+            {
+                var wx = sel.X + x;
+                var wy = sel.Y + y;
+                var coord = TileToChunk(wx, wy);
+                var lx = ((wx % ChunkSize) + ChunkSize) % ChunkSize;
+                var ly = ((wy % ChunkSize) + ChunkSize) % ChunkSize;
+                if (_selected.Chunks.TryGetValue(coord, out var chunk) && chunk.Tiles != null)
+                    tiles[x, y] = chunk.Tiles[lx, ly];
+                else
+                    tiles[x, y] = new DefinitionsTileData(0, 0, 0, false, new NoAttribute());
+            }
+        _clipboardData = tiles;
+        _clipboardArea = sel;
+        _clipboardLayer = _paintLayer;
+    }
+
+    private void butCut_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_selected == null) return;
+        butCopy_Click(sender, e);
+        var empty = new DefinitionsTileData(0, 0, 0, false, new NoAttribute());
+        var sel = MapSelection;
+        for (var x = sel.X; x < sel.X + sel.Width; x++)
+            for (var y = sel.Y; y < sel.Y + sel.Height; y++)
+                PaintTile(x, y, empty);
+    }
+
+    private void butPaste_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_selected == null || _clipboardData == null) return;
+        var sel = MapSelection;
+        for (var x = 0; x < _clipboardData.GetLength(0); x++)
+            for (var y = 0; y < _clipboardData.GetLength(1); y++)
+                PaintTile(sel.X + x, sel.Y + y, _clipboardData[x, y]);
     }
 
     private void butEdition_Click(object? sender, RoutedEventArgs e)
@@ -643,82 +532,23 @@ internal partial class EditorMapsWindow : Window
         if (butVisualization.IsChecked == true) butEdition.IsChecked = false;
         else butVisualization.IsChecked = true;
         Options.Instance.PreMapView = butVisualization.IsChecked == true;
-        _showVisualization = butVisualization.IsChecked == true;
         Client.Framework.Persistence.Repositories.OptionsRepository.Write();
     }
 
-    private void butGrid_Click(object? sender, RoutedEventArgs e)
-    {
-        Options.Instance.PreMapGrid = butGrid.IsChecked == true;
-        Client.Framework.Persistence.Repositories.OptionsRepository.Write();
-    }
+    private void butGrid_Click(object? sender, RoutedEventArgs e) { }
+    private void butAudio_Click(object? sender, RoutedEventArgs e) => _showAudio = butAudio.IsChecked == true;
 
-    private void butAudio_Click(object? sender, RoutedEventArgs e)
-    {
-        Options.Instance.PreMapAudio = butAudio.IsChecked == true;
-        _showAudio = butAudio.IsChecked == true;
-        Client.Framework.Persistence.Repositories.OptionsRepository.Write();
-        if (!Options.Instance.PreMapAudio)
-        {
-            AudioManager.Instance.StopMusic();
-            AudioManager.Instance.StopAllSounds();
-        }
-    }
-
-
+    // Zoom handlers
     private void butZoom_Normal_Click(object? sender, RoutedEventArgs e)
-    {
-        if (butZoom_Normal.IsChecked == true)
-        {
-            butZoom_2x.IsChecked = false;
-            butZoom_4x.IsChecked = false;
-        }
-        else butZoom_Normal.IsChecked = true;
-
-        UpdateMapBounds();
-    }
-
+    { butZoom_Normal.IsChecked = true; butZoom_2x.IsChecked = false; butZoom_4x.IsChecked = false; UpdateMapBounds(); }
     private void butZoom_2x_Click(object? sender, RoutedEventArgs e)
-    {
-        if (butZoom_2x.IsChecked == true)
-        {
-            butZoom_Normal.IsChecked = false;
-            butZoom_4x.IsChecked = false;
-        }
-        else butZoom_2x.IsChecked = true;
-
-        UpdateMapBounds();
-    }
-
+    { butZoom_Normal.IsChecked = false; butZoom_2x.IsChecked = true; butZoom_4x.IsChecked = false; UpdateMapBounds(); }
     private void butZoom_4x_Click(object? sender, RoutedEventArgs e)
-    {
-        if (butZoom_4x.IsChecked == true)
-        {
-            butZoom_Normal.IsChecked = false;
-            butZoom_2x.IsChecked = false;
-        }
-        else butZoom_4x.IsChecked = true;
+    { butZoom_Normal.IsChecked = false; butZoom_2x.IsChecked = false; butZoom_4x.IsChecked = true; UpdateMapBounds(); }
 
-        UpdateMapBounds();
-    }
-
-    // Mode toggle
-    private void butMNormal_Click(object? sender, RoutedEventArgs e)
-    {
-        ModesExclusive(butMNormal);
-        ResetMapSelectionSize();
-    }
-
-    private void butMZones_Click(object? sender, RoutedEventArgs e)
-    {
-        ModesExclusive(butMZones);
-    }
-
-    private void butMAttributes_Click(object? sender, RoutedEventArgs e)
-    {
-        ModesExclusive(butMAttributes);
-    }
-
+    private void butMNormal_Click(object? sender, RoutedEventArgs e) { ModesExclusive(butMNormal); ResetMapSelectionSize(); }
+    private void butMAttributes_Click(object? sender, RoutedEventArgs e) { ModesExclusive(butMAttributes); }
+    private void butMZones_Click(object? sender, RoutedEventArgs e) { ModesExclusive(butMZones); }
     private void butMNPCs_Click(object? sender, RoutedEventArgs e)
     {
         ModesExclusive(butMNPCs);
@@ -742,49 +572,86 @@ internal partial class EditorMapsWindow : Window
             butMAttributes.IsChecked = butMAttributes == pressed && pressed.IsChecked == true;
             butMNPCs.IsChecked = butMNPCs == pressed && pressed.IsChecked == true;
         }
-
-        // Sync mode-panel visibility
-        grpZones.IsVisible = butMZones.IsChecked == true;
+        layersPane.GrpZones.IsVisible = butMZones.IsChecked == true;
         grpAttributes.IsVisible = butMAttributes.IsChecked == true;
-        grpNPCs.IsVisible = butMNPCs.IsChecked == true;
+        layersPane.GrpNPCs.IsVisible = butMNPCs.IsChecked == true;
     }
 
-    // Other editor launchers
-    private void butEditors_Classes_Click(object? sender, RoutedEventArgs e) =>
-        EditorClassesWindow.Open(this);
-
-    private void butEditors_Interface_Click(object? sender, RoutedEventArgs e) =>
-        EditorInterfaceWindow.Open(this);
-
-    private void butEditors_Items_Click(object? sender, RoutedEventArgs e) =>
-        EditorItemsWindow.Open(this);
-
+    private void butEditors_Classes_Click(object? sender, RoutedEventArgs e) => EditorClassesWindow.Open(this);
+    private void butEditors_Interface_Click(object? sender, RoutedEventArgs e) => EditorInterfaceWindow.Open(this);
+    private void butEditors_Items_Click(object? sender, RoutedEventArgs e) => EditorItemsWindow.Open(this);
     private void butEditors_NPCs_Click(object? sender, RoutedEventArgs e) => EditorNpcsWindow.Open(this);
+    private void butEditors_Shops_Click(object? sender, RoutedEventArgs e) => EditorShopsWindow.Open(this);
+    private void butEditors_Tiles_Click(object? sender, RoutedEventArgs e) => EditorTilesWindow.Open(this);
 
-    private void butEditors_Shops_Click(object? sender, RoutedEventArgs e) =>
-        EditorShopsWindow.Open(this);
+    // ── CHUNK MANAGEMENT ──────────────────────────────────────────────
 
-    private void butEditors_Tiles_Click(object? sender, RoutedEventArgs e) =>
-        EditorTilesWindow.Open(this);
-
-    private void butCopy_Click(object? sender, RoutedEventArgs e) => CopyTiles();
-
-    private void butCut_Click(object? sender, RoutedEventArgs e)
+    private void RefreshChunkList()
     {
-        CopyTiles();
-        var sel = MapSelection;
-        for (var x = sel.X; x < sel.X + sel.Width; x++)
-            for (var y = sel.Y; y < sel.Y + sel.Height; y++)
-                for (byte c = 0; c < _selected!.Layer.Count; c++)
-                    _selected.Layer[c].Tile[x, y] = new MapTileData();
-        _selected!.Update();
+        if (_selected == null) return;
+        layersPane.LstChunks.ItemsSource = null;
+        layersPane.LstChunks.ItemsSource = _selected.Chunks.Keys.OrderBy(c => c.Y).ThenBy(c => c.X).ToList();
     }
 
-    private void butPaste_Click(object? sender, RoutedEventArgs e) => PasteTiles();
+    private void AddChunkAt(short cx, short cy)
+    {
+        if (_selected == null) return;
+        var coord = new ChunkCoord(cx, cy);
+        if (_selected.Chunks.ContainsKey(coord)) return;
+        var tiles = new DefinitionsTileData[ChunkSize, ChunkSize];
+        for (var x = 0; x < ChunkSize; x++)
+            for (var y = 0; y < ChunkSize; y++)
+                tiles[x, y] = new DefinitionsTileData(0, 0, 0, false, new NoAttribute());
+        _selected.Chunks[coord] = new MapChunk(cx, cy, 1, tiles);
+        RefreshChunkList();
+        UpdateMapBounds();
+    }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // MAP CANVAS POINTER EVENTS
-    // ─────────────────────────────────────────────────────────────────────────
+    private void butChunkLeft_Click(object? sender, RoutedEventArgs e)
+    {
+        var cx = (short)(MapScrollX / ChunkSize - 1);
+        var cy = (short)(MapScrollY / ChunkSize);
+        AddChunkAt(cx, cy);
+    }
+
+    private void butChunkRight_Click(object? sender, RoutedEventArgs e)
+    {
+        var cx = (short)(MapScrollX / ChunkSize + 1);
+        var cy = (short)(MapScrollY / ChunkSize);
+        AddChunkAt(cx, cy);
+    }
+
+    private void butChunkUp_Click(object? sender, RoutedEventArgs e)
+    {
+        var cx = (short)(MapScrollX / ChunkSize);
+        var cy = (short)(MapScrollY / ChunkSize - 1);
+        AddChunkAt(cx, cy);
+    }
+
+    private void butChunkDown_Click(object? sender, RoutedEventArgs e)
+    {
+        var cx = (short)(MapScrollX / ChunkSize);
+        var cy = (short)(MapScrollY / ChunkSize + 1);
+        AddChunkAt(cx, cy);
+    }
+
+    private void butDeleteChunk_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_selected == null) return;
+        var cx = (short)(MapScrollX / ChunkSize);
+        var cy = (short)(MapScrollY / ChunkSize);
+        var coord = new ChunkCoord(cx, cy);
+        _selected.Chunks.Remove(coord);
+        RefreshChunkList();
+        UpdateMapBounds();
+    }
+
+    // ── LAYER TOGGLE ──────────────────────────────────────────────────
+
+    private void butLayerGround_Click(object? sender, RoutedEventArgs e) => _paintLayer = Layer.Ground;
+    private void butLayerFringe_Click(object? sender, RoutedEventArgs e) => _paintLayer = Layer.Fringe;
+
+    // ── MAP CANVAS ────────────────────────────────────────────────────
 
     private void imgMap_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
@@ -796,56 +663,34 @@ internal partial class EditorMapsWindow : Window
 
         UpdateMapMouse(pt.X, pt.Y);
         var sel = MapSelection;
-        if (sel.X >= Map.Width || sel.Y >= Map.Height) return;
 
         if (ModeNormal)
         {
             TileEvents(btn);
             if (ToolArea) _defMapSelection = new SystemRect(_mapMouse, new SystemSize(1, 1));
         }
-        else if (ModeAttributes && DirBlockMode)
-        {
-            var tileDif = new SystemPoint((int)(pt.X - pt.X / Globals.Grid * Globals.Grid),
-                (int)(pt.Y - pt.Y / Globals.Grid * Globals.Grid));
-            for (byte i = 0; i < (byte)Direction.Count; i++)
-                if (tileDif.X >= Block_Position(i).X && tileDif.X <= Block_Position(i).X + 8)
-                    if (tileDif.Y >= Block_Position(i).Y && tileDif.Y <= Block_Position(i).Y + 8)
-                        _selected.Attribute[sel.X, sel.Y].Block[i] = !_selected.Attribute[sel.X, sel.Y].Block[i];
-        }
-        else if (ModeAttributes && !DirBlockMode && left)
+        else if (ModeAttributes && left)
             SetAttribute();
         else if (ModeAttributes && right)
-            _selected.Attribute[sel.X, sel.Y] = new MapAttribute();
-        else if (ModeZones)
-        {
-            if (left) _selected.Attribute[sel.X, sel.Y].Zone = (byte)scrlZone.Value;
-            if (right) _selected.Attribute[sel.X, sel.Y].Zone = 0;
-        }
+            ClearAttribute();
         else if (ModeNPCs && left)
-            AddNpc(true, (byte)sel.X, (byte)sel.Y);
+            AddNpc(true, (byte)_mapMouse.X, (byte)_mapMouse.Y);
     }
 
     private void imgMap_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         _mapPressed = false;
-        var pt = e.GetPosition(imgMap);
         if (e.InitialPressMouseButton != MouseButton.Left) return;
         if (_selected == null) return;
-        var layer = SelectedLayerIndex();
-        if (layer < 0) return;
+        var pt = e.GetPosition(imgMap);
         var sel = MapSelection;
-        if (sel.X >= Map.Width || sel.Y >= Map.Height) return;
 
         if (ToolRectangle && (sel.Width > 1 || sel.Height > 1))
         {
             for (var x = sel.X; x < sel.X + sel.Width; x++)
                 for (var y = sel.Y; y < sel.Y + sel.Height; y++)
-                {
-                    _selected.Layer[layer].Tile[x, y] = MakeSetTile();
-                    _selected.Layer[layer].Update(x, y);
-                }
+                    PaintTile(x, y, MakeSetTile());
         }
-
         ResetMapSelectionSize();
     }
 
@@ -858,7 +703,6 @@ internal partial class EditorMapsWindow : Window
         var btn = left ? MouseButtons.Left : right ? MouseButtons.Right : MouseButtons.None;
 
         UpdateMapMouse(pt.X, pt.Y);
-
         if (MapRectangle(pt.X, pt.Y, left)) return;
         if (ToolArea && IsToolEnabled(butArea)) return;
 
@@ -866,43 +710,123 @@ internal partial class EditorMapsWindow : Window
 
         if (ModeNormal)
             TileEvents(btn);
-        else if (ModeZones)
-        {
-            if (left) _selected.Attribute[_mapMouse.X, _mapMouse.Y].Zone = (byte)scrlZone.Value;
-            if (right) _selected.Attribute[MapSelection.X, MapSelection.Y].Zone = 0;
-        }
-        else if (ModeAttributes && !DirBlockMode)
-        {
-            if (left) _selected.Attribute[_mapMouse.X, _mapMouse.Y].Type = (byte)AttributeSelected();
-            if (right) _selected.Attribute[MapSelection.X, MapSelection.Y].Type = 0;
-        }
+        else if (ModeAttributes && !left)
+            return;
+        else if (ModeAttributes)
+            SetAttribute();
     }
 
     private void UpdateMapMouse(double px, double py)
     {
-        var x = (int)(px / GridZoom) + (int)scrlMapX.Value;
-        var y = (int)(py / GridZoom) + (int)scrlMapY.Value;
-        _mapMouse = new SystemPoint(
-            Math.Clamp(x, 0, Map.Width - 1),
-            Math.Clamp(y, 0, Map.Height - 1));
+        var x = (int)(px / GridZoom) + MapScrollX;
+        var y = (int)(py / GridZoom) + MapScrollY;
+        _mapMouse = new SystemPoint(x, y);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // TILE CANVAS POINTER EVENTS
-    // ─────────────────────────────────────────────────────────────────────────
+    private void scrlMapX_Scroll(object? sender, AvaloniaScrollEventArgs e) { }
+    private void scrlMapY_Scroll(object? sender, AvaloniaScrollEventArgs e) { }
+    private void scrlTileX_Scroll(object? sender, AvaloniaScrollEventArgs e) { }
+    private void scrlTileY_Scroll(object? sender, AvaloniaScrollEventArgs e) { }
+
+    // ── TILE PAINTING ─────────────────────────────────────────────────
+
+    private void PaintTile(int worldX, int worldY, DefinitionsTileData tile)
+    {
+        if (_selected == null) return;
+        var coord = TileToChunk(worldX, worldY);
+        var lx = ((worldX % ChunkSize) + ChunkSize) % ChunkSize;
+        var ly = ((worldY % ChunkSize) + ChunkSize) % ChunkSize;
+
+        if (!_selected.Chunks.TryGetValue(coord, out var chunk) || chunk.Tiles == null)
+        {
+            var newTiles = new DefinitionsTileData[ChunkSize, ChunkSize];
+            for (var x = 0; x < ChunkSize; x++)
+                for (var y = 0; y < ChunkSize; y++)
+                    newTiles[x, y] = new DefinitionsTileData(0, 0, 0, false, new NoAttribute());
+            chunk = new MapChunk(coord.X, coord.Y, 1, newTiles);
+            _selected.Chunks[coord] = chunk;
+        }
+
+        chunk.Tiles?[lx, ly] = tile with { Layer = _paintLayer };
+        chunk = chunk.WithNextVersion();
+        _selected.Chunks[coord] = chunk;
+    }
+
+    private void TileEvents(MouseButtons btn)
+    {
+        if (_selected == null) return;
+        if (btn == MouseButtons.Left)
+        {
+            if (ToolPencil) PaintTile(_mapMouse.X, _mapMouse.Y, MakeSetTile());
+            if (ToolDiscover) TileDiscover();
+        }
+        else if (btn == MouseButtons.Right)
+        {
+            if (ToolPencil)
+            {
+                var empty = new DefinitionsTileData(0, 0, 0, false, new NoAttribute());
+                PaintTile(_mapMouse.X, _mapMouse.Y, empty);
+            }
+        }
+    }
+
+    private bool MapRectangle(double px, double py, bool left)
+    {
+        var x = (int)(px / GridZoom) + MapScrollX;
+        var y = (int)(py / GridZoom) + MapScrollY;
+        if (!left) return false;
+        if (!IsToolEnabled(butRectangle) && !IsToolEnabled(butArea)) return false;
+        if (!_mapPressed) _defMapSelection.Size = new SystemSize(1, 1);
+        _defMapSelection.Width = x - _defMapSelection.X + 1;
+        _defMapSelection.Height = y - _defMapSelection.Y + 1;
+        _mapPressed = true;
+        return true;
+    }
+
+    private void TileDiscover()
+    {
+        if (_selected == null) return;
+        var coord = TileToChunk(_mapMouse.X, _mapMouse.Y);
+        var lx = ((_mapMouse.X % ChunkSize) + ChunkSize) % ChunkSize;
+        var ly = ((_mapMouse.Y % ChunkSize) + ChunkSize) % ChunkSize;
+        if (!_selected.Chunks.TryGetValue(coord, out var chunk) || chunk.Tiles == null) return;
+        var data = chunk.Tiles[lx, ly];
+        if (data.Texture == 0) return;
+        cmbTiles.SelectedIndex = data.Texture - 1;
+        chkAuto.IsChecked = data.IsAutoTile;
+        _defTilesSelection = new SystemRect(data.SourceX, data.SourceY, 1, 1);
+    }
+
+    private DefinitionsTileData MakeSetTile(int x = 0, int y = 0)
+    {
+        if (x == 0) x = Math.Max(0, TilesSelection.X);
+        if (y == 0) y = Math.Max(0, TilesSelection.Y);
+        return new DefinitionsTileData(
+            (byte)(cmbTiles.SelectedIndex + 1),
+            x, y,
+            AutoTile,
+            new NoAttribute(),
+            _paintLayer
+        );
+    }
+
+    private static ChunkCoord TileToChunk(int tileX, int tileY) =>
+        new(
+            (short)(tileX >= 0 ? tileX / ChunkSize : (tileX - ChunkSize + 1) / ChunkSize),
+            (short)(tileY >= 0 ? tileY / ChunkSize : (tileY - ChunkSize + 1) / ChunkSize));
+
+    // ── TILE SHEET ────────────────────────────────────────────────────
 
     private void imgTile_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (!e.GetCurrentPoint(imgTile).Properties.IsLeftButtonPressed) return;
         var pt = e.GetPosition(imgTile);
-        var x = (int)(pt.X + scrlTileX.Value) / Globals.Grid;
-        var y = (int)(pt.Y + scrlTileY.Value) / Globals.Grid;
-
+        var x = (int)(pt.X + scrlTileX.Value) / Grid;
+        var y = (int)(pt.Y + scrlTileY.Value) / Grid;
         if (cmbTiles.SelectedIndex < 0) return;
         var tex = Textures.Tiles[cmbTiles.SelectedIndex + 1];
         if ((int)(pt.X + scrlTileX.Value) > tex.ToSize().Width) return;
         if ((int)(pt.Y + scrlTileY.Value) > tex.ToSize().Height) return;
-
         _defTilesSelection.Location = new SystemPoint(x, y);
         UpdateTileSelected();
     }
@@ -911,81 +835,30 @@ internal partial class EditorMapsWindow : Window
     {
         if (cmbTiles.SelectedIndex < 0) return;
         var pt = e.GetPosition(imgTile);
-        var x = (int)(pt.X + scrlTileX.Value) / Globals.Grid;
-        var y = (int)(pt.Y + scrlTileY.Value) / Globals.Grid;
+        var x = (int)(pt.X + scrlTileX.Value) / Grid;
+        var y = (int)(pt.Y + scrlTileY.Value) / Grid;
         var tex = Textures.Tiles[cmbTiles.SelectedIndex + 1];
         var size = tex.ToSize();
-
-        TileMouse = new SystemPoint(x * Globals.Grid - (int)scrlTileX.Value, y * Globals.Grid - (int)scrlTileY.Value);
-
+        TileMouse = new SystemPoint(x * Grid - (int)scrlTileX.Value, y * Grid - (int)scrlTileY.Value);
         if (!e.GetCurrentPoint(imgTile).Properties.IsLeftButtonPressed) return;
         if (AutoTile) return;
-
-        x = Math.Clamp(x, 0, size.Width / Globals.Grid - 1);
-        y = Math.Clamp(y, 0, size.Height / Globals.Grid - 1);
-
+        x = Math.Clamp(x, 0, size.Width / Grid - 1);
+        y = Math.Clamp(y, 0, size.Height / Grid - 1);
         _defTilesSelection.Width = x - _defTilesSelection.X + 1;
         _defTilesSelection.Height = y - _defTilesSelection.Y + 1;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-
-    // ─────────────────────────────────────────────────────────────────────────
-
-    private void scrlMapX_Scroll(object? sender, AvaloniaScrollEventArgs e)
-    {
-        /* value binding auto */
-    }
-
-    private void scrlMapY_Scroll(object? sender, AvaloniaScrollEventArgs e)
-    {
-        /* value binding auto */
-    }
-
-    private void scrlTileX_Scroll(object? sender, AvaloniaScrollEventArgs e)
-    {
-    }
-
-    private void scrlTileY_Scroll(object? sender, AvaloniaScrollEventArgs e)
-    {
-    }
-
-    private void scrlZone_Scroll(object? sender, AvaloniaScrollEventArgs e)
-    {
-        var v = (int)scrlZone.Value;
-        lblZone.Text = v == 0 ? "Zone: None" : "Zone: " + v;
-    }
-
-    private void scrlZone_Clear_Click(object? sender, RoutedEventArgs e)
-    {
-        if (_selected == null) return;
-        for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-                _selected.Attribute[x, y].Zone = 0;
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // TILE SHEET COMBO / AUTO
-    // ─────────────────────────────────────────────────────────────────────────
-
     private void cmbTiles_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        scrlTileX.Value = 0;
-        scrlTileY.Value = 0;
-        chkAuto.IsChecked = false;
-        UpdateTileBounds();
-        TileMouse = new SystemPoint(0);
+        scrlTileX.Value = 0; scrlTileY.Value = 0; chkAuto.IsChecked = false;
+        UpdateTileBounds(); TileMouse = new SystemPoint(0);
         _defTilesSelection = new SystemRect(0, 0, 1, 1);
         ResetMapSelectionSize();
     }
 
-    private void chkAuto_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        UpdateTileSelected();
-    }
+    private void chkAuto_IsCheckedChanged(object? sender, RoutedEventArgs e) => UpdateTileSelected();
 
-    private void UpdateTileSelected()
-        => _defTilesSelection.Size = AutoTile ? new SystemSize(2, 3) : new SystemSize(1, 1);
+    private void UpdateTileSelected() => _defTilesSelection.Size = AutoTile ? new SystemSize(2, 3) : new SystemSize(1, 1);
 
     private void UpdateTileBounds()
     {
@@ -995,197 +868,53 @@ internal partial class EditorMapsWindow : Window
         scrlTileY.Maximum = Math.Max(0, size.Height - TileCanvasHeight);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // ── ATTRIBUTES ────────────────────────────────────────────────────
 
-    // ─────────────────────────────────────────────────────────────────────────
-
-    private void RefreshLayerList()
+    private TileAttributeUnion GetSelectedAttribute()
     {
-        if (_selected == null) return;
-        _layerVms = _selected.Layer
-            .Select((l, i) => new LayerVm
-            {
-                Index = i + 1,
-                Name = l.Name,
-                TypeName = ((Layer)l.Type).ToString(),
-                Visible = true
-            })
-            .ToList();
-        lstLayers.ItemsSource = null;
-        lstLayers.ItemsSource = _layerVms;
-        if (_layerVms.Count > 0) lstLayers.SelectedIndex = 0;
-    }
-
-    private void lstLayers_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-    }
-
-    private void layerVisible_Changed(object? sender, RoutedEventArgs e)
-    {
-    }
-
-    public int SelectedLayerIndex()
-    {
-        if (lstLayers.SelectedItem is LayerVm vm) return vm.Index - 1;
-        return -1;
-    }
-
-    private void butLayers_Add_Click(object? sender, RoutedEventArgs e)
-    {
-        _layerEditIsNew = true;
-        txtLayer_Name.Text = string.Empty;
-        cmbLayers_Type.SelectedIndex = 0;
-        lblLayerEditTitle.Text = "Add layer";
-        butLayer_Ok.Content = "Add";
-        pnlLayerEdit.IsVisible = true;
-    }
-
-    private void butLayers_Edit_Click(object? sender, RoutedEventArgs e)
-    {
-        var idx = SelectedLayerIndex();
-        if (idx < 0 || _selected == null) return;
-        _layerEditIsNew = false;
-        txtLayer_Name.Text = _selected.Layer[idx].Name;
-        cmbLayers_Type.SelectedIndex = _selected.Layer[idx].Type;
-        lblLayerEditTitle.Text = "Edit layer";
-        butLayer_Ok.Content = "Save";
-        pnlLayerEdit.IsVisible = true;
-    }
-
-    private void butLayer_Ok_Click(object? sender, RoutedEventArgs e)
-    {
-        if (_selected == null) return;
-        var name = txtLayer_Name.Text ?? string.Empty;
-        if (name.Length is < 1 or > 12) return;
-
-        if (_layerEditIsNew)
+        if (optA_Block.IsChecked == true) return new BlockedTile();
+        if (optA_Warp.IsChecked == true)
         {
-            if (FindLayer(name) >= 0)
-            {
-                MessageBox.Show("There is already a layer with that name.");
-                return;
-            }
-
-            var layer = new MapLayer(name) { Type = (byte)cmbLayers_Type.SelectedIndex };
-            for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
-                    layer.Tile[x, y] = new MapTileData();
-            _selected.Layer.Add(layer);
+            var targetMap = cmbA_Warp_Map.SelectedItem as Map;
+            return new WarpTile(
+                targetMap?.Id ?? Guid.Empty,
+                (int)(numA_Warp_X.Value ?? 0),
+                (int)(numA_Warp_Y.Value ?? 0)
+            );
         }
-        else
+        if (optA_Item.IsChecked == true)
         {
-            var idx = SelectedLayerIndex();
-            if (idx < 0) return;
-            if (_selected.Layer[idx].Name != name && FindLayer(name) >= 0)
-            {
-                MessageBox.Show("There is already a layer with this name.");
-                return;
-            }
-
-            _selected.Layer[idx].Name = name;
-            _selected.Layer[idx].Type = (byte)cmbLayers_Type.SelectedIndex;
+            var item = cmbA_Item.SelectedItem as Item;
+            return new ItemTile(item?.Id ?? Guid.Empty, (short)(numA_Item_Amount.Value ?? 1));
         }
-
-        SortLayers();
-        pnlLayerEdit.IsVisible = false;
+        return new NoAttribute();
     }
 
-    private void butLayer_Cancel_Click(object? sender, RoutedEventArgs e)
-        => pnlLayerEdit.IsVisible = false;
-
-    private void butLayers_Remove_Click(object? sender, RoutedEventArgs e)
-    {
-        if (_selected == null || _selected.Layer.Count <= 1) return;
-        var idx = SelectedLayerIndex();
-        if (idx < 0) return;
-        _selected.Layer.RemoveAt(idx);
-        RefreshLayerList();
-    }
-
-    private void butLayers_Up_Click(object? sender, RoutedEventArgs e)
+    private void SetAttribute()
     {
         if (_selected == null) return;
-        var idx = SelectedLayerIndex();
-        if (idx <= 0 || idx >= _selected.Layer.Count) return;
-        if (_selected.Layer[idx - 1].Type != _selected.Layer[idx].Type) return;
-        (_selected.Layer[idx], _selected.Layer[idx - 1]) = (_selected.Layer[idx - 1], _selected.Layer[idx]);
-        RefreshLayerList();
-        lstLayers.SelectedIndex = idx - 1;
+        var sel = MapSelection;
+        var coord = TileToChunk(sel.X, sel.Y);
+        var lx = ((sel.X % ChunkSize) + ChunkSize) % ChunkSize;
+        var ly = ((sel.Y % ChunkSize) + ChunkSize) % ChunkSize;
+        if (!_selected.Chunks.TryGetValue(coord, out var chunk) || chunk.Tiles == null) return;
+        var tile = chunk.Tiles[lx, ly];
+        if (tile == null) return;
+        chunk.Tiles[lx, ly] = tile with { Attribute = GetSelectedAttribute() };
     }
 
-    private void butLayers_Down_Click(object? sender, RoutedEventArgs e)
+    private void ClearAttribute()
     {
         if (_selected == null) return;
-        var idx = SelectedLayerIndex();
-        if (idx < 0 || idx >= _selected.Layer.Count - 1) return;
-        if (_selected.Layer[idx + 1].Type != _selected.Layer[idx].Type) return;
-        (_selected.Layer[idx], _selected.Layer[idx + 1]) = (_selected.Layer[idx + 1], _selected.Layer[idx]);
-        RefreshLayerList();
-        lstLayers.SelectedIndex = idx + 1;
+        var sel = MapSelection;
+        var coord = TileToChunk(sel.X, sel.Y);
+        var lx = ((sel.X % ChunkSize) + ChunkSize) % ChunkSize;
+        var ly = ((sel.Y % ChunkSize) + ChunkSize) % ChunkSize;
+        if (!_selected.Chunks.TryGetValue(coord, out var chunk) || chunk.Tiles == null) return;
+        var tile = chunk.Tiles[lx, ly];
+        if (tile == null) return;
+        chunk.Tiles[lx, ly] = tile with { Attribute = new NoAttribute() };
     }
-
-    private void SortLayers()
-    {
-        var temp = new List<MapLayer>();
-        for (byte n = 0; n < (byte)Layer.Count; n++)
-            for (byte i = 0; i < _selected!.Layer.Count; i++)
-                if (_selected.Layer[i].Type == n)
-                    temp.Add(_selected.Layer[i]);
-        _selected!.Layer = temp;
-        RefreshLayerList();
-    }
-
-    private int FindLayer(string name)
-    {
-        for (byte i = 0; i < _selected!.Layer.Count; i++)
-            if (_selected.Layer[i].Name == name)
-                return i;
-        return -1;
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-
-    // ─────────────────────────────────────────────────────────────────────────
-
-    private void RefreshNpcList()
-    {
-        if (_selected == null) return;
-        lstNPC.ItemsSource = null;
-        lstNPC.ItemsSource = _selected.Npc;
-    }
-
-    private void AddNpc(bool fixedSpawn = false, byte x = 0, byte y = 0)
-    {
-        if (_selected == null || cmbNPC.SelectedItem is not Npc npc) return;
-        _selected.Npc.Add(new MapNpc
-        {
-            NpcId = npc.Id,
-            Zone = (byte)(numNPC_Zone.Value ?? 0),
-            Spawn = fixedSpawn,
-            X = x,
-            Y = y
-        });
-        RefreshNpcList();
-    }
-
-    private void butNPC_Add_Click(object? sender, RoutedEventArgs e) => AddNpc();
-
-    private void butNPC_Remove_Click(object? sender, RoutedEventArgs e)
-    {
-        if (_selected == null || lstNPC.SelectedIndex < 0) return;
-        _selected.Npc.RemoveAt(lstNPC.SelectedIndex);
-        RefreshNpcList();
-    }
-
-    private void butNPC_Clear_Click(object? sender, RoutedEventArgs e)
-    {
-        _selected?.Npc.Clear();
-        RefreshNpcList();
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-
-    // ─────────────────────────────────────────────────────────────────────────
 
     private void optA_Warp_Changed(object? sender, RoutedEventArgs e)
     {
@@ -1193,12 +922,7 @@ internal partial class EditorMapsWindow : Window
         if (optA_Warp.IsChecked == true)
         {
             if (cmbA_Warp_Map.Items.Count > 0) cmbA_Warp_Map.SelectedIndex = 0;
-            if (cmbA_Warp_Direction.Items.Count == 0)
-                foreach (var d in Enum.GetValues<Direction>())
-                    cmbA_Warp_Direction.Items.Add(d.ToString());
-            cmbA_Warp_Direction.SelectedIndex = 0;
-            numA_Warp_X.Value = 0;
-            numA_Warp_Y.Value = 0;
+            numA_Warp_X.Value = 0; numA_Warp_Y.Value = 0;
         }
     }
 
@@ -1207,113 +931,106 @@ internal partial class EditorMapsWindow : Window
         if (optA_Item.IsChecked == true)
         {
             if (_catalog.Items.Count == 0)
-            {
-                MessageBox.Show("It must have at least one item registered to use this attribute.");
-                optA_Block.IsChecked = true;
-                return;
-            }
-
+            { MessageBox.Show("It must have at least one item registered to use this attribute."); optA_Block.IsChecked = true; return; }
             cmbA_Item.Items.Clear();
             foreach (var item in _catalog.Items.Values) cmbA_Item.Items.Add(item);
             if (cmbA_Item.Items.Count > 0) cmbA_Item.SelectedIndex = 0;
-            numA_Item_Amount.Value = _aData2 = 1;
+            numA_Item_Amount.Value = 1;
         }
-
         grpA_Item.IsVisible = optA_Item.IsChecked == true;
     }
 
-    private void cmbA_Warp_Map_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (cmbA_Warp_Map.SelectedItem is Map m) _aData1 = m.Id.ToString();
-    }
-
-    private void cmbA_Warp_Direction_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        _aData4 = (short)cmbA_Warp_Direction.SelectedIndex;
-    }
-
-    private void numA_Warp_X_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        _aData2 = (short)(e.NewValue ?? 0);
-    }
-
-    private void numA_Warp_Y_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        _aData3 = (short)(e.NewValue ?? 0);
-    }
-
-    private void cmbA_Item_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (cmbA_Item.SelectedItem is Item item) _aData1 = item.Id.ToString();
-    }
-
-    private void numA_Item_Amount_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        _aData2 = (short)(e.NewValue ?? 0);
-    }
+    private void cmbA_Warp_Map_SelectionChanged(object? sender, SelectionChangedEventArgs e) { }
+    private void numA_Warp_X_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) { }
+    private void numA_Warp_Y_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) { }
+    private void cmbA_Item_SelectionChanged(object? sender, SelectionChangedEventArgs e) { }
+    private void numA_Item_Amount_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) { }
 
     private void butAttributes_Clear_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-                _selected.Attribute[x, y] = new MapAttribute();
+        foreach (var (coord, chunk) in _selected.Chunks)
+        {
+            if (chunk.Tiles == null) continue;
+            for (var x = 0; x < ChunkSize; x++)
+                for (var y = 0; y < ChunkSize; y++)
+                {
+                    var t = chunk.Tiles[x, y];
+                    if (t != null) chunk.Tiles[x, y] = t with { Attribute = new NoAttribute() };
+                }
+        }
     }
 
     private void butAttributes_Import_Click(object? sender, RoutedEventArgs e)
     {
+        // Import from tile sheet metadata — disabled for now
+    }
+
+    // ── ZONES (kept for backward compat, maps to SpawnTile) ────────────
+
+    private void scrlZone_Scroll(object? sender, AvaloniaScrollEventArgs e)
+    {
+        var v = (int)layersPane.ScrlZone.Value;
+        layersPane.LblZone.Text = v == 0 ? "Zone: None" : "Zone: " + v;
+    }
+
+    private void scrlZone_Clear_Click(object? sender, RoutedEventArgs e)
+    {
         if (_selected == null) return;
-        for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-                for (byte c = 0; c < _selected.Layer.Count; c++)
+        foreach (var (coord, chunk) in _selected.Chunks)
+        {
+            if (chunk.Tiles == null) continue;
+            for (var x = 0; x < ChunkSize; x++)
+                for (var y = 0; y < ChunkSize; y++)
                 {
-                    var data = _selected.Layer[c].Tile[x, y];
-                    if (data.Texture <= 0) continue;
-                    if (Tile.List[data.Texture].Data[data.X, data.Y].Attribute > 0)
-                        _selected.Attribute[x, y].Type = Tile.List[data.Texture].Data[data.X, data.Y].Attribute;
-                    for (byte b = 0; b < (byte)Direction.Count; b++)
-                        if (Tile.List[data.Texture].Data[data.X, data.Y].Block[b])
-                            _selected.Attribute[x, y].Block[b] = true;
+                    var t = chunk.Tiles[x, y];
+                    if (t?.Attribute is SpawnTile) chunk.Tiles[x, y] = t with { Attribute = new NoAttribute() };
                 }
+        }
     }
 
-    private TileAttribute AttributeSelected()
-    {
-        if (optA_Block.IsChecked == true) return TileAttribute.Block;
-        if (optA_Warp.IsChecked == true) return TileAttribute.Warp;
-        if (optA_Item.IsChecked == true) return TileAttribute.Item;
-        return TileAttribute.None;
-    }
+    // ── NPC LIST ──────────────────────────────────────────────────────
 
-    private void SetAttribute()
+    private void RefreshNpcList()
     {
         if (_selected == null) return;
-        var sel = MapSelection;
-        _selected.Attribute[sel.X, sel.Y].Data1 = _aData1;
-        _selected.Attribute[sel.X, sel.Y].Data2 = _aData2;
-        _selected.Attribute[sel.X, sel.Y].Data3 = _aData3;
-        _selected.Attribute[sel.X, sel.Y].Data4 = _aData4;
-        _selected.Attribute[sel.X, sel.Y].Type = (byte)AttributeSelected();
+        lstNPC.ItemsSource = null;
+        lstNPC.ItemsSource = _selected.Npc;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // UTILS (mirrors WinForms Utils region)
-    // ─────────────────────────────────────────────────────────────────────────
+    private void AddNpc(bool fixedSpawn = false, int x = 0, int y = 0)
+    {
+        if (_selected == null || cmbNPC.SelectedItem is not Npc npc) return;
+        _selected.Npc.Add(new MapNpc { NpcId = npc.Id, Zone = (byte)(numNPC_Zone.Value ?? 0), Spawn = fixedSpawn, X = x, Y = y });
+        RefreshNpcList();
+    }
+
+    private void butNPC_Add_Click(object? sender, RoutedEventArgs e) => AddNpc();
+    private void butNPC_Remove_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_selected == null || lstNPC.SelectedIndex < 0) return;
+        _selected.Npc.RemoveAt(lstNPC.SelectedIndex);
+        RefreshNpcList();
+    }
+    private void butNPC_Clear_Click(object? sender, RoutedEventArgs e) { _selected?.Npc.Clear(); RefreshNpcList(); }
+
+    // ── LAYERS STUBS (removed, kept for AXAML wiring) ─────────────────
+
+    private void lstLayers_SelectionChanged(object? sender, SelectionChangedEventArgs e) { }
+    private void butLayers_Add_Click(object? sender, RoutedEventArgs e) { }
+    private void butLayers_Remove_Click(object? sender, RoutedEventArgs e) { }
+    private void butLayers_Edit_Click(object? sender, RoutedEventArgs e) { }
+    private void butLayers_Up_Click(object? sender, RoutedEventArgs e) { }
+    private void butLayers_Down_Click(object? sender, RoutedEventArgs e) { }
+    private void butLayer_Ok_Click(object? sender, RoutedEventArgs e) { }
+    private void butLayer_Cancel_Click(object? sender, RoutedEventArgs e) { }
+
+    // ── UTILS ─────────────────────────────────────────────────────────
 
     private static SystemRect SelectionRec(SystemRect t)
     {
-        if (t.Width <= 0)
-        {
-            t.X += t.Width - 1;
-            t.Width = (t.Width - 2) * -1;
-        }
-
-        if (t.Height <= 0)
-        {
-            t.Y += t.Height - 1;
-            t.Height = (t.Height - 2) * -1;
-        }
-
+        if (t.Width <= 0) { t.X += t.Width - 1; t.Width = (t.Width - 2) * -1; }
+        if (t.Height <= 0) { t.Y += t.Height - 1; t.Height = (t.Height - 2) * -1; }
         return t;
     }
 
@@ -1329,8 +1046,8 @@ internal partial class EditorMapsWindow : Window
         }
     }
 
-    public SystemRect TileSource => new(TilesSelection.X * Globals.Grid, TilesSelection.Y * Globals.Grid,
-        TilesSelection.Width * Globals.Grid, TilesSelection.Height * Globals.Grid);
+    public SystemRect TileSource => new(TilesSelection.X * Grid, TilesSelection.Y * Grid,
+        TilesSelection.Width * Grid, TilesSelection.Height * Grid);
 
     public byte Zoom()
     {
@@ -1339,163 +1056,29 @@ internal partial class EditorMapsWindow : Window
         return 1;
     }
 
-    public byte GridZoom => (byte)(Globals.Grid / Zoom());
+    public byte GridZoom => (byte)(Grid / Zoom());
 
-    public SystemRect ZoomRect(SystemRect value)
-        => new(value.X / Zoom(), value.Y / Zoom(), value.Width / Zoom(), value.Height / Zoom());
+    public SystemRect ZoomRect(SystemRect value) => new(value.X / Zoom(), value.Y / Zoom(), value.Width / Zoom(), value.Height / Zoom());
+    public SystemPoint ZoomGrid(int x, int y) => new(x * GridZoom, y * GridZoom);
 
-    public SystemPoint ZoomGrid(int x, int y)
-        => new(x * GridZoom, y * GridZoom);
-
-    // Layer visibility check (replaces lstLayers.Items[c].Checked)
-    public bool IsLayerVisible(int index)
-        => index < _layerVms.Count && _layerVms[index].Visible;
+    public bool IsLayerVisible(int index) => (Layer)index == _paintLayer;
 
     private void UpdateMapBounds()
     {
-        if (_selected == null) return;
-        scrlMapX.Maximum = Math.Max(0, (Map.Width / Zoom() * Globals.Grid - MapCanvasWidth) / Globals.Grid);
-        scrlMapY.Maximum = Math.Max(0, (Map.Height / Zoom() * Globals.Grid - MapCanvasHeight) / Globals.Grid);
-        scrlMapX.Value = 0;
-        scrlMapY.Value = 0;
+        if (_selected == null || _selected.Chunks.Count == 0) return;
+
+        var minX = _selected.Chunks.Keys.Min(c => c.X);
+        var maxX = _selected.Chunks.Keys.Max(c => c.X);
+        var minY = _selected.Chunks.Keys.Min(c => c.Y);
+        var maxY = _selected.Chunks.Keys.Max(c => c.Y);
+
+        const int margin = 2;
+        scrlMapX.Minimum = (minX - margin) * ChunkSize;
+        scrlMapX.Maximum = (maxX + margin + 1) * ChunkSize;
+        scrlMapY.Minimum = (minY - margin) * ChunkSize;
+        scrlMapY.Maximum = (maxY + margin + 1) * ChunkSize;
     }
 
     private void ResetMapSelectionSize() => _defMapSelection.Size = new SystemSize(1, 1);
-
     private static bool IsToolEnabled(ToggleButton btn) => btn.IsEnabled && btn.IsChecked == true;
-
-    private void TileEvents(MouseButtons btn)
-    {
-        if (_selected == null) return;
-        var layer = SelectedLayerIndex();
-        if (layer < 0) return;
-
-        if (btn == MouseButtons.Left)
-        {
-            if (ToolPencil) TileSet((byte)layer);
-            if (ToolDiscover) TileDiscover();
-        }
-        else if (btn == MouseButtons.Right)
-        {
-            if (ToolPencil) TileClear((byte)layer);
-        }
-    }
-
-    private bool MapRectangle(double px, double py, bool left)
-    {
-        var x = (int)(px / GridZoom) + (int)scrlMapX.Value;
-        var y = (int)(py / GridZoom) + (int)scrlMapY.Value;
-
-        if (!left) return false;
-        if (!IsToolEnabled(butRectangle) && !IsToolEnabled(butArea)) return false;
-
-        if (!_mapPressed) _defMapSelection.Size = new SystemSize(1, 1);
-        x = Math.Clamp(x, 0, Map.Width - 1);
-        y = Math.Clamp(y, 0, Map.Height - 1);
-        _defMapSelection.Width = x - _defMapSelection.X + 1;
-        _defMapSelection.Height = y - _defMapSelection.Y + 1;
-        _mapPressed = true;
-        return true;
-    }
-
-    private void TileDiscover()
-    {
-        if (_selected == null) return;
-        for (var c = _selected.Layer.Count - 1; c >= 0; c--)
-        {
-            var data = _selected.Layer[c].Tile[MapSelection.X, MapSelection.Y];
-            if (!IsLayerVisible(c)) continue;
-            if (data.Texture == 0) continue;
-            cmbTiles.SelectedIndex = data.Texture - 1;
-            chkAuto.IsChecked = data.IsAutoTile;
-            _defTilesSelection = new SystemRect(data.X, data.Y, 1, 1);
-            return;
-        }
-    }
-
-    private MapTileData MakeSetTile(byte x = 0, byte y = 0)
-    {
-        if (x == 0) x = (byte)TilesSelection.X;
-        if (y == 0) y = (byte)TilesSelection.Y;
-        return new MapTileData
-        {
-            Mini = new SystemPoint[4],
-            X = x,
-            Y = y,
-            Texture = (byte)(cmbTiles.SelectedIndex + 1),
-            IsAutoTile = AutoTile
-        };
-    }
-
-    private void TileSet(byte layerNum)
-    {
-        if (_selected == null) return;
-        if (TilesSelection.Width > 1 || TilesSelection.Height > 1)
-            TileSetMultiples(layerNum);
-        _selected.Layer[layerNum].Tile[MapSelection.X, MapSelection.Y] = MakeSetTile();
-        _selected.Layer[layerNum].Update(MapSelection.X, MapSelection.Y);
-    }
-
-    private void TileSetMultiples(byte layerNum)
-    {
-        if (_selected == null || AutoTile) return;
-        byte x2 = 0;
-        for (var x = MapSelection.X; x < MapSelection.X + TilesSelection.Width; x++)
-        {
-            byte y2 = 0;
-            for (var y = MapSelection.Y; y < MapSelection.Y + TilesSelection.Height; y++)
-            {
-                if (!Map.OutLimit((short)x, (short)y))
-                {
-                    _selected.Layer[layerNum].Tile[x, y] =
-                        MakeSetTile((byte)(TilesSelection.X + x2), (byte)(TilesSelection.Y + y2));
-                    _selected.Layer[layerNum].Update(x, y);
-                }
-
-                y2++;
-            }
-
-            x2++;
-        }
-    }
-
-    private void TileClear(byte layerNum)
-    {
-        if (_selected == null) return;
-        _selected.Layer[layerNum].Tile[MapSelection.X, MapSelection.Y] = new MapTileData { Mini = new SystemPoint[4] };
-        _selected.Layer[layerNum].Update(MapSelection.X, MapSelection.Y);
-    }
-
-    private void CopyTiles()
-    {
-        if (_selected == null) return;
-        _tilesCopy.Data = new MapLayer[_selected.Layer.Count];
-        _tilesCopy.Area = MapSelection;
-        for (byte c = 0; c < _tilesCopy.Data.Length; c++)
-        {
-            _tilesCopy.Data[c] = new MapLayer(_selected.Layer[c].Name);
-            for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
-                    _tilesCopy.Data[c].Tile[x, y] = _selected.Layer[c].Tile[x, y];
-        }
-
-        butPaste.IsEnabled = true;
-    }
-
-    private void PasteTiles()
-    {
-        if (_selected == null || _tilesCopy.Data == null) return;
-        for (var x = _tilesCopy.Area.X; x < _tilesCopy.Area.X + _tilesCopy.Area.Width; x++)
-            for (var y = _tilesCopy.Area.Y; y < _tilesCopy.Area.Y + _tilesCopy.Area.Height; y++)
-                for (byte c = 0; c < _tilesCopy.Data.Length; c++)
-                {
-                    var layer = FindLayer(_tilesCopy.Data[c].Name);
-                    var x2 = MapSelection.X + x - _tilesCopy.Area.X;
-                    var y2 = y + MapSelection.Y - _tilesCopy.Area.Y;
-                    if (layer < 0 || x2 >= Map.Width || y2 >= Map.Height) continue;
-                    _selected.Layer[layer].Tile[x2, y2] = _tilesCopy.Data[c].Tile[x, y];
-                }
-
-        _selected.Update();
-    }
 }

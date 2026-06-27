@@ -1,4 +1,3 @@
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Shops;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.State;

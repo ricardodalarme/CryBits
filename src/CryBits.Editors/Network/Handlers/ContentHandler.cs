@@ -19,6 +19,14 @@ internal class ContentHandler
     }
 
     [PacketHandler]
+    internal void Maps(MapsPacket packet)
+    {
+        DefinitionCatalog.Instance.Maps.Clear();
+        foreach (var (id, map) in packet.List)
+            DefinitionCatalog.Instance.Maps[id] = map;
+    }
+
+    [PacketHandler]
     internal void Map(MapPacket packet)
     {
         var map = packet.Map;

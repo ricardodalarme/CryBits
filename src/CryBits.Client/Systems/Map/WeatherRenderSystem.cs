@@ -27,7 +27,7 @@ internal sealed class WeatherRenderSystem(World world, Renderer renderer) : ICli
             var transform = state.Get<TransformComponent>();
             if (particle == null || transform == null) continue;
 
-            float srcX = particle.Type == Weather.Snowing ? 32f : 0f;
+            float srcX = particle.Type == WeatherType.Snow ? 32f : 0f;
             AppendQuad(_batch, transform.X, transform.Y, srcX, 0f, 32f, 32f, _particleTint);
         }
 

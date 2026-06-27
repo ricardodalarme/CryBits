@@ -4,4 +4,4 @@ using MemoryPack;
 namespace CryBits.Simulation.Components;
 
 [MemoryPackable]
-public sealed partial record class Position(Guid MapId, byte X, byte Y, Direction Direction);
+public sealed partial record class Position(Guid MapId, int X, int Y, Direction Direction);

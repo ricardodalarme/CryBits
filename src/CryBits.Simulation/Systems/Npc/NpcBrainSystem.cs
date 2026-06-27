@@ -6,6 +6,7 @@ using CryBits.Definitions.Utils;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
+using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 using CryBits.Simulation.Systems.Npc.Behaviors;
 using static CryBits.Simulation.SimulationConstants;
@@ -25,32 +26,27 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
         if (tick.TickNumber - _lastTick < TicksPerSecond / 2) return;
         _lastTick = tick.TickNumber;
 
-        foreach (var map in world.Maps.Values)
+        foreach (var e in world.Entities.All)
         {
-            if (!map.HasPlayers(world.Entities)) continue;
+            if (!e.Has<NpcTag>()) continue;
+            var npcState = e.Get<NpcState>();
+            if (npcState == null) continue;
+            var pos = e.Get<Position>()!;
 
-            foreach (var npcId in map.NpcIds)
+            UpdateTarget(world, e.Id, tick);
+            if (npcState.TargetId.HasValue)
             {
-                var e = world.Entities.Get(npcId);
-                if (e == null) continue;
-                var npcState = e.Get<NpcState>();
-                if (npcState == null) continue;
-
-                UpdateTarget(world, npcId, tick);
-                if (npcState.TargetId.HasValue)
-                {
-                    var targetE = world.Entities.Get(npcState.TargetId.Value);
-                    FaceTarget(world, e, targetE?.Get<Position>());
-                }
-
-                var npcData = catalog.Npcs.Get(npcState.NpcDefId);
-                if (npcData == null) continue;
-
-                var behavior = PickBehavior(e, npcData, npcState);
-                var intent = behavior.GetNextAction(world, e, npcData, tick);
-                if (intent != null)
-                    tick.Intents.Enqueue(intent);
+                var targetE = world.Entities.Get(npcState.TargetId.Value);
+                FaceTarget(world, e, targetE?.Get<Position>());
             }
+
+            var npcData = catalog.Npcs.Get(npcState.NpcDefId);
+            if (npcData == null) continue;
+
+            var behavior = PickBehavior(e, npcData, npcState);
+            var intent = behavior.GetNextAction(world, e, npcData, tick);
+            if (intent != null)
+                tick.Intents.Enqueue(intent);
         }
     }
 
@@ -135,48 +131,37 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
         var pos = e.Get<Position>()!;
         var npcData = catalog.Npcs.Get(npcState.NpcDefId);
         if (npcData is null) return;
-        var map = world.Maps.Get(pos.MapId);
-        if (map == null) return;
 
-        short distance;
+        var npcChunk = ChunkGrid.FromPosition(pos.X, pos.Y);
+        var nearby = world.SpatialGrid.GetNeighborhood(npcChunk, 2);
 
-        foreach (var state in world.Entities.All)
+        foreach (var id in world.SpatialGrid.GetEntities(nearby))
         {
-            if (!state.Has<PlayerTag>()) continue;
-            var targetPos = state.Get<Position>();
+            if (id == npcId) continue;
+            var targetPos = world.Get<Position>(id);
             if (targetPos == null || targetPos.MapId != pos.MapId) continue;
 
-            distance = (short)Math.Sqrt(Math.Pow(pos.X - targetPos.X, 2) +
-                                        Math.Pow(pos.Y - targetPos.Y, 2));
-            if (distance <= npcData.Sight)
+            var dx = pos.X - targetPos.X;
+            var dy = pos.Y - targetPos.Y;
+            var distSq = dx * dx + dy * dy;
+
+            if (distSq > npcData.Sight * npcData.Sight) continue;
+
+            if (world.Has<PlayerTag>(id))
             {
-                world.Update<NpcState>(npcId, s => s with { TargetId = state.Id });
+                world.Update<NpcState>(npcId, s => s with { TargetId = id });
                 if (!string.IsNullOrEmpty(npcData.SayMsg))
-                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, state.Id, npcData.Name + ": " + npcData.SayMsg, ChatColors.White));
+                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, id, npcData.Name + ": " + npcData.SayMsg, ChatColors.White));
                 return;
             }
-        }
 
-        if (!npcData.AttackNpc) return;
-
-        foreach (var otherNpcId in map.NpcIds)
-        {
-            if (otherNpcId == npcId) continue;
-            var otherE = world.Entities.Get(otherNpcId);
-            if (otherE == null) continue;
-            var otherNpcState = otherE.Get<NpcState>();
-            if (otherNpcState == null) continue;
-            var otherPos = otherE.Get<Position>();
-            if (otherPos == null) continue;
-            var otherData = catalog.Npcs.Get(otherNpcState.NpcDefId);
-            if (otherData is null) continue;
-            if (npcData.IsAllied(otherData.Id)) continue;
-
-            distance = (short)Math.Sqrt(Math.Pow(pos.X - otherPos.X, 2) +
-                                        Math.Pow(pos.Y - otherPos.Y, 2));
-            if (distance <= npcData.Sight)
+            if (npcData.AttackNpc && world.Has<NpcTag>(id))
             {
-                world.Update<NpcState>(npcId, s => s with { TargetId = otherNpcId });
+                var otherNpcState = world.Get<NpcState>(id);
+                if (otherNpcState == null) continue;
+                var otherData = catalog.Npcs.Get(otherNpcState.NpcDefId);
+                if (otherData is null || npcData.IsAllied(otherData.Id)) continue;
+                world.Update<NpcState>(npcId, s => s with { TargetId = id });
                 return;
             }
         }

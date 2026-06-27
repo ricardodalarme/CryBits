@@ -10,6 +10,7 @@ using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
 using CryBits.Simulation.Intents;
+using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 using static CryBits.Simulation.SimulationConstants;
 using Attribute = CryBits.Definitions.Characters.Attribute;
@@ -20,7 +21,6 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
-        // Remove stale combat events from previous tick
         foreach (var state in world.All)
             state.Remove<AttackHit>();
 
@@ -37,8 +37,8 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         if (attackerE == null) return;
 
         var pos = attackerE.Get<Position>()!;
-        var map = world.Maps.Get(pos.MapId);
-        if (map == null) return;
+        if (!world.MapDefs.TryGetValue(pos.MapId, out var mapDef))
+            return;
 
         if (attackerE.Get<TradeState>()?.Partner != null) return;
         if (attackerE.Get<ShopState>()?.ShopId != null) return;
@@ -48,15 +48,17 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         EntityId? victimId = intent.TargetId;
         if (victimId == null)
         {
-            var (nextX, nextY) = pos.Direction.NextTile(pos.X, pos.Y);
-            if (map.TileBlocked(pos.X, pos.Y, pos.Direction, world.Entities, false))
+            var dir = pos.Direction;
+            var nextX = dir == Direction.Right ? pos.X + 1 : dir == Direction.Left ? pos.X - 1 : pos.X;
+            var nextY = dir == Direction.Down ? pos.Y + 1 : dir == Direction.Up ? pos.Y - 1 : pos.Y;
+
+            if (ChunkGrid.IsTileBlocked(world, pos.MapId, nextX, nextY))
             {
                 MissAttack(world, intent.SourceEntityId);
                 return;
             }
 
-            victimId = map.HasPlayer(nextX, nextY, world.Entities)
-                    ?? map.HasNpc(nextX, nextY, world.Entities);
+            victimId = ChunkGrid.FindEntityAtTile(world, pos.MapId, nextX, nextY);
 
             if (victimId == null)
             {
@@ -68,7 +70,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         var victimE = world.Entities.Get(victimId.Value);
         if (victimE == null) return;
 
-        if (victimE.Has<PlayerTag>() && map.Data.Moral == (byte)Moral.Pacific)
+        if (victimE.Has<PlayerTag>() && mapDef.Moral == Moral.Pacific)
         {
             tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, intent.SourceEntityId, "This is a peaceful area.", ChatColors.White));
             return;
@@ -89,11 +91,11 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
             }
         }
 
-        DealDamage(world, tick, intent.SourceEntityId, victimId.Value, map, cooldown);
+        DealDamage(world, tick, intent.SourceEntityId, victimId.Value, mapDef, cooldown);
     }
 
     private void DealDamage(World world, Tick tick,
-        EntityId attackerId, EntityId victimId, MapState map, AttackCooldown cooldown)
+        EntityId attackerId, EntityId victimId, Map mapDef, AttackCooldown cooldown)
     {
         var attackerE = world.Entities.Get(attackerId);
         var victimE = world.Entities.Get(victimId);

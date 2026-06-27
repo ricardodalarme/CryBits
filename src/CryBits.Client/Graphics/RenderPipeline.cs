@@ -31,10 +31,7 @@ internal sealed class RenderPipeline(
         InGame();
 
         cameraManager.BeginUIDraw();
-
-        if (Screen.Current?.Body is { } body) uiRenderer.DrawInterface(body);
-
-        if (Screen.Current == Screens.Game) uiRenderer.DrawChat();
+        DrawUI();
 
         renderer.RenderWindow.Display();
     }
@@ -46,13 +43,21 @@ internal sealed class RenderPipeline(
         cameraManager.BeginWorldDraw();
 
         mapRenderer.DrawPanorama();
-        mapRenderer.DrawLayer((byte)Layer.Ground);
+        mapRenderer.DrawLayer(Layer.Ground);
         scheduler.Ground.Render();
 
-        mapRenderer.DrawLayer((byte)Layer.Fringe);
+        mapRenderer.DrawLayer(Layer.Fringe);
 
         scheduler.Fringe.Render();
+    }
 
+    private void DrawUI()
+    {
+        if (Screen.Current?.Body is { } body) uiRenderer.DrawInterface(body);
+
+        if (Screen.Current != Screens.Game) return;
+
+        uiRenderer.DrawChat();
         mapRenderer.DrawMapName();
         uiRenderer.DrawParty();
 

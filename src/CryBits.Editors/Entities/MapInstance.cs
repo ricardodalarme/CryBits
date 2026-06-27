@@ -5,7 +5,6 @@ using CryBits.Definitions.Maps;
 using CryBits.Editors.Maps;
 using static CryBits.Definitions.Globals;
 
-
 namespace CryBits.Editors.Entities;
 
 internal class MapInstance
@@ -23,31 +22,17 @@ internal class MapInstance
     public MapWeatherParticleInstance[] Weather = [];
     public byte Lightning;
 
-    /// <summary>
-    /// Resize the weather particle array for the current map weather type.
-    /// </summary>
     public void UpdateWeatherType()
     {
-        var win = EditorMapsWindow.Instance;
-        if (win?.SelectedMap != null)
-            Weather = win.SelectedMap.Weather.Type switch
-            {
-                CryBits.Definitions.Maps.Weather.Thundering or CryBits.Definitions.Maps.Weather.Raining =>
-                    new MapWeatherParticleInstance[MaxRainParticles + 1],
-                CryBits.Definitions.Maps.Weather.Snowing => new MapWeatherParticleInstance[MaxSnowParticles + 1],
-                _ => Weather
-            };
+        Weather = [];
     }
 
-    /// <summary>
-    /// Update fog offsets and related timers for the selected map.
-    /// </summary>
     public void UpdateFog()
     {
         var win = EditorMapsWindow.Instance;
         if (win == null || !win.IsOpen) return;
         if (win.SelectedMap == null) return;
-        if (win.SelectedMap.Fog.Texture == 0) return;
+        if (win.SelectedMap.DefaultFog?.Texture == 0) return;
         UpdateFogX();
         UpdateFogY();
     }
@@ -55,8 +40,10 @@ internal class MapInstance
     private void UpdateFogX()
     {
         var map = EditorMapsWindow.Instance!.SelectedMap!;
-        var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
-        int speed = map.Fog.SpeedX;
+        var fog = map.DefaultFog;
+        if (fog == null) return;
+        var textureSize = Textures.Fogs[fog.Texture].ToSize();
+        int speed = fog.SpeedX;
 
         if (_fogXTimer >= Environment.TickCount64) return;
         if (speed == 0) return;
@@ -79,8 +66,10 @@ internal class MapInstance
     private void UpdateFogY()
     {
         var map = EditorMapsWindow.Instance!.SelectedMap!;
-        var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
-        int speed = map.Fog.SpeedY;
+        var fog = map.DefaultFog;
+        if (fog == null) return;
+        var textureSize = Textures.Fogs[fog.Texture].ToSize();
+        int speed = fog.SpeedY;
 
         if (_fogYTimer >= Environment.TickCount64) return;
         if (speed == 0) return;
@@ -100,25 +89,22 @@ internal class MapInstance
         _fogYTimer = Environment.TickCount64 + 50 - speed;
     }
 
-    /// <summary>
-    /// Update weather particles, sounds and timers for the current map.
-    /// </summary>
     public void UpdateWeather()
     {
         bool stop = false, move;
 
         var win = EditorMapsWindow.Instance;
         if (win?.SelectedMap == null) return;
-        if (!win.IsOpen || win.SelectedMap.Weather.Type == 0 || !win.ShowVisualizationSafe)
+
+        var weatherType = win.SelectedMap.DefaultWeather;
+        if (!win.IsOpen || weatherType == WeatherType.None || !win.ShowVisualizationSafe)
         {
             if (AudioManager.Instance.IsPlaying(Sounds.Rain))
                 AudioManager.Instance.StopAllSounds();
             return;
         }
 
-        var weather = win.SelectedMap.Weather;
-
-        if (weather.Type is CryBits.Definitions.Maps.Weather.Raining or CryBits.Definitions.Maps.Weather.Thundering)
+        if (weatherType is WeatherType.Rain or WeatherType.Thunder)
         {
             if (!AudioManager.Instance.IsPlaying(Sounds.Rain))
                 AudioManager.Instance.PlaySound(Sounds.Rain, true);
@@ -141,20 +127,20 @@ internal class MapInstance
                 _thunderingTimer = Environment.TickCount64 + 25;
             }
 
-        for (var i = 1; i <= Weather.GetUpperBound(0); i++)
+        for (var i = 1; i <= Math.Max(0, Weather.GetUpperBound(0)); i++)
             if (!Weather[i].Visible)
             {
-                if (Random.Shared.Next(0, MaxWeatherIntensity - weather.Intensity) == 0)
+                if (Random.Shared.Next(0, 100) == 0)
                 {
                     if (!stop)
                     {
                         Weather[i].Visible = true;
 
-                        switch (weather.Type)
+                        switch (weatherType)
                         {
-                            case CryBits.Definitions.Maps.Weather.Thundering:
-                            case CryBits.Definitions.Maps.Weather.Raining: Weather[i].SetRain(); break;
-                            case CryBits.Definitions.Maps.Weather.Snowing: Weather[i].SetSnow(); break;
+                            case WeatherType.Thunder:
+                            case WeatherType.Rain: Weather[i].SetRain(); break;
+                            case WeatherType.Snow: Weather[i].SetSnow(); break;
                         }
                     }
                 }
@@ -163,19 +149,19 @@ internal class MapInstance
             }
             else
             {
-                switch (weather.Type)
+                switch (weatherType)
                 {
-                    case CryBits.Definitions.Maps.Weather.Thundering:
-                    case CryBits.Definitions.Maps.Weather.Raining: Weather[i].MoveRain(); break;
-                    case CryBits.Definitions.Maps.Weather.Snowing: Weather[i].MoveSnow(move); break;
+                    case WeatherType.Thunder:
+                    case WeatherType.Rain: Weather[i].MoveRain(); break;
+                    case WeatherType.Snow: Weather[i].MoveSnow(move); break;
                 }
 
-                if (Weather[i].X > Map.Width * Grid || Weather[i].Y > Map.Height * Grid)
+                if (Weather[i].X > 16000 || Weather[i].Y > 16000)
                     Weather[i] = new MapWeatherParticleInstance();
             }
 
-        if (weather.Type == CryBits.Definitions.Maps.Weather.Thundering)
-            if (Random.Shared.Next(0, MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
+        if (weatherType == WeatherType.Thunder)
+            if (Random.Shared.Next(0, 1000) == 0)
             {
                 var thunderList = new[]
                 {

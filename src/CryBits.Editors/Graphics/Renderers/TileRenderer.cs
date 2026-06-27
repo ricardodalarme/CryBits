@@ -34,8 +34,8 @@ internal class TileRenderer(Renderer renderer)
         renderer.Draw(WinTile, texture, new Rectangle(position, texture.ToSize()),
             new Rectangle(new Point(0), texture.ToSize()));
 
-        for (byte x = 0; x <= 298 / Grid; x++)
-            for (byte y = 0; y <= 443 / Grid; y++)
+        for (int x = 0; x <= 298 / Grid; x++)
+            for (int y = 0; y <= 443 / Grid; y++)
             {
                 if (modeAttributes)
                     TileAttributes(textureNum, scrollX, scrollY, x, y);
@@ -48,7 +48,7 @@ internal class TileRenderer(Renderer renderer)
         WinTile.Display();
     }
 
-    private void TileAttributes(int textureNum, int scrollX, int scrollY, byte x, byte y)
+    private void TileAttributes(int textureNum, int scrollX, int scrollY, int x, int y)
     {
         var tile = new Point(scrollX + x, scrollY + y);
         var point = new Point(x * Grid + Grid / 2 - 5, y * Grid + Grid / 2 - 6);
@@ -64,7 +64,7 @@ internal class TileRenderer(Renderer renderer)
         }
     }
 
-    private void TileDirBlock(int textureNum, int scrollX, int scrollY, byte x, byte y)
+    private void TileDirBlock(int textureNum, int scrollX, int scrollY, int x, int y)
     {
         var tile = new Point(scrollX + x, scrollY + y);
         if (tile.X > Client.Framework.Entities.Tile.Tile.List[textureNum].Data.GetUpperBound(0)) return;

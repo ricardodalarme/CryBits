@@ -26,6 +26,6 @@ public sealed class FleeBehavior : INpcBehavior
         else
             dir = pos.Y > targetPos.Y ? Direction.Down : Direction.Up;
 
-        return new MoveIntent(entity.Id, dir, CryBits.Definitions.Common.Movement.Walking);
+        return new MoveIntent(entity.Id, dir, Definitions.Common.Movement.Walking);
     }
 }

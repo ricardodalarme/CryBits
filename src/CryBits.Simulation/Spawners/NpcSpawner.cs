@@ -11,18 +11,18 @@ namespace CryBits.Simulation.Spawners;
 
 public static class NpcSpawner
 {
-    public static EntityId Spawn(World world, DefinitionCatalog catalog, Guid mapId, byte npcIndex)
+    public static EntityId Spawn(World world, DefinitionCatalog catalog, Guid mapId, int npcIndex)
     {
-        var map = world.Maps.Get(mapId);
-        if (map == null) return default;
+        if (!world.MapDefs.TryGetValue(mapId, out var mapDef))
+            return default;
 
-        var npcSpawn = map.Data.Npc[npcIndex];
+        var npcSpawn = mapDef.Npc[npcIndex];
         var npcData = catalog.Npcs.Get(npcSpawn.NpcId);
         if (npcData == null) return default;
 
         var entityId = world.Entities.Create();
 
-        var (x, y) = FindSpawnPosition(map, map.Data, npcSpawn);
+        var (x, y) = FindSpawnPosition(mapDef, npcSpawn);
 
         world.Set(entityId, new NpcState(Index: npcIndex, NpcDefId: npcSpawn.NpcId));
         world.Set(entityId, new Position(MapId: mapId, X: x, Y: y, Direction: Direction.Down));
@@ -37,37 +37,33 @@ public static class NpcSpawner
         world.Set(entityId, new AttackCooldown());
         world.Set(entityId, new NpcTag());
 
-        map.NpcIds.Add(entityId);
-
         return entityId;
     }
 
-    private static (byte x, byte y) FindSpawnPosition(MapState map, Map mapData, MapNpc npcSpawn)
+    private static (int x, int y) FindSpawnPosition(Map mapData, MapNpc npcSpawn)
     {
         if (npcSpawn.Spawn)
             return (npcSpawn.X, npcSpawn.Y);
 
-        for (byte i = 0; i < 50; i++)
+        var allChunks = mapData.Chunks.Values.Where(c => c.Tiles != null).ToList();
+        if (allChunks.Count == 0) return (0, 0);
+
+        var chunkSize = 32;
+        var candidates = new List<(int x, int y)>();
+
+        foreach (var chunk in allChunks)
         {
-            var x = (byte)Random.Shared.Next(0, Map.Width - 1);
-            var y = (byte)Random.Shared.Next(0, Map.Height - 1);
-
-            if (npcSpawn.Zone > 0 && mapData.Attribute[x, y].Zone != npcSpawn.Zone)
-                continue;
-
-            if (!mapData.TileBlocked(x, y))
-                return (x, y);
+            for (var tx = 0; tx < chunkSize; tx++)
+                for (var ty = 0; ty < chunkSize; ty++)
+                    if (!chunk.Tiles![tx, ty].IsBlocked)
+                    {
+                        var wx = chunk.X * chunkSize + tx;
+                        var wy = chunk.Y * chunkSize + ty;
+                        candidates.Add((wx, wy));
+                    }
         }
 
-        for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-                if (!mapData.TileBlocked(x, y))
-                {
-                    if (npcSpawn.Zone > 0 && mapData.Attribute[x, y].Zone != npcSpawn.Zone)
-                        continue;
-                    return (x, y);
-                }
-
-        return (0, 0);
+        if (candidates.Count == 0) return (0, 0);
+        return candidates[Random.Shared.Next(candidates.Count)];
     }
 }

@@ -4,7 +4,9 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
-using static CryBits.Definitions.Globals;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Spatial;
+using MapDef = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Client.Systems.Map;
 
@@ -14,10 +16,24 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
 
     private const float LightningDecayInterval = 0.025f;
 
+    private WeatherType GetEffectiveWeather(MapDef map)
+    {
+        var playerId = context.LocalPlayer.Entity;
+        if (playerId == null) return map.DefaultWeather;
+        var pos = context.World.Get<Position>(playerId.Value);
+        if (pos == null) return map.DefaultWeather;
+        var chunkCoord = ChunkGrid.FromPosition(pos.X, pos.Y);
+        if (map.Chunks.TryGetValue(chunkCoord, out var chunk) && chunk.WeatherOverride.HasValue)
+            return chunk.WeatherOverride.Value;
+        return map.DefaultWeather;
+    }
+
     public void Update(float dt)
     {
-        var weatherData = context.CurrentMap?.Data.Weather;
-        if (weatherData == null || weatherData.Type == Weather.Normal) return;
+        var map = context.CurrentMap?.Data;
+        if (map == null) return;
+        var weather = GetEffectiveWeather(map);
+        if (weather == WeatherType.None) return;
 
         foreach (var state in context.World.All)
         {
@@ -37,13 +53,13 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
             }
         }
 
-        if (weatherData.Type == Weather.Thundering)
-            TryThunder(weatherData.Intensity);
+        if (weather == WeatherType.Thunder)
+            TryThunder(100);
     }
 
     private void TryThunder(byte intensity)
     {
-        if (Random.Shared.Next(0, MaxWeatherIntensity * 10 - intensity * 2) != 0) return;
+        if (Random.Shared.Next(0, 1000) != 0) return;
 
         var thunder = Random.Shared.Next(0, _thunderSounds.Length);
         audioManager.PlaySound(_thunderSounds[thunder]);

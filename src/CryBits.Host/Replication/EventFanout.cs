@@ -1,14 +1,21 @@
 using CryBits.Host.Core;
 using CryBits.Host.Network.Senders;
+using CryBits.Protocol.Packets.Server;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Spatial;
 using CryBits.Simulation.Events;
+using CryBits.Transport;
+using CryBits.Transport.Abstractions;
+using MemoryPack;
 
 namespace CryBits.Host.Replication;
 
 internal sealed class EventFanout(
     SessionManager sessions,
     ChatSender chatSender,
-    ContentSender contentSender)
+    ContentSender contentSender,
+    ITransport transport)
 {
     public void Fanout(Tick tick, World world)
     {
@@ -28,15 +35,32 @@ internal sealed class EventFanout(
 
     private void ReplicatePlayerWarp(PlayerWarpedEvent warp, World world)
     {
-        foreach (var map in world.Maps.Values)
+        foreach (var map in world.MapDefs.Values)
         {
             if (map.Id == warp.NewMapId)
             {
                 var session = sessions.Get(warp.PlayerId);
-                if (session != null)
+                if (session == null) return;
+
+                contentSender.Map(session, map.Id);
+                contentSender.MapRevision(session, map.Id);
+
+                // Send initial AOI chunks for the new map position
+                var pos = world.Get<Position>(warp.PlayerId);
+                if (pos != null)
                 {
-                    contentSender.MapRevision(session, map.Id);
+                    var center = ChunkGrid.FromPosition(pos.X, pos.Y);
+                    foreach (var chunkCoord in world.SpatialGrid.GetNeighborhood(center, 2))
+                    {
+                        var payload = ChunkPayloadBuilder.Build(world, pos.MapId, chunkCoord.X, chunkCoord.Y);
+                        if (payload != null)
+                        {
+                            var bytes = MemoryPackSerializer.Serialize<IServerPacket>(payload);
+                            transport.Send(session.Id, bytes, DeliveryChannel.ReliableOrdered);
+                        }
+                    }
                 }
+
                 break;
             }
         }

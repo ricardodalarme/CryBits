@@ -25,4 +25,6 @@ namespace CryBits.Protocol.Packets.Server;
 [MemoryPackUnion(19, typeof(TradeStatePacket))]
 [MemoryPackUnion(20, typeof(TradeOfferPacket))]
 [MemoryPackUnion(21, typeof(KeyframePacket))]
+[MemoryPackUnion(22, typeof(ChunkPayload))]
+[MemoryPackUnion(23, typeof(ChunkRevisionPacket))]
 public partial interface IServerPacket : IPacket;

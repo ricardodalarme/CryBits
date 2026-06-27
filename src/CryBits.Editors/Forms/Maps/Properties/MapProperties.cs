@@ -1,5 +1,4 @@
 using CryBits.Client.Framework.Graphics;
-using CryBits.Definitions;
 using CryBits.Definitions.Maps;
 using CryBits.Editors.Entities;
 using PropertyModels.ComponentModel;
@@ -11,9 +10,6 @@ internal class MapProperties(Map map) : MiniReactiveObject
 {
     public readonly Map Base = map;
 
-    /////////////
-    // General //
-    /////////////
     [Category("General")]
     public string Name
     {
@@ -37,16 +33,17 @@ internal class MapProperties(Map map) : MiniReactiveObject
         set => Base.Music = value;
     }
 
-    /////////
-    // Fog //
-    /////////
     [Category("Fog")]
     [DisplayName("Fog Texture")]
     [DefaultValue(0)]
     public byte FogTexture
     {
-        get => Base.Fog.Texture;
-        set => Base.Fog.Texture = Math.Min(value, (byte)(Textures.Fogs.Count - 1));
+        get => Base.DefaultFog?.Texture ?? 0;
+        set
+        {
+            Base.DefaultFog ??= new FogConfig();
+            Base.DefaultFog = Base.DefaultFog with { Texture = Math.Min(value, (byte)(Textures.Fogs.Count - 1)) };
+        }
     }
 
     [Category("Fog")]
@@ -54,8 +51,12 @@ internal class MapProperties(Map map) : MiniReactiveObject
     [DefaultValue(255)]
     public byte FogAlpha
     {
-        get => Base.Fog.Alpha;
-        set => Base.Fog.Alpha = value;
+        get => Base.DefaultFog?.Alpha ?? 255;
+        set
+        {
+            Base.DefaultFog ??= new FogConfig();
+            Base.DefaultFog = Base.DefaultFog with { Alpha = value };
+        }
     }
 
     [Category("Fog")]
@@ -63,8 +64,12 @@ internal class MapProperties(Map map) : MiniReactiveObject
     [DefaultValue(0)]
     public sbyte FogSpeedX
     {
-        get => Base.Fog.SpeedX;
-        set => Base.Fog.SpeedX = value;
+        get => Base.DefaultFog?.SpeedX ?? 0;
+        set
+        {
+            Base.DefaultFog ??= new FogConfig();
+            Base.DefaultFog = Base.DefaultFog with { SpeedX = value };
+        }
     }
 
     [Category("Fog")]
@@ -72,39 +77,35 @@ internal class MapProperties(Map map) : MiniReactiveObject
     [DefaultValue(0)]
     public sbyte FogSpeedY
     {
-        get => Base.Fog.SpeedY;
-        set => Base.Fog.SpeedY = value;
+        get => Base.DefaultFog?.SpeedY ?? 0;
+        set
+        {
+            Base.DefaultFog ??= new FogConfig();
+            Base.DefaultFog = Base.DefaultFog with { SpeedY = value };
+        }
     }
-
-    /////////////
-    // Weather //
-    /////////////
 
     [Category("Weather")]
     [DisplayName("Weather Intensity")]
     [DefaultValue(0)]
     public byte WeatherIntensity
     {
-        get => Base.Weather.Intensity;
-        set => Base.Weather.Intensity = Math.Min(value, Globals.MaxWeatherIntensity);
+        get => 0;
+        set { }
     }
 
     [Category("Weather")]
     [DisplayName("Weather Type")]
     [DefaultValue(0)]
-    public Weather WeatherType
+    public WeatherType WeatherTypeProp
     {
-        get => Base.Weather.Type;
+        get => Base.DefaultWeather;
         set
         {
-            Base.Weather.Type = value;
-            MapInstance.Instance.UpdateWeatherType();
+            Base.DefaultWeather = value;
+            MapInstance.Instance?.UpdateWeatherType();
         }
     }
-
-    /////////
-    // Hue //
-    /////////
 
     [Category("Hue Overlay")]
     [DisplayName("Red Hue")]
@@ -133,15 +134,12 @@ internal class MapProperties(Map map) : MiniReactiveObject
         set => Base.ColorArgb = (Base.ColorArgb & ~0xFF) | value;
     }
 
-    //////////
-    // Misc //
-    //////////
     [Category("Misc")]
     [DefaultValue(100)]
     public byte Lighting
     {
-        get => Base.Lighting;
-        set => Base.Lighting = value;
+        get => Base.DefaultLighting;
+        set => Base.DefaultLighting = value;
     }
 
     [Category("Misc")]

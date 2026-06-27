@@ -7,65 +7,93 @@ using CryBits.Persistence.Repositories;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
+using MemoryPack;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class MapHandler(GameContext context, ContentSender contentSender, AudioManager audioManager, ContentRepository contentRepository)
+internal class MapHandler(GameContext context, ContentSender contentSender, AudioManager audioManager, MapRepository mapRepository)
 {
     [PacketHandler]
     internal void MapRevision(MapRevisionPacket packet)
     {
         var id = packet.MapId;
-        var currentRevision = packet.Revision;
 
-        // Destroy entities for other players leaving this map (they'll re-spawn on PlayerData)
         var myEntity = context.LocalPlayer.Entity;
         if (myEntity.HasValue)
             context.World.DestroyWhere(s => s.Has<PlayerTag>() && s.Id != myEntity.Value);
         else
             context.World.DestroyWhere(s => s.Has<PlayerTag>());
 
-        // Check whether the map data needs to be downloaded
-        var map = contentRepository.Load<Map>(id);
-        bool needed;
+        var map = mapRepository.LoadMap(id);
         if (map is not null)
         {
-            needed = map.Revision != currentRevision;
+            context.CurrentMap = new ClientMap(map);
 
-            context.CurrentMap = new ClientMap(map, context.World);
-            context.CurrentMap.Data.Update();
-
-            // Play map background music from cached data
             if (string.IsNullOrEmpty(map.Music))
                 audioManager.StopMusic();
             else
                 audioManager.PlayMusic(map.Music);
         }
-        else
-            needed = true;
 
-        // Request map data
-        contentSender.RequestMap(needed);
+        contentSender.RequestMap(true);
     }
 
     [PacketHandler]
     internal void Map(MapPacket packet)
     {
         var map = packet.Map;
-        context.CurrentMap = new ClientMap(map, context.World);
 
-        // Persist map to disk
-        contentRepository.Save(map);
+        // Preserve chunks that have already arrived via ChunkPayload
+        if (context.CurrentMap?.Data is { } existing && existing.Id == map.Id)
+            foreach (var (coord, chunk) in existing.Chunks)
+                map.Chunks.TryAdd(coord, chunk);
 
-        // Reset weather ECS state for the new map and spawn the fog entity.
-        WeatherSpawner.Reset(context.World, context.CurrentMap.Data.Weather.Type);
-        FogSpawner.Spawn(context.World, context.CurrentMap.Data.Fog);
-        context.CurrentMap.Data.Update();
+        context.CurrentMap = new ClientMap(map);
 
-        // Play map background music
+        mapRepository.SaveMap(map);
+
+        WeatherSpawner.Reset(context.World, context.CurrentMap.Data.DefaultWeather);
+        FogSpawner.Spawn(context.World, context.CurrentMap.Data.DefaultFog);
+
         if (string.IsNullOrEmpty(context.CurrentMap.Data.Music))
             audioManager.StopMusic();
         else
             audioManager.PlayMusic(context.CurrentMap.Data.Music);
+    }
+
+    [PacketHandler]
+    internal void HandleChunkRevision(ChunkRevisionPacket packet)
+    {
+        if (packet.Version < 0)
+            context.CurrentMap?.Data.Chunks.Remove(new ChunkCoord(packet.ChunkX, packet.ChunkY));
+    }
+
+    [PacketHandler]
+    internal void ChunkPayload(ChunkPayload packet)
+    {
+        var map = context.CurrentMap?.Data;
+        if (map == null) return;
+
+        TileData[,]? tiles = null;
+        if (packet.TileData.Length > 0)
+            tiles = MemoryPackSerializer.Deserialize<TileData[,]>(packet.TileData);
+
+        var key = (packet.ChunkX, packet.ChunkY);
+        if (map.Chunks.TryGetValue(key, out var existingChunk))
+        {
+            map.Chunks[key] = existingChunk with
+            {
+                Version = packet.Version,
+                Tiles = tiles ?? existingChunk.Tiles,
+                WeatherOverride = packet.WeatherOverride ?? existingChunk.WeatherOverride,
+                FogOverride = packet.FogOverride ?? existingChunk.FogOverride,
+                LightingOverride = packet.LightingOverride ?? existingChunk.LightingOverride
+            };
+        }
+        else
+        {
+            map.Chunks[key] = new MapChunk(packet.ChunkX, packet.ChunkY, packet.Version, tiles,
+                packet.WeatherOverride, packet.FogOverride, packet.LightingOverride);
+        }
     }
 }

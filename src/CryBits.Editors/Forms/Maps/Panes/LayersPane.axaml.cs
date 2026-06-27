@@ -47,6 +47,9 @@ internal partial class LayersPane : UserControl
     public Button ButAttributes_Clear => butAttributes_Clear;
     public Button ButAttributes_Import => butAttributes_Import;
 
+    // Chunks
+    public ListBox LstChunks => lstChunks;
+
     // NPCs
     public Border GrpNPCs => grpNPCs;
     public ComboBox CmbNPC => cmbNPC;

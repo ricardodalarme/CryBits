@@ -23,7 +23,6 @@ public partial class MapsPacket : IServerPacket
 public partial class MapRevisionPacket : IServerPacket
 {
     public Guid MapId;
-    public short Revision;
 }
 
 [MemoryPackable]

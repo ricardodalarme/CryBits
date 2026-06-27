@@ -10,11 +10,10 @@ namespace CryBits.Simulation.Systems.Spawning;
 public sealed class NpcRespawnSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
     private readonly List<Entry> _pendingRespawns = [];
-    private readonly record struct Entry(Guid MapId, byte NpcIndex, long RespawnTick);
+    private readonly record struct Entry(Guid MapId, int NpcIndex, long RespawnTick);
 
     public void Execute(World world, Tick tick)
     {
-        // Register pending respawns from NpcDiedEvent
         foreach (var ev in tick.Events.Events)
         {
             if (ev is not NpcDiedEvent died) continue;
@@ -27,14 +26,12 @@ public sealed class NpcRespawnSystem(DefinitionCatalog catalog) : ISimulationSys
                 tick.TickNumber + npcData.SpawnTime * TicksPerSecond));
         }
 
-        // Process pending respawns
         for (var i = _pendingRespawns.Count - 1; i >= 0; i--)
         {
             var entry = _pendingRespawns[i];
             if (tick.TickNumber < entry.RespawnTick) continue;
 
-            var map = world.Maps.Get(entry.MapId);
-            if (map == null || !map.HasPlayers(world.Entities))
+            if (!world.MapDefs.ContainsKey(entry.MapId))
             {
                 _pendingRespawns.RemoveAt(i);
                 continue;

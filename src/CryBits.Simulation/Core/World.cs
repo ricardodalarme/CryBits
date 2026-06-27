@@ -1,11 +1,14 @@
+using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Core;
 
 public sealed class World
 {
-    public Dictionary<Guid, MapState> Maps { get; } = [];
+    public Dictionary<Guid, Map> MapDefs { get; } = [];
+    public ChunkGrid SpatialGrid { get; set; } = new();
     public long TickCount { get; set; }
     public EntityRegistry Entities { get; } = new();
 
@@ -49,6 +52,7 @@ public sealed class World
 
     public void Destroy(EntityId id)
     {
+        SpatialGrid.Remove(id);
         Entities.Destroy(id);
     }
 
@@ -60,6 +64,7 @@ public sealed class World
     public void Clear()
     {
         Entities.Clear();
+        SpatialGrid = new ChunkGrid();
     }
 
     public T? Get<T>(EntityId id) where T : class
@@ -74,7 +79,19 @@ public sealed class World
 
     public void Set<T>(EntityId id, T component) where T : class
     {
-        Entities.Get(id)?.Set(component);
+        var state = Entities.Get(id);
+        if (state == null) return;
+
+        if (component is Position newPos)
+        {
+            var oldPos = state.Get<Position>();
+            if (oldPos != null)
+                SpatialGrid.Move(id, oldPos.X, oldPos.Y, newPos.X, newPos.Y);
+            else
+                SpatialGrid.Add(id, newPos.X, newPos.Y);
+        }
+
+        state.Set(component);
         MarkDirty<T>(id);
     }
 
@@ -112,7 +129,7 @@ public sealed class World
                 toDestroy.Add(state.Id);
         }
         foreach (var id in toDestroy)
-            Entities.Destroy(id);
+            Destroy(id);
     }
 
     public IEnumerable<EntityState> All => Entities.All;

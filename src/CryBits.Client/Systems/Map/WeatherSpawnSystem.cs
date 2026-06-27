@@ -2,7 +2,10 @@ using CryBits.Client.Components;
 using CryBits.Client.Core;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Spatial;
 using static CryBits.Definitions.Globals;
+using MapDef = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Client.Systems.Map;
 
@@ -10,10 +13,10 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
 {
     public void Update(float dt)
     {
-        var weatherData = context.CurrentMap?.Data.Weather;
-        if (weatherData == null || weatherData.Type == Weather.Normal) return;
+        var map = context.CurrentMap?.Data;
+        if (map == null) return;
 
-        var type = weatherData.Type;
+        var type = GetEffectiveWeather(map);
 
         var activeCount = 0;
         foreach (var _ in context.World.All)
@@ -22,14 +25,26 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
                 activeCount++;
         }
 
-        var maxParticles = type == Weather.Snowing ? MaxSnowParticles : MaxRainParticles;
+        var maxParticles = type == WeatherType.Snow ? MaxSnowParticles : MaxRainParticles;
         if (activeCount >= maxParticles) return;
-        if (Random.Shared.Next(0, MaxWeatherIntensity - weatherData.Intensity) != 0) return;
+        if (Random.Shared.Next(0, 100) != 0) return;
 
         SpawnParticle(type);
     }
 
-    private void SpawnParticle(Weather type)
+    private WeatherType GetEffectiveWeather(MapDef map)
+    {
+        var playerId = context.LocalPlayer.Entity;
+        if (playerId == null) return map.DefaultWeather;
+        var pos = context.World.Get<Position>(playerId.Value);
+        if (pos == null) return map.DefaultWeather;
+        var chunkCoord = ChunkGrid.FromPosition(pos.X, pos.Y);
+        if (map.Chunks.TryGetValue(chunkCoord, out var chunk) && chunk.WeatherOverride.HasValue)
+            return chunk.WeatherOverride.Value;
+        return map.DefaultWeather;
+    }
+
+    private void SpawnParticle(WeatherType type)
     {
         int x, y, speed;
         int start = 0;
@@ -37,7 +52,7 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
 
         switch (type)
         {
-            case Weather.Raining or Weather.Thundering:
+            case WeatherType.Rain or WeatherType.Thunder:
                 speed = Random.Shared.Next(8, 13);
                 if (Random.Shared.Next(2) == 0)
                 {
@@ -51,7 +66,7 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
                 }
                 break;
 
-            case Weather.Snowing:
+            case WeatherType.Snow:
                 speed = Random.Shared.Next(1, 3);
                 start = Random.Shared.Next(-32, ScreenWidth);
                 back = Random.Shared.Next(2) != 0;

@@ -72,6 +72,7 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<AccountRepository>();
     services.AddSingleton<CharacterRepository>();
     services.AddSingleton<ContentRepository>();
+    services.AddSingleton<MapRepository>();
     services.AddSingleton<DataLoader>();
 
     services.AddSingleton<ITransport>(_ => new UdpTransport());
@@ -101,6 +102,7 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<ContentService>();
     services.AddSingleton<KeyframeEncoder>();
     services.AddSingleton<EventFanout>();
+    services.AddSingleton<InterestManager>();
     services.AddSingleton<KeyframeReplicator>();
     services.AddSingleton<IntentIngress>();
 

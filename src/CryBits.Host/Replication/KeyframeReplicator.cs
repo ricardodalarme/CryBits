@@ -1,8 +1,8 @@
+using CryBits.Definitions.Maps;
 using CryBits.Host.Core;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using CryBits.Simulation.State;
 using CryBits.Transport;
 using CryBits.Transport.Abstractions;
 using MemoryPack;
@@ -14,7 +14,8 @@ internal sealed class KeyframeReplicator(
     SessionManager sessions,
     KeyframeEncoder encoder,
     EventFanout eventFanout,
-    ITransport transport) : ISimulationSystem
+    ITransport transport,
+    InterestManager interestManager) : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
@@ -47,22 +48,43 @@ internal sealed class KeyframeReplicator(
 
             if (!dirtyMaps.Contains(pos.MapId)) continue;
 
-            var entities = GetEntitiesOnMap(pos.MapId);
-            var packet = encoder.Encode(pos.MapId, entities);
-            var bytes = MemoryPackSerializer.Serialize<IServerPacket>(packet);
-            transport.Send(session.Id, bytes, DeliveryChannel.ReliableOrdered);
+            var diff = interestManager.Update(observerId);
+
+            // Send chunk payloads for newly entered chunks
+            foreach (var chunk in diff.Entered)
+            {
+                var payload = BuildChunkPayload(pos.MapId, chunk);
+                if (payload != null)
+                {
+                    var chunkBytes = MemoryPackSerializer.Serialize<IServerPacket>(payload);
+                    transport.Send(session.Id, chunkBytes, DeliveryChannel.ReliableOrdered);
+                }
+            }
+
+            // Notify client to evict chunks that left AOI
+            foreach (var chunk in diff.Left)
+            {
+                var evict = new ChunkRevisionPacket
+                {
+                    MapId = pos.MapId,
+                    ChunkX = chunk.X,
+                    ChunkY = chunk.Y,
+                    Version = -1
+                };
+                var evictBytes = MemoryPackSerializer.Serialize<IServerPacket>(evict);
+                transport.Send(session.Id, evictBytes, DeliveryChannel.ReliableOrdered);
+            }
+
+            // Send keyframe for observable entities
+            var visible = interestManager.GetObservableEntities(observerId).ToList();
+            if (visible.Count == 0) continue;
+
+            var packet = encoder.Encode(pos.MapId, visible);
+            var keyframeBytes = MemoryPackSerializer.Serialize<IServerPacket>(packet);
+            transport.Send(session.Id, keyframeBytes, DeliveryChannel.ReliableOrdered);
         }
     }
 
-    private List<EntityId> GetEntitiesOnMap(Guid mapId)
-    {
-        var result = new List<EntityId>();
-        foreach (var state in world.All)
-        {
-            var pos = state.Get<Position>();
-            if (pos != null && pos.MapId == mapId)
-                result.Add(state.Id);
-        }
-        return result;
-    }
+    private ChunkPayload? BuildChunkPayload(Guid mapId, ChunkCoord chunk) =>
+        ChunkPayloadBuilder.Build(world, mapId, chunk.X, chunk.Y);
 }

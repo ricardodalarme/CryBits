@@ -13,8 +13,8 @@ public partial record class Npc : Definition
     public byte SpawnTime { get; set; }
     public byte Sight { get; set; }
     public int Experience { get; set; }
-    public short[] Vital { get; set; } = new short[(byte)CryBits.Definitions.Characters.Vital.Count];
-    public short[] Attribute { get; set; } = new short[(byte)CryBits.Definitions.Characters.Attribute.Count];
+    public short[] Vital { get; set; } = new short[(byte)Characters.Vital.Count];
+    public short[] Attribute { get; set; } = new short[(byte)Characters.Attribute.Count];
     public IList<NpcDrop> Drop { get; set; } = [];
     public bool AttackNpc { get; set; }
 

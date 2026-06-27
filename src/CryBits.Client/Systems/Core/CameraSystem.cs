@@ -6,7 +6,6 @@ using CryBits.Simulation.State;
 using SFML.System;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
-using MapData = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Client.Systems.Core;
 
@@ -39,16 +38,14 @@ internal sealed class CameraSystem(GameContext context, CameraManager cameraMana
 
         const float halfW = ScreenWidth / 2f;
         const float halfH = ScreenHeight / 2f;
-        const int mapPixelW = MapData.Width * Grid;
-        const int mapPixelH = MapData.Height * Grid;
 
-        var cx = Math.Clamp(transform.X + Grid / 2f, halfW, mapPixelW - halfW);
-        var cy = Math.Clamp(transform.Y + Grid / 2f, halfH, mapPixelH - halfH);
+        var cx = transform.X + Grid / 2f;
+        var cy = transform.Y + Grid / 2f;
 
         var left = (int)Math.Max(0, (cx - halfW) / Grid);
         var top = (int)Math.Max(0, (cy - halfH) / Grid);
-        var right = (int)Math.Min(MapData.Width - 1, (cx + halfW) / Grid);
-        var bottom = (int)Math.Min(MapData.Height - 1, (cy + halfH) / Grid);
+        var right = (int)((cx + halfW) / Grid);
+        var bottom = (int)((cy + halfH) / Grid);
 
         cameraManager.ApplyFrame(new Vector2f(cx, cy), new Rectangle(left, top, right, bottom));
     }

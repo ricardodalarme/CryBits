@@ -11,8 +11,8 @@ public sealed class Character
     public byte Points { get; set; }
     public short[] Attributes { get; set; } = [];
     public Guid MapId { get; set; }
-    public byte X { get; set; }
-    public byte Y { get; set; }
+    public int X { get; set; }
+    public int Y { get; set; }
     public byte Direction { get; set; }
     public short Hp { get; set; }
     public short Mp { get; set; }

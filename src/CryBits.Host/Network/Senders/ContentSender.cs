@@ -1,4 +1,5 @@
 using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Maps;
 using CryBits.Host.Core;
 using CryBits.Protocol.Packets.Server;
 
@@ -10,20 +11,21 @@ internal sealed class ContentSender(PackageSender packageSender, DefinitionCatal
     {
         var map = catalog.Maps.GetValueOrDefault(mapId);
         if (map != null)
-            packageSender.ToPlayer(session, new MapPacket { Map = map });
+            packageSender.ToPlayer(session, new MapPacket { Map = session.InEditor ? map : map with { Chunks = [] } });
     }
 
     public void Maps(Session session)
     {
-        packageSender.ToPlayer(session, new MapsPacket { List = catalog.Maps });
-        foreach (var map in catalog.Maps.Values) Map(session, map.Id);
+        var result = new Dictionary<Guid, Map>(catalog.Maps.Count);
+        foreach (var (id, map) in catalog.Maps)
+            result[id] = session.InEditor ? map : map with { Chunks = [] };
+
+        packageSender.ToPlayer(session, new MapsPacket { List = result });
     }
 
     public void MapRevision(Session session, Guid mapId)
     {
-        var map = catalog.Maps.GetValueOrDefault(mapId);
-        if (map != null)
-            packageSender.ToPlayer(session, new MapRevisionPacket { MapId = mapId, Revision = map.Revision });
+        packageSender.ToPlayer(session, new MapRevisionPacket { MapId = mapId });
     }
 
     public void Classes(Session session)

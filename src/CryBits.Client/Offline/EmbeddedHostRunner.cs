@@ -35,7 +35,8 @@ public sealed class EmbeddedHostRunner : IDisposable
 
         // Load content definitions
         var contentRepo = new ContentRepository();
-        var dataLoader = new DataLoader(contentRepo, catalog);
+        var mapRepo = new MapRepository();
+        var dataLoader = new DataLoader(contentRepo, mapRepo, catalog);
         dataLoader.LoadAll();
 
         // SQLite database for account/character persistence
@@ -76,15 +77,16 @@ public sealed class EmbeddedHostRunner : IDisposable
             accountSenderHost, accountRepo, charRepo, _host));
 
         var keyframeEncoder = new KeyframeEncoder(simulation);
-        var eventFanout = new EventFanout(ss, chatSender, contentSender);
+        var eventFanout = new EventFanout(ss, chatSender, contentSender, pair.Server);
+        var interestManager = new InterestManager(simulation);
 
         hostDispatcher.Register(new CharacterService(
             charRepo, authSender, contentSender,
             accountSenderHost, chatSender, catalog, _host,
-            keyframeEncoder, pair.Server));
+            keyframeEncoder, interestManager, pair.Server));
 
         _host.Pipeline.AddSystem(new KeyframeReplicator(
-            simulation, ss, keyframeEncoder, eventFanout, pair.Server));
+            simulation, ss, keyframeEncoder, eventFanout, pair.Server, interestManager));
 
         // Start server tick loop
         _cts = new CancellationTokenSource();

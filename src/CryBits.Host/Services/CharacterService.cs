@@ -8,8 +8,10 @@ using CryBits.Host.Replication;
 using CryBits.Persistence.Repositories;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
+
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
+using CryBits.Simulation.Spatial;
 using CryBits.Simulation.Spawners;
 using CryBits.Simulation.State;
 using CryBits.Transport;
@@ -29,6 +31,7 @@ internal sealed class CharacterService(
     DefinitionCatalog catalog,
     WorldHost host,
     KeyframeEncoder keyframeEncoder,
+    InterestManager interestManager,
     ITransport transport)
 {
     [PacketHandler]
@@ -146,11 +149,13 @@ internal sealed class CharacterService(
             WriteCharacterSave(session, entity);
         }
 
+        interestManager.RemoveObserver(entityId);
+
         var tickNum = host.CurrentTick?.TickNumber ?? 0;
         host.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent(tickNum, entityId));
 
         host.Sessions.Unregister(entityId);
-        host.Entities.Destroy(entityId);
+        host.Simulation.Destroy(entityId);
         session.Character = null;
     }
 
@@ -214,8 +219,7 @@ internal sealed class CharacterService(
         var entityId = PlayerSpawner.Spawn(host.Simulation, catalog, data);
         var state = host.Entities.Get(entityId)!;
         var pos = state.Get<Position>()!;
-        var map = host.Maps.Get(pos.MapId);
-        if (map == null) return;
+        if (!host.Maps.TryGetValue(pos.MapId, out var mapDef)) return;
 
         host.Sessions.Register(entityId, session);
         session.Character = entityId;
@@ -224,8 +228,20 @@ internal sealed class CharacterService(
         contentSender.Items(session);
         contentSender.Npcs(session);
         contentSender.Shops(session);
-        contentSender.Map(session, map.Data.Id);
-        contentSender.MapRevision(session, map.Data.Id);
+        contentSender.Map(session, mapDef.Id);
+
+        // Send initial AOI chunk payloads
+        var world = host.Simulation;
+        var center = ChunkGrid.FromPosition(pos.X, pos.Y);
+        foreach (var chunkCoord in world.SpatialGrid.GetNeighborhood(center, 2))
+        {
+            var payload = ChunkPayloadBuilder.Build(world, pos.MapId, chunkCoord.X, chunkCoord.Y);
+            if (payload != null)
+            {
+                var chunkBytes = MemoryPackSerializer.Serialize<CryBits.Protocol.Packets.Server.IServerPacket>(payload);
+                transport.Send(session.Id, chunkBytes, DeliveryChannel.ReliableOrdered);
+            }
+        }
 
         var allOnMap = GetAllEntitiesOnMap(host.Entities, pos.MapId);
         var keyframe = keyframeEncoder.Encode(pos.MapId, allOnMap);

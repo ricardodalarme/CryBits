@@ -1,3 +1,4 @@
+using CryBits.Definitions.Maps;
 using CryBits.Host.Ingress;
 using CryBits.Host.Network;
 using CryBits.Host.Scheduling;
@@ -19,7 +20,7 @@ internal sealed class WorldHost
     public IntentFunnel IntentFunnel { get; } = new();
     public Tick? CurrentTick { get; set; }
     public EntityRegistry Entities => Simulation.Entities;
-    public Dictionary<Guid, MapState> Maps => Simulation.Maps;
+    public Dictionary<Guid, Map> Maps => Simulation.MapDefs;
     public EntityId? FindPlayer(string name) => Simulation.FindPlayer(name);
 
     private readonly TickDriver _tickDriver;

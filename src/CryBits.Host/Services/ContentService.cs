@@ -14,8 +14,10 @@ internal sealed class ContentService(
     AuthSender authSender,
     ContentSender contentSender,
     ContentRepository contentRepository,
+    MapRepository mapRepository,
     DefinitionCatalog catalog,
-    WorldHost host)
+    WorldHost host,
+    WorldInitializer worldInitializer)
 {
     [PacketHandler]
     internal void WriteClasses(Session session, WriteClassesPacket packet)
@@ -43,23 +45,22 @@ internal sealed class ContentService(
         }
 
         catalog.Maps = packet.Maps;
-        contentRepository.SaveAll(catalog.Maps.Values);
+        mapRepository.SaveAllMaps(catalog.Maps.Values);
+        worldInitializer.Initialize();
 
         foreach (var tempMap in host.Maps.Values)
         {
-            tempMap.SpawnItems(host.Entities);
-
             foreach (var t in host.Sessions.Where(t => t != session))
             {
                 if (t.InEditor)
                 {
-                    contentSender.Map(t, tempMap.Data.Id);
+                    contentSender.Map(t, tempMap.Id);
                 }
                 else if (t.Character.HasValue)
                 {
                     var otherPos = host.Entities.Get(t.Character.Value)?.Get<Position>();
                     if (otherPos?.MapId == tempMap.Id)
-                        contentSender.Map(t, tempMap.Data.Id);
+                        contentSender.Map(t, tempMap.Id);
                 }
             }
         }
@@ -134,7 +135,7 @@ internal sealed class ContentService(
             var pos = state.Get<Position>()!;
             var mapInstance = host.Maps[pos.MapId];
 
-            if (packet.SendMap) contentSender.Map(session, mapInstance.Data.Id);
+            if (packet.SendMap) contentSender.Map(session, mapInstance.Id);
 
             host.Entities.Get(entityId)?.Remove<MapLoadingTag>();
         }

@@ -10,7 +10,7 @@ namespace CryBits.Client.Spawners;
 
 internal static class GroundItemSpawner
 {
-    public static EntityId Spawn(World world, long networkId, Item item, byte tileX, byte tileY)
+    public static EntityId Spawn(World world, long networkId, Item item, int tileX, int tileY)
     {
         var texture = Textures.Items[item.Texture];
 

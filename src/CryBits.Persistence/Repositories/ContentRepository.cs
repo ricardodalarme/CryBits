@@ -12,7 +12,6 @@ public class ContentRepository()
     {
         var path = PathFor<T>(id);
         if (!File.Exists(path)) return null;
-
         var json = File.ReadAllText(path);
         return JsonSerializer.Deserialize<T>(json, JsonConfig.Options);
     }
@@ -21,7 +20,6 @@ public class ContentRepository()
     {
         var dir = DirectoryFor<T>();
         if (!dir.Exists) yield break;
-
         foreach (var file in dir.GetFiles("*" + Format))
         {
             var json = File.ReadAllText(file.FullName);
@@ -34,7 +32,6 @@ public class ContentRepository()
     {
         var dir = DirectoryFor<T>();
         if (!dir.Exists) dir.Create();
-
         var json = JsonSerializer.Serialize(entity, JsonConfig.Options);
         File.WriteAllText(PathFor<T>(entity.Id), json);
     }

@@ -119,11 +119,12 @@ public sealed class Game : IDisposable
         var context = GameContext.Instance;
         var audioManager = AudioManager.Instance;
         var contentRepository = new ContentRepository();
+        var mapRepository = new MapRepository();
         var cat = DefinitionCatalog.Instance;
 
         PacketDispatcher.Register(new AuthHandler(cat));
         PacketDispatcher.Register(new AccountHandler(audioManager, context));
-        PacketDispatcher.Register(new MapHandler(context, ContentSender.Instance, audioManager, contentRepository));
+        PacketDispatcher.Register(new MapHandler(context, ContentSender.Instance, audioManager, mapRepository));
         PacketDispatcher.Register(new KeyframeHandler(new Replication.SnapshotApplier(context.World, context)));
         PacketDispatcher.Register(new ChatHandler(Chat.Instance));
         PacketDispatcher.Register(new PartyHandler(IntentSender.Instance, context));

@@ -61,8 +61,6 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
         if (e == null) return;
 
         var pos = e.Get<Position>()!;
-        var posMap = world.Maps.Get(pos.MapId);
-        if (posMap == null) return;
 
         var npcData = catalog.Npcs.Get(died.NpcDefId);
         if (npcData == null) return;
@@ -72,7 +70,6 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
                 if (Random.Shared.Next(1, 99) <= npcData.Drop[d].Chance)
                     tick.Events.Emit(new LootDroppedEvent(tick.TickNumber, pos.MapId, pos.X, pos.Y, npcData.Drop[d].ItemId, npcData.Drop[d].Amount, tick.TickNumber + GroundItemDespawnTicks));
 
-        world.Entities.Destroy(died.EntityId);
-        posMap.NpcIds.Remove(died.EntityId);
+        world.Destroy(died.EntityId);
     }
 }

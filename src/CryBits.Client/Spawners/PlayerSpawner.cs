@@ -22,7 +22,7 @@ internal static class PlayerSpawner
         short textureNum,
         short[] vitals,
         short[] maxVitals,
-        byte x, byte y,
+        int x, int y,
         Direction direction)
     {
         var texture = Textures.Characters[textureNum];
@@ -33,9 +33,9 @@ internal static class PlayerSpawner
         return world.SpawnBuilder()
             .With(new NetworkId(networkId))
             .With(new PlayerAppearance(Name: name, ClassId: Guid.Empty, TextureNum: textureNum, Gender: Gender.Male))
-            .With(new NameColorComponent(SFML.Graphics.Color.White))
+            .With(new NameColorComponent(Color.White))
             .With(new TransformComponent(x * Globals.Grid, y * Globals.Grid))
-            .With(new SpriteComponent(texture, null, SFML.Graphics.Color.White))
+            .With(new SpriteComponent(texture, null, Color.White))
             .With(new AnimatedSpriteComponent(frameWidth, frameHeight, Globals.AnimationAmountX, 0.25f, 0f, 0, 0, true))
             .With(new MovementComponent(x, y, 0f, 0f, Globals.WalkSpeedPixelsPerSecond, MovementState.Stopped, direction))
             .With(new AttackComponent())
@@ -55,7 +55,7 @@ internal static class PlayerSpawner
         short[] maxVitals,
         short[] attributes,
         Item?[] equipment,
-        byte x, byte y,
+        int x, int y,
         Direction direction)
     {
         var entity = Spawn(world, networkId, name, textureNum, vitals, maxVitals, x, y, direction);

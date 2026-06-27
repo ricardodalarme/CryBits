@@ -1,5 +1,4 @@
 using CryBits.Client.Framework.Graphics;
-using CryBits.Editors.Forms;
 using CryBits.Editors.Forms.Npcs;
 using SFML.Graphics;
 using System.Drawing;

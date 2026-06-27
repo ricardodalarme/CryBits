@@ -3,6 +3,7 @@ using CryBits.Client.Core;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 using SFML.Window;
@@ -58,17 +59,47 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
             return;
         }
 
+        var nextX = direction switch
+        {
+            Direction.Right => movement.TileX + 1,
+            Direction.Left => movement.TileX - 1,
+            _ => movement.TileX
+        };
+        var nextY = direction switch
+        {
+            Direction.Down => movement.TileY + 1,
+            Direction.Up => movement.TileY - 1,
+            _ => movement.TileY
+        };
+        if (HasSolidEntityAt(nextX, nextY))
+        {
+            context.World.Set(entity, movement with { Direction = direction });
+            return;
+        }
+
         var speed = desired == MovementState.Moving ? RunSpeedPixelsPerSecond : WalkSpeedPixelsPerSecond;
 
         var (offsetX, offsetY, tileX, tileY) = direction switch
         {
-            Direction.Up => (0f, Grid, movement.TileX, (byte)(movement.TileY - 1)),
-            Direction.Down => (0f, -Grid, movement.TileX, (byte)(movement.TileY + 1)),
-            Direction.Right => (-Grid, 0f, (byte)(movement.TileX + 1), movement.TileY),
-            Direction.Left => (Grid, 0f, (byte)(movement.TileX - 1), movement.TileY),
+            Direction.Up => (0f, Grid, movement.TileX, movement.TileY - 1),
+            Direction.Down => (0f, -Grid, movement.TileX, movement.TileY + 1),
+            Direction.Right => (-Grid, 0f, movement.TileX + 1, movement.TileY),
+            Direction.Left => (Grid, 0f, movement.TileX - 1, movement.TileY),
             _ => (0f, 0f, movement.TileX, movement.TileY)
         };
 
         context.World.Set(entity, new MovementComponent(tileX, tileY, offsetX, offsetY, speed, desired, direction));
+    }
+
+    private bool HasSolidEntityAt(int tileX, int tileY)
+    {
+        foreach (var state in context.World.Entities.All)
+        {
+            var mov = state.Get<MovementComponent>();
+            if (mov == null || mov.TileX != tileX || mov.TileY != tileY) continue;
+            if (state.Has<PlayerTag>() || state.Has<NpcTag>())
+                return true;
+        }
+        return false;
     }
 }

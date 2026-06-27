@@ -21,11 +21,11 @@ public static class PlayerSpawner
         ArgumentNullException.ThrowIfNull(@class);
 
         var maxHp = VitalFormulas.MaxVital(Vital.Hp, @class.Vital[(byte)Vital.Hp],
-            @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality],
-            @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence], data.Level);
+            @class.Attribute[(byte)Definitions.Characters.Attribute.Vitality],
+            @class.Attribute[(byte)Definitions.Characters.Attribute.Intelligence], data.Level);
         var maxMp = VitalFormulas.MaxVital(Vital.Mp, @class.Vital[(byte)Vital.Mp],
-            @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality],
-            @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence], data.Level);
+            @class.Attribute[(byte)Definitions.Characters.Attribute.Vitality],
+            @class.Attribute[(byte)Definitions.Characters.Attribute.Intelligence], data.Level);
 
         var entityId = world.Entities.Create();
 
@@ -76,11 +76,11 @@ public static class PlayerSpawner
         var entityId = world.Entities.Create();
 
         var maxHp = VitalFormulas.MaxVital(Vital.Hp, @class.Vital[(byte)Vital.Hp],
-            @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality],
-            @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence], 1);
+            @class.Attribute[(byte)Definitions.Characters.Attribute.Vitality],
+            @class.Attribute[(byte)Definitions.Characters.Attribute.Intelligence], 1);
         var maxMp = VitalFormulas.MaxVital(Vital.Mp, @class.Vital[(byte)Vital.Mp],
-            @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality],
-            @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence], 1);
+            @class.Attribute[(byte)Definitions.Characters.Attribute.Vitality],
+            @class.Attribute[(byte)Definitions.Characters.Attribute.Intelligence], 1);
 
         world.Set(entityId, new Position(MapId: @class.SpawnMapId, X: @class.SpawnX, Y: @class.SpawnY, Direction: (Direction)@class.SpawnDirection));
 

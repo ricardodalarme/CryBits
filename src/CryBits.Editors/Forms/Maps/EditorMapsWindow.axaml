@@ -35,9 +35,9 @@
             <Separator Width="6" />
 
             <!-- Clipboard -->
-            <Button x:Name="butCut"   Content="Cut"   Click="butCut_Click"   IsEnabled="False" Margin="0,0,2,0" />
-            <Button x:Name="butCopy"  Content="Copy"  Click="butCopy_Click"  IsEnabled="False" Margin="0,0,2,0" />
-            <Button x:Name="butPaste" Content="Paste" Click="butPaste_Click" IsEnabled="False" Margin="0,0,2,0" />
+            <Button x:Name="butCut"   Content="Cut"   Click="butCut_Click"   IsEnabled="True" Margin="0,0,2,0" />
+            <Button x:Name="butCopy"  Content="Copy"  Click="butCopy_Click"  IsEnabled="True" Margin="0,0,2,0" />
+            <Button x:Name="butPaste" Content="Paste" Click="butPaste_Click" IsEnabled="True" Margin="0,0,2,0" />
             <Separator Width="6" />
 
             <!-- Draw tools -->
@@ -55,6 +55,14 @@
             <ToggleButton x:Name="butZoom_Normal" Content="1×" IsChecked="True"  Click="butZoom_Normal_Click"  Margin="0,0,2,0" />
             <ToggleButton x:Name="butZoom_2x"     Content="2×" IsChecked="False" Click="butZoom_2x_Click"     Margin="0,0,2,0" />
             <ToggleButton x:Name="butZoom_4x"     Content="4×" IsChecked="False" Click="butZoom_4x_Click"     Margin="0,0,2,0" />
+            <Separator Width="6" />
+
+            <!-- Chunks -->
+            <Button x:Name="butChunkLeft"   Content="←" ToolTip.Tip="Add chunk to left"  Click="butChunkLeft_Click"   Margin="0,0,2,0" />
+            <Button x:Name="butChunkUp"     Content="↑" ToolTip.Tip="Add chunk above"    Click="butChunkUp_Click"     Margin="0,0,2,0" />
+            <Button x:Name="butChunkDown"   Content="↓" ToolTip.Tip="Add chunk below"    Click="butChunkDown_Click"   Margin="0,0,2,0" />
+            <Button x:Name="butChunkRight"  Content="→" ToolTip.Tip="Add chunk to right" Click="butChunkRight_Click"  Margin="0,0,2,0" />
+            <Button x:Name="butDeleteChunk" Content="−"  ToolTip.Tip="Delete current chunk" Click="butDeleteChunk_Click" Margin="0,0,2,0" />
             <Separator Width="6" />
 
             <!-- View -->

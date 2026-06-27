@@ -57,6 +57,15 @@
                 </StackPanel>
             </Border>
 
+            <!-- Chunks list -->
+            <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="4">
+                <StackPanel>
+                    <TextBlock Text="Chunks" FontWeight="Bold" Margin="0,0,0,2" />
+                    <ListBox x:Name="lstChunks" Height="120" />
+                </StackPanel>
+            </Border>
+
             <!-- Zones panel -->
             <Border x:Name="grpZones"
                     BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"

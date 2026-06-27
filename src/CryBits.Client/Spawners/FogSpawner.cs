@@ -8,11 +8,11 @@ namespace CryBits.Client.Spawners;
 
 internal static class FogSpawner
 {
-    public static void Spawn(World world, MapFog fog)
+    public static void Spawn(World world, FogConfig? fog)
     {
         world.DestroyWhere(s => s.Has<FogComponent>());
 
-        if (fog.Texture == 0) return;
+        if (fog == null || fog.Texture == 0) return;
         var color = new Color(255, 255, 255, fog.Alpha);
         _ = world.SpawnBuilder()
             .With(new SpriteComponent(Textures.Fogs[fog.Texture], null, color))

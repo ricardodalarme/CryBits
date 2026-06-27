@@ -8,6 +8,7 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
+using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 using static CryBits.Simulation.SimulationConstants;
 
@@ -94,9 +95,6 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                         if (e == null) continue;
                         var inv = e.Get<InventoryState>()!;
                         var pos = e.Get<Position>()!;
-                        var map = world.Maps.Get(pos.MapId);
-                        if (map == null) continue;
-
                         var oldItem = catalog.Items.Get(equip.OldItemId.Value);
                         if (oldItem == null) continue;
                         if (!GiveItem(world, playerId.Value, oldItem, 1))
@@ -183,7 +181,6 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         var inv = e.Get<InventoryState>()!;
         var pos = e.Get<Position>()!;
         var trade = e.Get<TradeState>();
-        var map = world.Maps.Get(pos.MapId)!;
 
         if (inv.Slots[slotIndex].ItemId == Guid.Empty) return;
         var item = catalog.Items.Get(inv.Slots[slotIndex].ItemId);
@@ -259,10 +256,8 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         var e = world.Entities.Get(entityId);
         if (e == null) return;
         var pos = e.Get<Position>()!;
-        var map = world.Maps.Get(pos.MapId);
-        if (map == null) return;
 
-        var groundEntityId = map.FindGroundItemEntity(world.Entities, pos.X, pos.Y);
+        var groundEntityId = ChunkGrid.FindGroundItemAtTile(world, pos.MapId, pos.X, pos.Y);
         if (groundEntityId == null) return;
 
         var groundEntity = world.Entities.Get(groundEntityId.Value);
@@ -272,9 +267,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         if (item == null) return;
 
         if (GiveItem(world, entityId, item, comp.Amount))
-        {
-            world.Entities.Destroy(groundEntityId.Value);
-            map.GroundItemIds.Remove(groundEntityId.Value);
-        }
+            world.Destroy(groundEntityId.Value);
     }
+
 }
