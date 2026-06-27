@@ -102,6 +102,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
                     {
                         var data = chunk.Tiles[tx, ty];
                         if (data == null || data.Texture <= 0) continue;
+                        if (!win.IsLayerVisible(data.Layer)) continue;
 
                         var worldX = cx * ChunkSize + tx;
                         var worldY = cy * ChunkSize + ty;
@@ -161,6 +162,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
                     {
                         var data = chunk.Tiles[tx, ty];
                         if (data == null) continue;
+                        if (!win.IsLayerVisible(data.Layer)) continue;
 
                         var worldX = cx * ChunkSize + tx;
                         var worldY = cy * ChunkSize + ty;

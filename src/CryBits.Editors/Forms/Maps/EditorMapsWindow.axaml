@@ -68,7 +68,7 @@
             <ToggleButton x:Name="butVisualization" Content="Visualization" IsChecked="True"  Click="butVisualization_Click" Margin="0,0,2,0" />
             <ToggleButton x:Name="butEdition"       Content="Edition"       IsChecked="False" Click="butEdition_Click"       Margin="0,0,2,0" />
             <Separator Width="6" />
-            <ToggleButton x:Name="butGrid"  Content="Grid"  IsChecked="False" Click="butGrid_Click"  Margin="0,0,2,0" />
+            <ToggleButton x:Name="butGrid"  Content="Grid"  IsChecked="False" Margin="0,0,2,0" />
             <ToggleButton x:Name="butAudio" Content="Audio" IsChecked="True"  Click="butAudio_Click" Margin="0,0,2,0" />
             <Separator Width="6" />
 

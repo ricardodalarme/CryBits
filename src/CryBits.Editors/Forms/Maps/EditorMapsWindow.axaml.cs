@@ -41,9 +41,10 @@ internal enum MouseButtons { None, Left, Right }
 internal sealed class LayerVm : INotifyPropertyChanged
 {
     private bool _visible = true;
-    public int Index { get; init; }
-    public string Name { get; init; } = string.Empty;
-    public string TypeName { get; init; } = string.Empty;
+    public Layer Layer { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string TypeName { get; set; } = string.Empty;
+    public int Index { get; set; }
     public bool Visible { get => _visible; set { _visible = value; OnPropertyChanged(); } }
     public event PropertyChangedEventHandler? PropertyChanged;
     private void OnPropertyChanged([CallerMemberName] string? n = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
@@ -117,14 +118,13 @@ internal partial class EditorMapsWindow : Window
     private MapProperties? _mapProps;
     private bool _mapPressed;
     private Layer _paintLayer = Layer.Ground;
+    private readonly List<LayerVm> _layers = [];
 
     private SystemPoint _mapMouse;
     private SystemRect _defTilesSelection = new(0, 0, 1, 1);
     private SystemRect _defMapSelection = new(0, 0, 1, 1);
 
     private DefinitionsTileData[,]? _clipboardData;
-    private SystemRect _clipboardArea;
-    private Layer _clipboardLayer;
 
     // Tile sheet pane
     private ComboBox cmbTiles => tileSheetPane.CmbTiles;
@@ -264,14 +264,13 @@ internal partial class EditorMapsWindow : Window
         tileSheetPane.ChkAuto.IsCheckedChanged += chkAuto_IsCheckedChanged;
         tileSheetPane.ImgTile.PointerPressed += imgTile_PointerPressed;
         tileSheetPane.ImgTile.PointerMoved += imgTile_PointerMoved;
-        tileSheetPane.ScrlTileY.Scroll += scrlTileY_Scroll;
-        tileSheetPane.ScrlTileX.Scroll += scrlTileX_Scroll;
+        tileSheetPane.ScrlTileY.Scroll += (_, _) => { };
+        tileSheetPane.ScrlTileX.Scroll += (_, _) => { };
 
         mapCanvasPane.ImgMap.PointerPressed += imgMap_PointerPressed;
         mapCanvasPane.ImgMap.PointerReleased += imgMap_PointerReleased;
         mapCanvasPane.ImgMap.PointerMoved += imgMap_PointerMoved;
 
-        layersPane.LstLayers.SelectionChanged += lstLayers_SelectionChanged;
         layersPane.ScrlZone.Scroll += scrlZone_Scroll;
         layersPane.ScrlZone_Clear.Click += scrlZone_Clear_Click;
         layersPane.OptA_Warp.IsCheckedChanged += optA_Warp_Changed;
@@ -286,6 +285,16 @@ internal partial class EditorMapsWindow : Window
         layersPane.ButNPC_Add.Click += butNPC_Add_Click;
         layersPane.ButNPC_Remove.Click += butNPC_Remove_Click;
         layersPane.ButNPC_Clear.Click += butNPC_Clear_Click;
+
+        // Wire layer buttons
+        layersPane.LstLayers.SelectionChanged += lstLayers_SelectionChanged;
+        layersPane.ButLayers_Add.Click += butLayers_Add_Click;
+        layersPane.ButLayers_Remove.Click += butLayers_Remove_Click;
+        layersPane.ButLayers_Edit.Click += butLayers_Edit_Click;
+        layersPane.ButLayers_Up.Click += butLayers_Up_Click;
+        layersPane.ButLayers_Down.Click += butLayers_Down_Click;
+        layersPane.ButLayer_Ok.Click += butLayer_Ok_Click;
+        layersPane.ButLayer_Cancel.Click += butLayer_Cancel_Click;
 
         explorerPane.TxtFilter.TextChanged += txtFilter_TextChanged;
         explorerPane.ButNew.Click += butNew_Click;
@@ -379,9 +388,19 @@ internal partial class EditorMapsWindow : Window
         SelectMap(map);
     }
 
+    private void InitLayers()
+    {
+        _layers.Clear();
+        _layers.Add(new LayerVm { Layer = Layer.Ground, Name = "Ground", TypeName = "Ground", Index = 0 });
+        _layers.Add(new LayerVm { Layer = Layer.Fringe, Name = "Fringe", TypeName = "Fringe", Index = 1 });
+        _paintLayer = Layer.Ground;
+        RefreshLayerList();
+    }
+
     private void SelectMap(Map map)
     {
         _selected = map;
+        InitLayers();
         RefreshWarpMapCombo();
         if (_mapProps != null) _mapProps.PropertyChanged -= OnMapPropertyChanged;
         _mapProps = new MapProperties(map);
@@ -390,6 +409,14 @@ internal partial class EditorMapsWindow : Window
         RefreshNpcList();
         MapInstance.Instance.UpdateWeatherType();
         RefreshChunkList();
+    }
+
+    private void RefreshLayerList()
+    {
+        layersPane.LstLayers.ItemsSource = null;
+        layersPane.LstLayers.ItemsSource = _layers;
+        if (layersPane.LstLayers.SelectedItem == null && _layers.Count > 0)
+            layersPane.LstLayers.SelectedIndex = 0;
     }
 
     private void OnMapPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -520,8 +547,6 @@ internal partial class EditorMapsWindow : Window
                     tiles[x, y] = new DefinitionsTileData(0, 0, 0, false, new NoAttribute());
             }
         _clipboardData = tiles;
-        _clipboardArea = sel;
-        _clipboardLayer = _paintLayer;
     }
 
     private void butCut_Click(object? sender, RoutedEventArgs e)
@@ -560,7 +585,6 @@ internal partial class EditorMapsWindow : Window
         Client.Framework.Persistence.Repositories.OptionsRepository.Write();
     }
 
-    private void butGrid_Click(object? sender, RoutedEventArgs e) { }
     private void butAudio_Click(object? sender, RoutedEventArgs e) => _showAudio = butAudio.IsChecked == true;
 
     // Zoom handlers (PanAndZoom native)
@@ -664,11 +688,6 @@ internal partial class EditorMapsWindow : Window
         _selected.Chunks.Remove(coord);
         RefreshChunkList();
     }
-
-    // ── LAYER TOGGLE ──────────────────────────────────────────────────
-
-    private void butLayerGround_Click(object? sender, RoutedEventArgs e) => _paintLayer = Layer.Ground;
-    private void butLayerFringe_Click(object? sender, RoutedEventArgs e) => _paintLayer = Layer.Fringe;
 
     // ── MAP CANVAS ────────────────────────────────────────────────────
 
@@ -1033,16 +1052,93 @@ internal partial class EditorMapsWindow : Window
     }
     private void butNPC_Clear_Click(object? sender, RoutedEventArgs e) { _selected?.Npc.Clear(); RefreshNpcList(); }
 
-    // ── LAYERS STUBS (removed, kept for AXAML wiring) ─────────────────
+    // ── LAYERS ──────────────────────────────────────────────────────────
 
-    private void lstLayers_SelectionChanged(object? sender, SelectionChangedEventArgs e) { }
-    private void butLayers_Add_Click(object? sender, RoutedEventArgs e) { }
-    private void butLayers_Remove_Click(object? sender, RoutedEventArgs e) { }
-    private void butLayers_Edit_Click(object? sender, RoutedEventArgs e) { }
-    private void butLayers_Up_Click(object? sender, RoutedEventArgs e) { }
-    private void butLayers_Down_Click(object? sender, RoutedEventArgs e) { }
-    private void butLayer_Ok_Click(object? sender, RoutedEventArgs e) { }
-    private void butLayer_Cancel_Click(object? sender, RoutedEventArgs e) { }
+    private void SyncPaintLayer()
+    {
+        if (layersPane.LstLayers.SelectedItem is LayerVm lvm)
+            _paintLayer = lvm.Layer;
+    }
+
+    private void lstLayers_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        SyncPaintLayer();
+    }
+
+    private void ShowEditPanel(bool isNew)
+    {
+        layersPane.PnlLayerEdit.IsVisible = true;
+        layersPane.LblLayerEditTitle.Text = isNew ? "Add layer" : "Edit layer";
+        layersPane.ButLayer_Ok.Tag = isNew;
+        layersPane.CmbLayers_Type.Items.Clear();
+        foreach (var l in new[] { Layer.Ground, Layer.Fringe })
+            layersPane.CmbLayers_Type.Items.Add(l.ToString());
+        layersPane.CmbLayers_Type.SelectedIndex = 0;
+        layersPane.TxtLayer_Name.Text = string.Empty;
+    }
+
+    private void butLayers_Add_Click(object? sender, RoutedEventArgs e) => ShowEditPanel(true);
+    private void butLayers_Edit_Click(object? sender, RoutedEventArgs e)
+    {
+        if (layersPane.LstLayers.SelectedItem is not LayerVm sel) return;
+        ShowEditPanel(false);
+        layersPane.TxtLayer_Name.Text = sel.Name;
+        layersPane.CmbLayers_Type.SelectedItem = sel.Layer.ToString();
+    }
+
+    private void butLayer_Ok_Click(object? sender, RoutedEventArgs e)
+    {
+        var name = layersPane.TxtLayer_Name.Text.Trim();
+        if (string.IsNullOrEmpty(name)) return;
+        var typeStr = layersPane.CmbLayers_Type.SelectedItem as string ?? Layer.Ground.ToString();
+        var layerType = typeStr == Layer.Fringe.ToString() ? Layer.Fringe : Layer.Ground;
+
+        if (layersPane.ButLayer_Ok.Tag is true)
+        {
+            _layers.Add(new LayerVm { Layer = layerType, Name = name, TypeName = typeStr, Index = _layers.Count });
+        }
+        else if (layersPane.LstLayers.SelectedItem is LayerVm sel)
+        {
+            sel.Name = name;
+            sel.TypeName = typeStr;
+        }
+        RefreshLayerList();
+        layersPane.PnlLayerEdit.IsVisible = false;
+    }
+
+    private void butLayer_Cancel_Click(object? sender, RoutedEventArgs e) =>
+        layersPane.PnlLayerEdit.IsVisible = false;
+
+    private void butLayers_Remove_Click(object? sender, RoutedEventArgs e)
+    {
+        if (layersPane.LstLayers.SelectedItem is not LayerVm sel) return;
+        if (_layers.Count <= 1) return;
+        _layers.Remove(sel);
+        for (var i = 0; i < _layers.Count; i++) _layers[i].Index = i;
+        RefreshLayerList();
+    }
+
+    private void SwapLayer(int from, int to)
+    {
+        if (from < 0 || from >= _layers.Count || to < 0 || to >= _layers.Count) return;
+        (_layers[from], _layers[to]) = (_layers[to], _layers[from]);
+        _layers[from].Index = from;
+        _layers[to].Index = to;
+        RefreshLayerList();
+        layersPane.LstLayers.SelectedIndex = to;
+    }
+
+    private void butLayers_Up_Click(object? sender, RoutedEventArgs e)
+    {
+        var idx = layersPane.LstLayers.SelectedIndex;
+        SwapLayer(idx, idx - 1);
+    }
+
+    private void butLayers_Down_Click(object? sender, RoutedEventArgs e)
+    {
+        var idx = layersPane.LstLayers.SelectedIndex;
+        SwapLayer(idx, idx + 1);
+    }
 
     // ── UTILS ─────────────────────────────────────────────────────────
 
@@ -1070,7 +1166,12 @@ internal partial class EditorMapsWindow : Window
 
 
 
-    public bool IsLayerVisible(int index) => (Layer)index == _paintLayer;
+    public bool IsLayerVisible(Layer layer)
+    {
+        foreach (var lvm in _layers)
+            if (lvm.Layer == layer) return lvm.Visible;
+        return true;
+    }
 
     private void ResetMapSelectionSize() => _defMapSelection.Size = new SystemSize(1, 1);
     private static bool IsToolEnabled(ToggleButton btn) => btn.IsEnabled && btn.IsChecked == true;
