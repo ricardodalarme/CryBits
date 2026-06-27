@@ -2,8 +2,6 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
-using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
@@ -12,9 +10,8 @@ using CryBits.Persistence.Repositories;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class MapHandler(GameContext context, MapSender mapSender, AudioManager audioManager, DefinitionCatalog catalog, ContentRepository contentRepository)
+internal class MapHandler(GameContext context, ContentSender contentSender, AudioManager audioManager, ContentRepository contentRepository)
 {
-    private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
     internal void MapRevision(MapRevisionPacket packet)
     {
@@ -37,12 +34,18 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
 
             context.CurrentMap = new ClientMap(map, context.World);
             context.CurrentMap.Data.Update();
+
+            // Play map background music from cached data
+            if (string.IsNullOrEmpty(map.Music))
+                audioManager.StopMusic();
+            else
+                audioManager.PlayMusic(map.Music);
         }
         else
             needed = true;
 
         // Request map data
-        mapSender.RequestMap(needed);
+        contentSender.RequestMap(needed);
     }
 
     [PacketHandler]
@@ -58,31 +61,11 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         WeatherSpawner.Reset(context.World, context.CurrentMap.Data.Weather.Type);
         FogSpawner.Spawn(context.World, context.CurrentMap.Data.Fog);
         context.CurrentMap.Data.Update();
-    }
 
-    [PacketHandler]
-    internal void JoinMap(JoinMapPacket _)
-    {
-        // Play map background music if present
+        // Play map background music
         if (string.IsNullOrEmpty(context.CurrentMap.Data.Music))
             audioManager.StopMusic();
         else
             audioManager.PlayMusic(context.CurrentMap.Data.Music);
-    }
-
-    [PacketHandler]
-    internal void MapItems(MapItemsPacket packet)
-    {
-        var world = context.World;
-
-        // Destroy all stale map-item entities
-        world.DestroyWhere(s => s.Has<GroundItem>());
-
-        // Spawn an ECS entity for every item the server reported.
-        foreach (var itemData in packet.Items)
-        {
-            var item = _catalog.Items.Get(itemData.ItemId);
-            if (item is not null) GroundItemSpawner.Spawn(world, item, itemData.X, itemData.Y);
-        }
     }
 }

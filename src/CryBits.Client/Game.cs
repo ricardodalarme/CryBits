@@ -12,11 +12,15 @@ using CryBits.Client.Offline;
 using CryBits.Client.Systems;
 using CryBits.Client.UI;
 using CryBits.Client.UI.Game;
+using CryBits.Client.UI.Game.Views;
 using CryBits.Client.UI.Menu;
+using CryBits.Client.Components;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Persistence.Repositories;
 using CryBits.Protocol.Serialization;
+using CryBits.Simulation;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
 using System.Diagnostics;
 using static CryBits.Definitions.Globals;
@@ -60,6 +64,7 @@ public sealed class Game : IDisposable
 
     private void Initialize()
     {
+        RegisterComponentTypes();
         Directories.Create();
         ToolsRepository.Instance.Read();
         OptionsRepository.Read();
@@ -118,10 +123,8 @@ public sealed class Game : IDisposable
 
         PacketDispatcher.Register(new AuthHandler(cat));
         PacketDispatcher.Register(new AccountHandler(audioManager, context));
-        PacketDispatcher.Register(new PlayerHandler(context, cat));
-        PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager, cat, contentRepository));
-        PacketDispatcher.Register(new NpcHandler(context, cat));
-        PacketDispatcher.Register(new CombatHandler(context));
+        PacketDispatcher.Register(new MapHandler(context, ContentSender.Instance, audioManager, contentRepository));
+        PacketDispatcher.Register(new KeyframeHandler(new Replication.SnapshotApplier(context.World, context)));
         PacketDispatcher.Register(new ChatHandler(Chat.Instance));
         PacketDispatcher.Register(new PartyHandler(IntentSender.Instance, context));
         PacketDispatcher.Register(new TradeHandler(IntentSender.Instance, context));
@@ -159,6 +162,22 @@ public sealed class Game : IDisposable
 
                 _scheduler?.Simulation.Update(deltaTime);
 
+                var ctx = GameContext.Instance;
+                if (ctx.LocalPlayer.Entity is { } playerEntityId)
+                {
+                    var level = ctx.World.Get<LevelComponent>(playerEntityId);
+                    var attrs = ctx.World.Get<AttributesComponent>(playerEntityId);
+                    if (level != null && attrs != null)
+                    {
+                        short total = 0;
+                        foreach (var v in attrs.Values) total += v;
+                        if (level.TotalAttributes != total)
+                            ctx.World.Set(playerEntityId, level with { TotalAttributes = total });
+                    }
+                    BarsView.Update();
+                    CharacterView.Update();
+                }
+
                 if (timer1000 < Environment.TickCount64)
                 {
                     Fps = fps;
@@ -191,6 +210,12 @@ public sealed class Game : IDisposable
     {
         GameContext.Instance.Reset();
         Window.Instance.OpenMenu();
+    }
+
+    private static void RegisterComponentTypes()
+    {
+        ComponentTypes.RegisterDefault();
+        ComponentTypeRegistry.Register<NetworkId>(18);
     }
 
     public void Dispose()

@@ -2,7 +2,6 @@ using CryBits.Client.Components;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions;
 using CryBits.Definitions.Characters;
-using CryBits.Definitions.Common;
 using CryBits.Definitions.Npcs;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;

@@ -7,30 +7,28 @@ namespace CryBits.Client.Network.Handlers;
 
 internal class ContentHandler(DefinitionCatalog catalog)
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-
     [PacketHandler]
     internal void Classes(ClassesPacket packet)
     {
-        _catalog.Classes = packet.List;
-        CreateCharacterView.UpdateClassLabels(_catalog);
+        catalog.Classes = packet.List;
+        CreateCharacterView.UpdateClassLabels(catalog);
     }
 
     [PacketHandler]
     internal void Items(ItemsPacket packet)
     {
-        _catalog.Items = packet.List;
+        catalog.Items = packet.List;
     }
 
     [PacketHandler]
     internal void Npcs(NpcsPacket packet)
     {
-        _catalog.Npcs = packet.List;
+        catalog.Npcs = packet.List;
     }
 
     [PacketHandler]
     internal void Shops(ShopsPacket packet)
     {
-        _catalog.Shops = packet.List;
+        catalog.Shops = packet.List;
     }
 }

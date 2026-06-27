@@ -4,9 +4,9 @@ using CryBits.Transport;
 
 namespace CryBits.Client.Network.Senders;
 
-internal class MapSender(Connection connection)
+internal class ContentSender(Connection connection)
 {
-    public static MapSender Instance { get; } = new(Connection.Instance);
+    public static ContentSender Instance { get; } = new(Connection.Instance);
 
     public void RequestMap(bool order) =>
         connection.SendPacket(new RequestMapPacket { SendMap = order }, DeliveryChannel.ReliableUnordered);

@@ -1,6 +1,7 @@
 using CryBits.Client.Components;
 using CryBits.Client.Core;
 using CryBits.Definitions.Common;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using static CryBits.Definitions.Globals;
 using MovementState = CryBits.Definitions.Common.Movement;
@@ -16,6 +17,31 @@ internal sealed class MovementSystem(World world) : IClientSystem
             var movement = state.Get<MovementComponent>();
             var transform = state.Get<TransformComponent>();
             if (movement == null || transform == null) continue;
+
+            if (!state.Has<LocalPlayerTag>())
+            {
+                var pos = state.Get<Position>();
+                if (pos != null && (movement.TileX != pos.X || movement.TileY != pos.Y))
+                {
+                    var offsetX = pos.Direction switch
+                    {
+                        Direction.Right => -Grid,
+                        Direction.Left => Grid,
+                        _ => 0f
+                    };
+                    var offsetY = pos.Direction switch
+                    {
+                        Direction.Up => Grid,
+                        Direction.Down => -Grid,
+                        _ => 0f
+                    };
+                    movement = new MovementComponent(
+                        pos.X, pos.Y, offsetX, offsetY,
+                        movement.SpeedPixelsPerSecond, MovementState.Walking, pos.Direction
+                    );
+                    world.Set(state.Id, movement);
+                }
+            }
 
             var newMovement = Step(movement, dt);
 

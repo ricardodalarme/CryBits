@@ -128,6 +128,13 @@ internal class CharacterView(GameContext context, IntentSender intentSender, Equ
         {
             LevelLabel.SetArguments(level.Level);
             PointsLabel.SetArguments(level.Points);
+
+            var hasPoints = level.Points > 0;
+            AddStrengthButton.Visible = hasPoints;
+            AddResistanceButton.Visible = hasPoints;
+            AddIntelligenceButton.Visible = hasPoints;
+            AddAgilityButton.Visible = hasPoints;
+            AddVitalityButton.Visible = hasPoints;
         }
         var attrs = local.GetAttributes();
         if (attrs != null)
