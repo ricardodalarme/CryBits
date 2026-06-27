@@ -26,5 +26,6 @@ public static class ComponentTypes
         ComponentTypeRegistry.Register<TradeState>(17);
         ComponentTypeRegistry.Register<MapLoadingTag>(19);
         ComponentTypeRegistry.Register<AttackHit>(20);
+        ComponentTypeRegistry.Register<CollidableTag>(21);
     }
 }

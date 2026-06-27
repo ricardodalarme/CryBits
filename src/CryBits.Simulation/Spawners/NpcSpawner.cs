@@ -36,6 +36,7 @@ public static class NpcSpawner
         world.Set(entityId, new AttributesComponent((short[])npcData.Attribute.Clone()));
         world.Set(entityId, new AttackCooldown());
         world.Set(entityId, new NpcTag());
+        world.Set(entityId, new CollidableTag());
 
         return entityId;
     }

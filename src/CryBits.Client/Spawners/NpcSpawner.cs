@@ -36,7 +36,6 @@ internal static class NpcSpawner
             .With(new MovementComponent(x, y, 0f, 0f, Globals.WalkSpeedPixelsPerSecond, MovementState.Stopped, direction))
             .With(new AttackComponent())
             .With(new NpcTag())
-            .With(new CollidableTag())
             .With(currentVitals)
             .Id;
     }

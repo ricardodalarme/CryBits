@@ -97,7 +97,7 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
         {
             var mov = state.Get<MovementComponent>();
             if (mov == null || mov.TileX != tileX || mov.TileY != tileY) continue;
-            if (state.Has<PlayerTag>() || state.Has<NpcTag>())
+            if (state.Has<CollidableTag>())
                 return true;
         }
         return false;

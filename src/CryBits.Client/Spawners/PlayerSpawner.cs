@@ -37,7 +37,6 @@ internal static class PlayerSpawner
             .With(new MovementComponent(x, y, 0f, 0f, Globals.WalkSpeedPixelsPerSecond, MovementState.Stopped, direction))
             .With(new AttackComponent())
             .With(new PlayerTag())
-            .With(new CollidableTag())
             .With(new Vitals(Hp: vitals[0], Mp: vitals[1], MaxHp: maxVitals[0], MaxMp: maxVitals[1]))
             .Id;
     }

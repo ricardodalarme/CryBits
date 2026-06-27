@@ -116,10 +116,8 @@ public sealed class ChunkGrid
         {
             var pos = world.Get<Position>(id);
             if (pos != null && pos.X == x && pos.Y == y && pos.MapId == mapId)
-            {
                 if (world.Get<GroundItem>(id) != null)
                     return id;
-            }
         }
         return null;
     }
@@ -131,10 +129,8 @@ public sealed class ChunkGrid
         {
             var pos = world.Get<Position>(id);
             if (pos != null && pos.X == x && pos.Y == y && pos.MapId == mapId)
-            {
-                if (world.Has<PlayerTag>(id) || world.Has<NpcTag>(id))
+                if (world.Has<CollidableTag>(id))
                     return id;
-            }
         }
         return null;
     }

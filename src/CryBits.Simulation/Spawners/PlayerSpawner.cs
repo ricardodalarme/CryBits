@@ -66,6 +66,7 @@ public static class PlayerSpawner
 
         world.Set(entityId, new AttackCooldown(0));
         world.Set(entityId, new PlayerTag());
+        world.Set(entityId, new CollidableTag());
 
         return entityId;
     }
@@ -110,6 +111,7 @@ public static class PlayerSpawner
 
         world.Set(entityId, new AttackCooldown());
         world.Set(entityId, new PlayerTag());
+        world.Set(entityId, new CollidableTag());
 
         return entityId;
     }
