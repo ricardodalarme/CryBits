@@ -44,7 +44,7 @@ public class Connection
 
     public void SendPacket<T>(T packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered) where T : IClientPacket
     {
-        _transport.Send(PacketSerializer.Serialize(packet), delivery);
+        _transport.Send(PacketSerializer.Serialize<IClientPacket>(packet), delivery);
     }
 
     public bool TryConnect(string address, int port, string key)

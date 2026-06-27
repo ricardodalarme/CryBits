@@ -1,4 +1,5 @@
 using CryBits.Definitions.Items;
+using CryBits.Definitions.Slots;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
@@ -43,9 +44,9 @@ public sealed class HotbarSystem : ISimulationSystem
 
         if (hotbarSlot >= hotbar.Slots.Length) return;
 
-        hotbar.Slots[hotbarSlot].Type = type;
-        hotbar.Slots[hotbarSlot].Slot = slot;
-        world.MarkDirty<HotbarState>(entityId);
+        var newSlots = (HotbarSlot[])hotbar.Slots.Clone();
+        newSlots[hotbarSlot] = newSlots[hotbarSlot] with { Type = type, Slot = slot };
+        world.Set(entityId, new HotbarState(newSlots));
     }
 
     private void Change(World world, EntityId entityId, short slotOld, short slotNew)
@@ -54,8 +55,9 @@ public sealed class HotbarSystem : ISimulationSystem
         if (e == null) return;
         var hotbar = e.Get<HotbarState>()!;
 
-        (hotbar.Slots[slotOld], hotbar.Slots[slotNew]) = (hotbar.Slots[slotNew], hotbar.Slots[slotOld]);
-        world.MarkDirty<HotbarState>(entityId);
+        var newSlots = (HotbarSlot[])hotbar.Slots.Clone();
+        (newSlots[slotOld], newSlots[slotNew]) = (newSlots[slotNew], newSlots[slotOld]);
+        world.Set(entityId, new HotbarState(newSlots));
     }
 
     private void Use(World world, Tick tick, EntityId entityId, short hotbarSlot)
@@ -68,7 +70,7 @@ public sealed class HotbarSystem : ISimulationSystem
         {
             case SlotType.Item:
                 var invSlot = hotbar.Slots[hotbarSlot].Slot;
-                tick.Events.Emit(new ItemUsedEvent { PlayerId = entityId, SlotIndex = invSlot, DirectUse = true });
+                tick.Events.Emit(new ItemUsedEvent(tick.TickNumber, entityId, invSlot, Guid.Empty, true));
                 break;
         }
     }
@@ -91,7 +93,8 @@ public sealed class HotbarSystem : ISimulationSystem
 
         if (foundSlot == null) return;
 
-        hotbar.Slots[foundSlot.Value].Slot = slotNew;
-        world.MarkDirty<HotbarState>(entityId);
+        var newSlots = (HotbarSlot[])hotbar.Slots.Clone();
+        newSlots[foundSlot.Value] = newSlots[foundSlot.Value] with { Slot = slotNew };
+        world.Set(entityId, new HotbarState(newSlots));
     }
 }

@@ -29,7 +29,7 @@ public sealed class GroundItemSystem(DefinitionCatalog catalog) : ISimulationSys
 
                 if (tick.TickNumber >= groundItem.DespawnTick)
                 {
-                    tick.Events.Emit(new GroundItemRemovedEvent { EntityId = map.GroundItemIds[i], MapId = map.Id });
+                    tick.Events.Emit(new GroundItemRemovedEvent(tick.TickNumber, map.GroundItemIds[i], map.Id));
                     world.Entities.Destroy(map.GroundItemIds[i]);
                     map.GroundItemIds.RemoveAt(i);
                 }

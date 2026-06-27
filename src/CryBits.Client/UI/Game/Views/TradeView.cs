@@ -7,6 +7,7 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Slots;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
 using SFML.Window;
 using System.Drawing;
@@ -119,10 +120,12 @@ internal class TradeView(IntentSender intentSender, ItemRenderer itemRenderer, G
         OfferDisabledPanel.Visible = false;
         intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Accepted));
 
-        var trade = context.LocalPlayer.GetTrade();
-        if (trade != null)
+        var playerEntity = context.LocalPlayer.Entity;
+        if (playerEntity != null)
         {
-            trade.Offer = new TradeSlot[MaxInventory];
+            var trade = context.World.Get<TradeState>(playerEntity.Value);
+            if (trade != null)
+                context.World.Set(playerEntity.Value, trade with { Offer = new TradeSlot[MaxInventory] });
         }
     }
 

@@ -1,8 +1,3 @@
 namespace CryBits.Client.Components;
 
-public sealed class FadeComponent
-{
-    public float Timer { get; set; }
-    public float IntervalSeconds { get; set; }
-    public byte AmountPerTick { get; set; }
-}
+public sealed record class FadeComponent(float Timer = 0f, float IntervalSeconds = 0.1f, byte AmountPerTick = 1);

@@ -32,12 +32,7 @@ public sealed class ChatSystem : ISimulationSystem
                     foreach (var state in world.Entities.All)
                     {
                         if (!state.Has<PlayerTag>()) continue;
-                        tick.Events.Emit(new ChatMessageEvent
-                        {
-                            RecipientId = state.Id,
-                            Text = formatted,
-                            ColorArgb = ChatColors.White
-                        });
+                        tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, state.Id, formatted, ChatColors.White));
                     }
                     break;
 
@@ -50,12 +45,7 @@ public sealed class ChatSystem : ISimulationSystem
                         if (!state.Has<PlayerTag>()) continue;
                         var pos = state.Get<Position>();
                         if (pos == null || pos.MapId != sourcePos.MapId) continue;
-                        tick.Events.Emit(new ChatMessageEvent
-                        {
-                            RecipientId = state.Id,
-                            Text = formatted,
-                            ColorArgb = ChatColors.White
-                        });
+                        tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, state.Id, formatted, ChatColors.White));
                     }
                     break;
 
@@ -64,27 +54,12 @@ public sealed class ChatSystem : ISimulationSystem
                     var targetId = world.FindPlayer(chat.Addressee);
                     if (targetId == null) break;
 
-                    tick.Events.Emit(new ChatMessageEvent
-                    {
-                        RecipientId = chat.SourceEntityId,
-                        Text = "To " + chat.Addressee + ": " + chat.Text,
-                        ColorArgb = ChatColors.White
-                    });
-                    tick.Events.Emit(new ChatMessageEvent
-                    {
-                        RecipientId = targetId.Value,
-                        Text = "From " + appearance.Name + ": " + chat.Text,
-                        ColorArgb = ChatColors.White
-                    });
+                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, chat.SourceEntityId, "To " + chat.Addressee + ": " + chat.Text, ChatColors.White));
+                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, targetId.Value, "From " + appearance.Name + ": " + chat.Text, ChatColors.White));
                     break;
 
                 case Message.Local:
-                    tick.Events.Emit(new ChatMessageEvent
-                    {
-                        RecipientId = chat.SourceEntityId,
-                        Text = formatted,
-                        ColorArgb = ChatColors.White
-                    });
+                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, chat.SourceEntityId, formatted, ChatColors.White));
                     break;
             }
         }

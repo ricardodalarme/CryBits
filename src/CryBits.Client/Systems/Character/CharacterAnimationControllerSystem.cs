@@ -17,14 +17,14 @@ internal sealed class CharacterAnimationControllerSystem(World world) : IClientS
             var movement = state.Get<MovementComponent>();
             if (attack == null || anim == null || movement == null) continue;
 
-            if (attack.AttackCountdown > 0f)
-            {
-                attack.AttackCountdown -= dt;
-                if (attack.AttackCountdown <= 0f)
-                    attack.AttackCountdown = 0f;
-            }
+            var newCountdown = attack.AttackCountdown > 0f
+                ? MathF.Max(0f, attack.AttackCountdown - dt)
+                : attack.AttackCountdown;
 
-            anim.CurrentFrameY = movement.Direction switch
+            if (attack.AttackCountdown != newCountdown)
+                world.Set(state.Id, new AttackComponent(newCountdown));
+
+            var frameY = movement.Direction switch
             {
                 Direction.Up => MovementUp,
                 Direction.Down => MovementDown,
@@ -33,20 +33,14 @@ internal sealed class CharacterAnimationControllerSystem(World world) : IClientS
                 _ => 0
             };
 
-            if (attack.IsAttacking && attack.AttackCountdown > AttackSpeed / 2000f)
-            {
-                anim.Playing = false;
-                anim.CurrentFrameX = AnimationAttack;
-            }
+            if (attack.IsAttacking && newCountdown > AttackSpeed / 2000f)
+                world.Set(state.Id, new AnimatedSpriteComponent(
+                    anim.FrameWidth, anim.FrameHeight, anim.FrameCount, anim.TimePerFrame,
+                    anim.Timer, AnimationAttack, frameY, false));
             else if (movement.IsMoving)
-            {
-                anim.Playing = true;
-            }
+                world.Set(state.Id, anim with { CurrentFrameY = frameY, Playing = true });
             else
-            {
-                anim.Playing = false;
-                anim.CurrentFrameX = 0;
-            }
+                world.Set(state.Id, anim with { CurrentFrameY = frameY, Playing = false, CurrentFrameX = 0 });
         }
     }
 }

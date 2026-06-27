@@ -81,17 +81,18 @@ internal class TradeHandler(IntentSender intentSender, GameContext context)
     {
         var trade = context.LocalPlayer.GetTrade();
         if (trade == null) return;
+        var newOffer = new TradeSlot[MaxInventory];
         if (packet.Own)
         {
-            if (trade.Offer == null) trade.Offer = new TradeSlot[MaxInventory];
-            for (byte i = 0; i < MaxInventory && i < trade.Offer.Length; i++)
-                trade.Offer[i] = new TradeSlot { SlotNum = (short)i, Amount = packet.Items[i].Amount };
+            for (byte i = 0; i < MaxInventory; i++)
+                newOffer[i] = new TradeSlot { SlotNum = (short)i, Amount = packet.Items[i].Amount };
+            context.World.Set(context.LocalPlayer.Entity!.Value, trade with { Offer = newOffer });
         }
         else
         {
-            if (trade.TheirOffer == null) trade.TheirOffer = new TradeSlot[MaxInventory];
-            for (byte i = 0; i < MaxInventory && i < trade.TheirOffer.Length; i++)
-                trade.TheirOffer[i] = new TradeSlot { SlotNum = (short)i, Amount = packet.Items[i].Amount };
+            for (byte i = 0; i < MaxInventory; i++)
+                newOffer[i] = new TradeSlot { SlotNum = (short)i, Amount = packet.Items[i].Amount };
+            context.World.Set(context.LocalPlayer.Entity!.Value, trade with { TheirOffer = newOffer });
         }
     }
 }

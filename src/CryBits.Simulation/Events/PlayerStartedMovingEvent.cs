@@ -2,7 +2,4 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Events;
 
-public sealed record PlayerStartedMovingEvent : SimEvent
-{
-    public EntityId PlayerId { get; init; }
-}
+public sealed partial record class PlayerStartedMovingEvent(long TickNumber, EntityId PlayerId) : SimEvent(TickNumber);

@@ -2,8 +2,4 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Events;
 
-public sealed record XpAwardedEvent : SimEvent
-{
-    public EntityId EntityId { get; init; }
-    public int Amount { get; init; }
-}
+public sealed partial record class XpAwardedEvent(long TickNumber, EntityId EntityId, int Amount) : SimEvent(TickNumber);

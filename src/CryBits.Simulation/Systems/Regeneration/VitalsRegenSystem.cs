@@ -23,9 +23,12 @@ public sealed class VitalsRegenSystem : ISimulationSystem
             var vitals = state.Get<Vitals>()!;
             var attrs = state.Get<AttributesComponent>();
 
+            var newHp = vitals.Hp;
+            var newMp = vitals.Mp;
+
             for (byte v = 0; v < (byte)Vital.Count; v++)
             {
-                var current = v == 0 ? vitals.Hp : vitals.Mp;
+                var current = v == 0 ? newHp : newMp;
                 var max = v == 0 ? vitals.MaxHp : vitals.MaxMp;
                 if (current >= max) continue;
 
@@ -35,10 +38,11 @@ public sealed class VitalsRegenSystem : ISimulationSystem
                 var regen = VitalFormulas.VitalRegeneration((Vital)v, max, vitality, intelligence);
                 current += regen;
                 if (current > max) current = max;
-                if (v == 0) vitals.Hp = current; else vitals.Mp = current;
-
-                world.MarkDirty<Vitals>(state.Id);
+                if (v == 0) newHp = (short)current; else newMp = (short)current;
             }
+
+            if (newHp != vitals.Hp || newMp != vitals.Mp)
+                world.Set(state.Id, new Vitals(Hp: newHp, Mp: newMp, MaxHp: vitals.MaxHp, MaxMp: vitals.MaxMp));
         }
     }
 }

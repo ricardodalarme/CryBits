@@ -21,44 +21,23 @@ public static class NpcSpawner
         if (npcData == null) return default;
 
         var entityId = world.Entities.Create();
-        var entity = world.Entities.Get(entityId)!;
 
         var (x, y) = FindSpawnPosition(map, map.Data, npcSpawn);
 
-        entity.Set(new NpcState
-        {
-            Index = npcIndex,
-            NpcDefId = npcSpawn.NpcId,
-            TargetId = null
-        });
-
-        entity.Set(new Position
-        {
-            X = x,
-            Y = y,
-            Direction = Direction.Down,
-            MapId = mapId
-        });
-
-        entity.Set(new Vitals
-        {
-            Hp = npcData.Vital[(byte)Vital.Hp],
-            Mp = npcData.Vital[(byte)Vital.Mp],
-            MaxHp = npcData.Vital[(byte)Vital.Hp],
-            MaxMp = npcData.Vital[(byte)Vital.Mp]
-        });
-
-        entity.Set(new LevelComponent { Level = 1 });
-        entity.Set(new AttributesComponent { Values = (short[])npcData.Attribute.Clone() });
-        entity.Set(new AttackCooldown());
-        entity.Set(new NpcTag());
+        world.Set(entityId, new NpcState(Index: npcIndex, NpcDefId: npcSpawn.NpcId));
+        world.Set(entityId, new Position(MapId: mapId, X: x, Y: y, Direction: Direction.Down));
+        world.Set(entityId, new Vitals(
+            Hp: npcData.Vital[(byte)Vital.Hp],
+            Mp: npcData.Vital[(byte)Vital.Mp],
+            MaxHp: npcData.Vital[(byte)Vital.Hp],
+            MaxMp: npcData.Vital[(byte)Vital.Mp]
+        ));
+        world.Set(entityId, new LevelComponent(Level: 1));
+        world.Set(entityId, new AttributesComponent((short[])npcData.Attribute.Clone()));
+        world.Set(entityId, new AttackCooldown());
+        world.Set(entityId, new NpcTag());
 
         map.NpcIds.Add(entityId);
-        world.MarkDirty<NpcState>(entityId);
-        world.MarkDirty<Position>(entityId);
-        world.MarkDirty<Vitals>(entityId);
-        world.MarkDirty<LevelComponent>(entityId);
-        world.MarkDirty<AttributesComponent>(entityId);
 
         return entityId;
     }

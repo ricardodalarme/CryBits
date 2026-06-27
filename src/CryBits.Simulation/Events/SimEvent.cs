@@ -1,6 +1,3 @@
 namespace CryBits.Simulation.Events;
 
-public abstract record SimEvent
-{
-    public long TickNumber { get; set; }
-}
+public abstract partial record class SimEvent(long TickNumber);

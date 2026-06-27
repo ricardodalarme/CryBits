@@ -117,7 +117,13 @@ public sealed class World
 
     public IEnumerable<EntityState> All => Entities.All;
 
-    public void MarkDirty<T>(EntityId id) where T : class
+    public void Update<T>(EntityId id, Func<T, T> transform) where T : class
+    {
+        var current = Entities.Get(id)?.Get<T>();
+        if (current != null) Set(id, transform(current));
+    }
+
+    private void MarkDirty<T>(EntityId id) where T : class
     {
         Dirty?.Mark<T>(id);
     }

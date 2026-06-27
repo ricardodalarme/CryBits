@@ -1,9 +1,7 @@
 using CryBits.Definitions.Slots;
-using static CryBits.Definitions.Globals;
+using MemoryPack;
 
 namespace CryBits.Simulation.Components;
 
-public sealed class HotbarState
-{
-    public HotbarSlot[] Slots { get; set; } = new HotbarSlot[MaxHotbar];
-}
+[MemoryPackable]
+public sealed partial record class HotbarState(HotbarSlot[] Slots);

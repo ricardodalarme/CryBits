@@ -1,12 +1,8 @@
 using CryBits.Definitions.Slots;
 using CryBits.Simulation.State;
+using MemoryPack;
 
 namespace CryBits.Simulation.Components;
 
-public sealed class TradeState
-{
-    public EntityId? Partner { get; set; }
-    public EntityId? PendingInviterId { get; set; }
-    public TradeSlot[]? Offer { get; set; }
-    public TradeSlot[]? TheirOffer { get; set; }
-}
+[MemoryPackable]
+public sealed partial record class TradeState(EntityId? Partner = null, EntityId? PendingInviterId = null, TradeSlot[]? Offer = null, TradeSlot[]? TheirOffer = null);

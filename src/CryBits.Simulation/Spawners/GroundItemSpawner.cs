@@ -1,4 +1,5 @@
 using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
@@ -15,13 +16,11 @@ public static class GroundItemSpawner
         if (map == null) return null;
 
         var entityId = world.Entities.Create();
-        var entity = world.Entities.Get(entityId)!;
 
-        entity.Set(new Position { MapId = mapId, X = x, Y = y });
-        entity.Set(new GroundItem { ItemDefId = itemDefId, Amount = amount, DespawnTick = despawnTick });
+        world.Set(entityId, new Position(MapId: mapId, X: x, Y: y, Direction: Direction.Down));
+        world.Set(entityId, new GroundItem(itemDefId, amount, despawnTick));
 
         map.GroundItemIds.Add(entityId);
-        world.MarkDirty<GroundItem>(entityId);
         return entityId;
     }
 }

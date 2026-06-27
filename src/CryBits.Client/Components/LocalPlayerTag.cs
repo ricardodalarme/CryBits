@@ -1,3 +1,3 @@
 namespace CryBits.Client.Components;
 
-public sealed class LocalPlayerTag;
+public sealed record class LocalPlayerTag;

@@ -2,8 +2,4 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Events;
 
-public sealed record GroundItemRemovedEvent : SimEvent
-{
-    public EntityId EntityId { get; init; }
-    public Guid MapId { get; init; }
-}
+public sealed partial record class GroundItemRemovedEvent(long TickNumber, EntityId EntityId, Guid MapId) : SimEvent(TickNumber);

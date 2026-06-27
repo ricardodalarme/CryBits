@@ -13,14 +13,18 @@ internal sealed class AnimatedSpriteSystem(World world) : IClientSystem
             var anim = state.Get<AnimatedSpriteComponent>();
             if (anim == null || !anim.Playing) continue;
 
-            anim.Timer += deltaTime;
-            if (anim.Timer < anim.TimePerFrame) continue;
+            var newTimer = anim.Timer + deltaTime;
+            if (newTimer < anim.TimePerFrame)
+            {
+                world.Set(state.Id, anim with { Timer = newTimer });
+                continue;
+            }
 
-            anim.Timer -= anim.TimePerFrame;
-            anim.CurrentFrameX++;
+            var frames = (int)(newTimer / anim.TimePerFrame);
+            var remainder = newTimer - frames * anim.TimePerFrame;
+            var newFrameX = (anim.CurrentFrameX + frames) % anim.FrameCount;
 
-            if (anim.CurrentFrameX >= anim.FrameCount)
-                anim.CurrentFrameX = 0;
+            world.Set(state.Id, anim with { Timer = remainder, CurrentFrameX = newFrameX });
         }
     }
 }

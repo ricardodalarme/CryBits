@@ -38,7 +38,7 @@ internal sealed class AttackSystem(
         if (TradeView.Panel.Visible) return;
         if (ShopView.Panel.Visible) return;
 
-        state.AttackCountdown = AttackSpeed / 1000f;
+        context.World.Set(entity.Value, new AttackComponent(AttackSpeed / 1000f));
         intentSender.Send(new AttackIntent(default, null));
     }
 }

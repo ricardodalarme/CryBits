@@ -14,9 +14,9 @@ internal static class GroundItemSpawner
         var texture = Textures.Items[item.Texture];
 
         _ = world.SpawnBuilder()
-            .With(new TransformComponent { X = tileX * Grid, Y = tileY * Grid })
-            .With(new SpriteComponent { Texture = texture })
-            .With(new GroundItem { ItemDefId = item.Id, Amount = 1, DespawnTick = -1 })
+            .With(new TransformComponent(tileX * Grid, tileY * Grid))
+            .With(new SpriteComponent(texture, null, SFML.Graphics.Color.White))
+            .With(new GroundItem(ItemDefId: item.Id, Amount: 1))
             .Id;
     }
 }

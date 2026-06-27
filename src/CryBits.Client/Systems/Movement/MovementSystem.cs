@@ -17,51 +17,61 @@ internal sealed class MovementSystem(World world) : IClientSystem
             var transform = state.Get<TransformComponent>();
             if (movement == null || transform == null) continue;
 
-            Step(movement, dt);
+            var newMovement = Step(movement, dt);
 
-            transform.X = (int)(movement.TileX * Grid + movement.OffsetX);
-            transform.Y = (int)(movement.TileY * Grid + movement.OffsetY);
+            if (newMovement != movement)
+                world.Set(state.Id, newMovement);
+
+            world.Set(state.Id, new TransformComponent(
+                (int)(newMovement.TileX * Grid + newMovement.OffsetX),
+                (int)(newMovement.TileY * Grid + newMovement.OffsetY)
+            ));
         }
     }
 
-    private static void Step(MovementComponent m, float dt)
+    private static MovementComponent Step(MovementComponent m, float dt)
     {
         if (m.MovementState == MovementState.Stopped)
-        {
-            m.OffsetX = 0f;
-            m.OffsetY = 0f;
-            return;
-        }
+            return m with { OffsetX = 0f, OffsetY = 0f };
 
         float delta = m.SpeedPixelsPerSecond * dt;
         float prevX = m.OffsetX, prevY = m.OffsetY;
 
-        switch (m.Direction)
+        var newOffsetX = m.Direction switch
         {
-            case Direction.Up: m.OffsetY -= delta; break;
-            case Direction.Down: m.OffsetY += delta; break;
-            case Direction.Right: m.OffsetX += delta; break;
-            case Direction.Left: m.OffsetX -= delta; break;
-        }
+            Direction.Right => m.OffsetX + delta,
+            Direction.Left => m.OffsetX - delta,
+            _ => m.OffsetX
+        };
+        var newOffsetY = m.Direction switch
+        {
+            Direction.Down => m.OffsetY + delta,
+            Direction.Up => m.OffsetY - delta,
+            _ => m.OffsetY
+        };
 
-        if (prevX > 0f && m.OffsetX < 0f) m.OffsetX = 0f;
-        if (prevX < 0f && m.OffsetX > 0f) m.OffsetX = 0f;
-        if (prevY > 0f && m.OffsetY < 0f) m.OffsetY = 0f;
-        if (prevY < 0f && m.OffsetY > 0f) m.OffsetY = 0f;
+        if (prevX > 0f && newOffsetX < 0f) newOffsetX = 0f;
+        if (prevX < 0f && newOffsetX > 0f) newOffsetX = 0f;
+        if (prevY > 0f && newOffsetY < 0f) newOffsetY = 0f;
+        if (prevY < 0f && newOffsetY > 0f) newOffsetY = 0f;
 
-        if (MathF.Abs(m.OffsetX) < 0.1f) m.OffsetX = 0f;
-        if (MathF.Abs(m.OffsetY) < 0.1f) m.OffsetY = 0f;
+        var clampedOffsetX = MathF.Abs(newOffsetX) < 0.1f ? 0f : newOffsetX;
+        var clampedOffsetY = MathF.Abs(newOffsetY) < 0.1f ? 0f : newOffsetY;
 
         var arrived = m.Direction switch
         {
-            Direction.Right => m.OffsetX >= 0f,
-            Direction.Left => m.OffsetX <= 0f,
-            Direction.Down => m.OffsetY >= 0f,
-            Direction.Up => m.OffsetY <= 0f,
+            Direction.Right => clampedOffsetX >= 0f,
+            Direction.Left => clampedOffsetX <= 0f,
+            Direction.Down => clampedOffsetY >= 0f,
+            Direction.Up => clampedOffsetY <= 0f,
             _ => true
         };
 
-        if (arrived)
-            m.MovementState = MovementState.Stopped;
+        return m with
+        {
+            OffsetX = clampedOffsetX,
+            OffsetY = clampedOffsetY,
+            MovementState = arrived ? MovementState.Stopped : m.MovementState
+        };
     }
 }

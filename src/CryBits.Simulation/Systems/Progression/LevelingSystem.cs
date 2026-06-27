@@ -52,8 +52,7 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
                 {
                     var victimLevel = world.Get<LevelComponent>(victimId2.Value);
                     if (victimLevel == null) continue;
-                    victimLevel.Experience /= 10;
-                    world.MarkDirty<LevelComponent>(victimId2.Value);
+                    world.Update<LevelComponent>(victimId2.Value, l => l with { Experience = l.Experience / 10 });
                 }
             }
 
@@ -78,10 +77,10 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
 
         if (level.Points <= 0) return;
 
-        attrs.Values[attributeNum]++;
-        level.Points--;
-        world.MarkDirty<LevelComponent>(entityId);
-        world.MarkDirty<AttributesComponent>(entityId);
+        var newValues = (short[])attrs.Values.Clone();
+        newValues[attributeNum]++;
+        world.Set(entityId, new AttributesComponent(newValues));
+        world.Update<LevelComponent>(entityId, l => l with { Points = (short)(l.Points - 1) });
     }
 
     private void GiveExperience(World world, EntityId entityId, int value)
@@ -94,9 +93,11 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
         if (party?.Members.Count > 0 && value > 0)
             PartySplitXp(world, entityId, value);
         else
-            level.Experience += value;
+            world.Update<LevelComponent>(entityId, l => l with { Experience = l.Experience + value });
 
-        if (level.Experience < 0) level.Experience = 0;
+        var currentLevel = world.Get<LevelComponent>(entityId);
+        if (currentLevel != null && currentLevel.Experience < 0)
+            world.Update<LevelComponent>(entityId, l => l with { Experience = 0 });
 
         CheckLevelUp(world, entityId);
     }
@@ -108,28 +109,28 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
         var level = e.Get<LevelComponent>()!;
         var attrs = e.Get<AttributesComponent>()!;
 
-        byte numLevel = 0;
-
         short totalAttr = 0;
         for (byte i = 0; i < (byte)Attribute.Count; i++) totalAttr += attrs.Values[i];
         var expNeeded = LevelingFormulas.ExperienceNeeded(level.Level, totalAttr, (byte)level.Points);
 
-        while (level.Experience >= expNeeded)
-        {
-            numLevel++;
-            var expRest = level.Experience - expNeeded;
+        if (level.Experience < expNeeded) return;
 
-            level.Level++;
-            level.Points += Config.NumPoints;
-            level.Experience = expRest;
+        var newLevel = level.Level;
+        var newPoints = level.Points;
+        var newExp = level.Experience;
+
+        while (newExp >= expNeeded)
+        {
+            newLevel++;
+            newPoints += Config.NumPoints;
+            newExp -= expNeeded;
 
             totalAttr = 0;
             for (byte i = 0; i < (byte)Attribute.Count; i++) totalAttr += attrs.Values[i];
-            expNeeded = LevelingFormulas.ExperienceNeeded(level.Level, totalAttr, (byte)level.Points);
+            expNeeded = LevelingFormulas.ExperienceNeeded(newLevel, totalAttr, (byte)newPoints);
         }
 
-        world.MarkDirty<LevelComponent>(entityId);
-        world.MarkDirty<AttributesComponent>(entityId);
+        world.Set(entityId, new LevelComponent(Level: newLevel, Experience: newExp, Points: newPoints));
     }
 
     private void PartySplitXp(World world, EntityId entityId, int value)
@@ -162,11 +163,9 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
             experienceSum += givenExperience;
 
             GiveExperience(world, party.Members[i], givenExperience);
-            world.MarkDirty<LevelComponent>(party.Members[i]);
         }
 
-        level.Experience += value - experienceSum;
+        world.Update<LevelComponent>(entityId, l => l with { Experience = l.Experience + value - experienceSum });
         CheckLevelUp(world, entityId);
-        world.MarkDirty<LevelComponent>(entityId);
     }
 }

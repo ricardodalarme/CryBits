@@ -14,7 +14,6 @@ public sealed class EventBuffer
 
     public void Emit(SimEvent ev)
     {
-        ev.TickNumber = _tickNumber;
         _events.Add(ev);
     }
 

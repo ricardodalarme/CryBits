@@ -1,6 +1,6 @@
+using MemoryPack;
+
 namespace CryBits.Simulation.Components;
 
-public sealed class AttackCooldown
-{
-    public long NextAllowedTick { get; set; }
-}
+[MemoryPackable]
+public sealed partial record class AttackCooldown(long NextAllowedTick = 0);

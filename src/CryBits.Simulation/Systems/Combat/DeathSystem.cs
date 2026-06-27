@@ -37,28 +37,22 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
         var playerClass = catalog.Classes.Get(appearance.ClassId);
         if (playerClass is null) return;
 
-        vitals.Hp = vitals.MaxHp;
-        vitals.Mp = vitals.MaxMp;
+        world.Set(playerId.Value, new Vitals(Hp: vitals.MaxHp, Mp: vitals.MaxMp, MaxHp: vitals.MaxHp, MaxMp: vitals.MaxMp));
 
         var oldMapId = pos.MapId;
-        pos.Direction = (Direction)playerClass.SpawnDirection;
-        pos.MapId = playerClass.SpawnMapId;
-        pos.X = playerClass.SpawnX;
-        pos.Y = playerClass.SpawnY;
 
-        if (oldMapId != pos.MapId)
-            world.Set(playerId.Value, new MapLoadingTag());
-
-        tick.Events.Emit(new PlayerWarpedEvent
+        world.Update<Position>(playerId.Value, p => p with
         {
-            PlayerId = playerId.Value,
-            OldMapId = oldMapId,
-            NewMapId = pos.MapId,
-            NeedsMapData = true
+            Direction = (Direction)playerClass.SpawnDirection,
+            MapId = playerClass.SpawnMapId,
+            X = playerClass.SpawnX,
+            Y = playerClass.SpawnY
         });
 
-        world.MarkDirty<Vitals>(playerId.Value);
-        world.MarkDirty<Position>(playerId.Value);
+        if (oldMapId != playerClass.SpawnMapId)
+            world.Set(playerId.Value, new MapLoadingTag());
+
+        tick.Events.Emit(new PlayerWarpedEvent(tick.TickNumber, playerId.Value, oldMapId, playerClass.SpawnMapId, true));
     }
 
     private void HandleNpcDeath(World world, Tick tick, NpcDiedEvent died)
@@ -76,15 +70,7 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
         for (byte d = 0; d < npcData.Drop.Count; d++)
             if (npcData.Drop[d].ItemId != Guid.Empty)
                 if (Random.Shared.Next(1, 99) <= npcData.Drop[d].Chance)
-                    tick.Events.Emit(new LootDroppedEvent
-                    {
-                        MapId = pos.MapId,
-                        X = pos.X,
-                        Y = pos.Y,
-                        ItemId = npcData.Drop[d].ItemId,
-                        Amount = npcData.Drop[d].Amount,
-                        DespawnTick = tick.TickNumber + GroundItemDespawnTicks
-                    });
+                    tick.Events.Emit(new LootDroppedEvent(tick.TickNumber, pos.MapId, pos.X, pos.Y, npcData.Drop[d].ItemId, npcData.Drop[d].Amount, tick.TickNumber + GroundItemDespawnTicks));
 
         world.Entities.Destroy(died.EntityId);
         posMap.NpcIds.Remove(died.EntityId);

@@ -78,10 +78,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
             dir = pos.Y > targetPos.Y ? Direction.Up : Direction.Down;
 
         if (pos.Direction != dir)
-        {
-            pos.Direction = dir;
-            world.MarkDirty<Position>(entity.Id);
-        }
+            world.Update<Position>(entity.Id, p => p with { Direction = dir });
     }
 
     private void UpdateTarget(World world, EntityId npcId, Tick tick)
@@ -105,24 +102,18 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
                 {
                     var targetPos = targetE.Get<Position>()!;
                     if (targetPos.MapId != pos.MapId)
-                        npcState.TargetId = null;
+                        world.Update<NpcState>(npcId, s => s with { TargetId = null });
                 }
                 else if (targetE.Has<NpcTag>())
                 {
                     var targetNpcState = targetE.Get<NpcState>();
                     var targetPos = targetE.Get<Position>()!;
                     if (targetNpcState == null || targetPos.MapId != pos.MapId)
-                    {
-                        npcState.TargetId = null;
-                        world.MarkDirty<NpcState>(npcId);
-                    }
+                        world.Update<NpcState>(npcId, s => s with { TargetId = null });
                 }
             }
             else
-            {
-                npcState.TargetId = null;
-                world.MarkDirty<NpcState>(npcId);
-            }
+                world.Update<NpcState>(npcId, s => s with { TargetId = null });
         }
 
         if (npcState.TargetId.HasValue)
@@ -132,10 +123,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
             var targetPos = targetE.Get<Position>()!;
             var distance = Math.Sqrt(Math.Pow(pos.X - targetPos.X, 2) + Math.Pow(pos.Y - targetPos.Y, 2));
             if (npcData.Sight < distance)
-            {
-                npcState.TargetId = null;
-                world.MarkDirty<NpcState>(npcId);
-            }
+                world.Update<NpcState>(npcId, s => s with { TargetId = null });
         }
     }
 
@@ -162,15 +150,9 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
                                         Math.Pow(pos.Y - targetPos.Y, 2));
             if (distance <= npcData.Sight)
             {
-                npcState.TargetId = state.Id;
-                world.MarkDirty<NpcState>(npcId);
+                world.Update<NpcState>(npcId, s => s with { TargetId = state.Id });
                 if (!string.IsNullOrEmpty(npcData.SayMsg))
-                    tick.Events.Emit(new ChatMessageEvent
-                    {
-                        RecipientId = state.Id,
-                        Text = npcData.Name + ": " + npcData.SayMsg,
-                        ColorArgb = ChatColors.White
-                    });
+                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, state.Id, npcData.Name + ": " + npcData.SayMsg, ChatColors.White));
                 return;
             }
         }
@@ -194,8 +176,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
                                         Math.Pow(pos.Y - otherPos.Y, 2));
             if (distance <= npcData.Sight)
             {
-                npcState.TargetId = otherNpcId;
-                world.MarkDirty<NpcState>(npcId);
+                world.Update<NpcState>(npcId, s => s with { TargetId = otherNpcId });
                 return;
             }
         }

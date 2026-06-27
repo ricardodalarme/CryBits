@@ -28,57 +28,44 @@ public static class PlayerSpawner
             @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence], data.Level);
 
         var entityId = world.Entities.Create();
-        var entity = world.Entities.Get(entityId)!;
 
-        entity.Set(new Position
-        {
-            MapId = data.MapId,
-            X = data.X,
-            Y = data.Y,
-            Direction = (Direction)data.Direction
-        });
+        world.Set(entityId, new Position(MapId: data.MapId, X: data.X, Y: data.Y, Direction: (Direction)data.Direction));
 
-        entity.Set(new PlayerAppearance
-        {
-            Name = data.Name,
-            ClassId = data.ClassId,
-            TextureNum = data.Gender == Gender.Male ? @class.TextureMale[data.TextureNum] : @class.TextureFemale[data.TextureNum],
-            Gender = data.Gender
-        });
+        world.Set(entityId, new PlayerAppearance(
+            Name: data.Name,
+            ClassId: data.ClassId,
+            TextureNum: data.Gender == Gender.Male ? @class.TextureMale[data.TextureNum] : @class.TextureFemale[data.TextureNum],
+            Gender: data.Gender
+        ));
 
-        entity.Set(new LevelComponent
-        {
-            Level = data.Level,
-            Experience = data.Experience,
-            Points = data.Points
-        });
-        entity.Set(new AttributesComponent { Values = (short[])data.Attributes.Clone() });
+        world.Set(entityId, new LevelComponent(Level: data.Level, Experience: data.Experience, Points: data.Points));
+        world.Set(entityId, new AttributesComponent((short[])data.Attributes.Clone()));
 
         var hp = data.Hp > 0 ? data.Hp : maxHp;
         var mp = data.Mp > 0 ? data.Mp : maxMp;
-        entity.Set(new Vitals { Hp = hp, Mp = mp, MaxHp = maxHp, MaxMp = maxMp });
+        world.Set(entityId, new Vitals(Hp: hp, Mp: mp, MaxHp: maxHp, MaxMp: maxMp));
 
-        var inv = new InventoryState();
+        var invSlots = new ItemSlot[MaxInventory];
         for (byte i = 0; i < MaxInventory; i++)
-            inv.Slots[i] = i < data.InventoryIds.Length
+            invSlots[i] = i < data.InventoryIds.Length
                 ? new ItemSlot(data.InventoryIds[i], data.InventoryAmounts[i])
                 : new ItemSlot(Guid.Empty, 0);
-        entity.Set(inv);
+        world.Set(entityId, new InventoryState(invSlots));
 
-        var equip = new EquipmentState();
+        var equipSlots = new Guid[(byte)Equipment.Count];
         for (byte i = 0; i < (byte)Equipment.Count; i++)
-            equip.Slots[i] = i < data.Equipment.Length ? data.Equipment[i] : Guid.Empty;
-        entity.Set(equip);
+            equipSlots[i] = i < data.Equipment.Length ? data.Equipment[i] : Guid.Empty;
+        world.Set(entityId, new EquipmentState(equipSlots));
 
-        var hotbar = new HotbarState();
+        var hotbarSlots = new HotbarSlot[MaxHotbar];
         for (byte i = 0; i < MaxHotbar; i++)
-            hotbar.Slots[i] = i < data.HotbarTypes.Length
+            hotbarSlots[i] = i < data.HotbarTypes.Length
                 ? new HotbarSlot((SlotType)data.HotbarTypes[i], data.HotbarSlots[i])
                 : new HotbarSlot(SlotType.None, 0);
-        entity.Set(hotbar);
+        world.Set(entityId, new HotbarState(hotbarSlots));
 
-        entity.Set(new AttackCooldown());
-        entity.Set(new PlayerTag());
+        world.Set(entityId, new AttackCooldown(0));
+        world.Set(entityId, new PlayerTag());
 
         return entityId;
     }
@@ -87,7 +74,6 @@ public static class PlayerSpawner
         Class @class, Gender gender, short textureNum)
     {
         var entityId = world.Entities.Create();
-        var entity = world.Entities.Get(entityId)!;
 
         var maxHp = VitalFormulas.MaxVital(Vital.Hp, @class.Vital[(byte)Vital.Hp],
             @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality],
@@ -96,40 +82,34 @@ public static class PlayerSpawner
             @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality],
             @class.Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence], 1);
 
-        entity.Set(new Position
-        {
-            MapId = @class.SpawnMapId,
-            X = @class.SpawnX,
-            Y = @class.SpawnY,
-            Direction = (Direction)@class.SpawnDirection
-        });
+        world.Set(entityId, new Position(MapId: @class.SpawnMapId, X: @class.SpawnX, Y: @class.SpawnY, Direction: (Direction)@class.SpawnDirection));
 
-        entity.Set(new PlayerAppearance
-        {
-            Name = name,
-            ClassId = @class.Id,
-            TextureNum = gender == Gender.Male ? @class.TextureMale[textureNum] : @class.TextureFemale[textureNum],
-            Gender = gender
-        });
+        world.Set(entityId, new PlayerAppearance(
+            Name: name,
+            ClassId: @class.Id,
+            TextureNum: gender == Gender.Male ? @class.TextureMale[textureNum] : @class.TextureFemale[textureNum],
+            Gender: gender
+        ));
 
-        entity.Set(new LevelComponent { Level = 1 });
-        entity.Set(new AttributesComponent { Values = (short[])@class.Attribute.Clone() });
-        entity.Set(new Vitals { Hp = maxHp, Mp = maxMp, MaxHp = maxHp, MaxMp = maxMp });
+        world.Set(entityId, new LevelComponent(Level: 1));
+        world.Set(entityId, new AttributesComponent((short[])@class.Attribute.Clone()));
+        world.Set(entityId, new Vitals(Hp: maxHp, Mp: maxMp, MaxHp: maxHp, MaxMp: maxMp));
 
-        var inv = new InventoryState();
+        var invSlots = new ItemSlot[MaxInventory];
         for (byte i = 0; i < MaxInventory; i++)
-            inv.Slots[i] = new ItemSlot(Guid.Empty, 0);
-        entity.Set(inv);
+            invSlots[i] = new ItemSlot(Guid.Empty, 0);
+        world.Set(entityId, new InventoryState(invSlots));
 
-        entity.Set(new EquipmentState());
+        var equipSlots = new Guid[(byte)Equipment.Count];
+        world.Set(entityId, new EquipmentState(equipSlots));
 
-        var hotbar = new HotbarState();
+        var hotbarSlots = new HotbarSlot[MaxHotbar];
         for (byte i = 0; i < MaxHotbar; i++)
-            hotbar.Slots[i] = new HotbarSlot(SlotType.None, 0);
-        entity.Set(hotbar);
+            hotbarSlots[i] = new HotbarSlot(SlotType.None, 0);
+        world.Set(entityId, new HotbarState(hotbarSlots));
 
-        entity.Set(new AttackCooldown());
-        entity.Set(new PlayerTag());
+        world.Set(entityId, new AttackCooldown());
+        world.Set(entityId, new PlayerTag());
 
         return entityId;
     }

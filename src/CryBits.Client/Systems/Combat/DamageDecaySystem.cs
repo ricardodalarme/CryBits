@@ -18,9 +18,11 @@ internal sealed class DamageDecaySystem(World world) : IClientSystem
             var damage = state.Get<HurtComponent>();
             if (damage == null) continue;
 
-            damage.HurtCountdown -= dt;
-            if (damage.HurtCountdown <= 0f)
+            var newCountdown = damage.HurtCountdown - dt;
+            if (newCountdown <= 0f)
                 _pendingRemove.Add(state.Id);
+            else
+                world.Set(state.Id, new HurtComponent(newCountdown));
         }
 
         foreach (var id in _pendingRemove)

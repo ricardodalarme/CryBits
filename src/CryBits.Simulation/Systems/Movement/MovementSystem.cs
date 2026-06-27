@@ -28,13 +28,11 @@ public sealed class MovementSystem : ISimulationSystem
     {
         var e = world.Entities.Get(entityId);
         if (e == null) return;
-        var pos = e.Get<Position>()!;
 
         if (direction is < Direction.Up or > Direction.Right) return;
         if (e.Has<MapLoadingTag>()) return;
 
-        pos.Direction = direction;
-        world.MarkDirty<Position>(entityId);
+        world.Update<Position>(entityId, pos => pos with { Direction = direction });
     }
 
     private void Move(World world, Tick tick, EntityId entityId, CommonMovement movement)
@@ -70,23 +68,16 @@ public sealed class MovementSystem : ISimulationSystem
                         return;
                 }
             else
-            {
-                world.MarkDirty<Position>(entityId);
                 return;
-            }
         }
         else if (Map.OutLimit(nextX, nextY))
-        {
-            world.MarkDirty<Position>(entityId);
             return;
-        }
         else if (!map.TileBlocked(oldX, oldY, pos.Direction, world.Entities))
         {
-            pos.X = nextX;
-            pos.Y = nextY;
+            world.Update<Position>(entityId, p => p with { X = nextX, Y = nextY, Direction = p.Direction });
 
             if (e.Has<PlayerTag>())
-                tick.Events.Emit(new PlayerStartedMovingEvent { PlayerId = entityId });
+                tick.Events.Emit(new PlayerStartedMovingEvent(tick.TickNumber, entityId));
         }
 
         if (e.Has<PlayerTag>())
@@ -94,13 +85,11 @@ public sealed class MovementSystem : ISimulationSystem
             var tile = map.Data.Attribute[nextX, nextY];
             if ((TileAttribute)tile.Type == TileAttribute.Warp)
             {
-                if (tile.Data4 > 0) pos.Direction = (Direction)tile.Data4 - 1;
+                var warpDir = tile.Data4 > 0 ? (Direction)tile.Data4 - 1 : pos.Direction;
+                world.Update<Position>(entityId, p => p with { Direction = warpDir, X = p.X, Y = p.Y });
                 Warp(world, tick, entityId, new Guid(tile.Data1), (byte)tile.Data2, (byte)tile.Data3);
             }
         }
-
-        if (oldX != pos.X || oldY != pos.Y)
-            world.MarkDirty<Position>(entityId);
     }
 
     private void Warp(World world, Tick tick, EntityId entityId, Guid mapId, byte x, byte y)
@@ -115,23 +104,13 @@ public sealed class MovementSystem : ISimulationSystem
         if (x >= Map.Width) x = Map.Width - 1;
         if (y >= Map.Height) y = Map.Height - 1;
 
-        pos.MapId = map.Id;
-        pos.X = x;
-        pos.Y = y;
+        world.Update<Position>(entityId, p => p with { MapId = map.Id, X = x, Y = y });
 
         var needsMapData = oldMapId != map.Id;
         if (needsMapData)
             world.Set(entityId, new MapLoadingTag());
 
         if (e.Has<PlayerTag>())
-            tick.Events.Emit(new PlayerWarpedEvent
-            {
-                PlayerId = entityId,
-                OldMapId = oldMapId,
-                NewMapId = map.Id,
-                NeedsMapData = needsMapData
-            });
-
-        world.MarkDirty<Position>(entityId);
+            tick.Events.Emit(new PlayerWarpedEvent(tick.TickNumber, entityId, oldMapId, map.Id, needsMapData));
     }
 }

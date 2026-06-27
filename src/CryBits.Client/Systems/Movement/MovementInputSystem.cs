@@ -38,35 +38,37 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
         var movement = context.World.Get<MovementComponent>(entity);
         if (movement == null || movement.MovementState != MovementState.Stopped) return;
 
-        if (inputManager.IsScancodePressed(Keyboard.Scancode.Up)) Move(Direction.Up, movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Down)) Move(Direction.Down, movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Left)) Move(Direction.Left, movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Right)) Move(Direction.Right, movement);
+        if (inputManager.IsScancodePressed(Keyboard.Scancode.Up)) Move(entity, Direction.Up, movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Down)) Move(entity, Direction.Down, movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Left)) Move(entity, Direction.Left, movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Right)) Move(entity, Direction.Right, movement);
     }
 
-    private void Move(Direction direction, MovementComponent movement)
+    private void Move(EntityId entity, Direction direction, MovementComponent movement)
     {
-        movement.Direction = direction;
-
         var desired = inputManager.IsKeyPressed(Keyboard.Key.LShift)
             ? MovementState.Moving
             : MovementState.Walking;
 
         intentSender.Send(new MoveIntent(default, direction, desired));
 
-        if (context.CurrentMap.TileBlocked(movement.TileX, movement.TileY, direction)) return;
-
-        movement.MovementState = desired;
-        movement.SpeedPixelsPerSecond = desired == MovementState.Moving
-            ? RunSpeedPixelsPerSecond
-            : WalkSpeedPixelsPerSecond;
-
-        switch (direction)
+        if (context.CurrentMap.TileBlocked(movement.TileX, movement.TileY, direction))
         {
-            case Direction.Up: movement.OffsetY = Grid; movement.TileY--; break;
-            case Direction.Down: movement.OffsetY = -Grid; movement.TileY++; break;
-            case Direction.Right: movement.OffsetX = -Grid; movement.TileX++; break;
-            case Direction.Left: movement.OffsetX = Grid; movement.TileX--; break;
+            context.World.Set(entity, movement with { Direction = direction });
+            return;
         }
+
+        var speed = desired == MovementState.Moving ? RunSpeedPixelsPerSecond : WalkSpeedPixelsPerSecond;
+
+        var (offsetX, offsetY, tileX, tileY) = direction switch
+        {
+            Direction.Up => (0f, Grid, movement.TileX, (byte)(movement.TileY - 1)),
+            Direction.Down => (0f, -Grid, movement.TileX, (byte)(movement.TileY + 1)),
+            Direction.Right => (-Grid, 0f, (byte)(movement.TileX + 1), movement.TileY),
+            Direction.Left => (Grid, 0f, (byte)(movement.TileX - 1), movement.TileY),
+            _ => (0f, 0f, movement.TileX, movement.TileY)
+        };
+
+        context.World.Set(entity, new MovementComponent(tileX, tileY, offsetX, offsetY, speed, desired, direction));
     }
 }

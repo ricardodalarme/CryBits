@@ -2,11 +2,4 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Events;
 
-public sealed record NpcDiedEvent : SimEvent
-{
-    public EntityId EntityId { get; init; }
-    public Guid MapId { get; init; }
-    public Guid NpcDefId { get; init; }
-    public byte NpcIndex { get; init; }
-    public EntityId? SourceId { get; init; }
-}
+public sealed partial record class NpcDiedEvent(long TickNumber, EntityId EntityId, Guid MapId, Guid NpcDefId, byte NpcIndex, EntityId? SourceId) : SimEvent(TickNumber);

@@ -39,7 +39,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         if (attackerE.Get<TradeState>()?.Partner != null) return;
         if (attackerE.Get<ShopState>()?.ShopId != null) return;
         var cooldown = attackerE.Get<AttackCooldown>()!;
-        if (tick.TickNumber < cooldown.NextAllowedTick + AttackSpeedTicks) return;
+        if (tick.TickNumber < cooldown.NextAllowedTick + (int)AttackSpeedTicks) return;
 
         EntityId? victimId = intent.TargetId;
         if (victimId == null)
@@ -66,7 +66,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
 
         if (victimE.Has<PlayerTag>() && map.Data.Moral == (byte)Moral.Pacific)
         {
-            tick.Events.Emit(new ChatMessageEvent { RecipientId = intent.SourceEntityId, Text = "This is a peaceful area.", ColorArgb = ChatColors.White });
+            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, intent.SourceEntityId, "This is a peaceful area.", ChatColors.White));
             return;
         }
 
@@ -79,7 +79,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
                 if (victimData.Behaviour == Behaviour.Friendly) return;
                 if (victimData.Behaviour == Behaviour.ShopKeeper)
                 {
-                    tick.Events.Emit(new NpcAttackedEvent { AttackerId = intent.SourceEntityId, NpcInstanceId = victimId.Value });
+                    tick.Events.Emit(new NpcAttackedEvent(tick.TickNumber, intent.SourceEntityId, victimId.Value));
                     return;
                 }
             }
@@ -99,7 +99,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         var attackerAttrs = attackerE.Get<AttributesComponent>()!;
         var victimAttrs = victimE.Get<AttributesComponent>();
 
-        cooldown.NextAllowedTick = tick.TickNumber;
+        world.Update<AttackCooldown>(attackerId, c => c with { NextAllowedTick = tick.TickNumber });
 
         var weaponDamage = GetWeaponDamage(attackerE);
         var attackerDamage = CombatFormulas.BaseDamage(attackerAttrs.Values[(byte)Attribute.Strength], weaponDamage);
@@ -110,45 +110,28 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
 
         if (netDamage > 0)
         {
-            tick.Events.Emit(new CombatAttackEvent
-            {
-                AttackerId = attackerId,
-                VictimId = victimId,
-                MapId = attackerPos.MapId,
-                Hit = true
-            });
+            tick.Events.Emit(new CombatAttackEvent(tick.TickNumber, attackerId, victimId, attackerPos.MapId, true));
 
             if (netDamage < victimVitals.Hp)
-            {
-                victimVitals.Hp -= netDamage;
-                world.MarkDirty<Vitals>(victimId);
-            }
+                world.Update<Vitals>(victimId, v => v with { Hp = (short)(v.Hp - netDamage) });
             else
             {
                 if (victimE.Has<PlayerTag>())
-                    tick.Events.Emit(new PlayerDiedEvent { EntityId = victimId, SourceId = attackerId });
+                    tick.Events.Emit(new PlayerDiedEvent(tick.TickNumber, victimId, attackerId));
                 else if (victimE.Has<NpcTag>())
                 {
                     var npcState = victimE.Get<NpcState>()!;
-                    tick.Events.Emit(new NpcDiedEvent
-                    {
-                        EntityId = victimId,
-                        MapId = attackerPos.MapId,
-                        NpcDefId = npcState.NpcDefId,
-                        NpcIndex = npcState.Index,
-                        SourceId = attackerId
-                    });
+                    tick.Events.Emit(new NpcDiedEvent(tick.TickNumber, victimId, attackerPos.MapId, npcState.NpcDefId, npcState.Index, attackerId));
                 }
             }
         }
         else
-            tick.Events.Emit(new CombatAttackEvent { AttackerId = attackerId, VictimId = victimId, MapId = attackerPos.MapId, Hit = false });
+            tick.Events.Emit(new CombatAttackEvent(tick.TickNumber, attackerId, victimId, attackerPos.MapId, false));
     }
 
     private static void MissAttack(Tick tick, EntityId entityId, Position pos, AttackCooldown cooldown)
     {
-        tick.Events.Emit(new CombatAttackEvent { AttackerId = entityId, MapId = pos.MapId, Hit = false });
-        cooldown.NextAllowedTick = tick.TickNumber;
+        tick.Events.Emit(new CombatAttackEvent(tick.TickNumber, entityId, null, pos.MapId, false));
     }
 
     private short GetWeaponDamage(EntityState e)
