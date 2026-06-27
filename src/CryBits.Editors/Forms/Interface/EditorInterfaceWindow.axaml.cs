@@ -4,7 +4,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Client.Framework.Persistence.Repositories;
-using CryBits.Definitions.Common;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics.Renderers;
@@ -65,8 +64,8 @@ internal partial class EditorInterfaceWindow : Window
     // Consumed by Renders.Instance.Interface()
     public static byte SelectedWindowIndex { get; private set; }
 
-    private bool _loadingProps;
     private Component? _selectedComponent;
+    private ComponentEditorViewModel? _componentViewModel;
     private TreeItemVM? _selectedNode;
     private TreeItemVM _rootVM = new(); // virtual root for the current window
 
@@ -122,6 +121,8 @@ internal partial class EditorInterfaceWindow : Window
         SelectedWindowIndex = (byte)Math.Max(0, cmbWindows.SelectedIndex);
         _selectedNode = null;
         _selectedComponent = null;
+        _componentViewModel = null;
+        DataContext = null;
         RebuildTree();
         UpdatePropertiesPanel();
     }
@@ -212,6 +213,8 @@ internal partial class EditorInterfaceWindow : Window
         _selectedNode.Parent.Children.Remove(_selectedNode);
         _selectedNode = null;
         _selectedComponent = null;
+        _componentViewModel = null;
+        DataContext = null;
         UpdatePropertiesPanel();
     }
 
@@ -273,216 +276,33 @@ internal partial class EditorInterfaceWindow : Window
             return;
         }
 
-        _loadingProps = true;
         pnlPropsBase.IsVisible = true;
         lblNoSelection.IsVisible = false;
 
-        txtPropName.Text = c.Name;
-        numPropX.Value = c.Position.X;
-        numPropY.Value = c.Position.Y;
-        chkPropVisible.IsChecked = c.Visible;
+        _componentViewModel = new ComponentEditorViewModel(c);
+        DataContext = _componentViewModel;
 
-        secTextureNum.IsVisible = c is Button or Panel;
-        secLabelProps.IsVisible = c is Label;
-        secCheckBoxProps.IsVisible = c is CheckBox;
-        secTextBoxProps.IsVisible = c is TextBox;
-        secProgressBarProps.IsVisible = c is ProgressBar;
-        secSlotGridProps.IsVisible = c is SlotGrid;
-        secPictureProps.IsVisible = c is Picture;
-
-        switch (c)
-        {
-            case Button btn: numPropTexture.Value = btn.TextureNum; break;
-            case Panel pnl: numPropTexture.Value = pnl.TextureNum; break;
-            case Label lbl:
-                txtPropLblText.Text = lbl.Text;
-                cmbPropLblAlignment.SelectedIndex = (int)lbl.Alignment;
-                clrPropLabel.Color = Avalonia.Media.Color.FromRgb((byte)(lbl.Color >> 16), (byte)(lbl.Color >> 8), (byte)lbl.Color);
-                numPropLblMaxWidth.Value = lbl.MaxWidth;
-                break;
-            case CheckBox cb:
-                txtPropCbText.Text = cb.Text;
-                chkPropCbChecked.IsChecked = cb.Checked;
-                break;
-            case TextBox tb:
-                txtPropTbText.Text = tb.Text;
-                numPropMaxChars.Value = tb.MaxCharacters;
-                numPropTbWidth.Value = tb.Width;
-                chkPropPassword.IsChecked = tb.Password;
-                break;
-            case ProgressBar pb:
-                numPropPbSourceY.Value = pb.SourceY;
-                numPropPbWidth.Value = pb.Width;
-                numPropPbHeight.Value = pb.Height;
-                break;
-            case SlotGrid sg:
-                numPropSgRows.Value = sg.Rows;
-                numPropSgColumns.Value = sg.Columns;
-                numPropSgSlotSize.Value = sg.SlotSize;
-                numPropSgPadding.Value = sg.Padding;
-                txtSgSlotCount.Text = sg.SlotCount.ToString();
-                break;
-            case Picture pic:
-                numPropPicWidth.Value = pic.Width;
-                numPropPicHeight.Value = pic.Height;
-                break;
-        }
-
-        _loadingProps = false;
-    }
-
-    // ─── Property write-back ──────────────────────────────────────────────────
-
-    private void txtPropName_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent == null) return;
-        _selectedComponent.Name = txtPropName.Text ?? string.Empty;
-        // INotifyPropertyChanged on TreeItemVM.Header propagates the change to the TreeView automatically
+        // Update Header in tree when Name changes
         if (_selectedNode != null)
-            _selectedNode.Header = _selectedComponent.ToString() ?? string.Empty;
+            _selectedNode.Header = c.ToString() ?? string.Empty;
+
+        // ColorPicker needs manual handling (Avalonia.Media.Color ↔ int conversion)
+        if (c is Label lbl)
+        {
+            clrPropLabel.Color = Avalonia.Media.Color.FromRgb(
+                (byte)(lbl.Color >> 16), (byte)(lbl.Color >> 8), (byte)lbl.Color);
+        }
     }
 
-    private void numPropX_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent == null) return;
-        _selectedComponent.Position = new Point((int)(e.NewValue ?? 0), _selectedComponent.Position.Y);
-    }
-
-    private void numPropY_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent == null) return;
-        _selectedComponent.Position = new Point(_selectedComponent.Position.X, (int)(e.NewValue ?? 0));
-    }
-
-    private void chkPropVisible_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent == null) return;
-        _selectedComponent.Visible = chkPropVisible.IsChecked ?? false;
-    }
-
-    private void numPropTexture_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent == null) return;
-        var v = (byte)(e.NewValue ?? 0);
-        if (_selectedComponent is Button btn) btn.TextureNum = v;
-        else if (_selectedComponent is Panel pnl) pnl.TextureNum = v;
-    }
-
-    private void txtPropLblText_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not Label lbl) return;
-        lbl.Text = txtPropLblText.Text ?? string.Empty;
-    }
-
-    private void cmbPropLblAlignment_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not Label lbl) return;
-        lbl.Alignment = (TextAlign)(cmbPropLblAlignment.SelectedIndex >= 0 ? cmbPropLblAlignment.SelectedIndex : 0);
-    }
+    // ──────────────────────────────────────────────────────────────────────────
+    // Remaining property handlers (can't be bound)
+    // ──────────────────────────────────────────────────────────────────────────
 
     private void clrPropLabel_ColorChanged(object? sender, Avalonia.Controls.ColorChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not Label lbl) return;
+        if (_selectedComponent is not Label lbl) return;
         var c = e.NewColor;
         lbl.Color = (c.R << 16) | (c.G << 8) | c.B;
-    }
-
-    private void numPropLblMaxWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not Label lbl) return;
-        lbl.MaxWidth = (int)(e.NewValue ?? 0);
-    }
-
-    private void txtPropCbText_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not CheckBox cb) return;
-        cb.Text = txtPropCbText.Text ?? string.Empty;
-    }
-
-    private void chkPropCbChecked_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not CheckBox cb) return;
-        cb.Checked = chkPropCbChecked.IsChecked ?? false;
-    }
-
-    private void txtPropTbText_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not TextBox tb) return;
-        tb.Text = txtPropTbText.Text ?? string.Empty;
-    }
-
-    private void numPropMaxChars_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not TextBox tb) return;
-        tb.MaxCharacters = (short)(e.NewValue ?? 0);
-    }
-
-    private void numPropTbWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not TextBox tb) return;
-        tb.Width = (short)(e.NewValue ?? 0);
-    }
-
-    private void chkPropPassword_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not TextBox tb) return;
-        tb.Password = chkPropPassword.IsChecked ?? false;
-    }
-
-    private void numPropPbSourceY_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not ProgressBar pb) return;
-        pb.SourceY = (int)(e.NewValue ?? 0);
-    }
-
-    private void numPropPbWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not ProgressBar pb) return;
-        pb.Width = (int)(e.NewValue ?? 0);
-    }
-
-    private void numPropPbHeight_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not ProgressBar pb) return;
-        pb.Height = (int)(e.NewValue ?? 0);
-    }
-
-    private void numPropSgRows_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
-        sg.Rows = (byte)(e.NewValue ?? 1);
-        txtSgSlotCount.Text = sg.SlotCount.ToString();
-    }
-
-    private void numPropSgColumns_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
-        sg.Columns = (byte)(e.NewValue ?? 1);
-        txtSgSlotCount.Text = sg.SlotCount.ToString();
-    }
-
-    private void numPropSgSlotSize_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
-        sg.SlotSize = (byte)(e.NewValue ?? 32);
-    }
-
-    private void numPropSgPadding_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
-        sg.Padding = (byte)(e.NewValue ?? 4);
-    }
-
-    private void numPropPicWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not Picture pic) return;
-        pic.Width = (int)(e.NewValue ?? 0);
-    }
-
-    private void numPropPicHeight_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loadingProps || _selectedComponent is not Picture pic) return;
-        pic.Height = (int)(e.NewValue ?? 0);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

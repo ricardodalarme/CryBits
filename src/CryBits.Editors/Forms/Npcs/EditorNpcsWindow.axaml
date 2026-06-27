@@ -52,26 +52,27 @@
 
                             <Grid ColumnDefinitions="90,*">
                                 <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center"/>
-                                <TextBox x:Name="txtName" Grid.Column="1" TextChanged="txtName_TextChanged"/>
+                                <TextBox Grid.Column="1" Text="{Binding Name}"/>
                             </Grid>
                             <Grid ColumnDefinitions="90,*">
                                 <TextBlock Grid.Column="0" Text="Say message:" VerticalAlignment="Center"/>
-                                <TextBox x:Name="txtSayMsg" Grid.Column="1" TextChanged="txtSayMsg_TextChanged"/>
+                                <TextBox Grid.Column="1" Text="{Binding SayMsg}"/>
                             </Grid>
                             <Grid ColumnDefinitions="90,*">
                                 <TextBlock Grid.Column="0" Text="Texture:" VerticalAlignment="Center"/>
                                 <NumericUpDown x:Name="numTexture" Grid.Column="1" Minimum="0" Maximum="255"
-                                               FormatString="0" ValueChanged="numTexture_ValueChanged"/>
+                                               FormatString="0" Value="{Binding Texture}"
+                                               ValueChanged="numTexture_ValueChanged"/>
                             </Grid>
                             <Grid ColumnDefinitions="90,*">
                                 <TextBlock Grid.Column="0" Text="Range (sight):" VerticalAlignment="Center"/>
-                                <NumericUpDown x:Name="numRange" Grid.Column="1" Minimum="0" Maximum="20"
-                                               FormatString="0" ValueChanged="numRange_ValueChanged"/>
+                                <NumericUpDown Grid.Column="1" Minimum="0" Maximum="20"
+                                               FormatString="0" Value="{Binding Sight}"/>
                             </Grid>
                             <Grid ColumnDefinitions="90,*">
                                 <TextBlock Grid.Column="0" Text="Spawn rate (s):" VerticalAlignment="Center"/>
-                                <NumericUpDown x:Name="numSpawn" Grid.Column="1" Minimum="0" Maximum="255"
-                                               FormatString="0" ValueChanged="numSpawn_ValueChanged"/>
+                                <NumericUpDown Grid.Column="1" Minimum="0" Maximum="255"
+                                               FormatString="0" Value="{Binding SpawnTime}"/>
                             </Grid>
                         </StackPanel>
 
@@ -95,45 +96,45 @@
                             <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,4,0">
                                 <Grid ColumnDefinitions="90,*">
                                     <TextBlock Grid.Column="0" Text="HP:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numHP" Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" ValueChanged="numHP_ValueChanged"/>
+                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" Value="{Binding Hp}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="90,*">
                                     <TextBlock Grid.Column="0" Text="MP:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numMP" Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" ValueChanged="numMP_ValueChanged"/>
+                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" Value="{Binding Mp}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="90,*">
                                     <TextBlock Grid.Column="0" Text="Strength:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numStrength" Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" ValueChanged="numStrength_ValueChanged"/>
+                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" Value="{Binding Strength}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="90,*">
                                     <TextBlock Grid.Column="0" Text="Resistance:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numResistance" Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" ValueChanged="numResistance_ValueChanged"/>
+                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" Value="{Binding Resistance}"/>
                                 </Grid>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Spacing="4" Margin="4,0,0,0">
                                 <Grid ColumnDefinitions="100,*">
                                     <TextBlock Grid.Column="0" Text="Intelligence:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numIntelligence" Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" ValueChanged="numIntelligence_ValueChanged"/>
+                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" Value="{Binding Intelligence}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="100,*">
                                     <TextBlock Grid.Column="0" Text="Agility:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numAgility" Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" ValueChanged="numAgility_ValueChanged"/>
+                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" Value="{Binding Agility}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="100,*">
                                     <TextBlock Grid.Column="0" Text="Vitality:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numVitality" Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" ValueChanged="numVitality_ValueChanged"/>
+                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" Value="{Binding Vitality}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="100,*">
                                     <TextBlock Grid.Column="0" Text="Experience:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numExperience" Grid.Column="1" Minimum="0" Maximum="2147483647"
-                                                   FormatString="0" ValueChanged="numExperience_ValueChanged"/>
+                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="2147483647"
+                                                   FormatString="0" Value="{Binding Experience}"/>
                                 </Grid>
                             </StackPanel>
                         </Grid>
@@ -162,8 +163,8 @@
                         </Grid>
                         <Grid ColumnDefinitions="90,*">
                             <TextBlock Grid.Column="0" Text="Flee at HP%:" VerticalAlignment="Center"/>
-                            <NumericUpDown x:Name="numFlee_Health" Grid.Column="1" Minimum="0" Maximum="100"
-                                           FormatString="0" ValueChanged="numFlee_Health_ValueChanged"/>
+                            <NumericUpDown Grid.Column="1" Minimum="0" Maximum="100"
+                                           FormatString="0" Value="{Binding FleeHealth}"/>
                         </Grid>
                         <Grid x:Name="pnlShop" ColumnDefinitions="90,*" IsVisible="False">
                             <TextBlock Grid.Column="0" Text="Shop:" VerticalAlignment="Center"/>

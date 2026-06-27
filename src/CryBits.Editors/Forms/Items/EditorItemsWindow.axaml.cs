@@ -2,19 +2,18 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Characters;
 using CryBits.Definitions.Classes;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
-using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Editors.Forms.Items;
 
 internal partial class EditorItemsWindow : Window
 {
     private readonly DefinitionCatalog _catalog;
+    private ItemEditorViewModel? _viewModel;
 
     /// <summary>Opens the Items editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
@@ -29,7 +28,6 @@ internal partial class EditorItemsWindow : Window
     public static short CurrentTextureIndex { get; private set; } = 0;
 
     private Item? _selected;
-    private bool _loading;
 
     public EditorItemsWindow(DefinitionCatalog catalog)
     {
@@ -74,20 +72,6 @@ internal partial class EditorItemsWindow : Window
         pnlRight.IsVisible = lstItems.SelectedItem != null;
     }
 
-    private void RefreshItemListKeepSelection()
-    {
-        var saved = _selected;
-        _loading = true;
-
-        var filter = txtFilter.Text ?? string.Empty;
-        lstItems.ItemsSource = _catalog.Items.Values
-            .Where(i => i.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
-            .ToList();
-
-        lstItems.SelectedItem = saved;
-        _loading = false;
-    }
-
     private void txtFilter_TextChanged(object? sender, TextChangedEventArgs e)
     {
         RefreshItemList();
@@ -95,36 +79,16 @@ internal partial class EditorItemsWindow : Window
 
     private void lstItems_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading) return;
         if (lstItems.SelectedItem is not Item item) return;
-        LoadItem(item);
-        pnlRight.IsVisible = true;
-    }
-
-    private void LoadItem(Item item)
-    {
-        _loading = true;
         _selected = item;
+        _viewModel = new ItemEditorViewModel(item);
+        DataContext = _viewModel;
 
-        txtName.Text = item.Name;
-        txtDescription.Text = item.Description;
-        numTexture.Value = item.Texture;
+        numTexture.Maximum = Math.Max(0, Textures.Items.Count - 1);
+
         cmbType.SelectedIndex = (byte)item.Type;
-        chkStackable.IsChecked = item.Stackable;
-        cmbBind.SelectedIndex = (byte)item.Bind;
-        cmbRarity.SelectedIndex = (byte)item.Rarity;
-        numReq_Level.Value = item.ReqLevel;
         cmbReq_Class.SelectedIndex = item.ReqClassId.HasValue ? cmbReq_Class.Items.IndexOf(_catalog.Classes.Get(item.ReqClassId.Value)) : 0;
-        numPotion_Experience.Value = item.PotionExperience;
-        numPotion_HP.Value = item.PotionVital[(byte)Vital.Hp];
-        numPotion_MP.Value = item.PotionVital[(byte)Vital.Mp];
         cmbEquipment_Type.SelectedIndex = item.EquipType;
-        numEquip_Strength.Value = item.EquipAttribute[(byte)Attribute.Strength];
-        numEquip_Resistance.Value = item.EquipAttribute[(byte)Attribute.Resistance];
-        numEquip_Intelligence.Value = item.EquipAttribute[(byte)Attribute.Intelligence];
-        numEquip_Agility.Value = item.EquipAttribute[(byte)Attribute.Agility];
-        numEquip_Vitality.Value = item.EquipAttribute[(byte)Attribute.Vitality];
-        numWeapon_Damage.Value = item.WeaponDamage;
 
         UpdateTypePanels((byte)item.Type);
         UpdateWeaponDamageVisibility(item.EquipType);
@@ -132,7 +96,7 @@ internal partial class EditorItemsWindow : Window
         CurrentTextureIndex = item.Texture;
         UpdateTexturePreview(item.Texture);
 
-        _loading = false;
+        pnlRight.IsVisible = true;
     }
 
     // ──────────────────────────────────────────────────────────
@@ -153,30 +117,17 @@ internal partial class EditorItemsWindow : Window
         if (_selected == null) return;
         _catalog.Items.Remove(_selected.Id);
         _selected = null;
+        _viewModel = null;
+        DataContext = null;
         RefreshItemList();
         pnlRight.IsVisible = lstItems.SelectedItem != null;
     }
 
     // ──────────────────────────────────────────────────────────
 
-    // ──────────────────────────────────────────────────────────
-
-    private void txtName_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Name = txtName.Text ?? string.Empty;
-        RefreshItemListKeepSelection();
-    }
-
-    private void txtDescription_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Description = txtDescription.Text ?? string.Empty;
-    }
-
     private void cmbType_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
+        if (_selected == null) return;
         _selected.Type = (ItemType)cmbType.SelectedIndex;
         UpdateTypePanels((byte)cmbType.SelectedIndex);
     }
@@ -190,76 +141,20 @@ internal partial class EditorItemsWindow : Window
     private void numTexture_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         CurrentTextureIndex = (short)(e.NewValue ?? 0);
-        if (_loading || _selected == null) return;
-        _selected.Texture = CurrentTextureIndex;
         UpdateTexturePreview(CurrentTextureIndex);
-    }
-
-    private void cmbRarity_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Rarity = (Rarity)cmbRarity.SelectedIndex;
-    }
-
-    private void cmbBind_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Bind = (BindOn)cmbBind.SelectedIndex;
-    }
-
-    private void chkStackable_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Stackable = chkStackable.IsChecked ?? false;
-    }
-
-    // ──────────────────────────────────────────────────────────
-
-    // ──────────────────────────────────────────────────────────
-
-    private void numReq_Level_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.ReqLevel = (short)(e.NewValue ?? 0);
     }
 
     private void cmbReq_Class_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
+        if (_selected == null) return;
         _selected.ReqClassId = cmbReq_Class.SelectedIndex == 0
             ? null
             : (cmbReq_Class.SelectedItem as Class)?.Id;
     }
 
-    // ──────────────────────────────────────────────────────────
-
-    // ──────────────────────────────────────────────────────────
-
-    private void numPotion_HP_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.PotionVital[(byte)Vital.Hp] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numPotion_MP_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.PotionVital[(byte)Vital.Mp] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numPotion_Experience_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.PotionExperience = (int)(e.NewValue ?? 0);
-    }
-
-    // ──────────────────────────────────────────────────────────
-
-    // ──────────────────────────────────────────────────────────
-
     private void cmbEquipment_Type_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
+        if (_selected == null) return;
         _selected.EquipType = (byte)cmbEquipment_Type.SelectedIndex;
         UpdateWeaponDamageVisibility(_selected.EquipType);
     }
@@ -267,42 +162,6 @@ internal partial class EditorItemsWindow : Window
     private void UpdateWeaponDamageVisibility(byte equipTypeIndex)
     {
         pnlWeaponDamage.IsVisible = equipTypeIndex == (byte)Equipment.Weapon;
-    }
-
-    private void numEquip_Strength_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.EquipAttribute[(byte)Attribute.Strength] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numEquip_Resistance_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.EquipAttribute[(byte)Attribute.Resistance] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numEquip_Intelligence_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.EquipAttribute[(byte)Attribute.Intelligence] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numEquip_Agility_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.EquipAttribute[(byte)Attribute.Agility] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numEquip_Vitality_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.EquipAttribute[(byte)Attribute.Vitality] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numWeapon_Damage_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.WeaponDamage = (short)(e.NewValue ?? 0);
     }
 
     // ──────────────────────────────────────────────────────────

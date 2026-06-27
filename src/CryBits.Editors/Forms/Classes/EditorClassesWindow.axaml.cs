@@ -2,13 +2,11 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Characters;
-using CryBits.Definitions.Classes;
 using CryBits.Definitions.Items;
+using Class = CryBits.Definitions.Classes.Class;
 using CryBits.Definitions.Slots;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
-using Attribute = CryBits.Definitions.Characters.Attribute;
 using Map = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Editors.Forms.Classes;
@@ -16,8 +14,8 @@ namespace CryBits.Editors.Forms.Classes;
 internal partial class EditorClassesWindow : Window
 {
     private readonly DefinitionCatalog _catalog;
+    private ClassEditorViewModel? _viewModel;
 
-    /// <summary>Opens the Classes editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
         if (DefinitionCatalog.Instance.Maps.Count == 0)
@@ -32,11 +30,9 @@ internal partial class EditorClassesWindow : Window
         window.Show();
     }
 
-    // Consumed by Renders.cs EditorClass() instead of EditorClasses.Form.numTexture.Value
     public static short CurrentTextureIndex { get; private set; } = 1;
 
     private Class? _selected;
-    private bool _loading;
     private bool _addingToMale;
 
     public EditorClassesWindow(DefinitionCatalog catalog)
@@ -44,28 +40,14 @@ internal partial class EditorClassesWindow : Window
         _catalog = catalog;
         InitializeComponent();
 
-        // Populate comboboxes from live data
         cmbItems.ItemsSource = _catalog.Items.Values.ToList();
         cmbSpawn_Map.ItemsSource = _catalog.Maps.Values.ToList();
 
-        // Wire SFML window: fires first time sfmlHost becomes part of the layout tree
-        // (replaced with WriteableBitmap rendering - no native host needed)
-
-        // Filter textbox change
         txtFilter.TextChanged += txtFilter_TextChanged;
-
-        // Initial list population
         RefreshClassList();
     }
 
-    protected override void OnClosed(EventArgs e)
-    {
-        base.OnClosed(e);
-    }
-
-    // ──────────────────────────────────────────────────────────
-    // Class list
-    // ──────────────────────────────────────────────────────────
+    // ── Class list ──────────────────────────────────────────────
 
     private void RefreshClassList()
     {
@@ -75,67 +57,27 @@ internal partial class EditorClassesWindow : Window
             .ToList();
 
         lstClasses.ItemsSource = filtered;
-
         if (filtered.Count > 0 && lstClasses.SelectedItem == null)
             lstClasses.SelectedIndex = 0;
 
         pnlContent.IsVisible = lstClasses.SelectedItem != null;
     }
 
-    private void RefreshClassListKeepSelection()
-    {
-        var savedSelected = _selected;
-        _loading = true;
-
-        var filter = txtFilter.Text ?? string.Empty;
-        lstClasses.ItemsSource = _catalog.Classes.Values
-            .Where(c => c.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
-            .ToList();
-
-        lstClasses.SelectedItem = savedSelected;
-        _loading = false;
-    }
-
     private void lstClasses_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading) return;
         if (lstClasses.SelectedItem is not Class cls) return;
-        LoadClass(cls);
-        pnlContent.IsVisible = true;
-    }
-
-    private void LoadClass(Class cls)
-    {
-        _loading = true;
         _selected = cls;
-
-        txtName.Text = cls.Name;
-        txtDescription.Text = cls.Description;
-
-        numHP.Value = cls.Vital[(byte)Vital.Hp];
-        numMP.Value = cls.Vital[(byte)Vital.Mp];
-
-        numStrength.Value = cls.Attribute[(byte)Attribute.Strength];
-        numResistance.Value = cls.Attribute[(byte)Attribute.Resistance];
-        numIntelligence.Value = cls.Attribute[(byte)Attribute.Intelligence];
-        numAgility.Value = cls.Attribute[(byte)Attribute.Agility];
-        numVitality.Value = cls.Attribute[(byte)Attribute.Vitality];
-
-        numSpawn_X.Maximum = 999;
-        numSpawn_Y.Maximum = 999;
-        numSpawn_X.Value = cls.SpawnX;
-        numSpawn_Y.Value = cls.SpawnY;
-
-        cmbSpawn_Map.SelectedItem = _catalog.Maps.Values.FirstOrDefault(m => m.Id == cls.SpawnMapId);
-        cmbSpawn_Direction.SelectedIndex = cls.SpawnDirection;
+        _viewModel = new ClassEditorViewModel(cls);
+        DataContext = _viewModel;
 
         numTexture.Maximum = Textures.Characters.Count - 1;
+
+        cmbSpawn_Map.SelectedItem = _catalog.Maps.Values.FirstOrDefault(m => m.Id == cls.SpawnMapId);
 
         RefreshTextureLists();
         RefreshItemList();
         HideOverlays();
-
-        _loading = false;
+        pnlContent.IsVisible = true;
     }
 
     private void RefreshTextureLists()
@@ -162,9 +104,7 @@ internal partial class EditorClassesWindow : Window
         RefreshClassList();
     }
 
-    // ──────────────────────────────────────────────────────────
-    // New / Remove
-    // ──────────────────────────────────────────────────────────
+    // ── New / Remove ───────────────────────────────────────────
 
     private void butNew_Click(object? sender, RoutedEventArgs e)
     {
@@ -177,85 +117,17 @@ internal partial class EditorClassesWindow : Window
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-
-        if (_catalog.Classes.Count == 1)
-        {
-            // Must have at least one class – silently ignore (or show a dialog)
-            return;
-        }
+        if (_catalog.Classes.Count == 1) return;
 
         _catalog.Classes.Remove(_selected.Id);
         _selected = null;
+        _viewModel = null;
+        DataContext = null;
         RefreshClassList();
         pnlContent.IsVisible = lstClasses.SelectedItem != null;
     }
 
-    // ──────────────────────────────────────────────────────────
-
-    // ──────────────────────────────────────────────────────────
-
-    private void txtName_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Name = txtName.Text ?? string.Empty;
-        RefreshClassListKeepSelection();
-    }
-
-    private void txtDescription_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Description = txtDescription.Text ?? string.Empty;
-    }
-
-    // ──────────────────────────────────────────────────────────
-
-    // ──────────────────────────────────────────────────────────
-
-    private void numHP_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Vital[(byte)Vital.Hp] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numMP_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Vital[(byte)Vital.Mp] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numStrength_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Strength] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numResistance_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Resistance] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numIntelligence_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Intelligence] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numAgility_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Agility] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numVitality_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Vitality] = (short)(e.NewValue ?? 0);
-    }
-
-    // ──────────────────────────────────────────────────────────
-
-    // ──────────────────────────────────────────────────────────
+    // ── Textures ───────────────────────────────────────────────
 
     private void butMTexture_Click(object? sender, RoutedEventArgs e)
     {
@@ -295,10 +167,6 @@ internal partial class EditorClassesWindow : Window
         UpdateTexturePreview(CurrentTextureIndex);
     }
 
-    /// <summary>
-    /// Converts the first animation frame of an SFML character spritesheet
-    /// to an Avalonia WriteableBitmap shown inside imgTexturePreview.
-    /// </summary>
     private void UpdateTexturePreview(short textureIndex)
     {
         if (textureIndex <= 0 || textureIndex >= Textures.Characters.Count)
@@ -307,7 +175,6 @@ internal partial class EditorClassesWindow : Window
             return;
         }
 
-        // Spritesheet is 4 cols × 4 rows – preview just the first frame (top-left)
         SfmlRenderBlit.BlitTexture(Textures.Characters[textureIndex], imgTexturePreview, 4, 4);
     }
 
@@ -325,13 +192,11 @@ internal partial class EditorClassesWindow : Window
         HideOverlays();
     }
 
-    // ──────────────────────────────────────────────────────────
-    // Initial items
-    // ──────────────────────────────────────────────────────────
+    // ── Initial items ──────────────────────────────────────────
 
     private void butItem_Add_Click(object? sender, RoutedEventArgs e)
     {
-        if (_catalog.Items.Count == 0) return; // no items registered
+        if (_catalog.Items.Count == 0) return;
 
         cmbItems.SelectedIndex = 0;
         numItem_Amount.Value = 1;
@@ -354,40 +219,28 @@ internal partial class EditorClassesWindow : Window
         RefreshItemList();
     }
 
-    // ──────────────────────────────────────────────────────────
-
-    // ──────────────────────────────────────────────────────────
+    // ── Spawn map ──────────────────────────────────────────────
 
     private void cmbSpawn_Map_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
+        if (_selected == null) return;
         if (cmbSpawn_Map.SelectedItem is Map map) _selected.SpawnMapId = map.Id;
     }
 
     private void cmbSpawn_Direction_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.SpawnDirection = (byte)cmbSpawn_Direction.SelectedIndex;
+        if (_viewModel == null) return;
+        // Binding handles the value — just refresh if needed
     }
 
-    private void numSpawn_X_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.SpawnX = (int)(e.NewValue ?? 0);
-    }
-
-    private void numSpawn_Y_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.SpawnY = (int)(e.NewValue ?? 0);
-    }
-
-    // ──────────────────────────────────────────────────────────
-    // Save / Cancel
-    // ──────────────────────────────────────────────────────────
+    // ── Save / Cancel ──────────────────────────────────────────
 
     private void butSave_Click(object? sender, RoutedEventArgs e)
     {
+        // Re-sync spawn map in case binding didn't capture it
+        if (_selected != null && cmbSpawn_Map.SelectedItem is Map map)
+            _selected.SpawnMapId = map.Id;
+
         PackageSender.Instance.WriteClasses();
         Close();
     }

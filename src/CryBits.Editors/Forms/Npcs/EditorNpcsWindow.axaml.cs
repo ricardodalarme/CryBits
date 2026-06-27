@@ -4,7 +4,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Npcs;
@@ -14,13 +13,13 @@ using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Network;
 using SFML.Graphics;
 using SFML.System;
-using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Editors.Forms.Npcs;
 
 internal partial class EditorNpcsWindow : Window
 {
     private readonly DefinitionCatalog _catalog;
+    private NpcEditorViewModel? _viewModel;
 
     /// <summary>Opens the NPCs editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
@@ -35,7 +34,6 @@ internal partial class EditorNpcsWindow : Window
     public static short CurrentTextureIndex { get; private set; }
 
     private Npc? _selected;
-    private bool _loading;
 
     private WriteableBitmap? _previewBitmap;
     private readonly DispatcherTimer? _timer;
@@ -100,18 +98,6 @@ internal partial class EditorNpcsWindow : Window
         pnlContent.IsVisible = lstNpcs.SelectedItem != null;
     }
 
-    private void RefreshNpcListKeepSelection()
-    {
-        var saved = _selected;
-        _loading = true;
-        var filter = txtFilter.Text ?? string.Empty;
-        lstNpcs.ItemsSource = _catalog.Npcs.Values
-            .Where(n => n.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
-            .ToList();
-        lstNpcs.SelectedItem = saved;
-        _loading = false;
-    }
-
     private void txtFilter_TextChanged(object? sender, TextChangedEventArgs e)
     {
         RefreshNpcList();
@@ -119,39 +105,16 @@ internal partial class EditorNpcsWindow : Window
 
     private void lstNpcs_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading) return;
         if (lstNpcs.SelectedItem is not Npc npc) return;
-        LoadNpc(npc);
-        pnlContent.IsVisible = true;
-    }
-
-    private void LoadNpc(Npc npc)
-    {
-        _loading = true;
         _selected = npc;
-
-        txtName.Text = npc.Name;
-        txtSayMsg.Text = npc.SayMsg;
+        _viewModel = new NpcEditorViewModel(npc);
+        DataContext = _viewModel;
 
         numTexture.Maximum = Math.Max(0, Textures.Characters.Count - 1);
-        numTexture.Value = npc.Texture;
         CurrentTextureIndex = npc.Texture;
-
-        numRange.Value = npc.Sight;
-        numSpawn.Value = npc.SpawnTime;
-        numExperience.Value = npc.Experience;
-
-        numHP.Value = npc.Vital[(byte)Vital.Hp];
-        numMP.Value = npc.Vital[(byte)Vital.Mp];
-        numStrength.Value = npc.Attribute[(byte)Attribute.Strength];
-        numResistance.Value = npc.Attribute[(byte)Attribute.Resistance];
-        numIntelligence.Value = npc.Attribute[(byte)Attribute.Intelligence];
-        numAgility.Value = npc.Attribute[(byte)Attribute.Agility];
-        numVitality.Value = npc.Attribute[(byte)Attribute.Vitality];
 
         cmbBehavior.SelectedIndex = (int)npc.Behaviour;
         cmbMovement.SelectedIndex = (int)npc.Movement;
-        numFlee_Health.Value = npc.FleeHealth;
         chkAttackNpc.IsChecked = npc.AttackNpc;
         lstAllies.IsEnabled = npc.AttackNpc;
 
@@ -168,7 +131,7 @@ internal partial class EditorNpcsWindow : Window
         pnlDrop_Add.IsVisible = false;
         pnlAllie_Add.IsVisible = false;
 
-        _loading = false;
+        pnlContent.IsVisible = true;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -189,97 +152,24 @@ internal partial class EditorNpcsWindow : Window
         if (_selected == null) return;
         _catalog.Npcs.Remove(_selected.Id);
         _selected = null;
+        _viewModel = null;
+        DataContext = null;
         RefreshNpcList();
         pnlContent.IsVisible = lstNpcs.SelectedItem != null;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // Property write-backs
+    // Property write-backs (handlers that can't be replaced by binding)
     // ──────────────────────────────────────────────────────────────────────────
-
-    private void txtName_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Name = txtName.Text ?? string.Empty;
-        RefreshNpcListKeepSelection();
-    }
-
-    private void txtSayMsg_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.SayMsg = txtSayMsg.Text ?? string.Empty;
-    }
 
     private void numTexture_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.Texture = (short)(e.NewValue ?? 0);
-        CurrentTextureIndex = _selected.Texture;
-    }
-
-    private void numRange_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Sight = (byte)(e.NewValue ?? 0);
-    }
-
-    private void numSpawn_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.SpawnTime = (byte)(e.NewValue ?? 0);
-    }
-
-    private void numExperience_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Experience = (int)(e.NewValue ?? 0);
-    }
-
-    private void numHP_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Vital[(byte)Vital.Hp] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numMP_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Vital[(byte)Vital.Mp] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numStrength_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Strength] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numResistance_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Resistance] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numIntelligence_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Intelligence] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numAgility_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Agility] = (short)(e.NewValue ?? 0);
-    }
-
-    private void numVitality_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Vitality] = (short)(e.NewValue ?? 0);
+        CurrentTextureIndex = (short)(e.NewValue ?? 0);
     }
 
     private void cmbBehavior_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
+        if (_selected == null) return;
         var behaviour = (Behaviour)cmbBehavior.SelectedIndex;
 
         // Validate: ShopKeeper needs at least one shop
@@ -304,19 +194,13 @@ internal partial class EditorNpcsWindow : Window
 
     private void cmbMovement_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
+        if (_selected == null) return;
         _selected.Movement = (MovementStyle)cmbMovement.SelectedIndex;
-    }
-
-    private void numFlee_Health_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
-    {
-        if (_loading || _selected == null) return;
-        _selected.FleeHealth = (byte)(e.NewValue ?? 0);
     }
 
     private void cmbShop_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
+        if (_selected == null) return;
         if (cmbShop.SelectedItem is Shop shop)
             _selected.ShopId = shop.Id;
     }
@@ -358,8 +242,6 @@ internal partial class EditorNpcsWindow : Window
 
     // ──────────────────────────────────────────────────────────────────────────
 
-    // ──────────────────────────────────────────────────────────────────────────
-
     private void RefreshAlliesList()
     {
         lstAllies.ItemsSource = null;
@@ -368,7 +250,7 @@ internal partial class EditorNpcsWindow : Window
 
     private void chkAttackNpc_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        if (_loading || _selected == null) return;
+        if (_selected == null) return;
         _selected.AttackNpc = chkAttackNpc.IsChecked ?? false;
         lstAllies.IsEnabled = _selected.AttackNpc;
         if (!_selected.AttackNpc)

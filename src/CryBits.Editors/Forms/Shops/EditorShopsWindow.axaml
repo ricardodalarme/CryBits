@@ -1,7 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CryBits.Editors.Forms.Shops"
         xmlns:semi="https://irihi.tech/semi"
         x:Class="CryBits.Editors.Forms.Shops.EditorShopsWindow"
+        x:DataType="vm:ShopEditorViewModel"
         Title="Shop Editor"
         Width="857" Height="530"
         CanResize="False"
@@ -48,7 +50,7 @@
                         <StackPanel Grid.Column="0" Spacing="4">
                             <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,2" />
                             <TextBlock Text="Name:" />
-                            <TextBox x:Name="txtName" TextChanged="txtName_TextChanged" />
+                            <TextBox Text="{Binding Name}" />
                         </StackPanel>
                         <StackPanel Grid.Column="1" Spacing="4">
                             <TextBlock Text="Default currency:" Margin="0,0,0,22" />

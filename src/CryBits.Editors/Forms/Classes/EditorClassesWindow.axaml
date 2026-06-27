@@ -47,11 +47,11 @@
                     <StackPanel>
                         <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,6"/>
                         <TextBlock Text="Name:" Margin="0,0,0,2"/>
-                        <TextBox x:Name="txtName" TextChanged="txtName_TextChanged" Margin="0,0,0,6"/>
+                        <TextBox Text="{Binding Name}" Margin="0,0,0,6"/>
                         <TextBlock Text="Description:" Margin="0,0,0,2"/>
-                        <TextBox x:Name="txtDescription" AcceptsReturn="True" Height="80"
+                        <TextBox AcceptsReturn="True" Height="80"
                                  TextWrapping="Wrap"
-                                 TextChanged="txtDescription_TextChanged"/>
+                                 Text="{Binding Description}"/>
                     </StackPanel>
                 </Border>
 
@@ -124,20 +124,20 @@
                         <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="HP:"  Margin="0,0,0,2"/>
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="MP:"  Margin="0,0,0,2"/>
-                            <NumericUpDown x:Name="numHP" Grid.Row="1" Grid.Column="0" Minimum="0" Maximum="9999"
-                                           FormatString="0" ValueChanged="numHP_ValueChanged" Margin="0,0,4,6"/>
-                            <NumericUpDown x:Name="numMP" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Minimum="0" Maximum="9999"
-                                           FormatString="0" ValueChanged="numMP_ValueChanged" Margin="0,0,0,6"/>
+                            <NumericUpDown Grid.Row="1" Grid.Column="0" Minimum="0" Maximum="9999"
+                                           FormatString="0" Value="{Binding Hp}" Margin="0,0,4,6"/>
+                            <NumericUpDown Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Minimum="0" Maximum="9999"
+                                           FormatString="0" Value="{Binding Mp}" Margin="0,0,0,6"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Strength:"     Margin="0,0,0,2"/>
                             <TextBlock Grid.Row="2" Grid.Column="1" Text="Resistance:"   Margin="0,0,0,2"/>
                             <TextBlock Grid.Row="2" Grid.Column="2" Text="Intelligence:" Margin="0,0,0,2"/>
-                            <NumericUpDown x:Name="numStrength"     Grid.Row="3" Grid.Column="0" Minimum="0" Maximum="9999" FormatString="0" ValueChanged="numStrength_ValueChanged"     Margin="0,0,4,6"/>
-                            <NumericUpDown x:Name="numResistance"   Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="9999" FormatString="0" ValueChanged="numResistance_ValueChanged"   Margin="0,0,4,6"/>
-                            <NumericUpDown x:Name="numIntelligence" Grid.Row="3" Grid.Column="2" Minimum="0" Maximum="9999" FormatString="0" ValueChanged="numIntelligence_ValueChanged" Margin="0,0,0,6"/>
+                            <NumericUpDown Grid.Row="3" Grid.Column="0" Minimum="0" Maximum="9999" FormatString="0" Value="{Binding Strength}"     Margin="0,0,4,6"/>
+                            <NumericUpDown Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="9999" FormatString="0" Value="{Binding Resistance}"   Margin="0,0,4,6"/>
+                            <NumericUpDown Grid.Row="3" Grid.Column="2" Minimum="0" Maximum="9999" FormatString="0" Value="{Binding Intelligence}" Margin="0,0,0,6"/>
                             <TextBlock Grid.Row="4" Grid.Column="0" Text="Agility:"  Margin="0,0,0,2"/>
                             <TextBlock Grid.Row="4" Grid.Column="1" Text="Vitality:" Margin="0,0,0,2"/>
-                            <NumericUpDown x:Name="numAgility"  Grid.Row="5" Grid.Column="0" Minimum="0" Maximum="9999" FormatString="0" ValueChanged="numAgility_ValueChanged"  Margin="0,0,4,0"/>
-                            <NumericUpDown x:Name="numVitality" Grid.Row="5" Grid.Column="1" Minimum="0" Maximum="9999" FormatString="0" ValueChanged="numVitality_ValueChanged" Margin="0,0,0,0"/>
+                            <NumericUpDown Grid.Row="5" Grid.Column="0" Minimum="0" Maximum="9999" FormatString="0" Value="{Binding Agility}"  Margin="0,0,4,0"/>
+                            <NumericUpDown Grid.Row="5" Grid.Column="1" Minimum="0" Maximum="9999" FormatString="0" Value="{Binding Vitality}" Margin="0,0,0,0"/>
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -187,14 +187,16 @@
                         <TextBlock Grid.Row="0" Grid.Column="2" Text="X:"         Margin="0,0,0,2"/>
                         <TextBlock Grid.Row="0" Grid.Column="3" Text="Y:"         Margin="0,0,0,2"/>
                         <ComboBox x:Name="cmbSpawn_Map"       Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,4,0" SelectionChanged="cmbSpawn_Map_SelectionChanged"/>
-                        <ComboBox x:Name="cmbSpawn_Direction" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,4,0" SelectionChanged="cmbSpawn_Direction_SelectionChanged">
+                        <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,4,0"
+                                  SelectedIndex="{Binding SpawnDirectionIndex}"
+                                  SelectionChanged="cmbSpawn_Direction_SelectionChanged">
                             <ComboBoxItem Content="Up"/>
                             <ComboBoxItem Content="Down"/>
                             <ComboBoxItem Content="Left"/>
                             <ComboBoxItem Content="Right"/>
                         </ComboBox>
-                        <NumericUpDown x:Name="numSpawn_X" Grid.Row="1" Grid.Column="2" Minimum="0" FormatString="0" ValueChanged="numSpawn_X_ValueChanged" Margin="0,0,4,0"/>
-                        <NumericUpDown x:Name="numSpawn_Y" Grid.Row="1" Grid.Column="3" Minimum="0" FormatString="0" ValueChanged="numSpawn_Y_ValueChanged"/>
+                        <NumericUpDown Grid.Row="1" Grid.Column="2" Minimum="0" Maximum="999" FormatString="0" Value="{Binding SpawnX}" Margin="0,0,4,0"/>
+                        <NumericUpDown Grid.Row="1" Grid.Column="3" Minimum="0" Maximum="999" FormatString="0" Value="{Binding SpawnY}"/>
                     </Grid>
                 </StackPanel>
             </Border>

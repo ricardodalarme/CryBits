@@ -12,6 +12,7 @@ namespace CryBits.Editors.Forms.Shops;
 internal partial class EditorShopsWindow : Window
 {
     private readonly DefinitionCatalog _catalog;
+    private ShopEditorViewModel? _viewModel;
 
     /// <summary>Opens the Shops editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
@@ -68,6 +69,8 @@ internal partial class EditorShopsWindow : Window
         else
         {
             _selected = null;
+            _viewModel = null;
+            DataContext = null;
             Groups_Visibility();
         }
     }
@@ -77,7 +80,9 @@ internal partial class EditorShopsWindow : Window
         Groups_Visibility();
         if (_selected == null) return;
 
-        txtName.Text = _selected.Name;
+        _viewModel = new ShopEditorViewModel(_selected);
+        DataContext = _viewModel;
+
         cmbCurrency.SelectedItem = _catalog.Items.Get(_selected.CurrencyId);
 
         RefreshShopItems();
@@ -128,6 +133,8 @@ internal partial class EditorShopsWindow : Window
         var removeId = _selected.Id;
         _catalog.Shops.Remove(removeId);
         _selected = null;
+        _viewModel = null;
+        DataContext = null;
         List_Update();
         Groups_Visibility();
     }
@@ -142,14 +149,6 @@ internal partial class EditorShopsWindow : Window
     {
         PackageSender.Instance.RequestShops();
         Close();
-    }
-
-    private void txtName_TextChanged(object sender, TextChangedEventArgs e)
-    {
-        if (_selected == null) return;
-
-        _selected.Name = txtName.Text ?? string.Empty;
-        List_Update(_selected.Id);
     }
 
     private void cmbCurrency_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)

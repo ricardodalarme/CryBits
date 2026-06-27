@@ -1,6 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CryBits.Editors.Forms.Interface"
         x:Class="CryBits.Editors.Forms.Interface.EditorInterfaceWindow"
+        x:DataType="vm:ComponentEditorViewModel"
         Title="Interface Editor"
         Width="1280" Height="800"
         CanResize="False"
@@ -90,44 +92,41 @@
                         <StackPanel x:Name="pnlPropsBase" IsVisible="False" Spacing="4">
                             <Grid ColumnDefinitions="80,*">
                                 <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center"/>
-                                <TextBox x:Name="txtPropName" Grid.Column="1"
-                                         TextChanged="txtPropName_TextChanged"/>
+                                <TextBox Grid.Column="1" Text="{Binding Name}"/>
                             </Grid>
                             <Grid ColumnDefinitions="80,*">
                                 <TextBlock Grid.Column="0" Text="X:" VerticalAlignment="Center"/>
-                                <NumericUpDown x:Name="numPropX" Grid.Column="1"
+                                <NumericUpDown Grid.Column="1"
                                                Minimum="-9999" Maximum="9999" FormatString="0"
-                                               ValueChanged="numPropX_ValueChanged"/>
+                                               Value="{Binding X}"/>
                             </Grid>
                             <Grid ColumnDefinitions="80,*">
                                 <TextBlock Grid.Column="0" Text="Y:" VerticalAlignment="Center"/>
-                                <NumericUpDown x:Name="numPropY" Grid.Column="1"
+                                <NumericUpDown Grid.Column="1"
                                                Minimum="-9999" Maximum="9999" FormatString="0"
-                                               ValueChanged="numPropY_ValueChanged"/>
+                                               Value="{Binding Y}"/>
                             </Grid>
-                            <CheckBox x:Name="chkPropVisible" Content="Visible"
-                                      IsCheckedChanged="chkPropVisible_IsCheckedChanged"/>
+                            <CheckBox IsChecked="{Binding Visible}" Content="Visible"/>
 
                             <!-- TextureNum (Button / Panel) -->
-                            <Grid x:Name="secTextureNum" ColumnDefinitions="80,*" IsVisible="False">
+                            <Grid IsVisible="{Binding HasTextureNum}" ColumnDefinitions="80,*">
                                 <TextBlock Grid.Column="0" Text="Texture #:" VerticalAlignment="Center"/>
-                                <NumericUpDown x:Name="numPropTexture" Grid.Column="1"
+                                <NumericUpDown Grid.Column="1"
                                                Minimum="0" FormatString="0"
-                                               ValueChanged="numPropTexture_ValueChanged"/>
+                                               Value="{Binding TextureNum}"/>
                             </Grid>
 
                             <!-- Label-specific -->
-                            <StackPanel x:Name="secLabelProps" IsVisible="False" Spacing="4">
+                            <StackPanel IsVisible="{Binding IsLabel}" Spacing="4">
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Text:" VerticalAlignment="Center"/>
-                                    <TextBox x:Name="txtPropLblText" Grid.Column="1"
-                                             TextChanged="txtPropLblText_TextChanged"/>
+                                    <TextBox Grid.Column="1" Text="{Binding LabelText}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Alignment:" VerticalAlignment="Center"/>
-                                    <ComboBox x:Name="cmbPropLblAlignment" Grid.Column="1"
+                                    <ComboBox Grid.Column="1"
                                               HorizontalAlignment="Stretch"
-                                              SelectionChanged="cmbPropLblAlignment_SelectionChanged">
+                                              SelectedIndex="{Binding LabelAlignment}">
                                         <ComboBoxItem Content="Left"/>
                                         <ComboBoxItem Content="Center"/>
                                         <ComboBoxItem Content="Right"/>
@@ -141,113 +140,110 @@
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Max Width:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropLblMaxWidth" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="0" Maximum="9999" FormatString="0"
-                                                   ValueChanged="numPropLblMaxWidth_ValueChanged"/>
+                                                   Value="{Binding LabelMaxWidth}"/>
                                 </Grid>
                             </StackPanel>
 
                             <!-- CheckBox-specific -->
-                            <StackPanel x:Name="secCheckBoxProps" IsVisible="False" Spacing="4">
+                            <StackPanel IsVisible="{Binding IsCheckBox}" Spacing="4">
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Text:" VerticalAlignment="Center"/>
-                                    <TextBox x:Name="txtPropCbText" Grid.Column="1"
-                                             TextChanged="txtPropCbText_TextChanged"/>
+                                    <TextBox Grid.Column="1" Text="{Binding CbText}"/>
                                 </Grid>
-                                <CheckBox x:Name="chkPropCbChecked" Content="Checked"
-                                          IsCheckedChanged="chkPropCbChecked_IsCheckedChanged"/>
+                                <CheckBox IsChecked="{Binding CbChecked}" Content="Checked"/>
                             </StackPanel>
 
                             <!-- TextBox-specific -->
-                            <StackPanel x:Name="secTextBoxProps" IsVisible="False" Spacing="4">
+                            <StackPanel IsVisible="{Binding IsTextBox}" Spacing="4">
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Text:" VerticalAlignment="Center"/>
-                                    <TextBox x:Name="txtPropTbText" Grid.Column="1"
-                                             TextChanged="txtPropTbText_TextChanged"/>
+                                    <TextBox Grid.Column="1" Text="{Binding TbText}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Max Chars:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropMaxChars" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="0" Maximum="9999" FormatString="0"
-                                                   ValueChanged="numPropMaxChars_ValueChanged"/>
+                                                   Value="{Binding TbMaxChars}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Width:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropTbWidth" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="0" Maximum="9999" FormatString="0"
-                                                   ValueChanged="numPropTbWidth_ValueChanged"/>
+                                                   Value="{Binding TbWidth}"/>
                                 </Grid>
-                                <CheckBox x:Name="chkPropPassword" Content="Password"
-                                          IsCheckedChanged="chkPropPassword_IsCheckedChanged"/>
+                                <CheckBox IsChecked="{Binding TbPassword}" Content="Password"/>
                             </StackPanel>
 
                             <!-- ProgressBar-specific -->
-                            <StackPanel x:Name="secProgressBarProps" IsVisible="False" Spacing="4">
+                            <StackPanel IsVisible="{Binding IsProgressBar}" Spacing="4">
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Source Y:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropPbSourceY" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="0" FormatString="0"
-                                                   ValueChanged="numPropPbSourceY_ValueChanged"/>
+                                                   Value="{Binding PbSourceY}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Width:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropPbWidth" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="0" FormatString="0"
-                                                   ValueChanged="numPropPbWidth_ValueChanged"/>
+                                                   Value="{Binding PbWidth}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Height:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropPbHeight" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="0" FormatString="0"
-                                                   ValueChanged="numPropPbHeight_ValueChanged"/>
+                                                   Value="{Binding PbHeight}"/>
                                 </Grid>
                             </StackPanel>
 
                             <!-- SlotGrid-specific -->
-                            <StackPanel x:Name="secSlotGridProps" IsVisible="False" Spacing="4">
+                            <StackPanel IsVisible="{Binding IsSlotGrid}" Spacing="4">
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Rows:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropSgRows" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="1" Maximum="255" FormatString="0"
-                                                   ValueChanged="numPropSgRows_ValueChanged"/>
+                                                   Value="{Binding SgRows}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Columns:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropSgColumns" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="1" Maximum="255" FormatString="0"
-                                                   ValueChanged="numPropSgColumns_ValueChanged"/>
+                                                   Value="{Binding SgColumns}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Slot Size:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropSgSlotSize" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="1" Maximum="255" FormatString="0"
-                                                   ValueChanged="numPropSgSlotSize_ValueChanged"/>
+                                                   Value="{Binding SgSlotSize}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Padding:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropSgPadding" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="0" Maximum="255" FormatString="0"
-                                                   ValueChanged="numPropSgPadding_ValueChanged"/>
+                                                   Value="{Binding SgPadding}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Slots:" VerticalAlignment="Center" Opacity="0.6"/>
-                                    <TextBlock x:Name="txtSgSlotCount" Grid.Column="1" VerticalAlignment="Center" Opacity="0.6"/>
+                                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Opacity="0.6"
+                                               Text="{Binding SgSlotCount}"/>
                                 </Grid>
                             </StackPanel>
 
                             <!-- Picture-specific -->
-                            <StackPanel x:Name="secPictureProps" IsVisible="False" Spacing="4">
+                            <StackPanel IsVisible="{Binding IsPicture}" Spacing="4">
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Width:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropPicWidth" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="0" Maximum="9999" FormatString="0"
-                                                   ValueChanged="numPropPicWidth_ValueChanged"/>
+                                                   Value="{Binding PicWidth}"/>
                                 </Grid>
                                 <Grid ColumnDefinitions="80,*">
                                     <TextBlock Grid.Column="0" Text="Height:" VerticalAlignment="Center"/>
-                                    <NumericUpDown x:Name="numPropPicHeight" Grid.Column="1"
+                                    <NumericUpDown Grid.Column="1"
                                                    Minimum="0" Maximum="9999" FormatString="0"
-                                                   ValueChanged="numPropPicHeight_ValueChanged"/>
+                                                   Value="{Binding PicHeight}"/>
                                 </Grid>
                             </StackPanel>
                         </StackPanel>

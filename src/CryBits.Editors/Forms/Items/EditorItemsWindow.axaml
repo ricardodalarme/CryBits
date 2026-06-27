@@ -1,6 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CryBits.Editors.Forms.Items"
         x:Class="CryBits.Editors.Forms.Items.EditorItemsWindow"
+        x:DataType="vm:ItemEditorViewModel"
         Title="Items Editor"
         Width="648" Height="828"
         CanResize="False"
@@ -51,12 +53,12 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center" Width="90"/>
-                        <TextBox x:Name="txtName" Grid.Column="1" TextChanged="txtName_TextChanged"/>
+                        <TextBox Grid.Column="1" Text="{Binding Name}"/>
                     </Grid>
 
                     <TextBlock Text="Description:"/>
-                    <TextBox x:Name="txtDescription" Height="75" AcceptsReturn="True"
-                             TextWrapping="Wrap" TextChanged="txtDescription_TextChanged"/>
+                    <TextBox Height="75" AcceptsReturn="True"
+                             TextWrapping="Wrap" Text="{Binding Description}"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -76,10 +78,10 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Texture:" VerticalAlignment="Center" Width="90"/>
                         <NumericUpDown x:Name="numTexture" Grid.Column="1" Minimum="0" FormatString="0"
+                                       Value="{Binding Texture}"
                                        ValueChanged="numTexture_ValueChanged"/>
                         <Image x:Name="imgTexturePreview" Grid.Column="2" Width="37" Height="37"
                                Margin="6,0,0,0" Stretch="Uniform"/>
@@ -92,7 +94,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Rarity:" VerticalAlignment="Center" Width="90"/>
                         <ComboBox x:Name="cmbRarity" Grid.Column="1" HorizontalAlignment="Stretch"
-                                  SelectionChanged="cmbRarity_SelectionChanged"/>
+                                  SelectedIndex="{Binding RarityIndex}"/>
                     </Grid>
 
                     <Grid>
@@ -102,11 +104,10 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Bind:" VerticalAlignment="Center" Width="90"/>
                         <ComboBox x:Name="cmbBind" Grid.Column="1" HorizontalAlignment="Stretch"
-                                  SelectionChanged="cmbBind_SelectionChanged"/>
+                                  SelectedIndex="{Binding BindIndex}"/>
                     </Grid>
 
-                    <CheckBox x:Name="chkStackable" Content="Stackable"
-                              IsCheckedChanged="chkStackable_IsCheckedChanged"/>
+                    <CheckBox IsChecked="{Binding Stackable}" Content="Stackable"/>
                 </StackPanel>
             </Border>
 
@@ -121,8 +122,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Level:" VerticalAlignment="Center" Width="90"/>
-                        <NumericUpDown x:Name="numReq_Level" Grid.Column="1" Minimum="0" FormatString="0"
-                                       ValueChanged="numReq_Level_ValueChanged"/>
+                        <NumericUpDown Grid.Column="1" Minimum="0" FormatString="0" Value="{Binding ReqLevel}"/>
                     </Grid>
 
                     <Grid>
@@ -151,8 +151,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="HP:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown x:Name="numPotion_HP" Grid.Column="1" Minimum="-100" FormatString="0"
-                                           ValueChanged="numPotion_HP_ValueChanged"/>
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding PotionHp}"/>
                         </Grid>
 
                         <Grid>
@@ -161,8 +160,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="MP:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown x:Name="numPotion_MP" Grid.Column="1" Minimum="-100" FormatString="0"
-                                           ValueChanged="numPotion_MP_ValueChanged"/>
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding PotionMp}"/>
                         </Grid>
 
                         <Grid>
@@ -171,8 +169,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Experience:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown x:Name="numPotion_Experience" Grid.Column="1" Minimum="-100" FormatString="0"
-                                           ValueChanged="numPotion_Experience_ValueChanged"/>
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding PotionExperience}"/>
                         </Grid>
 
                         <TextBlock Text="(Negative values are also valid)" FontStyle="Italic"
@@ -208,8 +205,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Strength:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown x:Name="numEquip_Strength" Grid.Column="1" Minimum="-100" FormatString="0"
-                                           ValueChanged="numEquip_Strength_ValueChanged"/>
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding EquipStrength}"/>
                         </Grid>
 
                         <Grid>
@@ -218,8 +214,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Resistance:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown x:Name="numEquip_Resistance" Grid.Column="1" Minimum="-100" FormatString="0"
-                                           ValueChanged="numEquip_Resistance_ValueChanged"/>
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding EquipResistance}"/>
                         </Grid>
 
                         <Grid>
@@ -228,8 +223,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Intelligence:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown x:Name="numEquip_Intelligence" Grid.Column="1" Minimum="-100" FormatString="0"
-                                           ValueChanged="numEquip_Intelligence_ValueChanged"/>
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding EquipIntelligence}"/>
                         </Grid>
 
                         <Grid>
@@ -238,8 +232,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Agility:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown x:Name="numEquip_Agility" Grid.Column="1" Minimum="-100" FormatString="0"
-                                           ValueChanged="numEquip_Agility_ValueChanged"/>
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding EquipAgility}"/>
                         </Grid>
 
                         <Grid>
@@ -248,8 +241,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Vitality:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown x:Name="numEquip_Vitality" Grid.Column="1" Minimum="-100" FormatString="0"
-                                           ValueChanged="numEquip_Vitality_ValueChanged"/>
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding EquipVitality}"/>
                         </Grid>
 
                         <!-- Weapon damage (only visible when equipment type = Weapon) -->
@@ -259,8 +251,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Weapon Damage:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown x:Name="numWeapon_Damage" Grid.Column="1" Minimum="0" FormatString="0"
-                                           ValueChanged="numWeapon_Damage_ValueChanged"/>
+                            <NumericUpDown Grid.Column="1" Minimum="0" FormatString="0" Value="{Binding WeaponDamage}"/>
                         </Grid>
 
                         <TextBlock Text="(Negative values are also valid)" FontStyle="Italic"
