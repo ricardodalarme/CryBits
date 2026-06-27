@@ -1,8 +1,8 @@
 using CryBits.Definitions.Common;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
-using static CryBits.Definitions.Globals;
 using CryBits.Simulation.State;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Host.Network.Senders;
 

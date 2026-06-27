@@ -3,12 +3,6 @@ namespace CryBits.Simulation.Events;
 public sealed class EventBuffer
 {
     private readonly List<SimEvent> _events = [];
-    private long _tickNumber;
-
-    public long TickNumber
-    {
-        set => _tickNumber = value;
-    }
 
     public IReadOnlyList<SimEvent> Events => _events;
 

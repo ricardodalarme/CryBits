@@ -5,18 +5,12 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Core;
 
-public sealed class MapState
+public sealed class MapState(Guid id, Map data)
 {
-    public Guid Id { get; }
-    public Map Data { get; }
+    public Guid Id { get; } = id;
+    public Map Data { get; } = data;
     public List<EntityId> NpcIds { get; } = [];
     public List<EntityId> GroundItemIds { get; } = [];
-
-    public MapState(Guid id, Map data)
-    {
-        Id = id;
-        Data = data;
-    }
 
     public EntityId? HasNpc(byte x, byte y, EntityRegistry entities)
     {

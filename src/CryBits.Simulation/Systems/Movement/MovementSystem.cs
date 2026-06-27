@@ -1,12 +1,12 @@
 using CryBits.Definitions.Common;
-using CommonMovement = CryBits.Definitions.Common.Movement;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
+using CommonMovement = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Simulation.Systems.Movement;
 

@@ -3,8 +3,8 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
 using SFML.Graphics;
 using System.Drawing;
-using static CryBits.Editors.Logic.Utils;
 using static CryBits.Definitions.Globals;
+using static CryBits.Editors.Logic.Utils;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Editors.Graphics.Renderers;

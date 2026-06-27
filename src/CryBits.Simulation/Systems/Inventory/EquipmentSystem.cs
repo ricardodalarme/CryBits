@@ -1,12 +1,12 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
-using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.Events;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Simulation.Systems.Inventory;
 

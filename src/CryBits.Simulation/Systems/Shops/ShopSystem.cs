@@ -4,8 +4,8 @@ using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
 using CryBits.Definitions.Utils;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.Events;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
@@ -49,9 +49,9 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
                         var npcE = world.Entities.Get(npcId.Value);
                         if (npcE == null) break;
                         var npcState = npcE.Get<NpcState>()!;
-                    var npcData = catalog.Npcs.Get(npcState.NpcDefId);
-                    if (npcData is null) break;
-                    if (npcData.Behaviour == Behaviour.ShopKeeper)
+                        var npcData = catalog.Npcs.Get(npcState.NpcDefId);
+                        if (npcData is null) break;
+                        if (npcData.Behaviour == Behaviour.ShopKeeper)
                         {
                             var shop = catalog.Shops.Get(npcData.ShopId);
                             if (shop != null) Open(world, attackerId.Value, shop);

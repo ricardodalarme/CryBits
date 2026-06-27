@@ -1,6 +1,6 @@
+using CryBits.Host.Core;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
-using CryBits.Host.Core;
 using CryBits.Simulation.State;
 using System.Linq.Expressions;
 using System.Reflection;

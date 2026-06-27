@@ -14,8 +14,8 @@ public class Array2DConverter<T> : JsonConverter<T[,]>
         var cols = jagged[0].Length;
         var result = new T[rows, cols];
         for (var i = 0; i < rows; i++)
-        for (var j = 0; j < cols; j++)
-            result[i, j] = jagged[i][j];
+            for (var j = 0; j < cols; j++)
+                result[i, j] = jagged[i][j];
 
         return result;
     }

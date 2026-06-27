@@ -1,10 +1,10 @@
 using CryBits.Definitions.Common;
-using CryBits.Protocol;
-using CryBits.Protocol.Packets.Client;
 using CryBits.Host.Core;
 using CryBits.Host.Network.Senders;
 using CryBits.Persistence.Models;
 using CryBits.Persistence.Repositories;
+using CryBits.Protocol;
+using CryBits.Protocol.Packets.Client;
 using static CryBits.Definitions.Globals;
 using BcryptNet = BCrypt.Net.BCrypt;
 

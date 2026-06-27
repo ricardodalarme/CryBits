@@ -2,12 +2,12 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
 using CryBits.Editors.Graphics;
+using CryBits.Editors.Maps;
 using SFML.Graphics;
 using System.Drawing;
-using static CryBits.Editors.Logic.Utils;
 using static CryBits.Definitions.Globals;
+using static CryBits.Editors.Logic.Utils;
 using Color = SFML.Graphics.Color;
-using CryBits.Editors.Maps;
 
 namespace CryBits.Editors.Entities;
 

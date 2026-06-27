@@ -1,13 +1,13 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
-using static CryBits.Definitions.Globals;
-using CryBits.Simulation.Core;
-using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
+using static CryBits.Definitions.Globals;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Simulation.Systems.Progression;
 

@@ -2,8 +2,8 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.Events;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
 using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Simulation.Systems.Combat;

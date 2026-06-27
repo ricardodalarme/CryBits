@@ -1,10 +1,10 @@
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Utils;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
+using CryBits.Definitions.Utils;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
@@ -50,10 +50,10 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         {
             var (nextX, nextY) = pos.Direction.NextTile(pos.X, pos.Y);
             if (map.TileBlocked(pos.X, pos.Y, pos.Direction, world.Entities, false))
-                {
-                    MissAttack(world, intent.SourceEntityId);
-                    return;
-                }
+            {
+                MissAttack(world, intent.SourceEntityId);
+                return;
+            }
 
             victimId = map.HasPlayer(nextX, nextY, world.Entities)
                     ?? map.HasNpc(nextX, nextY, world.Entities);

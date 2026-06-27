@@ -1,10 +1,10 @@
-using CryBits.Simulation.Components;
 using CryBits.Definitions.Utils;
-using CryBits.Simulation.Events;
-using static CryBits.Definitions.Globals;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Simulation.Systems.Party;
 

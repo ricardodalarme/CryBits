@@ -2,11 +2,11 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
 using CryBits.Definitions.Utils;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.Events;
-using static CryBits.Definitions.Globals;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Simulation.Systems.Trade;
 

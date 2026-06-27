@@ -8,8 +8,8 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 using MemoryPack;
-using ProtocolEntity = CryBits.Protocol.Packets.Server.KeyframeEntity;
 using EntityKind = CryBits.Protocol.Packets.Server.EntityKind;
+using ProtocolEntity = CryBits.Protocol.Packets.Server.KeyframeEntity;
 
 namespace CryBits.Client.Replication;
 

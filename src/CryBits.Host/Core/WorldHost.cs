@@ -43,7 +43,7 @@ internal sealed class WorldHost
     public void Tick()
     {
         Simulation.TickCount++;
-        var tick = new Tick(Simulation.TickCount, new IntentBuffer(), new EventBuffer { TickNumber = Simulation.TickCount });
+        var tick = new Tick(Simulation.TickCount, new IntentBuffer(), new EventBuffer());
         CurrentTick = tick;
 
         Transport.Poll();
