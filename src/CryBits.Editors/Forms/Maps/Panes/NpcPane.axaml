@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CryBits.Editors.Forms.Maps.Panes.NpcPane">
+    <StackPanel Spacing="6" Margin="4">
+        <TextBlock Text="NPCs" FontWeight="Bold" />
+        <TextBlock Text="NPC:" />
+        <ComboBox x:Name="cmbNPC" HorizontalAlignment="Stretch" />
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+            <TextBlock Grid.Column="0" Text="Zone:" VerticalAlignment="Center" />
+            <NumericUpDown x:Name="numNPC_Zone" Grid.Column="1" Minimum="0" Maximum="20" />
+        </Grid>
+        <Button Content="Add" x:Name="butNPC_Add"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+        <ListBox x:Name="lstNPC" Height="180" />
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
+            <Button Grid.Column="0" Content="Remove" x:Name="butNPC_Remove"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+            <Button Grid.Column="1" Content="Clear" x:Name="butNPC_Clear"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+        </Grid>
+    </StackPanel>
+</UserControl>

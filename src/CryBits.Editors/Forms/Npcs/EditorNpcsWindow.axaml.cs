@@ -10,7 +10,6 @@ using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Graphics.Renderers;
-using CryBits.Editors.Network;
 using SFML.Graphics;
 using SFML.System;
 
@@ -21,7 +20,6 @@ internal partial class EditorNpcsWindow : Window
     private readonly DefinitionCatalog _catalog;
     private NpcEditorViewModel? _viewModel;
 
-    /// <summary>Opens the NPCs editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
         owner.Hide();
@@ -30,7 +28,6 @@ internal partial class EditorNpcsWindow : Window
         window.Show();
     }
 
-    // Consumed by Renders.EditorNpc() instead of EditorNpcs.Form.numTexture.Value
     public static short CurrentTextureIndex { get; private set; }
 
     private Npc? _selected;
@@ -43,18 +40,14 @@ internal partial class EditorNpcsWindow : Window
         _catalog = catalog;
         InitializeComponent();
 
-        // Populate behaviour/movement combos
         foreach (var ms in Enum.GetValues<MovementStyle>())
             cmbMovement.Items.Add(ms.ToString());
 
-        // Populate drop-item and shop combos from live data
         cmbDrop_Item.ItemsSource = _catalog.Items.Values.ToList();
         cmbShop.ItemsSource = _catalog.Shops.Values.ToList();
 
-        // SFML offscreen render for the texture preview
         CharacterRenderer.Instance.WinCharacter = new RenderTexture(new Vector2u(80, 80));
 
-        // Timer: ~30 fps preview
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
         _timer.Tick += OnRenderTick;
         _timer.Start();
@@ -65,13 +58,11 @@ internal partial class EditorNpcsWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
+        CharacterRenderer.Instance.WinCharacter?.Dispose();
         CharacterRenderer.Instance.WinCharacter = null;
+        _previewBitmap?.Dispose();
         base.OnClosed(e);
     }
-
-    // ──────────────────────────────────────────────────────────────────────────
-    // SFML render tick → WriteableBitmap texture preview
-    // ──────────────────────────────────────────────────────────────────────────
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
@@ -80,10 +71,6 @@ internal partial class EditorNpcsWindow : Window
         CharacterRenderer.Instance.Character();
         SfmlRenderBlit.Blit(CharacterRenderer.Instance.WinCharacter, ref _previewBitmap, imgTexture);
     }
-
-    // ──────────────────────────────────────────────────────────────────────────
-    // NPC list
-    // ──────────────────────────────────────────────────────────────────────────
 
     private void RefreshNpcList()
     {
@@ -98,17 +85,16 @@ internal partial class EditorNpcsWindow : Window
         pnlContent.IsVisible = lstNpcs.SelectedItem != null;
     }
 
-    private void txtFilter_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        RefreshNpcList();
-    }
+    private void txtFilter_TextChanged(object? sender, TextChangedEventArgs e) => RefreshNpcList();
 
     private void lstNpcs_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (lstNpcs.SelectedItem is not Npc npc) return;
         _selected = npc;
-        _viewModel = new NpcEditorViewModel(npc);
+        _viewModel = new NpcEditorViewModel(npc, _catalog);
         DataContext = _viewModel;
+        _viewModel.RequestClose += () => Close();
+        _viewModel.RequestRefreshList += RefreshNpcList;
 
         numTexture.Maximum = Math.Max(0, Textures.Characters.Count - 1);
         CurrentTextureIndex = npc.Texture;
@@ -118,13 +104,11 @@ internal partial class EditorNpcsWindow : Window
         chkAttackNpc.IsChecked = npc.AttackNpc;
         lstAllies.IsEnabled = npc.AttackNpc;
 
-        // Shop visibility
         pnlShop.IsVisible = npc.Behaviour == Behaviour.ShopKeeper;
         cmbShop.SelectedItem = _catalog.Shops.Get(npc.ShopId);
         if (npc.Behaviour == Behaviour.ShopKeeper && cmbShop.SelectedItem == null && cmbShop.Items.Count > 0)
             cmbShop.SelectedIndex = 0;
 
-        // Drop / Allies lists
         RefreshDropList();
         RefreshAlliesList();
 
@@ -133,34 +117,6 @@ internal partial class EditorNpcsWindow : Window
 
         pnlContent.IsVisible = true;
     }
-
-    // ──────────────────────────────────────────────────────────────────────────
-    // New / Remove
-    // ──────────────────────────────────────────────────────────────────────────
-
-    private void butNew_Click(object? sender, RoutedEventArgs e)
-    {
-        var npc = new Npc();
-        _catalog.Npcs.Add(npc.Id, npc);
-        RefreshNpcList();
-        lstNpcs.SelectedItem = npc;
-        pnlContent.IsVisible = true;
-    }
-
-    private void butRemove_Click(object? sender, RoutedEventArgs e)
-    {
-        if (_selected == null) return;
-        _catalog.Npcs.Remove(_selected.Id);
-        _selected = null;
-        _viewModel = null;
-        DataContext = null;
-        RefreshNpcList();
-        pnlContent.IsVisible = lstNpcs.SelectedItem != null;
-    }
-
-    // ──────────────────────────────────────────────────────────────────────────
-    // Property write-backs (handlers that can't be replaced by binding)
-    // ──────────────────────────────────────────────────────────────────────────
 
     private void numTexture_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
@@ -172,7 +128,6 @@ internal partial class EditorNpcsWindow : Window
         if (_selected == null) return;
         var behaviour = (Behaviour)cmbBehavior.SelectedIndex;
 
-        // Validate: ShopKeeper needs at least one shop
         if (behaviour == Behaviour.ShopKeeper && _catalog.Shops.Count == 0)
         {
             cmbBehavior.SelectedIndex = (int)_selected.Behaviour;
@@ -183,13 +138,9 @@ internal partial class EditorNpcsWindow : Window
         pnlShop.IsVisible = behaviour == Behaviour.ShopKeeper;
 
         if (behaviour != Behaviour.ShopKeeper)
-        {
             cmbShop.SelectedIndex = -1;
-        }
         else if (_selected.ShopId == Guid.Empty && cmbShop.Items.Count > 0)
-        {
             cmbShop.SelectedIndex = 0;
-        }
     }
 
     private void cmbMovement_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -201,8 +152,7 @@ internal partial class EditorNpcsWindow : Window
     private void cmbShop_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_selected == null) return;
-        if (cmbShop.SelectedItem is Shop shop)
-            _selected.ShopId = shop.Id;
+        if (cmbShop.SelectedItem is Shop shop) _selected.ShopId = shop.Id;
     }
 
     private void RefreshDropList()
@@ -220,10 +170,7 @@ internal partial class EditorNpcsWindow : Window
         pnlDrop_Add.IsVisible = true;
     }
 
-    private void butDrop_Cancel_Click(object? sender, RoutedEventArgs e)
-    {
-        pnlDrop_Add.IsVisible = false;
-    }
+    private void butDrop_Cancel_Click(object? sender, RoutedEventArgs e) => pnlDrop_Add.IsVisible = false;
 
     private void butDrop_Ok_Click(object? sender, RoutedEventArgs e)
     {
@@ -239,8 +186,6 @@ internal partial class EditorNpcsWindow : Window
         _selected.Drop.Remove(drop);
         RefreshDropList();
     }
-
-    // ──────────────────────────────────────────────────────────────────────────
 
     private void RefreshAlliesList()
     {
@@ -268,10 +213,7 @@ internal partial class EditorNpcsWindow : Window
         pnlAllie_Add.IsVisible = true;
     }
 
-    private void butAllie_Cancel_Click(object? sender, RoutedEventArgs e)
-    {
-        pnlAllie_Add.IsVisible = false;
-    }
+    private void butAllie_Cancel_Click(object? sender, RoutedEventArgs e) => pnlAllie_Add.IsVisible = false;
 
     private void butAllie_Ok_Click(object? sender, RoutedEventArgs e)
     {
@@ -287,21 +229,5 @@ internal partial class EditorNpcsWindow : Window
         if (_selected == null || lstAllies.SelectedItem is not Npc allie) return;
         _selected.AllieIds.Remove(allie.Id);
         RefreshAlliesList();
-    }
-
-    // ──────────────────────────────────────────────────────────────────────────
-    // Save / Cancel
-    // ──────────────────────────────────────────────────────────────────────────
-
-    private void butSave_Click(object? sender, RoutedEventArgs e)
-    {
-        PackageSender.Instance.WriteNpcs();
-        Close();
-    }
-
-    private void butCancel_Click(object? sender, RoutedEventArgs e)
-    {
-        PackageSender.Instance.RequestNpcs();
-        Close();
     }
 }

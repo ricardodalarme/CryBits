@@ -1,6 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CryBits.Editors.Forms.Npcs"
         x:Class="CryBits.Editors.Forms.Npcs.EditorNpcsWindow"
+        x:DataType="vm:NpcEditorViewModel"
         Title="NPC Editor"
         Width="860" Height="760"
         CanResize="False"
@@ -29,9 +31,9 @@
 
         <!-- New / Remove (bottom-left) -->
         <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,*" Margin="0,6,8,0">
-            <Button Grid.Column="0" Content="New"    Click="butNew_Click"
+            <Button Grid.Column="0" Content="New"    Command="{Binding CreateNewCommand}"
                     Margin="0,0,3,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
-            <Button Grid.Column="1" Content="Remove" Click="butRemove_Click"
+            <Button Grid.Column="1" Content="Remove" Command="{Binding RemoveCommand}"
                     Margin="3,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
         </Grid>
 
@@ -248,9 +250,9 @@
 
                 <!-- ── Save / Cancel ── -->
                 <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
-                    <Button Grid.Column="0" Content="Save All" Click="butSave_Click"
+                    <Button Grid.Column="0" Content="Save All" Command="{Binding SaveCommand}"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,4,0"/>
-                    <Button Grid.Column="1" Content="Cancel"   Click="butCancel_Click"
+                    <Button Grid.Column="1" Content="Cancel"   Command="{Binding CancelCommand}"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,0,0"/>
                 </Grid>
 

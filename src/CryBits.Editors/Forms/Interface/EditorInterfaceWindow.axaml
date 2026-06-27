@@ -49,7 +49,7 @@
                                   SelectionChanged="treOrder_SelectionChanged"
                                   Margin="0,0,0,6">
                             <TreeView.ItemTemplate>
-                                <TreeDataTemplate ItemsSource="{Binding Children}">
+                                <TreeDataTemplate ItemsSource="{Binding Children}" x:DataType="vm:TreeItemVM">
                                     <TextBlock Text="{Binding Header}"/>
                                 </TreeDataTemplate>
                             </TreeView.ItemTemplate>

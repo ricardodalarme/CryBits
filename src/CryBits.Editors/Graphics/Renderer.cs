@@ -14,7 +14,7 @@ internal class Renderer
     public void Draw(IRenderTarget window, Texture texture, Rectangle source, Rectangle destiny,
         Color? color = null)
     {
-        var tmpImage = new Sprite(texture)
+        using var sprite = new Sprite(texture)
         {
             TextureRect = new IntRect(new Vector2i(source.X, source.Y), new Vector2i(source.Width, source.Height)),
             Position = new Vector2f(destiny.X, destiny.Y),
@@ -22,7 +22,7 @@ internal class Renderer
             Color = color ?? Color.White
         };
 
-        window.Draw(tmpImage, RenderStates.Default);
+        window.Draw(sprite, RenderStates.Default);
     }
 
     public void Draw(IRenderTarget window, Texture texture, int x, int y, int sourceX, int sourceY,
@@ -78,7 +78,7 @@ internal class Renderer
     public void DrawText(IRenderTarget window, string text, int x, int y, Color color,
         TextAlign alignment = TextAlign.Left)
     {
-        var tempText = new Text(Fonts.Default, text)
+        using var tempText = new Text(Fonts.Default, text)
         {
             CharacterSize = 10,
             FillColor = color,
@@ -96,5 +96,14 @@ internal class Renderer
 
         tempText.Position = new Vector2f(drawX, y);
         window.Draw(tempText);
+    }
+
+    /// <summary>Draws a checkered transparent-background pattern on the given target.</summary>
+    public void DrawTransparentBackground(IRenderTarget target)
+    {
+        var textureSize = Textures.Transparent.ToSize();
+        for (var x = 0; x <= target.Size.X / textureSize.Width; x++)
+            for (var y = 0; y <= target.Size.Y / textureSize.Height; y++)
+                Draw(target, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
     }
 }

@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CryBits.Editors.Forms.Maps.Panes.ToolbarPane">
+    <CommandBar HorizontalAlignment="Stretch" DefaultLabelPosition="Right">
+        <CommandBar.PrimaryCommands>
+
+            <!-- File -->
+            <CommandBarButton x:Name="butSaveAll" Label="Save All" />
+            <CommandBarButton x:Name="butReload"  Label="Reload" />
+            <CommandBarSeparator />
+
+            <!-- Mode -->
+            <CommandBarToggleButton x:Name="butMNormal"     Label="Normal"     IsChecked="True" />
+            <CommandBarToggleButton x:Name="butMAttributes" Label="Attributes" IsChecked="False" />
+            <CommandBarToggleButton x:Name="butMZones"      Label="Zones"      IsChecked="False" />
+            <CommandBarToggleButton x:Name="butMNPCs"       Label="NPCs"       IsChecked="False" />
+            <CommandBarSeparator />
+
+            <!-- Clipboard -->
+            <CommandBarButton x:Name="butCut"   Label="Cut" />
+            <CommandBarButton x:Name="butCopy"  Label="Copy" />
+            <CommandBarButton x:Name="butPaste" Label="Paste" />
+            <CommandBarSeparator />
+
+            <!-- Draw tools -->
+            <CommandBarToggleButton x:Name="butPencil"    Label="Pencil"    IsChecked="True" />
+            <CommandBarToggleButton x:Name="butRectangle" Label="Rectangle" IsChecked="False" />
+            <CommandBarToggleButton x:Name="butArea"      Label="Area"      IsChecked="False" />
+            <CommandBarToggleButton x:Name="butDiscover"  Label="Discover"  IsChecked="False" />
+            <CommandBarSeparator />
+
+            <CommandBarButton x:Name="butFill"   Label="Fill" />
+            <CommandBarButton x:Name="butEraser" Label="Eraser" />
+            <CommandBarSeparator />
+
+            <!-- Zoom -->
+            <CommandBarButton x:Name="butZoomReset" Label="Reset" />
+            <CommandBarButton x:Name="butZoomFit"   Label="Fit" />
+            <CommandBarSeparator />
+
+            <!-- View -->
+            <CommandBarToggleButton x:Name="butVisualization" Label="Visualization" IsChecked="True" />
+            <CommandBarToggleButton x:Name="butEdition"       Label="Edition"       IsChecked="False" />
+            <CommandBarSeparator />
+            <CommandBarToggleButton x:Name="butGrid"  Label="Grid"  IsChecked="False" />
+            <CommandBarToggleButton x:Name="butAudio" Label="Audio" IsChecked="True" />
+
+        </CommandBar.PrimaryCommands>
+
+        <CommandBar.SecondaryCommands>
+            <CommandBarSeparator />
+            <CommandBarButton x:Name="butEditors_Classes"    Label="Classes" />
+            <CommandBarButton x:Name="butEditors_Interface"  Label="Interface" />
+            <CommandBarButton x:Name="butEditors_Items"      Label="Items" />
+            <CommandBarButton x:Name="butEditors_NPCs"       Label="NPCs" />
+            <CommandBarButton x:Name="butEditors_Shops"      Label="Shops" />
+            <CommandBarButton x:Name="butEditors_Tiles"      Label="Tiles" />
+        </CommandBar.SecondaryCommands>
+    </CommandBar>
+</UserControl>

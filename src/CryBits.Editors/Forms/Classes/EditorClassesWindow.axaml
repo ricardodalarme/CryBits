@@ -1,18 +1,15 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CryBits.Editors.Forms.Classes"
         xmlns:semi="https://irihi.tech/semi"
         x:Class="CryBits.Editors.Forms.Classes.EditorClassesWindow"
+        x:DataType="vm:ClassEditorViewModel"
         Title="Class Editor"
         Width="1010" Height="585"
         CanResize="False"
         WindowStartupLocation="CenterScreen">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <semi:SemiTheme x:Key="SemiTheme" Locale="en-US" />
-        </ResourceDictionary>
-    </Window.Resources>
-
+    
     <Grid ColumnDefinitions="260,*" RowDefinitions="*,Auto" Margin="10">
 
         <!-- ═══════════════════════════════════════════════════ -->
@@ -27,8 +24,8 @@
 
         <!-- New / Remove buttons (bottom-left) -->
         <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,*" Margin="0,6,8,0">
-            <Button Grid.Column="0" Content="New"    Click="butNew_Click"    Margin="0,0,3,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
-            <Button Grid.Column="1" Content="Remove" Click="butRemove_Click" Margin="3,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+            <Button Grid.Column="0" Content="New"    Command="{Binding CreateNewCommand}" Margin="0,0,3,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+            <Button Grid.Column="1" Content="Remove" Command="{Binding RemoveCommand}" Margin="3,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
         </Grid>
 
         <!-- ═══════════════════════════════════════════════════ -->
@@ -189,7 +186,7 @@
                         <ComboBox x:Name="cmbSpawn_Map"       Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,4,0" SelectionChanged="cmbSpawn_Map_SelectionChanged"/>
                         <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,4,0"
                                   SelectedIndex="{Binding SpawnDirectionIndex}"
-                                  SelectionChanged="cmbSpawn_Direction_SelectionChanged">
+                                  >
                             <ComboBoxItem Content="Up"/>
                             <ComboBoxItem Content="Down"/>
                             <ComboBoxItem Content="Left"/>
@@ -203,9 +200,9 @@
 
             <!-- ROW 3: Save All / Cancel ── -->
             <Grid Grid.Row="3" ColumnDefinitions="*,*">
-                <Button Grid.Column="0" Content="Save All" Click="butSave_Click"
+                <Button Grid.Column="0" Content="Save All" Command="{Binding SaveCommand}"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,4,0"/>
-                <Button Grid.Column="1" Content="Cancel"   Click="butCancel_Click"
+                <Button Grid.Column="1" Content="Cancel"   Command="{Binding CancelCommand}"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,0,0"/>
             </Grid>
 

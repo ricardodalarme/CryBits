@@ -1,6 +1,6 @@
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms.Login;
-using CryBits.Editors.Maps;
+using CryBits.Editors.Forms.Maps;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
 

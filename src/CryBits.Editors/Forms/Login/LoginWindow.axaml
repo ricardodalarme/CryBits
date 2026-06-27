@@ -1,18 +1,14 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CryBits.Editors.Forms.Login"
         xmlns:semi="https://irihi.tech/semi"
         x:Class="CryBits.Editors.Forms.Login.LoginWindow"
+        x:DataType="vm:LoginViewModel"
         Title="Login"
         Width="540" Height="400"
         CanResize="False"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False">
-
-    <Window.Resources>
-        <ResourceDictionary>
-            <semi:SemiTheme x:Key="SemiTheme" Locale="en-US" />
-        </ResourceDictionary>
-    </Window.Resources>
 
     <StackPanel Margin="14" Spacing="10">
 
@@ -39,14 +35,14 @@
             <!-- Login fields -->
             <StackPanel Grid.Column="1" Spacing="6" VerticalAlignment="Center">
                 <TextBlock Text="Username:" />
-                <TextBox x:Name="txtUsername" />
+                <TextBox Text="{Binding Username}" />
 
                 <TextBlock Text="Password:" Margin="0,4,0,0" />
-                <TextBox x:Name="txtPassword" PasswordChar="*" />
+                <TextBox Text="{Binding Password}" PasswordChar="*" />
 
-                <CheckBox x:Name="chkUsername" Content="Save username" Margin="0,4,0,0" />
+                <CheckBox IsChecked="{Binding SaveUsername}" Content="Save username" Margin="0,4,0,0" />
                 <Button Content="Connect"
-                        Click="butConnect_Click"
+                        Command="{Binding ConnectCommand}"
                         IsDefault="True"
                         Margin="0,4,0,0"
                         HorizontalAlignment="Stretch"

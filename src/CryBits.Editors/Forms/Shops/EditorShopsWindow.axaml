@@ -10,12 +10,6 @@
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <semi:SemiTheme x:Key="SemiTheme" Locale="en-US" />
-        </ResourceDictionary>
-    </Window.Resources>
-
     <Grid Margin="10" ColumnDefinitions="234,*" ColumnSpacing="8" RowDefinitions="*,Auto">
 
         <!-- ═══════════════════════════════════════════════════ -->
@@ -31,9 +25,9 @@
 
         <!-- New / Remove buttons (bottom-left) -->
         <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,6,0,0">
-            <Button Grid.Column="0" Content="New"    Click="butNew_Click"
+            <Button Grid.Column="0" Content="New"    Command="{Binding CreateNewCommand}"
                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
-            <Button Grid.Column="1" Content="Remove" Click="butRemove_Click"
+            <Button Grid.Column="1" Content="Remove" Command="{Binding RemoveCommand}"
                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
         </Grid>
 
@@ -131,9 +125,9 @@
 
                 <!-- Save / Cancel -->
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
-                    <Button x:Name="butSave"   Grid.Column="0" Content="Save All" Click="butSave_Click"
+                    <Button Grid.Column="0" Content="Save All" Command="{Binding SaveCommand}"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
-                    <Button x:Name="butCancel" Grid.Column="1" Content="Cancel"   Click="butCancel_Click"
+                    <Button Grid.Column="1" Content="Cancel"   Command="{Binding CancelCommand}"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                 </Grid>
 

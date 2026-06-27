@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.PropertyGrid.Controls;
 
-namespace CryBits.Editors.Maps;
+namespace CryBits.Editors.Forms.Maps.Panes;
 
 internal partial class PropertiesPane : UserControl
 {

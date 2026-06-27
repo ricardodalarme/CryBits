@@ -1,7 +1,6 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Classes;
 using CryBits.Definitions.Items;
-using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
 using CryBits.Persistence.Repositories;

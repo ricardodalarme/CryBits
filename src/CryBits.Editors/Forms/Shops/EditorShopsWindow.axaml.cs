@@ -5,7 +5,6 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Shops;
 using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Network;
 
 namespace CryBits.Editors.Forms.Shops;
 
@@ -14,7 +13,6 @@ internal partial class EditorShopsWindow : Window
     private readonly DefinitionCatalog _catalog;
     private ShopEditorViewModel? _viewModel;
 
-    /// <summary>Opens the Shops editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
         if (DefinitionCatalog.Instance.Items.Count == 0)
@@ -80,11 +78,12 @@ internal partial class EditorShopsWindow : Window
         Groups_Visibility();
         if (_selected == null) return;
 
-        _viewModel = new ShopEditorViewModel(_selected);
+        _viewModel = new ShopEditorViewModel(_selected, _catalog);
         DataContext = _viewModel;
+        _viewModel.RequestClose += () => Close();
+        _viewModel.RequestRefreshList += () => List_Update(_selected?.Id);
 
         cmbCurrency.SelectedItem = _catalog.Items.Get(_selected.CurrencyId);
-
         RefreshShopItems();
     }
 
@@ -116,41 +115,6 @@ internal partial class EditorShopsWindow : Window
         List_Update(_selected?.Id);
     }
 
-    private void butNew_Click(object sender, RoutedEventArgs e)
-    {
-        var shop = new Shop();
-        _catalog.Shops.Add(shop.Id, shop);
-        List_Update(shop.Id);
-        Groups_Visibility();
-        if (cmbCurrency.Items.Count > 0)
-            cmbCurrency.SelectedIndex = 0;
-    }
-
-    private void butRemove_Click(object sender, RoutedEventArgs e)
-    {
-        if (_selected == null) return;
-
-        var removeId = _selected.Id;
-        _catalog.Shops.Remove(removeId);
-        _selected = null;
-        _viewModel = null;
-        DataContext = null;
-        List_Update();
-        Groups_Visibility();
-    }
-
-    private void butSave_Click(object sender, RoutedEventArgs e)
-    {
-        PackageSender.Instance.WriteShops();
-        Close();
-    }
-
-    private void butCancel_Click(object sender, RoutedEventArgs e)
-    {
-        PackageSender.Instance.RequestShops();
-        Close();
-    }
-
     private void cmbCurrency_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_selected == null) return;
@@ -158,28 +122,20 @@ internal partial class EditorShopsWindow : Window
             _selected.CurrencyId = item.Id;
     }
 
-    private void butSold_Add_Click(object sender, RoutedEventArgs e)
-    {
-        OpenAddItemPanel(true);
-    }
+    private void butSold_Add_Click(object sender, RoutedEventArgs e) => OpenAddItemPanel(true);
 
     private void butSold_Remove_Click(object sender, RoutedEventArgs e)
     {
         if (_selected == null || lstSold.SelectedIndex < 0) return;
-
         _selected.Sold.RemoveAt(lstSold.SelectedIndex);
         RefreshShopItems();
     }
 
-    private void butBought_Add_Click(object sender, RoutedEventArgs e)
-    {
-        OpenAddItemPanel(false);
-    }
+    private void butBought_Add_Click(object sender, RoutedEventArgs e) => OpenAddItemPanel(false);
 
     private void butBought_Remove_Click(object sender, RoutedEventArgs e)
     {
         if (_selected == null || lstBought.SelectedIndex < 0) return;
-
         _selected.Bought.RemoveAt(lstBought.SelectedIndex);
         RefreshShopItems();
     }
@@ -187,7 +143,6 @@ internal partial class EditorShopsWindow : Window
     private void OpenAddItemPanel(bool toSold)
     {
         if (_selected == null) return;
-
         _addingToSold = toSold;
         cmbItems.SelectedIndex = 0;
         numAmount.Value = 1;

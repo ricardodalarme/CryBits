@@ -1,11 +1,9 @@
-using CryBits.Client.Framework.Interfacily.Components;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CryBits.Definitions.Common;
-using System.ComponentModel;
 using System.Drawing;
-using System.Runtime.CompilerServices;
-using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
+using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Label = CryBits.Client.Framework.Interfacily.Components.Label;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
 using Picture = CryBits.Client.Framework.Interfacily.Components.Picture;
@@ -15,39 +13,35 @@ using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Editors.Forms.Interface;
 
-internal sealed class ComponentEditorViewModel(Component model) : INotifyPropertyChanged
+internal sealed class ComponentEditorViewModel(Component model) : ObservableObject
 {
     private readonly Component _model = model;
     public Component Component => _model;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private void Notify([CallerMemberName] string? n = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
 
     // ── Common properties ──────────────────────────────────────────────
 
     public string Name
     {
         get => _model.Name;
-        set { _model.Name = value; Notify(); }
+        set { _model.Name = value; OnPropertyChanged(); }
     }
 
     public int X
     {
         get => _model.Position.X;
-        set { _model.Position = new Point(value, _model.Position.Y); Notify(); }
+        set { _model.Position = new Point(value, _model.Position.Y); OnPropertyChanged(); }
     }
 
     public int Y
     {
         get => _model.Position.Y;
-        set { _model.Position = new Point(_model.Position.X, value); Notify(); }
+        set { _model.Position = new Point(_model.Position.X, value); OnPropertyChanged(); }
     }
 
     public bool Visible
     {
         get => _model.Visible;
-        set { _model.Visible = value; Notify(); }
+        set { _model.Visible = value; OnPropertyChanged(); }
     }
 
     // ── Type identification ────────────────────────────────────────────
@@ -75,7 +69,7 @@ internal sealed class ComponentEditorViewModel(Component model) : INotifyPropert
                 case Panel p: p.TextureNum = value; break;
                 default: return;
             }
-            Notify();
+            OnPropertyChanged();
         }
     }
 
@@ -84,19 +78,19 @@ internal sealed class ComponentEditorViewModel(Component model) : INotifyPropert
     public string LabelText
     {
         get => _model is Label lbl ? lbl.Text : string.Empty;
-        set { if (_model is Label lbl) { lbl.Text = value; Notify(); } }
+        set { if (_model is Label lbl) { lbl.Text = value; OnPropertyChanged(); } }
     }
 
     public int LabelAlignment
     {
         get => _model is Label lbl ? (int)lbl.Alignment : 0;
-        set { if (_model is Label lbl) { lbl.Alignment = (TextAlign)value; Notify(); } }
+        set { if (_model is Label lbl) { lbl.Alignment = (TextAlign)value; OnPropertyChanged(); } }
     }
 
     public int LabelMaxWidth
     {
         get => _model is Label lbl ? lbl.MaxWidth : 0;
-        set { if (_model is Label lbl) { lbl.MaxWidth = value; Notify(); } }
+        set { if (_model is Label lbl) { lbl.MaxWidth = value; OnPropertyChanged(); } }
     }
 
     // ── CheckBox ───────────────────────────────────────────────────────
@@ -104,39 +98,39 @@ internal sealed class ComponentEditorViewModel(Component model) : INotifyPropert
     public string CbText
     {
         get => _model is CheckBox cb ? cb.Text : string.Empty;
-        set { if (_model is CheckBox cb) { cb.Text = value; Notify(); } }
+        set { if (_model is CheckBox cb) { cb.Text = value; OnPropertyChanged(); } }
     }
 
     public bool CbChecked
     {
         get => _model is CheckBox cb && cb.Checked;
-        set { if (_model is CheckBox cb) { cb.Checked = value; Notify(); } }
+        set { if (_model is CheckBox cb) { cb.Checked = value; OnPropertyChanged(); } }
     }
 
-    // ── TextBox ────────────────────────────────────────────────────────
+    // ── TextBox ───────────────────────────────────────────────────────
 
     public string TbText
     {
         get => _model is TextBox tb ? tb.Text : string.Empty;
-        set { if (_model is TextBox tb) { tb.Text = value; Notify(); } }
+        set { if (_model is TextBox tb) { tb.Text = value; OnPropertyChanged(); } }
     }
 
     public short TbMaxChars
     {
         get => _model is TextBox tb ? tb.MaxCharacters : (short)0;
-        set { if (_model is TextBox tb) { tb.MaxCharacters = value; Notify(); } }
+        set { if (_model is TextBox tb) { tb.MaxCharacters = value; OnPropertyChanged(); } }
     }
 
     public short TbWidth
     {
         get => _model is TextBox tb ? tb.Width : (short)0;
-        set { if (_model is TextBox tb) { tb.Width = value; Notify(); } }
+        set { if (_model is TextBox tb) { tb.Width = value; OnPropertyChanged(); } }
     }
 
     public bool TbPassword
     {
         get => _model is TextBox tb && tb.Password;
-        set { if (_model is TextBox tb) { tb.Password = value; Notify(); } }
+        set { if (_model is TextBox tb) { tb.Password = value; OnPropertyChanged(); } }
     }
 
     // ── ProgressBar ────────────────────────────────────────────────────
@@ -144,19 +138,19 @@ internal sealed class ComponentEditorViewModel(Component model) : INotifyPropert
     public int PbSourceY
     {
         get => _model is ProgressBar pb ? pb.SourceY : 0;
-        set { if (_model is ProgressBar pb) { pb.SourceY = value; Notify(); } }
+        set { if (_model is ProgressBar pb) { pb.SourceY = value; OnPropertyChanged(); } }
     }
 
     public int PbWidth
     {
         get => _model is ProgressBar pb ? pb.Width : 0;
-        set { if (_model is ProgressBar pb) { pb.Width = value; Notify(); } }
+        set { if (_model is ProgressBar pb) { pb.Width = value; OnPropertyChanged(); } }
     }
 
     public int PbHeight
     {
         get => _model is ProgressBar pb ? pb.Height : 0;
-        set { if (_model is ProgressBar pb) { pb.Height = value; Notify(); } }
+        set { if (_model is ProgressBar pb) { pb.Height = value; OnPropertyChanged(); } }
     }
 
     // ── SlotGrid ───────────────────────────────────────────────────────
@@ -169,8 +163,8 @@ internal sealed class ComponentEditorViewModel(Component model) : INotifyPropert
             if (_model is SlotGrid sg)
             {
                 sg.Rows = value;
-                Notify();
-                Notify(nameof(SgSlotCount));
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(SgSlotCount));
             }
         }
     }
@@ -183,8 +177,8 @@ internal sealed class ComponentEditorViewModel(Component model) : INotifyPropert
             if (_model is SlotGrid sg)
             {
                 sg.Columns = value;
-                Notify();
-                Notify(nameof(SgSlotCount));
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(SgSlotCount));
             }
         }
     }
@@ -192,13 +186,13 @@ internal sealed class ComponentEditorViewModel(Component model) : INotifyPropert
     public byte SgSlotSize
     {
         get => _model is SlotGrid sg ? sg.SlotSize : (byte)32;
-        set { if (_model is SlotGrid sg) { sg.SlotSize = value; Notify(); } }
+        set { if (_model is SlotGrid sg) { sg.SlotSize = value; OnPropertyChanged(); } }
     }
 
     public byte SgPadding
     {
         get => _model is SlotGrid sg ? sg.Padding : (byte)4;
-        set { if (_model is SlotGrid sg) { sg.Padding = value; Notify(); } }
+        set { if (_model is SlotGrid sg) { sg.Padding = value; OnPropertyChanged(); } }
     }
 
     public int SgSlotCount => _model is SlotGrid sg ? sg.SlotCount : 0;
@@ -208,12 +202,12 @@ internal sealed class ComponentEditorViewModel(Component model) : INotifyPropert
     public int PicWidth
     {
         get => _model is Picture pic ? pic.Width : 0;
-        set { if (_model is Picture pic) { pic.Width = value; Notify(); } }
+        set { if (_model is Picture pic) { pic.Width = value; OnPropertyChanged(); } }
     }
 
     public int PicHeight
     {
         get => _model is Picture pic ? pic.Height : 0;
-        set { if (_model is Picture pic) { pic.Height = value; Notify(); } }
+        set { if (_model is Picture pic) { pic.Height = value; OnPropertyChanged(); } }
     }
 }

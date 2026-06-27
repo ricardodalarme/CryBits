@@ -47,6 +47,12 @@
           "bodong.PropertyModels": "12.0.0"
         }
       },
+      "CommunityToolkit.Mvvm": {
+        "type": "Direct",
+        "requested": "[8.4.2, )",
+        "resolved": "8.4.2",
+        "contentHash": "WadCzGEc2U+3e20avRLng4qNtt4zoOGWrdUISqJWrHe3/FSnrYjuM5Sb4yQb09LhkBXrrI4Zt3dLKgRMbItsrg=="
+      },
       "Dock.Avalonia": {
         "type": "Direct",
         "requested": "[12.0.0.2, )",

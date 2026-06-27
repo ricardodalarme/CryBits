@@ -1,13 +1,14 @@
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Maps;
-using CryBits.Editors.Graphics;
-using CryBits.Editors.Maps;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Forms.Maps;
 using SFML.Graphics;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
+using static CryBits.Editors.Forms.Maps.MapMath;
 using Color = SFML.Graphics.Color;
 
-namespace CryBits.Editors.Entities;
+namespace CryBits.Editors.Graphics.Renderers;
 
 internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 {
@@ -15,16 +16,6 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
     public RenderTexture? WinMap;
     public RenderTexture? WinMapTile;
-
-    private const int ChunkSize = 32;
-
-    private void Transparent(IRenderTarget window)
-    {
-        var textureSize = Textures.Transparent.ToSize();
-        for (var x = 0; x <= window.Size.X / textureSize.Width; x++)
-            for (var y = 0; y <= window.Size.Y / textureSize.Height; y++)
-                renderer.Draw(window, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
-    }
 
     public void EditorMapsTile()
     {
@@ -34,7 +25,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
         WinMapTile.Clear(Color.Black);
         var texture = Textures.Tiles[win.TileSheetIndex + 1];
         var position = new Point(win.TileScrollX, win.TileScrollY);
-        Transparent(WinMapTile);
+        renderer.DrawTransparentBackground(WinMapTile);
         renderer.Draw(WinMapTile, texture, new Rectangle(position, texture.ToSize()),
             new Rectangle(new Point(0), texture.ToSize()));
         renderer.DrawRectangle(WinMapTile,

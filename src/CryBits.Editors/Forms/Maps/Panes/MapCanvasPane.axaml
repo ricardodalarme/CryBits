@@ -1,7 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:paz="using:Avalonia.Controls.PanAndZoom"
-             x:Class="CryBits.Editors.Maps.MapCanvasPane">
+             x:Class="CryBits.Editors.Forms.Maps.Panes.MapCanvasPane">
     <Grid>
         <paz:ZoomBorder x:Name="zoomBorder"
                         Stretch="None"

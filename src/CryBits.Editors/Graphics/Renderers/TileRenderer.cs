@@ -27,7 +27,7 @@ internal class TileRenderer(Renderer renderer)
         if (textureNum < 0 || textureNum >= Textures.Tiles.Count) return;
 
         WinTile.Clear();
-        Transparent(WinTile);
+        renderer.DrawTransparentBackground(WinTile);
 
         var texture = Textures.Tiles[textureNum];
         var position = new Point(scrollX * Grid, scrollY * Grid);
@@ -84,11 +84,4 @@ internal class TileRenderer(Renderer renderer)
         }
     }
 
-    private void Transparent(RenderTexture target)
-    {
-        var textureSize = Textures.Transparent.ToSize();
-        for (var x = 0; x <= target.Size.X / textureSize.Width; x++)
-            for (var y = 0; y <= target.Size.Y / textureSize.Height; y++)
-                renderer.Draw(target, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
-    }
 }

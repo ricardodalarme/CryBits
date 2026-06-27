@@ -1,11 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
 using CryBits.Editors.AvaloniaUI;
@@ -41,6 +39,7 @@ internal partial class EditorTilesWindow : Window
 
         _viewModel = new TileEditorViewModel();
         DataContext = _viewModel;
+        _viewModel.RequestClose += () => Close();
 
         scrlTileX.Value = 0;
         scrlTileY.Value = 0;
@@ -55,7 +54,9 @@ internal partial class EditorTilesWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
+        TileRenderer.Instance.WinTile?.Dispose();
         TileRenderer.Instance.WinTile = null;
+        _bitmap?.Dispose();
         base.OnClosed(e);
     }
 
@@ -103,24 +104,5 @@ internal partial class EditorTilesWindow : Window
                             tileRef.Data[position.X, position.Y].Block[i] = !tileRef.Data[position.X, position.Y].Block[i];
             }
         }
-    }
-
-    private void butSave_Click(object? sender, RoutedEventArgs e)
-    {
-        TileRepository.WriteAll();
-        Close();
-    }
-
-    private void butClear_Click(object? sender, RoutedEventArgs e)
-    {
-        if (_viewModel == null) return;
-        if (Textures.Tiles.Count == 0 || _viewModel.TileIndex >= Textures.Tiles.Count) return;
-        var tileSize = Textures.Tiles[_viewModel.TileIndex].ToSize();
-        Tile.List[_viewModel.TileIndex] = new Tile(tileSize);
-    }
-
-    private void butCancel_Click(object? sender, RoutedEventArgs e)
-    {
-        Close();
     }
 }

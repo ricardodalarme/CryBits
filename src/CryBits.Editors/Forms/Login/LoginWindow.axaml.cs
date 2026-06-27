@@ -1,10 +1,5 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Threading;
-using CryBits.Client.Framework;
-using CryBits.Client.Framework.Network;
-using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Network;
 
 namespace CryBits.Editors.Forms.Login;
 
@@ -12,13 +7,6 @@ internal partial class LoginWindow : Window
 {
     private static LoginWindow? _instance;
 
-    /// <summary>The entered username (persisted across connection attempts).</summary>
-    public static string Username { get; set; } = string.Empty;
-
-    /// <summary>The entered password (persisted across connection attempts).</summary>
-    public static string Password { get; set; } = string.Empty;
-
-    /// <summary>Shows the login window (singleton), creating it if necessary.</summary>
     public static void Open()
     {
         Dispatcher.UIThread.Post(() =>
@@ -40,7 +28,6 @@ internal partial class LoginWindow : Window
         });
     }
 
-    /// <summary>Hides the login window if visible.</summary>
     public static void HideWindow()
     {
         Dispatcher.UIThread.Post(() =>
@@ -53,30 +40,6 @@ internal partial class LoginWindow : Window
     public LoginWindow()
     {
         InitializeComponent();
-        txtUsername.Text = Options.Instance.Username;
-        chkUsername.IsChecked = Options.Instance.Username != string.Empty;
-    }
-
-    private void butConnect_Click(object sender, RoutedEventArgs e)
-    {
-        Username = txtUsername.Text ?? string.Empty;
-        Password = txtPassword.Text ?? string.Empty;
-
-        if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
-        {
-            MessageBox.Show("Some field is empty.");
-            return;
-        }
-
-        if (Connection.Instance == null || !Connection.Instance.TryConnect())
-        {
-            MessageBox.Show("The server is currently unavailable.");
-            return;
-        }
-
-        PackageSender.Instance.Connect();
-
-        Options.Instance.Username = chkUsername.IsChecked == true ? Username : string.Empty;
-        Client.Framework.Persistence.Repositories.OptionsRepository.Write();
+        DataContext = new LoginViewModel();
     }
 }

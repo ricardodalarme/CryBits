@@ -1,7 +1,6 @@
 using CryBits.Client.Framework.Network;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
-using CryBits.Editors.Forms.Login;
 using CryBits.Protocol.Packets.Client;
 using CryBits.Transport;
 
@@ -11,7 +10,7 @@ internal class PackageSender(Connection connection, DefinitionCatalog catalog)
 {
     public static PackageSender Instance { get; } = new(Connection.Instance, DefinitionCatalog.Instance);
 
-    public void Connect() => connection.SendPacket(new ConnectPacket { Username = LoginWindow.Username, Password = LoginWindow.Password, IsClientAccess = true });
+    public void Connect(string username, string password) => connection.SendPacket(new ConnectPacket { Username = username, Password = password, IsClientAccess = true });
     public void RequestClasses() => connection.SendPacket(new RequestClassesPacket(), DeliveryChannel.ReliableUnordered);
     public void RequestMap(Map map) => connection.SendPacket(new RequestMapPacket { Id = map.Id }, DeliveryChannel.ReliableUnordered);
     public void RequestNpcs() => connection.SendPacket(new RequestNpcsPacket(), DeliveryChannel.ReliableUnordered);

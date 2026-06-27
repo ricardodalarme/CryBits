@@ -2,7 +2,6 @@ using CryBits.Definitions.Catalog;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
-using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 using CryBits.Simulation.Spawners;
 

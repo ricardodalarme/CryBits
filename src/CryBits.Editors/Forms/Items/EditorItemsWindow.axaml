@@ -32,10 +32,10 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="butNew" Grid.Column="0" Content="New" Margin="0,0,4,0"
-                        HorizontalAlignment="Stretch" Click="butNew_Click"/>
-                <Button x:Name="butRemove" Grid.Column="1" Content="Remove"
-                        HorizontalAlignment="Stretch" Click="butRemove_Click"/>
+                <Button Grid.Column="0" Content="New" Margin="0,0,4,0"
+                        HorizontalAlignment="Stretch" Command="{Binding CreateNewCommand}"/>
+                <Button Grid.Column="1" Content="Remove"
+                        HorizontalAlignment="Stretch" Command="{Binding RemoveCommand}"/>
             </Grid>
         </Grid>
 
@@ -266,12 +266,12 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="butSaveAll" Grid.Column="0" Content="Save All" Margin="0,0,4,0"
+                <Button Grid.Column="0" Content="Save All" Margin="0,0,4,0"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                        Classes="accent" Click="butSaveAll_Click"/>
-                <Button x:Name="butCancel" Grid.Column="1" Content="Cancel"
+                        Classes="accent" Command="{Binding SaveCommand}"/>
+                <Button Grid.Column="1" Content="Cancel"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                        Click="butCancel_Click"/>
+                        Command="{Binding CancelCommand}"/>
             </Grid>
 
         </StackPanel>

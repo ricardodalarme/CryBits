@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CryBits.Editors.Forms.Maps.Panes.AttributesPane">
+    <StackPanel Spacing="6" Margin="4">
+        <TextBlock Text="Attribute" FontWeight="Bold" />
+        <RadioButton x:Name="optA_Block"    Content="Block"              GroupName="Attr" IsChecked="True" />
+        <RadioButton x:Name="optA_Warp"     Content="Warp"               GroupName="Attr" />
+        <RadioButton x:Name="optA_Item"     Content="Item Spawn"         GroupName="Attr" />
+        <RadioButton x:Name="optA_DirBlock" Content="Directional Block"  GroupName="Attr" />
+
+        <Border x:Name="grpA_Warp"
+                BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                CornerRadius="4" Padding="6" IsVisible="False">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Warp to map:" />
+                <ComboBox x:Name="cmbA_Warp_Map" HorizontalAlignment="Stretch" />
+                <TextBlock Text="Direction:" />
+                <ComboBox x:Name="cmbA_Warp_Direction" HorizontalAlignment="Stretch" />
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <StackPanel Grid.Column="0" Spacing="2">
+                        <TextBlock Text="X:" />
+                        <NumericUpDown x:Name="numA_Warp_X" Minimum="0" Maximum="99" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="2">
+                        <TextBlock Text="Y:" />
+                        <NumericUpDown x:Name="numA_Warp_Y" Minimum="0" Maximum="99" />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="grpA_Item"
+                BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                CornerRadius="4" Padding="6" IsVisible="False">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Item:" />
+                <ComboBox x:Name="cmbA_Item" HorizontalAlignment="Stretch" />
+                <TextBlock Text="Amount:" />
+                <NumericUpDown x:Name="numA_Item_Amount" Minimum="1" Maximum="32767" />
+            </StackPanel>
+        </Border>
+
+        <Button Content="Clear All Attributes" x:Name="butAttributes_Clear"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+        <Button Content="Import from Tiles" x:Name="butAttributes_Import"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+    </StackPanel>
+</UserControl>

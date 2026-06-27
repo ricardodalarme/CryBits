@@ -9,15 +9,14 @@ using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics.Renderers;
 using SFML.Graphics;
 using SFML.System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Label = CryBits.Client.Framework.Interfacily.Components.Label;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
 using Picture = CryBits.Client.Framework.Interfacily.Components.Picture;
-using Point = System.Drawing.Point;
 using ProgressBar = CryBits.Client.Framework.Interfacily.Components.ProgressBar;
 using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 using SlotGrid = CryBits.Client.Framework.Interfacily.Components.SlotGrid;
@@ -26,27 +25,16 @@ using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 namespace CryBits.Editors.Forms.Interface;
 
 // ─── ViewModel for the order tree ───────────────────────────────────────────
-internal sealed class TreeItemVM : INotifyPropertyChanged
+internal sealed partial class TreeItemVM : ObservableObject
 {
+    [ObservableProperty]
     private string _header = string.Empty;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public string Header
-    {
-        get => _header;
-        set
-        {
-            _header = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Header)));
-        }
-    }
 
     public Component? Tag { get; set; }
     public InterfaceNode? SourceNode { get; set; }
     public TreeItemVM? Parent { get; set; }
     public ObservableCollection<TreeItemVM> Children { get; } = [];
-    public override string ToString() => _header;
+    public override string ToString() => Header;
 }
 
 // ─── Editor window ───────────────────────────────────────────────────────────
@@ -95,7 +83,9 @@ internal partial class EditorInterfaceWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
+        InterfaceRenderer.Instance.WinInterface?.Dispose();
         InterfaceRenderer.Instance.WinInterface = null;
+        _previewBitmap?.Dispose();
         base.OnClosed(e);
     }
 
@@ -311,8 +301,6 @@ internal partial class EditorInterfaceWindow : Window
 
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
-        // Rebuild Screen.Body / component.Children from the authoritative InterfaceNode tree
-        // before serializing, since editor operations mutate the InterfaceNode tree directly.
         foreach (var screenNode in InterfaceData.Instance.Tree.Nodes)
         {
             var screen = (Screen)screenNode.Tag!;
@@ -324,6 +312,8 @@ internal partial class EditorInterfaceWindow : Window
         Close();
     }
 
+    private void butCancel_Click(object? sender, RoutedEventArgs e) => Close();
+
     private static void SyncBodyFromNode(InterfaceNode node, List<Component> body)
     {
         foreach (var childNode in node.Nodes)
@@ -333,10 +323,5 @@ internal partial class EditorInterfaceWindow : Window
             SyncBodyFromNode(childNode, comp.Children);
             body.Add(comp);
         }
-    }
-
-    private void butCancel_Click(object? sender, RoutedEventArgs e)
-    {
-        Close();
     }
 }

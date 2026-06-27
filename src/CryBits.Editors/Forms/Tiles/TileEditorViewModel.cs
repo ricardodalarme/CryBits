@@ -1,73 +1,73 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using CryBits.Client.Framework.Persistence.Repositories;
 using G = CryBits.Definitions.Globals;
 
 namespace CryBits.Editors.Forms.Tiles;
 
-internal sealed class TileEditorViewModel : INotifyPropertyChanged
+internal sealed partial class TileEditorViewModel : ObservableObject
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private void Notify([CallerMemberName] string? n = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+    public event Action? RequestClose;
 
+    [ObservableProperty]
     private int _tileIndex = 1;
+
+    [ObservableProperty]
     private int _scrollX;
+
+    [ObservableProperty]
     private int _scrollY;
+
+    [ObservableProperty]
     private bool _isAttributeMode = true;
 
-    public int TileIndex
-    {
-        get => _tileIndex;
-        set
-        {
-            if (_tileIndex == value) return;
-            _tileIndex = value;
-            Notify();
-            Notify(nameof(TileLabel));
-            ScrollX = 0;
-            ScrollY = 0;
-            UpdateScrollBounds();
-        }
-    }
+    public string TileLabel => "Tile: " + TileIndex;
 
-    public string TileLabel => "Tile: " + _tileIndex;
-
-    public int ScrollX
-    {
-        get => _scrollX;
-        set { _scrollX = value; Notify(); }
-    }
-
-    public int ScrollY
-    {
-        get => _scrollY;
-        set { _scrollY = value; Notify(); }
-    }
-
-    public bool IsAttributeMode
-    {
-        get => _isAttributeMode;
-        set { _isAttributeMode = value; Notify(); Notify(nameof(ShowAttributes)); }
-    }
-
-    public bool ShowAttributes => _isAttributeMode;
+    public bool ShowAttributes => IsAttributeMode;
 
     public int MaxScrollBoundsX { get; private set; }
     public int MaxScrollBoundsY { get; private set; }
 
     public int MaxTileIndex => Math.Max(1, Textures.Tiles.Count - 1);
 
+    partial void OnTileIndexChanged(int value)
+    {
+        OnPropertyChanged(nameof(TileLabel));
+        ScrollX = 0;
+        ScrollY = 0;
+        UpdateScrollBounds();
+    }
+
+    [RelayCommand]
+    private void Save()
+    {
+        TileRepository.WriteAll();
+        RequestClose?.Invoke();
+    }
+
+    [RelayCommand]
+    private void Clear()
+    {
+        if (Textures.Tiles.Count == 0 || TileIndex >= Textures.Tiles.Count) return;
+        var tileSize = Textures.Tiles[TileIndex].ToSize();
+        Tile.List[TileIndex] = new Tile(tileSize);
+    }
+
+    [RelayCommand]
+    private void Cancel() => RequestClose?.Invoke();
+
     private void UpdateScrollBounds()
     {
-        if (Textures.Tiles.Count == 0 || _tileIndex >= Textures.Tiles.Count)
+        if (Textures.Tiles.Count == 0 || TileIndex >= Textures.Tiles.Count)
         {
             MaxScrollBoundsX = 0;
             MaxScrollBoundsY = 0;
             return;
         }
 
-        var tex = Textures.Tiles[_tileIndex];
+        var tex = Textures.Tiles[TileIndex];
         const int canvasW = 298;
         const int canvasH = 443;
         MaxScrollBoundsX = Math.Max(0, tex.ToSize().Width / G.Grid - canvasW / G.Grid);

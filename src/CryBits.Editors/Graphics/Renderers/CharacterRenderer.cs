@@ -11,9 +11,6 @@ internal class CharacterRenderer(Renderer renderer)
 
     public RenderTexture? WinCharacter;
 
-    /// <summary>
-    /// Render a character preview.
-    /// </summary>
     public void Character()
     {
         if (WinCharacter == null) return;
@@ -25,11 +22,11 @@ internal class CharacterRenderer(Renderer renderer)
 
     private void Character(RenderTexture target, short textureNum)
     {
+        if (textureNum <= 0 || textureNum >= Textures.Characters.Count) return;
+
         var texture = Textures.Characters[textureNum];
         var size = new Size(texture.ToSize().Width / 4, texture.ToSize().Height / 4);
-
-        if (textureNum > 0 && textureNum < Textures.Characters.Count)
-            renderer.Draw(target, texture, (int)(target.Size.X - size.Width) / 2, (int)(target.Size.Y - size.Height) / 2, 0, 0,
-                size.Width, size.Height);
+        renderer.Draw(target, texture, (int)(target.Size.X - size.Width) / 2, (int)(target.Size.Y - size.Height) / 2, 0, 0,
+            size.Width, size.Height);
     }
 }

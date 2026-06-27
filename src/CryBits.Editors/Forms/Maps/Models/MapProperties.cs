@@ -3,8 +3,9 @@ using CryBits.Definitions.Maps;
 using CryBits.Editors.Entities;
 using PropertyModels.ComponentModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-namespace CryBits.Editors.Forms.Maps.Properties;
+namespace CryBits.Editors.Forms.Maps.Models;
 
 internal class MapProperties(Map map) : MiniReactiveObject
 {
@@ -49,6 +50,7 @@ internal class MapProperties(Map map) : MiniReactiveObject
     [Category("Fog")]
     [DisplayName("Fog Alpha")]
     [DefaultValue(255)]
+    [Trackable(0, 255)]
     public byte FogAlpha
     {
         get => Base.DefaultFog?.Alpha ?? 255;
@@ -62,6 +64,7 @@ internal class MapProperties(Map map) : MiniReactiveObject
     [Category("Fog")]
     [DisplayName("Fog X Speed")]
     [DefaultValue(0)]
+    [Trackable(-128, 127)]
     public sbyte FogSpeedX
     {
         get => Base.DefaultFog?.SpeedX ?? 0;
@@ -75,6 +78,7 @@ internal class MapProperties(Map map) : MiniReactiveObject
     [Category("Fog")]
     [DisplayName("Fog Y Speed")]
     [DefaultValue(0)]
+    [Trackable(-128, 127)]
     public sbyte FogSpeedY
     {
         get => Base.DefaultFog?.SpeedY ?? 0;
@@ -85,9 +89,7 @@ internal class MapProperties(Map map) : MiniReactiveObject
         }
     }
 
-    [Category("Weather")]
-    [DisplayName("Weather Intensity")]
-    [DefaultValue(0)]
+    [Browsable(false)]
     public byte WeatherIntensity
     {
         get => 0;
@@ -110,6 +112,7 @@ internal class MapProperties(Map map) : MiniReactiveObject
     [Category("Hue Overlay")]
     [DisplayName("Red Hue")]
     [DefaultValue(255)]
+    [Trackable(0, 255)]
     public byte HueRed
     {
         get => (byte)(Base.ColorArgb >> 16);
@@ -119,6 +122,7 @@ internal class MapProperties(Map map) : MiniReactiveObject
     [Category("Hue Overlay")]
     [DisplayName("Green Hue")]
     [DefaultValue(255)]
+    [Trackable(0, 255)]
     public byte HueGreen
     {
         get => (byte)(Base.ColorArgb >> 8);
@@ -128,6 +132,7 @@ internal class MapProperties(Map map) : MiniReactiveObject
     [Category("Hue Overlay")]
     [DisplayName("Blue Hue")]
     [DefaultValue(255)]
+    [Trackable(0, 255)]
     public byte HueBlue
     {
         get => (byte)Base.ColorArgb;
@@ -136,6 +141,8 @@ internal class MapProperties(Map map) : MiniReactiveObject
 
     [Category("Misc")]
     [DefaultValue(100)]
+    [Trackable(0, 255)]
+    [Range(0, 255)]
     public byte Lighting
     {
         get => Base.DefaultLighting;

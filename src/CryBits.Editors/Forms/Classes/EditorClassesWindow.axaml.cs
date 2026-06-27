@@ -3,10 +3,9 @@ using Avalonia.Interactivity;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Items;
-using Class = CryBits.Definitions.Classes.Class;
 using CryBits.Definitions.Slots;
 using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Network;
+using Class = CryBits.Definitions.Classes.Class;
 using Map = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Editors.Forms.Classes;
@@ -43,11 +42,8 @@ internal partial class EditorClassesWindow : Window
         cmbItems.ItemsSource = _catalog.Items.Values.ToList();
         cmbSpawn_Map.ItemsSource = _catalog.Maps.Values.ToList();
 
-        txtFilter.TextChanged += txtFilter_TextChanged;
         RefreshClassList();
     }
-
-    // ── Class list ──────────────────────────────────────────────
 
     private void RefreshClassList()
     {
@@ -67,8 +63,10 @@ internal partial class EditorClassesWindow : Window
     {
         if (lstClasses.SelectedItem is not Class cls) return;
         _selected = cls;
-        _viewModel = new ClassEditorViewModel(cls);
+        _viewModel = new ClassEditorViewModel(cls, _catalog);
         DataContext = _viewModel;
+        _viewModel.RequestClose += () => Close();
+        _viewModel.RequestRefreshList += RefreshClassList;
 
         numTexture.Maximum = Textures.Characters.Count - 1;
 
@@ -103,31 +101,6 @@ internal partial class EditorClassesWindow : Window
     {
         RefreshClassList();
     }
-
-    // ── New / Remove ───────────────────────────────────────────
-
-    private void butNew_Click(object? sender, RoutedEventArgs e)
-    {
-        var cls = new Class();
-        _catalog.Classes.Add(cls.Id, cls);
-        RefreshClassList();
-        lstClasses.SelectedItem = _catalog.Classes.Values.FirstOrDefault(c => c.Id == cls.Id);
-    }
-
-    private void butRemove_Click(object? sender, RoutedEventArgs e)
-    {
-        if (_selected == null) return;
-        if (_catalog.Classes.Count == 1) return;
-
-        _catalog.Classes.Remove(_selected.Id);
-        _selected = null;
-        _viewModel = null;
-        DataContext = null;
-        RefreshClassList();
-        pnlContent.IsVisible = lstClasses.SelectedItem != null;
-    }
-
-    // ── Textures ───────────────────────────────────────────────
 
     private void butMTexture_Click(object? sender, RoutedEventArgs e)
     {
@@ -192,8 +165,6 @@ internal partial class EditorClassesWindow : Window
         HideOverlays();
     }
 
-    // ── Initial items ──────────────────────────────────────────
-
     private void butItem_Add_Click(object? sender, RoutedEventArgs e)
     {
         if (_catalog.Items.Count == 0) return;
@@ -219,35 +190,10 @@ internal partial class EditorClassesWindow : Window
         RefreshItemList();
     }
 
-    // ── Spawn map ──────────────────────────────────────────────
-
     private void cmbSpawn_Map_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_selected == null) return;
         if (cmbSpawn_Map.SelectedItem is Map map) _selected.SpawnMapId = map.Id;
     }
 
-    private void cmbSpawn_Direction_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (_viewModel == null) return;
-        // Binding handles the value — just refresh if needed
-    }
-
-    // ── Save / Cancel ──────────────────────────────────────────
-
-    private void butSave_Click(object? sender, RoutedEventArgs e)
-    {
-        // Re-sync spawn map in case binding didn't capture it
-        if (_selected != null && cmbSpawn_Map.SelectedItem is Map map)
-            _selected.SpawnMapId = map.Id;
-
-        PackageSender.Instance.WriteClasses();
-        Close();
-    }
-
-    private void butCancel_Click(object? sender, RoutedEventArgs e)
-    {
-        PackageSender.Instance.RequestClasses();
-        Close();
-    }
 }

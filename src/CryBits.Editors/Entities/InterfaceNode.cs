@@ -14,8 +14,6 @@ internal sealed class InterfaceNode
 
     public InterfaceNodeCollection Nodes { get; }
 
-    public InterfaceNode? LastNode => _nodes.Count > 0 ? _nodes[^1] : null;
-
     public InterfaceNode(string text = "")
     {
         Text = text;
