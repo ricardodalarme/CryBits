@@ -6,7 +6,7 @@ using CryBits.Client.Framework.Network;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
 
-namespace CryBits.Editors.Forms;
+namespace CryBits.Editors.Forms.Login;
 
 internal partial class LoginWindow : Window
 {

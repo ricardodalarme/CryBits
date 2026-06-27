@@ -7,7 +7,7 @@ using CryBits.Definitions.Shops;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
 
-namespace CryBits.Editors.Forms;
+namespace CryBits.Editors.Forms.Shops;
 
 internal partial class EditorShopsWindow : Window
 {

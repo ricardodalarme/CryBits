@@ -17,7 +17,7 @@ using static CryBits.Editors.Logic.Utils;
 using G = CryBits.Definitions.Globals;
 using Point = System.Drawing.Point;
 
-namespace CryBits.Editors.Forms;
+namespace CryBits.Editors.Forms.Tiles;
 
 internal partial class EditorTilesWindow : Window
 {

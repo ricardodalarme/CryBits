@@ -7,8 +7,9 @@ using System.Drawing;
 using static CryBits.Editors.Logic.Utils;
 using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
+using CryBits.Editors.Maps;
 
-namespace CryBits.Editors.Maps;
+namespace CryBits.Editors.Entities;
 
 internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 {

@@ -24,7 +24,7 @@ using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 using SlotGrid = CryBits.Client.Framework.Interfacily.Components.SlotGrid;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
-namespace CryBits.Editors.Forms;
+namespace CryBits.Editors.Forms.Interface;
 
 // ─── ViewModel for the order tree ───────────────────────────────────────────
 internal sealed class TreeItemVM : INotifyPropertyChanged

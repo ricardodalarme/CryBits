@@ -11,7 +11,7 @@ using CryBits.Editors.Network;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using Map = CryBits.Definitions.Maps.Map;
 
-namespace CryBits.Editors.Forms;
+namespace CryBits.Editors.Forms.Classes;
 
 internal partial class EditorClassesWindow : Window
 {

@@ -10,7 +10,7 @@ using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
-namespace CryBits.Editors.Forms;
+namespace CryBits.Editors.Forms.Items;
 
 internal partial class EditorItemsWindow : Window
 {
