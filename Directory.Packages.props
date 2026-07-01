@@ -31,6 +31,8 @@
   </ItemGroup>
 
   <ItemGroup Label="Client">
+    <PackageVersion Include="Iguina" Version="1.1.5" />
+    <PackageVersion Include="Iguina.Drivers.Sfml" Version="1.0.0" />
     <PackageVersion Include="SFML.Audio" Version="3.0.0" />
     <PackageVersion Include="SFML.Graphics" Version="3.0.0" />
     <PackageVersion Include="SFML.Window" Version="3.0.0" />

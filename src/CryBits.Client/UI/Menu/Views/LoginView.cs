@@ -1,61 +1,59 @@
 using CryBits.Client.Framework;
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Network.Senders;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class LoginView(AuthSender authSender) : IView
+internal class LoginView(IguinaContext uiContext, AuthSender authSender) : ViewBase
 {
-    internal static Panel LoginPanel => Tools.Panels["Connect"];
-    internal static TextBox UsernameTextBox => Tools.TextBoxes["Connect_Username"];
-    private static TextBox PasswordTextBox => Tools.TextBoxes["Connect_Password"];
-    internal static CheckBox SaveUsernameCheckBox => Tools.CheckBoxes["Connect_Save_Username"];
-    private static Button ConfirmButton => Tools.Buttons["Connect_Confirm"];
-    private static Button RegisterButton => Tools.Buttons["Register"];
+    internal Panel LoginPanel => uiContext.Get<Panel>("Login");
+    internal TextInput UsernameTextBox => uiContext.Get<TextInput>("Username");
+    private TextInput PasswordTextBox => uiContext.Get<TextInput>("Password");
+    internal Checkbox SaveUsernameCheckbox => uiContext.Get<Checkbox>("SaveUsername");
+    private Button ConfirmButton => uiContext.Get<Button>("LoginConfirm");
+    private Button RegisterButton => uiContext.Get<Button>("LoginRegister");
 
-    public void Bind()
+    public override void Bind()
     {
-        SaveUsernameCheckBox.OnMouseUp += OnSaveUsernameChanged;
-        ConfirmButton.OnMouseUp += OnConfirmPressed;
-        RegisterButton.OnMouseUp += OnRegisterPressed;
+        SaveUsernameCheckbox.Events.OnValueChanged += OnSaveUsernameChanged;
+        ConfirmButton.Events.OnClick += OnConfirmPressed;
+        RegisterButton.Events.OnClick += OnRegisterPressed;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        SaveUsernameCheckBox.OnMouseUp -= OnSaveUsernameChanged;
-        ConfirmButton.OnMouseUp -= OnConfirmPressed;
-        RegisterButton.OnMouseUp -= OnRegisterPressed;
+        SaveUsernameCheckbox.Events.OnValueChanged -= OnSaveUsernameChanged;
+        ConfirmButton.Events.OnClick -= OnConfirmPressed;
+        RegisterButton.Events.OnClick -= OnRegisterPressed;
     }
 
-    private void OnSaveUsernameChanged()
+    private void OnSaveUsernameChanged(Entity _)
     {
-        Options.Instance.SaveUsername = SaveUsernameCheckBox.Checked;
+        Options.Instance.SaveUsername = SaveUsernameCheckbox.Checked;
         OptionsRepository.Write();
     }
 
-    private void OnConfirmPressed()
+    private void OnConfirmPressed(Entity _)
     {
-        // Save username
-        Options.Instance.Username = UsernameTextBox.Text;
+        Options.Instance.Username = UsernameTextBox.Value;
         OptionsRepository.Write();
 
         if (!Connection.Instance.TryConnect())
         {
-            Alert.Show("The server is currently unavailable.");
+            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Server", "The server is currently unavailable.");
             return;
         }
 
-        authSender.Connect(UsernameTextBox.Text, PasswordTextBox.Text);
+        authSender.Connect(UsernameTextBox.Value, PasswordTextBox.Value);
     }
 
-    private void OnRegisterPressed()
+    private void OnRegisterPressed(Entity _)
     {
         Connection.Instance.Disconnect();
 
-        MenuScreen.CloseMenus();
-        RegisterView.RegisterPanel.Visible = true;
+        MenuScreen.Instance.CloseMenus();
+        MenuScreen.Instance.RegisterView.RegisterPanel.Visible = true;
     }
 }

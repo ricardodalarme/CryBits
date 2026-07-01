@@ -1,26 +1,26 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Framework.UI.Entities;
 using CryBits.Definitions.Common;
+using Iguina.Entities;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class SelectCharacterView(AccountSender accountSender, CharacterRenderer characterRenderer) : IView
+internal class SelectCharacterView(IguinaContext uiContext, AccountSender accountSender, CharacterRenderer characterRenderer) : ViewBase
 {
-    internal static Panel SelectCharacterPanel => Tools.Panels["SelectCharacter"];
-    internal static Button UseButton => Tools.Buttons["Character_Use"];
-    internal static Button CreateButton => Tools.Buttons["Character_Create"];
-    internal static Button DeleteButton => Tools.Buttons["Character_Delete"];
-    internal static Button ChangeRightButton => Tools.Buttons["Character_ChangeRight"];
-    private static Button ChangeLeftButton => Tools.Buttons["Character_ChangeLeft"];
-    private static Picture FacePicture => Tools.Pictures["SelectCharacter_Face"];
-    private static Picture SpritePicture => Tools.Pictures["SelectCharacter_Sprite"];
-    private static Label NameLabel => Tools.Labels["SelectCharacter_Name"];
+    internal Panel SelectCharacterPanel => uiContext.Get<Panel>("SelectCharacter");
+    internal static Button UseButton => IguinaContext.Instance.Get<Button>("CharUse");
+    internal static Button CreateButton => IguinaContext.Instance.Get<Button>("CharCreate");
+    internal static Button DeleteButton => IguinaContext.Instance.Get<Button>("CharDelete");
+    internal static Button ChangeRightButton => IguinaContext.Instance.Get<Button>("CharRight");
+    private Button ChangeLeftButton => uiContext.Get<Button>("CharLeft");
+    private Picture FacePicture => uiContext.Get<Picture>("CharFace");
+    private Picture SpritePicture => uiContext.Get<Picture>("CharSprite");
+    private static Label CharNameLabel => IguinaContext.Instance.Get<Label>("CharName");
 
     public static TempCharacter[] Characters = [];
-    public static int CurrentCharacter = 1;
+    public static int CurrentCharacter;
 
     public struct TempCharacter
     {
@@ -28,59 +28,66 @@ internal class SelectCharacterView(AccountSender accountSender, CharacterRendere
         public short TextureNum;
     }
 
-    public void Bind()
+    public override void Bind()
     {
-        FacePicture.OnRender += OnRenderFace;
-        SpritePicture.OnRender += OnRenderSprite;
-        UseButton.OnMouseUp += OnUsePressed;
-        CreateButton.OnMouseUp += OnCreatePressed;
-        DeleteButton.OnMouseUp += OnDeletePressed;
-        ChangeRightButton.OnMouseUp += OnChangeRightPressed;
-        ChangeLeftButton.OnMouseUp += OnChangeLeftPressed;
+        UseButton.Events.OnClick += OnUsePressed;
+        CreateButton.Events.OnClick += OnCreatePressed;
+        DeleteButton.Events.OnClick += OnDeletePressed;
+        ChangeRightButton.Events.OnClick += OnChangeRightPressed;
+        ChangeLeftButton.Events.OnClick += OnChangeLeftPressed;
+
+        FacePicture.OnRenderPicture += RenderFace;
+        SpritePicture.OnRenderPicture += RenderSprite;
+        uiContext.PostDraw += FacePicture.Render;
+        uiContext.PostDraw += SpritePicture.Render;
+
         UpdateButtonVisibility();
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        FacePicture.OnRender -= OnRenderFace;
-        SpritePicture.OnRender -= OnRenderSprite;
-        UseButton.OnMouseUp -= OnUsePressed;
-        CreateButton.OnMouseUp -= OnCreatePressed;
-        DeleteButton.OnMouseUp -= OnDeletePressed;
-        ChangeRightButton.OnMouseUp -= OnChangeRightPressed;
-        ChangeLeftButton.OnMouseUp -= OnChangeLeftPressed;
+        UseButton.Events.OnClick -= OnUsePressed;
+        CreateButton.Events.OnClick -= OnCreatePressed;
+        DeleteButton.Events.OnClick -= OnDeletePressed;
+        ChangeRightButton.Events.OnClick -= OnChangeRightPressed;
+        ChangeLeftButton.Events.OnClick -= OnChangeLeftPressed;
+        FacePicture.OnRenderPicture -= RenderFace;
+        SpritePicture.OnRenderPicture -= RenderSprite;
+        uiContext.PostDraw -= FacePicture.Render;
+        uiContext.PostDraw -= SpritePicture.Render;
     }
 
-    private void OnUsePressed()
+    private void RenderFace()
     {
-        accountSender.CharacterUse(CurrentCharacter);
+        if (CurrentCharacter >= Characters.Length) return;
+        var textureNum = Characters[CurrentCharacter].TextureNum;
+        if (textureNum <= 0) return;
+        var pos = FacePicture.LastBoundingRect;
+        characterRenderer.DrawFace(textureNum, new Point(pos.X, pos.Y));
     }
 
-    private void OnDeletePressed()
+    private void RenderSprite()
     {
-        accountSender.CharacterDelete(CurrentCharacter);
+        if (CurrentCharacter >= Characters.Length) return;
+        var textureNum = Characters[CurrentCharacter].TextureNum;
+        if (textureNum <= 0) return;
+        var pos = SpritePicture.LastBoundingRect;
+        characterRenderer.DrawCharacter(textureNum, new Point(pos.X, pos.Y), Direction.Down, 1);
     }
 
-    private void OnCreatePressed()
-    {
-        accountSender.CharacterCreate();
-    }
+    private void OnUsePressed(Entity _) => accountSender.CharacterUse(CurrentCharacter);
+    private void OnDeletePressed(Entity _) => accountSender.CharacterDelete(CurrentCharacter);
+    private void OnCreatePressed(Entity _) => accountSender.CharacterCreate();
 
-    private void OnChangeRightPressed()
+    private void OnChangeRightPressed(Entity _)
     {
-        if (CurrentCharacter == Characters.Length - 1)
-            CurrentCharacter = 0;
-        else
-            CurrentCharacter++;
+        if (CurrentCharacter == Characters.Length - 1) CurrentCharacter = 0; else CurrentCharacter++;
         UpdateButtonVisibility();
     }
 
-    private void OnChangeLeftPressed()
+    private void OnChangeLeftPressed(Entity _)
     {
-        if (CurrentCharacter == 0)
-            CurrentCharacter = Characters.Length;
-        else
-            CurrentCharacter--;
+        if (CurrentCharacter == 0) CurrentCharacter = Characters.Length; else CurrentCharacter--;
         UpdateButtonVisibility();
     }
 
@@ -90,8 +97,6 @@ internal class SelectCharacterView(AccountSender accountSender, CharacterRendere
         CreateButton.Visible = !visibility;
         DeleteButton.Visible = visibility;
         UseButton.Visible = visibility;
-        FacePicture.Visible = visibility;
-        SpritePicture.Visible = visibility;
         UpdateNameLabel();
         return visibility;
     }
@@ -100,21 +105,8 @@ internal class SelectCharacterView(AccountSender accountSender, CharacterRendere
     {
         var index = CurrentCharacter + 1;
         var hasCharacter = CurrentCharacter < Characters.Length;
-        NameLabel.Text = hasCharacter
+        CharNameLabel.Text = hasCharacter
             ? $"({index}) {Characters[CurrentCharacter].Name}"
             : $"({index}) None";
-    }
-
-    private void OnRenderFace(Point pos)
-    {
-        var textureNum = Characters[CurrentCharacter].TextureNum;
-        if (textureNum > 0) characterRenderer.DrawFace(textureNum, pos);
-    }
-
-    private void OnRenderSprite(Point pos)
-    {
-        var textureNum = Characters[CurrentCharacter].TextureNum;
-        if (textureNum <= 0) return;
-        characterRenderer.DrawCharacter(textureNum, pos, Direction.Down, 1);
     }
 }

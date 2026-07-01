@@ -1,13 +1,14 @@
-using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.UI;
+using Iguina;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
 namespace CryBits.Client.Managers;
 
-public class InputManager
+public class InputManager(UISystem? uiSystem = null)
 {
-    public static InputManager Instance { get; } = new();
+    public static InputManager Instance { get; } = new(IguinaContext.Instance.UISystem);
 
     /// <summary>
     /// Tracks window focus state. Set by LostFocus/GainedFocus events in Renderer.Init().
@@ -62,7 +63,7 @@ public class InputManager
         if (!IsFocused) return false;
 
         // Disable game keyboard inputs when a text box is focused.
-        if (TextBox.Focused != null) return false;
+        if (uiSystem?.FocusedEntity != null) return false;
 
         return Keyboard.IsScancodePressed(scancode);
     }
@@ -76,19 +77,9 @@ public class InputManager
         if (!IsFocused) return false;
 
         // Disable game keyboard inputs when a text box is focused.
-        if (TextBox.Focused != null) return false;
+        if (uiSystem?.FocusedEntity != null) return false;
 
         return Keyboard.IsKeyPressed(key);
-    }
-
-    /// <summary>
-    /// Checks if a mouse button is currently held down.
-    /// </summary>
-    public bool IsMouseButtonPressed(Mouse.Button button)
-    {
-        if (!IsFocused) return false;
-
-        return Mouse.IsButtonPressed(button);
     }
 
     /// <summary>
@@ -98,7 +89,7 @@ public class InputManager
     public bool WasKeyPressed(Keyboard.Key key)
     {
         if (!IsFocused) return false;
-        if (TextBox.Focused != null) return false;
+        if (uiSystem?.FocusedEntity != null) return false;
 
         return _pressedThisFrame.Contains(key);
     }
@@ -110,7 +101,7 @@ public class InputManager
     public bool WasKeyReleased(Keyboard.Key key)
     {
         if (!IsFocused) return false;
-        if (TextBox.Focused != null) return false;
+        if (uiSystem?.FocusedEntity != null) return false;
 
         return _releasedThisFrame.Contains(key);
     }

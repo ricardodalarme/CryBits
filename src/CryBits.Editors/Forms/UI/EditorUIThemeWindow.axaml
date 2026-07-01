@@ -1,0 +1,57 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CryBits.Editors.Forms.UI"
+        x:Class="CryBits.Editors.Forms.UI.EditorUIThemeWindow"
+        x:DataType="vm:EditorUIThemeViewModel"
+        Title="UI Theme Editor"
+        Width="1200" Height="700"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="8" RowDefinitions="Auto,*,Auto" ColumnDefinitions="200,8,*">
+
+        <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1"
+                BorderBrush="{DynamicResource SemiBorderColor}"
+                CornerRadius="4" Padding="8">
+            <Grid RowDefinitions="Auto,Auto,*">
+                <TextBlock Text="Theme Files" FontWeight="Bold" Margin="0,0,0,6"/>
+                <ListBox Grid.Row="2" ItemsSource="{Binding FileList}"
+                         SelectedItem="{Binding SelectedFileName}"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="2" RowDefinitions="*,8,Auto,8,200" Grid.Row="0" Grid.RowSpan="2">
+
+            <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="8">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Text="{Binding FileName}" FontWeight="Bold" Margin="0,0,0,4"/>
+                    <TextBox Grid.Row="1"
+                             Text="{Binding FileContent}"
+                             AcceptsReturn="True" AcceptsTab="True"
+                             TextWrapping="NoWrap"
+                             FontFamily="Consolas, Courier New, monospace"
+                             FontSize="12"/>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="4" BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="8">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,*">
+                    <TextBlock Text="Preview" FontWeight="Bold" Margin="0,0,0,4"/>
+                    <Border Grid.Column="0" Grid.Row="1" Background="Black" CornerRadius="4">
+                        <Image x:Name="imgPreview" Stretch="None"
+                               HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" Grid.Row="1" Margin="8,0,0,0" Spacing="4">
+                        <Button Content="Refresh Preview" Command="{Binding RefreshPreviewCommand}"/>
+                        <Button Content="Revert File" Command="{Binding RevertFileCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Button Grid.Row="2" Grid.Column="2" Content="Save Changes"
+                Command="{Binding SaveCommand}"
+                HorizontalAlignment="Right" Margin="0,4,0,0"/>
+    </Grid>
+</Window>

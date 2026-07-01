@@ -1,46 +1,45 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class MenusView : IView
+internal class MenusView(IguinaContext uiContext) : ViewBase
 {
-    private static Button CharacterButton => Tools.Buttons["Menu_Character"];
-    private static Button InventoryButton => Tools.Buttons["Menu_Inventory"];
-    private static Button OptionsButton => Tools.Buttons["Menu_Options"];
+    private Button CharacterButton => uiContext.Get<Button>("MenuCharacter");
+    private Button InventoryButton => uiContext.Get<Button>("MenuInventory");
+    private Button OptionsButton => uiContext.Get<Button>("MenuOptions");
 
-    public void Bind()
+    public override void Bind()
     {
-        CharacterButton.OnMouseUp += OnCharacterPressed;
-        InventoryButton.OnMouseUp += OnInventoryPressed;
-        OptionsButton.OnMouseUp += OnOptionsPressed;
+        CharacterButton.Events.OnClick += OnCharacterPressed;
+        InventoryButton.Events.OnClick += OnInventoryPressed;
+        OptionsButton.Events.OnClick += OnOptionsPressed;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        CharacterButton.OnMouseUp -= OnCharacterPressed;
-        InventoryButton.OnMouseUp -= OnInventoryPressed;
-        OptionsButton.OnMouseUp -= OnOptionsPressed;
+        CharacterButton.Events.OnClick -= OnCharacterPressed;
+        InventoryButton.Events.OnClick -= OnInventoryPressed;
+        OptionsButton.Events.OnClick -= OnOptionsPressed;
     }
 
-    private void OnCharacterPressed()
+    private void OnCharacterPressed(Entity _)
     {
-        CharacterView.Panel.Visible = !CharacterView.Panel.Visible;
-        InventoryView.Panel.Visible = false;
-        OptionsView.Panel.Visible = false;
+        uiContext.Registry["CharacterPanel"].Visible = !uiContext.Registry["CharacterPanel"].Visible;
+        uiContext.Registry["InventoryPanel"].Visible = false;
+        uiContext.Registry["OptionsPanel"].Visible = false;
     }
 
-    private void OnInventoryPressed()
+    private void OnInventoryPressed(Entity _)
     {
-        InventoryView.Panel.Visible = !InventoryView.Panel.Visible;
-        CharacterView.Panel.Visible = false;
-        OptionsView.Panel.Visible = false;
+        uiContext.Registry["InventoryPanel"].Visible = !uiContext.Registry["InventoryPanel"].Visible;
+        uiContext.Registry["CharacterPanel"].Visible = false;
+        uiContext.Registry["OptionsPanel"].Visible = false;
     }
 
-    private void OnOptionsPressed()
+    private void OnOptionsPressed(Entity _)
     {
-        OptionsView.Panel.Visible = !OptionsView.Panel.Visible;
-        CharacterView.Panel.Visible = false;
-        InventoryView.Panel.Visible = false;
+        uiContext.Registry["OptionsPanel"].Visible = !uiContext.Registry["OptionsPanel"].Visible;
+        uiContext.Registry["CharacterPanel"].Visible = false;
+        uiContext.Registry["InventoryPanel"].Visible = false;
     }
 }

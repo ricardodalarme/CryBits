@@ -1,19 +1,28 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Worlds;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class BarsView
+internal class BarsView(IguinaContext uiContext) : ViewBase
 {
-    private static Label HpValueLabel => Tools.Labels["Bars_HP_Value"];
-    private static Label MpValueLabel => Tools.Labels["Bars_MP_Value"];
-    private static Label ExpValueLabel => Tools.Labels["Bars_Exp_Value"];
-    private static ProgressBar HpBar => Tools.ProgressBars["Bars_HP_Bar"];
-    private static ProgressBar MpBar => Tools.ProgressBars["Bars_MP_Bar"];
-    private static ProgressBar ExpBar => Tools.ProgressBars["Bars_Exp_Bar"];
+    private Label HpValueLabel => uiContext.Get<Label>("HP_Value");
+    private Label MpValueLabel => uiContext.Get<Label>("MP_Value");
+    private Label ExpValueLabel => uiContext.Get<Label>("EXP_Value");
+    private ProgressBar HpBar => uiContext.Get<ProgressBar>("HP_Bar");
+    private ProgressBar MpBar => uiContext.Get<ProgressBar>("MP_Bar");
+    private ProgressBar ExpBar => uiContext.Get<ProgressBar>("EXP_Bar");
 
-    public static void Update()
+    public override void Bind()
+    {
+        uiContext.PostDraw += Update;
+    }
+
+    public override void Unbind()
+    {
+        uiContext.PostDraw -= Update;
+    }
+
+    private void Update()
     {
         var vitals = GameContext.Instance.LocalPlayer.GetVitals();
         var level = GameContext.Instance.LocalPlayer.GetLevel();
@@ -22,12 +31,12 @@ internal class BarsView
         var maxHp = vitals.MaxHp;
         var maxMp = vitals.MaxMp;
 
-        HpBar.SetValue(maxHp > 0 ? (float)vitals.Hp / maxHp : 0f);
-        MpBar.SetValue(maxMp > 0 ? (float)vitals.Mp / maxMp : 0f);
-        ExpBar.SetValue(level.ExpNeeded > 0 ? (float)level.Experience / level.ExpNeeded : 0f);
+        HpBar.ValueSafe = maxHp > 0 ? (int)((float)vitals.Hp / maxHp * 100f) : 0;
+        MpBar.ValueSafe = maxMp > 0 ? (int)((float)vitals.Mp / maxMp * 100f) : 0;
+        ExpBar.ValueSafe = level.ExpNeeded > 0 ? (int)((float)level.Experience / level.ExpNeeded * 100f) : 0;
 
-        HpValueLabel.SetArguments(vitals.Hp, maxHp);
-        MpValueLabel.SetArguments(vitals.Mp, maxMp);
-        ExpValueLabel.SetArguments(level.Experience, level.ExpNeeded);
+        HpValueLabel.Text = $"HP: {vitals.Hp}/{maxHp}";
+        MpValueLabel.Text = $"MP: {vitals.Mp}/{maxMp}";
+        ExpValueLabel.Text = $"EXP: {level.Experience}/{level.ExpNeeded}";
     }
 }

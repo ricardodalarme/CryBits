@@ -1,84 +1,84 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Worlds;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class OptionsView(AudioManager audioManager, GameContext context) : IView
+internal class OptionsView(IguinaContext uiContext, AudioManager audioManager, GameContext context) : ViewBase
 {
-    internal static Panel Panel => Tools.Panels["Menu_Options"];
-    internal static CheckBox SoundsCheckBox => Tools.CheckBoxes["Options_Sounds"];
-    internal static CheckBox MusicsCheckBox => Tools.CheckBoxes["Options_Musics"];
-    internal static CheckBox ChatCheckBox => Tools.CheckBoxes["Options_Chat"];
-    internal static CheckBox MetricsCheckBox => Tools.CheckBoxes["Options_Metrics"];
-    internal static CheckBox PartyCheckBox => Tools.CheckBoxes["Options_Party"];
-    internal static CheckBox TradeCheckBox => Tools.CheckBoxes["Options_Trade"];
+    internal Panel Panel => uiContext.Get<Panel>("OptionsPanel");
+    internal Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
+    internal Checkbox MusicsCheckbox => uiContext.Get<Checkbox>("Music");
+    internal Checkbox ChatCheckbox => uiContext.Get<Checkbox>("ChatPreview");
+    internal Checkbox MetricsCheckbox => uiContext.Get<Checkbox>("ShowFPS");
+    internal Checkbox PartyCheckbox => uiContext.Get<Checkbox>("PartyInvites");
+    internal Checkbox TradeCheckbox => uiContext.Get<Checkbox>("TradeInvites");
 
-    public void Bind()
+    public override void Bind()
     {
-        SoundsCheckBox.OnMouseUp += OnSoundsChanged;
-        MusicsCheckBox.OnMouseUp += OnMusicsChanged;
-        ChatCheckBox.OnMouseUp += OnChatChanged;
-        MetricsCheckBox.OnMouseUp += OnMetricsChanged;
-        PartyCheckBox.OnMouseUp += OnPartyInvitationsChanged;
-        TradeCheckBox.OnMouseUp += OnTradeInvitationsChanged;
+        SoundsCheckbox.Events.OnValueChanged += OnSoundsChanged;
+        MusicsCheckbox.Events.OnValueChanged += OnMusicsChanged;
+        ChatCheckbox.Events.OnValueChanged += OnChatChanged;
+        MetricsCheckbox.Events.OnValueChanged += OnMetricsChanged;
+        PartyCheckbox.Events.OnValueChanged += OnPartyInvitationsChanged;
+        TradeCheckbox.Events.OnValueChanged += OnTradeInvitationsChanged;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        SoundsCheckBox.OnMouseUp -= OnSoundsChanged;
-        MusicsCheckBox.OnMouseUp -= OnMusicsChanged;
-        ChatCheckBox.OnMouseUp -= OnChatChanged;
-        MetricsCheckBox.OnMouseUp -= OnMetricsChanged;
-        PartyCheckBox.OnMouseUp -= OnPartyInvitationsChanged;
-        TradeCheckBox.OnMouseUp -= OnTradeInvitationsChanged;
+        SoundsCheckbox.Events.OnValueChanged -= OnSoundsChanged;
+        MusicsCheckbox.Events.OnValueChanged -= OnMusicsChanged;
+        ChatCheckbox.Events.OnValueChanged -= OnChatChanged;
+        MetricsCheckbox.Events.OnValueChanged -= OnMetricsChanged;
+        PartyCheckbox.Events.OnValueChanged -= OnPartyInvitationsChanged;
+        TradeCheckbox.Events.OnValueChanged -= OnTradeInvitationsChanged;
     }
 
-    private void OnSoundsChanged()
+    private void OnSoundsChanged(Entity _)
     {
-        Options.Instance.Sounds = !Options.Instance.Sounds;
+        Options.Instance.Sounds = SoundsCheckbox.Checked;
         if (!Options.Instance.Sounds) audioManager.StopAllSounds();
         OptionsRepository.Write();
     }
 
-    private void OnMusicsChanged()
+    private void OnMusicsChanged(Entity _)
     {
-        Options.Instance.Musics = !Options.Instance.Musics;
+        Options.Instance.Musics = MusicsCheckbox.Checked;
         OptionsRepository.Write();
 
         if (!Options.Instance.Musics)
             audioManager.StopMusic();
-        else if (Screen.Current == Screens.Menu)
-            audioManager.PlayMusic(Musics.Menu);
-        else if (Screen.Current == Screens.Game)
+        else if (context.CurrentMap?.Data?.Music != null)
             audioManager.PlayMusic(context.CurrentMap.Data.Music);
+        else
+            audioManager.PlayMusic(Musics.Menu);
     }
 
-    private void OnChatChanged()
+    private void OnChatChanged(Entity _)
     {
-        Options.Instance.Chat = ChatCheckBox.Checked;
+        Options.Instance.Chat = ChatCheckbox.Checked;
         OptionsRepository.Write();
         if (Options.Instance.Chat) Chat.VisibilityTimer = Environment.TickCount64 + Chat.SleepTimer;
     }
 
-    private void OnMetricsChanged()
+    private void OnMetricsChanged(Entity _)
     {
-        Options.Instance.ShowMetrics = MetricsCheckBox.Checked;
+        Options.Instance.ShowMetrics = MetricsCheckbox.Checked;
         OptionsRepository.Write();
     }
 
-    private void OnPartyInvitationsChanged()
+    private void OnPartyInvitationsChanged(Entity _)
     {
-        Options.Instance.Party = PartyCheckBox.Checked;
+        Options.Instance.Party = PartyCheckbox.Checked;
         OptionsRepository.Write();
     }
 
-    private void OnTradeInvitationsChanged()
+    private void OnTradeInvitationsChanged(Entity _)
     {
-        Options.Instance.Trade = TradeCheckBox.Checked;
+        Options.Instance.Trade = TradeCheckbox.Checked;
         OptionsRepository.Write();
     }
 }

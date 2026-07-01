@@ -5,11 +5,11 @@ using CryBits.Client.Framework;
 using CryBits.Definitions.Maps;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms.Classes;
-using CryBits.Editors.Forms.Interface;
 using CryBits.Editors.Forms.Items;
 using CryBits.Editors.Forms.Npcs;
 using CryBits.Editors.Forms.Shops;
 using CryBits.Editors.Forms.Tiles;
+using CryBits.Editors.Forms.UI;
 using CryBits.Editors.Network;
 using DefinitionsTileData = CryBits.Definitions.Maps.TileData;
 using SystemRect = System.Drawing.Rectangle;
@@ -82,7 +82,7 @@ internal partial class ToolbarPane : UserControl
         butAudio.Click += OnAudio;
 
         butEditors_Classes.Click += (_, _) => EditorClassesWindow.Open(_deps!.ParentWindow!);
-        butEditors_Interface.Click += (_, _) => EditorInterfaceWindow.Open(_deps!.ParentWindow!);
+        butEditors_Interface.Click += (_, _) => EditorUILayoutWindow.Open(_deps!.ParentWindow!);
         butEditors_Items.Click += (_, _) => EditorItemsWindow.Open(_deps!.ParentWindow!);
         butEditors_NPCs.Click += (_, _) => EditorNpcsWindow.Open(_deps!.ParentWindow!);
         butEditors_Shops.Click += (_, _) => EditorShopsWindow.Open(_deps!.ParentWindow!);

@@ -1,6 +1,5 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
@@ -9,6 +8,7 @@ using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
 using static CryBits.Definitions.Globals;
+using CryBits.Client.UI.Game;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -24,14 +24,14 @@ internal class TradeHandler(IntentSender intentSender, GameContext context)
         var state = packet.State;
 
         // Set trade panel visibility
-        TradeView.Panel.Visible = packet.State;
+        GameScreen.Instance.TradeView.Panel.Visible = packet.State;
 
         if (state)
         {
             // Reset trade buttons
-            TradeView.ConfirmOfferButton.Visible = true;
-            TradeAmountView.Panel.Visible = TradeView.AcceptOfferButton.Visible = TradeView.DeclineOfferButton.Visible = false;
-            TradeView.OfferDisabledPanel.Visible = false;
+            GameScreen.Instance.TradeView.ConfirmOfferButton.Visible = true;
+            GameScreen.Instance.TradeAmountView.Panel.Visible = GameScreen.Instance.TradeView.AcceptOfferButton.Visible = GameScreen.Instance.TradeView.DeclineOfferButton.Visible = false;
+            GameScreen.Instance.TradeView.OfferDisabledPanel.Visible = false;
 
             // Attach fresh trade state to the local player entity for the duration of this session.
             context.World.Set(entity, new TradeState());
@@ -54,7 +54,7 @@ internal class TradeHandler(IntentSender intentSender, GameContext context)
         }
 
         // Show trade invitation panel
-        TradeInvitationView.Show(packet.PlayerInvitation);
+        GameScreen.Instance.TradeInvitationView.Show(packet.PlayerInvitation);
     }
 
     [PacketHandler]
@@ -64,14 +64,14 @@ internal class TradeHandler(IntentSender intentSender, GameContext context)
         {
             case TradeStatus.Accepted:
             case TradeStatus.Declined:
-                TradeView.ConfirmOfferButton.Visible = true;
-                TradeView.AcceptOfferButton.Visible = TradeView.DeclineOfferButton.Visible = false;
-                TradeView.OfferDisabledPanel.Visible = false;
+                GameScreen.Instance.TradeView.ConfirmOfferButton.Visible = true;
+                GameScreen.Instance.TradeView.AcceptOfferButton.Visible = GameScreen.Instance.TradeView.DeclineOfferButton.Visible = false;
+                GameScreen.Instance.TradeView.OfferDisabledPanel.Visible = false;
                 break;
             case TradeStatus.Confirmed:
-                TradeView.ConfirmOfferButton.Visible = false;
-                TradeView.AcceptOfferButton.Visible = TradeView.DeclineOfferButton.Visible = true;
-                TradeView.OfferDisabledPanel.Visible = false;
+                GameScreen.Instance.TradeView.ConfirmOfferButton.Visible = false;
+                GameScreen.Instance.TradeView.AcceptOfferButton.Visible = GameScreen.Instance.TradeView.DeclineOfferButton.Visible = true;
+                GameScreen.Instance.TradeView.OfferDisabledPanel.Visible = false;
                 break;
         }
     }

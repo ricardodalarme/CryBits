@@ -61,20 +61,6 @@ internal class Renderer
         DrawRectangle(window, new Rectangle(x, y, width, height), color);
     }
 
-    public void DrawBox(IRenderTarget window, Texture texture, byte margin, Point position, Size size)
-    {
-        var textureWidth = texture.ToSize().Width;
-        var textureHeight = texture.ToSize().Height;
-
-        Draw(window, texture, new Rectangle(new Point(0), new Size(margin, textureWidth)),
-            new Rectangle(position, new Size(margin, textureHeight)));
-        Draw(window, texture, new Rectangle(new Point(textureWidth - margin, 0), new Size(margin, textureHeight)),
-            new Rectangle(new Point(position.X + size.Width - margin, position.Y), new Size(margin, textureHeight)));
-        Draw(window, texture, new Rectangle(new Point(margin, 0), new Size(margin, textureHeight)),
-            new Rectangle(new Point(position.X + margin, position.Y),
-                new Size(size.Width - margin * 2, textureHeight)));
-    }
-
     public void DrawText(IRenderTarget window, string text, int x, int y, Color color,
         TextAlign alignment = TextAlign.Left)
     {

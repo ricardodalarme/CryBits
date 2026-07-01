@@ -1,19 +1,13 @@
-using CryBits.Client.Framework;
-using CryBits.Client.Framework.Audio;
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.UI.Game;
-using CryBits.Client.UI.Game.Views;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Client.Worlds;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
-using OptionsView = CryBits.Client.UI.Game.Views.OptionsView;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class AccountHandler(AudioManager audioManager, GameContext context)
+internal class AccountHandler(GameContext context)
 {
     [PacketHandler]
     internal void Join(JoinPacket packet)
@@ -26,15 +20,15 @@ internal class AccountHandler(AudioManager audioManager, GameContext context)
     internal void CreateCharacter(CreateCharacterPacket _)
     {
         // Reset character-creation inputs
-        CreateCharacterView.NameTextBox.Text = string.Empty;
-        CreateCharacterView.GenderMaleCheckBox.Checked = true;
-        CreateCharacterView.GenderFemaleCheckBox.Checked = false;
+        MenuScreen.Instance.CreateCharacterView.NameTextBox.Value = string.Empty;
+        MenuScreen.Instance.CreateCharacterView.GenderMaleRadio.Checked = true;
+        MenuScreen.Instance.CreateCharacterView.GenderFemaleRadio.Checked = false;
         CreateCharacterView.CurrentClass = 0;
         CreateCharacterView.CurrentTexture = 0;
 
         // Show character creation panel
-        MenuScreen.CloseMenus();
-        CreateCharacterView.CreateCharacterPanel.Visible = true;
+        MenuScreen.Instance.CloseMenus();
+        MenuScreen.Instance.CreateCharacterView.CreateCharacterPanel.Visible = true;
     }
 
     [PacketHandler]
@@ -59,36 +53,6 @@ internal class AccountHandler(AudioManager audioManager, GameContext context)
     [PacketHandler]
     internal void JoinGame(JoinGamePacket _)
     {
-        // Reset UI state and options
-        Chat.Order = [];
-        Chat.LinesFirst = 0;
-        Chat.VisibilityTimer = Environment.TickCount64 + Chat.SleepTimer;
-        ChatView.MessageTextBox.Text = string.Empty;
-        OptionsView.SoundsCheckBox.Checked = Options.Instance.Sounds;
-        OptionsView.MusicsCheckBox.Checked = Options.Instance.Musics;
-        OptionsView.ChatCheckBox.Checked = Options.Instance.Chat;
-        OptionsView.MetricsCheckBox.Checked = Options.Instance.ShowMetrics;
-        OptionsView.TradeCheckBox.Checked = Options.Instance.Trade;
-        OptionsView.PartyCheckBox.Checked = Options.Instance.Party;
-        InformationView.Hide();
-
-        // Reset UI panels
-        CharacterView.Panel.Visible = false;
-        InventoryView.Panel.Visible = false;
-        OptionsView.Panel.Visible = false;
-        ChatView.Panel.Visible = false;
-        DropItemView.Panel.Visible = false;
-        PartyInvitationView.Panel.Visible = false;
-        TradeView.Panel.Visible = false;
-        TradeView.ConfirmOfferButton.Visible = true;
-        TradeView.AcceptOfferButton.Visible = false;
-        TradeView.DeclineOfferButton.Visible = false;
-        TradeView.OfferDisabledPanel.Visible = false;
-        ShopView.Panel.Visible = false;
-        ShopSellView.Panel.Visible = false;
-
-        // Enter the game
-        audioManager.StopMusic();
-        Screen.Current = Screens.Game;
+        GameScreen.Instance.Open();
     }
 }

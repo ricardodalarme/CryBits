@@ -80,21 +80,6 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
             renderer.Draw(Textures.Panoramas[panorama], new System.Drawing.Point(0));
     }
 
-    public void DrawMapName()
-    {
-        if (context.CurrentMap == null) return;
-        var name = context.CurrentMap.Data.Name;
-        if (string.IsNullOrEmpty(name)) return;
-
-        var color = context.CurrentMap.Data.Moral switch
-        {
-            Moral.Dangerous => Color.Red,
-            _ => Color.White
-        };
-
-        renderer.DrawText(name, 426, 48, color);
-    }
-
     private VertexArray GetBatch(int textureIndex)
     {
         if (_batches.TryGetValue(textureIndex, out var va)) return va;

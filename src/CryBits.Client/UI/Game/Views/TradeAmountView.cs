@@ -1,43 +1,41 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Simulation.Intents;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeAmountView(IntentSender intentSender) : IView
+internal class TradeAmountView(IguinaContext uiContext, IntentSender intentSender) : ViewBase
 {
-    internal static Panel Panel => Tools.Panels["Trade_Amount"];
-    internal static TextBox AmountTextBox => Tools.TextBoxes["Trade_Amount"];
-    private static Button ConfirmButton => Tools.Buttons["Trade_Amount_Confirm"];
-    private static Button CancelButton => Tools.Buttons["Trade_Amount_Cancel"];
+    internal Panel Panel => uiContext.Get<Panel>("TradeAmount");
+    internal NumericInput AmountInput => uiContext.Get<NumericInput>("TradeAmountInput");
+    private Button ConfirmButton => uiContext.Get<Button>("TradeAmtConfirm");
+    private Button CancelButton => uiContext.Get<Button>("TradeAmtCancel");
 
-    public void Bind()
+    public override void Bind()
     {
-        ConfirmButton.OnMouseUp += OnConfirmPressed;
-        CancelButton.OnMouseUp += OnCancelPressed;
+        ConfirmButton.Events.OnClick += OnConfirmPressed;
+        CancelButton.Events.OnClick += OnCancelPressed;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        ConfirmButton.OnMouseUp -= OnConfirmPressed;
-        CancelButton.OnMouseUp -= OnCancelPressed;
+        ConfirmButton.Events.OnClick -= OnConfirmPressed;
+        CancelButton.Events.OnClick -= OnCancelPressed;
     }
 
-    private void OnConfirmPressed()
+    private void OnConfirmPressed(Entity _)
     {
-        // Validate entered amount
-        if (!short.TryParse(AmountTextBox.Text, out var amount) || amount <= 0)
+        if (AmountInput.NumericValue <= 0)
         {
-            Alert.Show("Enter a valid value!");
+            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Invalid", "Enter a valid value!");
             return;
         }
 
-        intentSender.Send(new TradeOfferIntent(default, TradeView.OwnSlot, TradeView.InventorySlot, amount));
+        intentSender.Send(new TradeOfferIntent(default, TradeView.OwnSlot, TradeView.InventorySlot, (short)AmountInput.NumericValue));
         Panel.Visible = false;
     }
 
-    private void OnCancelPressed()
+    private void OnCancelPressed(Entity _)
     {
         Panel.Visible = false;
     }

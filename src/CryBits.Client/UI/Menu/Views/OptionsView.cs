@@ -1,59 +1,59 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Worlds;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class OptionsView(AudioManager audioManager, GameContext context) : IView
+internal class OptionsView(IguinaContext uiContext, AudioManager audioManager, GameContext context) : ViewBase
 {
-    internal static Panel OptionsPanel => Tools.Panels["Options"];
-    internal static CheckBox SoundsCheckBox => Tools.CheckBoxes["Sounds"];
-    internal static CheckBox MusicsCheckBox => Tools.CheckBoxes["Musics"];
-    private static Button BackButton => Tools.Buttons["Options_Back"];
+    internal Panel OptionsPanel => uiContext.Get<Panel>("Options");
+    internal Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
+    internal Checkbox MusicsCheckbox => uiContext.Get<Checkbox>("Musics");
+    private Button BackButton => uiContext.Get<Button>("OptionsBack");
 
-    public void Bind()
+    public override void Bind()
     {
-        SoundsCheckBox.OnMouseUp += OnSoundsChanged;
-        MusicsCheckBox.OnMouseUp += OnMusicsChanged;
-        BackButton.OnMouseUp += OnBackPressed;
+        SoundsCheckbox.Events.OnValueChanged += OnSoundsChanged;
+        MusicsCheckbox.Events.OnValueChanged += OnMusicsChanged;
+        BackButton.Events.OnClick += OnBackPressed;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        SoundsCheckBox.OnMouseUp -= OnSoundsChanged;
-        MusicsCheckBox.OnMouseUp -= OnMusicsChanged;
-        BackButton.OnMouseUp -= OnBackPressed;
+        SoundsCheckbox.Events.OnValueChanged -= OnSoundsChanged;
+        MusicsCheckbox.Events.OnValueChanged -= OnMusicsChanged;
+        BackButton.Events.OnClick -= OnBackPressed;
     }
 
-    private void OnSoundsChanged()
+    private void OnSoundsChanged(Entity _)
     {
-        Options.Instance.Sounds = !Options.Instance.Sounds;
+        Options.Instance.Sounds = SoundsCheckbox.Checked;
         if (!Options.Instance.Sounds) audioManager.StopAllSounds();
         OptionsRepository.Write();
     }
 
-    private void OnMusicsChanged()
+    private void OnMusicsChanged(Entity _)
     {
-        Options.Instance.Musics = !Options.Instance.Musics;
+        Options.Instance.Musics = MusicsCheckbox.Checked;
         OptionsRepository.Write();
 
         if (!Options.Instance.Musics)
             audioManager.StopMusic();
-        else if (Screen.Current == Screens.Menu)
-            audioManager.PlayMusic(Musics.Menu);
-        else if (Screen.Current == Screens.Game)
+        else if (context.CurrentMap?.Data?.Music != null)
             audioManager.PlayMusic(context.CurrentMap.Data.Music);
+        else
+            audioManager.PlayMusic(Musics.Menu);
     }
 
-    private void OnBackPressed()
+    private void OnBackPressed(Entity _)
     {
         Connection.Instance.Disconnect();
 
-        MenuScreen.CloseMenus();
-        LoginView.LoginPanel.Visible = true;
+        MenuScreen.Instance.CloseMenus();
+        MenuScreen.Instance.LoginView.LoginPanel.Visible = true;
     }
 }

@@ -1,86 +1,86 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Shops;
 using CryBits.Simulation.Intents;
-using SFML.Window;
+using Iguina.Entities;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ShopView(IntentSender intentSender, ItemRenderer itemRenderer, DefinitionCatalog catalog) : IView
+internal class ShopView(IguinaContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, DefinitionCatalog catalog) : ViewBase
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-    internal static Panel Panel => Tools.Panels["Shop"];
-    private static Button CloseButton => Tools.Buttons["Shop_Close"];
-    private static Label NameLabel => Tools.Labels["Shop_Name"];
-    private static Label CurrencyLabel => Tools.Labels["Shop_Currency"];
-    private static SlotGrid Grid => Tools.SlotGrids["Shop_Grid"];
+    internal static Panel Panel => IguinaContext.Instance.Get<Panel>("Shop");
+    private Button CloseButton => uiContext.Get<Button>("ShopClose");
+    internal static Label NameLabel => IguinaContext.Instance.Get<Label>("ShopName");
+    internal static Label CurrencyLabel => IguinaContext.Instance.Get<Label>("ShopCurrency");
+    private SlotGrid Grid => uiContext.Get<SlotGrid>("ShopGrid");
 
     public static Shop? OpenedShop;
 
-    public void Bind()
+    public override void Bind()
     {
-        Grid.OnRenderSlot += OnRenderSlot;
-        Grid.OnMouseDoubleClick += OnGridMouseDoubleClick;
-        Grid.OnSlotHover += OnGridSlotHover;
-        Grid.OnSlotLeave += OnGridSlotLeave;
-        CloseButton.OnMouseUp += OnClosePressed;
+        Grid.OnSlotDoubleClick += OnSlotDoubleClick;
+        Grid.OnSlotHoverEnter += OnSlotHoverEnter;
+        Grid.OnSlotHoverLeave += TooltipView.Hide;
+        CloseButton.Events.OnClick += OnClosePressed;
+        uiContext.PostDraw += OnPostDraw;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        Grid.OnRenderSlot -= OnRenderSlot;
-        Grid.OnMouseDoubleClick -= OnGridMouseDoubleClick;
-        Grid.OnSlotHover -= OnGridSlotHover;
-        Grid.OnSlotLeave -= OnGridSlotLeave;
-        CloseButton.OnMouseUp -= OnClosePressed;
+        Grid.OnSlotDoubleClick -= OnSlotDoubleClick;
+        Grid.OnSlotHoverEnter -= OnSlotHoverEnter;
+        Grid.OnSlotHoverLeave -= TooltipView.Hide;
+        CloseButton.Events.OnClick -= OnClosePressed;
+        uiContext.PostDraw -= OnPostDraw;
     }
 
-    private void OnRenderSlot(int slot, Point pos)
+    private void OnSlotDoubleClick(int slot)
     {
-        if (OpenedShop == null || slot >= OpenedShop.Sold.Count) return;
-        if (_catalog.Items.Get(OpenedShop.Sold[slot].ItemId) is { } item)
-            itemRenderer.DrawItem(item, OpenedShop.Sold[slot].Amount, pos);
+        if (OpenedShop != null)
+            intentSender.Send(new ShopBuyIntent(default, (byte)slot));
     }
 
-    private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
-    {
-        if (OpenedShop == null) return;
-
-        // Purchase shop item.
-        intentSender.Send(new ShopBuyIntent(default, slot));
-    }
-
-    private void OnClosePressed()
+    private void OnClosePressed(Entity _)
     {
         Grid.ResetHover();
-        InformationView.Hide();
+        TooltipView.Hide();
         Panel.Visible = false;
         intentSender.Send(new ShopCloseIntent(default));
     }
 
-    private void OnGridSlotHover(short slot)
+    private void OnSlotHoverEnter(int slot)
     {
         if (OpenedShop == null || slot >= OpenedShop.Sold.Count) return;
-        var item = _catalog.Items.Get(OpenedShop.Sold[slot].ItemId);
+        var item = catalog.Items.Get(OpenedShop.Sold[slot].ItemId);
         if (item == null) return;
-        InformationView.Show(item.Id,
-            new Point(Panel.Position.X - 186, Panel.Position.Y + 5),
+        TooltipView.Show(item.Id,
+            new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5),
             "Price: " + OpenedShop.Sold[slot].Price);
     }
 
-    private static void OnGridSlotLeave(short slot) => InformationView.Hide();
+    private void OnPostDraw()
+    {
+        if (!Panel.Visible || OpenedShop == null) return;
+
+        for (var i = 0; i < Grid.TotalSlots; i++)
+        {
+            if (i >= OpenedShop.Sold.Count) break;
+            var rect = Grid.GetSlotRect(i);
+            if (catalog.Items.Get(OpenedShop.Sold[i].ItemId) is { } item)
+                itemRenderer.DrawItem(item, OpenedShop.Sold[i].Amount, new Point(rect.X, rect.Y));
+        }
+    }
 
     public static void Open(Shop shop)
     {
         if (shop == null) return;
         OpenedShop = shop;
-        NameLabel.SetArguments(shop.Name);
-        CurrencyLabel.SetArguments(DefinitionCatalog.Instance.Items.Get(shop.CurrencyId)?.Name ?? "Unknown");
+        NameLabel.Text = shop.Name;
+        CurrencyLabel.Text = DefinitionCatalog.Instance.Items.Get(shop.CurrencyId)?.Name ?? "Unknown";
         Panel.Visible = true;
     }
 }

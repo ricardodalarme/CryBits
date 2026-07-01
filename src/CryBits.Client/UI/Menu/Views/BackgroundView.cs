@@ -1,32 +1,31 @@
 using CryBits.Client.Framework;
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Network;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class BackgroundView : IView
+internal class BackgroundView(IguinaContext uiContext) : ViewBase
 {
-    private static Button OptionsButton => Tools.Buttons["Options"];
+    private Button OptionsButton => uiContext.Get<Button>("OptionsButton");
 
-    public void Bind()
+    public override void Bind()
     {
-        OptionsButton.OnMouseUp += OnOptionsPressed;
+        OptionsButton.Events.OnClick += OnOptionsPressed;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        OptionsButton.OnMouseUp -= OnOptionsPressed;
+        OptionsButton.Events.OnClick -= OnOptionsPressed;
     }
 
-    private void OnOptionsPressed()
+    private void OnOptionsPressed(Entity _)
     {
         Connection.Instance.Disconnect();
 
-        OptionsView.SoundsCheckBox.Checked = Options.Instance.Sounds;
-        OptionsView.MusicsCheckBox.Checked = Options.Instance.Musics;
+        MenuScreen.Instance.OptionsPanel.SoundsCheckbox.Checked = Options.Instance.Sounds;
+        MenuScreen.Instance.OptionsPanel.MusicsCheckbox.Checked = Options.Instance.Musics;
 
-        MenuScreen.CloseMenus();
-        OptionsView.OptionsPanel.Visible = true;
+        MenuScreen.Instance.CloseMenus();
+        MenuScreen.Instance.OptionsPanel.OptionsPanel.Visible = true;
     }
 }

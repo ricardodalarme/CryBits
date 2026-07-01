@@ -1,45 +1,43 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Simulation.Intents;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ShopSellView(IntentSender intentSender) : IView
+internal class ShopSellView(IguinaContext uiContext, IntentSender intentSender) : ViewBase
 {
-    internal static Panel Panel => Tools.Panels["Shop_Sell"];
-    internal static TextBox AmountTextBox => Tools.TextBoxes["Shop_Sell_Amount"];
-    private static Button ConfirmButton => Tools.Buttons["Shop_Sell_Confirm"];
-    private static Button CancelButton => Tools.Buttons["Shop_Sell_Cancel"];
+    internal Panel Panel => uiContext.Get<Panel>("ShopSell");
+    internal NumericInput AmountInput => uiContext.Get<NumericInput>("SellAmount");
+    private Button ConfirmButton => uiContext.Get<Button>("SellConfirm");
+    private Button CancelButton => uiContext.Get<Button>("SellCancel");
 
     public static short InventorySlot;
 
-    public void Bind()
+    public override void Bind()
     {
-        ConfirmButton.OnMouseUp += OnConfirmPressed;
-        CancelButton.OnMouseUp += OnCancelPressed;
+        ConfirmButton.Events.OnClick += OnConfirmPressed;
+        CancelButton.Events.OnClick += OnCancelPressed;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        ConfirmButton.OnMouseUp -= OnConfirmPressed;
-        CancelButton.OnMouseUp -= OnCancelPressed;
+        ConfirmButton.Events.OnClick -= OnConfirmPressed;
+        CancelButton.Events.OnClick -= OnCancelPressed;
     }
 
-    private void OnConfirmPressed()
+    private void OnConfirmPressed(Entity _)
     {
-        // Validate entered amount
-        if (!short.TryParse(AmountTextBox.Text, out var amount) || amount <= 0)
+        if (AmountInput.NumericValue <= 0)
         {
-            Alert.Show("Enter a valid value!");
+            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Invalid", "Enter a valid value!");
             return;
         }
 
-        intentSender.Send(new ShopSellIntent(default, (byte)InventorySlot, amount));
+        intentSender.Send(new ShopSellIntent(default, (byte)InventorySlot, (short)AmountInput.NumericValue));
         Panel.Visible = false;
     }
 
-    private void OnCancelPressed()
+    private void OnCancelPressed(Entity _)
     {
         Panel.Visible = false;
     }

@@ -1,8 +1,7 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.UI;
 using CryBits.Client.UI.Game;
-using CryBits.Client.UI.Game.Views;
 using CryBits.Simulation.Intents;
 using SFML.Window;
 
@@ -20,10 +19,17 @@ internal class GameInput(IntentSender intentSender, Chat chat)
     /// Subscribe to the game screen's key-released event.
     /// Call once at startup alongside other Bind() calls.
     /// </summary>
-    public void Bind() =>
-        Screens.Game.OnKeyReleased += OnKeyReleased;
+    public void Bind()
+    {
+        InputManager.Instance.KeyReleased += OnKeyReleased;
+    }
 
-    private void OnKeyReleased(KeyEventArgs e)
+    public void Unbind()
+    {
+        InputManager.Instance.KeyReleased -= OnKeyReleased;
+    }
+
+    private void OnKeyReleased(object? sender, KeyEventArgs e)
     {
         switch (e.Code)
         {
@@ -43,9 +49,9 @@ internal class GameInput(IntentSender intentSender, Chat chat)
 
     private void UseHotbar(byte slot)
     {
-        if (TextBox.Focused != null) return;
+        if (IguinaContext.Instance.UISystem?.FocusedEntity != null) return;
 
         intentSender.Send(new HotbarUseIntent(default, slot));
-        DropItemView.Panel.Visible = false;
+        GameScreen.Instance.DropItemView.Panel.Visible = false;
     }
 }

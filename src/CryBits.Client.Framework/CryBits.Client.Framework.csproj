@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Iguina" />
     <PackageReference Include="SFML.Audio" />
     <PackageReference Include="SFML.Graphics" />
     <PackageReference Include="SFML.Window" />

@@ -1,6 +1,6 @@
 using CryBits.Client.Framework;
+using CryBits.Client.UI.Game;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
@@ -45,6 +45,6 @@ internal class PartyHandler(IntentSender intentSender, GameContext context)
         }
 
         // Show party invitation panel
-        PartyInvitationView.Show(packet.PlayerInvitation);
+        GameScreen.Instance.PartyInvitationView.Show(packet.PlayerInvitation);
     }
 }

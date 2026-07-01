@@ -1,45 +1,43 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Simulation.Intents;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class DropItemView(IntentSender intentSender) : IView
+internal class DropItemView(IguinaContext uiContext, IntentSender intentSender) : ViewBase
 {
-    internal static Panel Panel => Tools.Panels["Drop"];
-    internal static TextBox AmountTextBox => Tools.TextBoxes["Drop_Amount"];
-    private static Button ConfirmButton => Tools.Buttons["Drop_Confirm"];
-    private static Button CancelButton => Tools.Buttons["Drop_Cancel"];
+    internal Panel Panel => uiContext.Get<Panel>("Drop");
+    internal NumericInput AmountInput => uiContext.Get<NumericInput>("DropAmount");
+    private Button ConfirmButton => uiContext.Get<Button>("DropConfirm");
+    private Button CancelButton => uiContext.Get<Button>("DropCancel");
 
     public static short InventorySlot;
 
-    public void Bind()
+    public override void Bind()
     {
-        ConfirmButton.OnMouseUp += OnConfirmPressed;
-        CancelButton.OnMouseUp += OnCancelPressed;
+        ConfirmButton.Events.OnClick += OnConfirmPressed;
+        CancelButton.Events.OnClick += OnCancelPressed;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        ConfirmButton.OnMouseUp -= OnConfirmPressed;
-        CancelButton.OnMouseUp -= OnCancelPressed;
+        ConfirmButton.Events.OnClick -= OnConfirmPressed;
+        CancelButton.Events.OnClick -= OnCancelPressed;
     }
 
-    private void OnConfirmPressed()
+    private void OnConfirmPressed(Entity _)
     {
-        // Validate entered amount
-        if (!short.TryParse(AmountTextBox.Text, out var amount) || amount <= 0)
+        if (AmountInput.NumericValue <= 0)
         {
-            Alert.Show("Enter a valid value!");
+            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Invalid", "Enter a valid value!");
             return;
         }
 
-        intentSender.Send(new DropItemIntent(default, (byte)InventorySlot, amount));
+        intentSender.Send(new DropItemIntent(default, (byte)InventorySlot, (short)AmountInput.NumericValue));
         Panel.Visible = false;
     }
 
-    private void OnCancelPressed()
+    private void OnCancelPressed(Entity _)
     {
         Panel.Visible = false;
     }

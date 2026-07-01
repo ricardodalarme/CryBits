@@ -21,6 +21,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Iguina" />
+    <PackageReference Include="Iguina.Drivers.Sfml" />
     <PackageReference Include="LiteNetLib" />
     <PackageReference Include="SFML.Audio" />
     <PackageReference Include="SFML.Graphics" />

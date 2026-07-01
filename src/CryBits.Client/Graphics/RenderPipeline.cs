@@ -1,11 +1,9 @@
-using CryBits.Client.Framework;
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Framework.Network;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Managers;
 using CryBits.Client.Systems;
+using CryBits.Client.UI;
 using CryBits.Definitions.Maps;
+using SFML.Graphics;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics;
@@ -14,14 +12,12 @@ internal sealed class RenderPipeline(
     Renderer renderer,
     CameraManager cameraManager,
     MapRenderer mapRenderer,
-    UIRenderer uiRenderer,
     SystemScheduler scheduler)
 {
     public static RenderPipeline Instance { get; } = new(
         Renderer.Instance,
         CameraManager.Instance,
         MapRenderer.Instance,
-        UIRenderer.Instance,
         SystemScheduler.Instance);
 
     public void Present()
@@ -30,7 +26,6 @@ internal sealed class RenderPipeline(
 
         InGame();
 
-        cameraManager.BeginUIDraw();
         DrawUI();
 
         renderer.RenderWindow.Display();
@@ -38,7 +33,7 @@ internal sealed class RenderPipeline(
 
     private void InGame()
     {
-        if (Screen.Current != Screens.Game) return;
+        if (IguinaContext.Instance.CurrentScreen != ScreenType.Game) return;
 
         cameraManager.BeginWorldDraw();
 
@@ -53,15 +48,17 @@ internal sealed class RenderPipeline(
 
     private void DrawUI()
     {
-        if (Screen.Current?.Body is { } body) uiRenderer.DrawInterface(body);
+        cameraManager.BeginUIDraw();
 
-        if (Screen.Current != Screens.Game) return;
+        IguinaContext.Instance.Draw();
 
-        uiRenderer.DrawChat();
-        mapRenderer.DrawMapName();
-        uiRenderer.DrawParty();
+        var iguinaTarget = IguinaContext.Instance.Target;
+        if (iguinaTarget != null)
+        {
+            var sprite = new Sprite(iguinaTarget.Texture);
+            renderer.RenderWindow.Draw(sprite);
+        }
 
-        if (Options.Instance.ShowMetrics) renderer.DrawText("FPS: " + Game.Fps, 176, 7, Color.White);
-        if (Options.Instance.ShowMetrics) renderer.DrawText("Latency: " + Connection.Latency, 176, 19, Color.White);
+        IguinaContext.Instance.PostDraw?.Invoke();
     }
 }

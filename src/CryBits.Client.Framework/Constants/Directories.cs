@@ -14,6 +14,7 @@ public static class Directories
     public static readonly DirectoryInfo Musics = new(Path.Combine(BaseDir, "Audio", "Musics"));
     public static readonly DirectoryInfo Fonts = new(Path.Combine(BaseDir, "Graphics", "Fonts"));
     public static readonly FileInfo Options = new(Path.Combine(BaseDir, "Data", "Options.json"));
+    public static readonly DirectoryInfo UITheme = new(Path.Combine(BaseDir, "Data", "UI"));
     public static readonly FileInfo ToolsData = new(Path.Combine(BaseDir, "Data", "Tools.json"));
 
     public static readonly DirectoryInfo MapsData = new(Path.Combine(BaseDir, "Data", "Maps"));
@@ -51,6 +52,7 @@ public static class Directories
         Musics.Create();
         Fonts.Create();
         Options.Directory?.Create();
+        UITheme.Create();
         MapsData.Create();
         Tiles.Create();
         ToolsData.Directory?.Create();

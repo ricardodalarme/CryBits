@@ -1,12 +1,9 @@
 using CryBits.Client.Commands;
-using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.UI.Game.Views;
 using CryBits.Definitions.Common;
 using CryBits.Simulation.Intents;
+using Iguina.Entities;
 using SFML.Graphics;
-using static CryBits.Client.Framework.Utils.TextUtils;
 
 namespace CryBits.Client.UI.Game;
 
@@ -15,15 +12,11 @@ internal class Chat
     public static Chat Instance { get; } = new Chat(IntentSender.Instance);
 
     private readonly ChatCommandDispatcher _dispatcher;
-
     private readonly IntentSender intentSender;
 
-    // Rendering order for chat lines
     public static List<Structure> Order = [];
-
     public static long VisibilityTimer;
     public const byte LinesVisible = 9;
-    public static byte LinesFirst;
     private const byte MaxLines = 50;
     public const short SleepTimer = 10000;
 
@@ -36,7 +29,6 @@ internal class Chat
             .Register(new TradeInviteCommand(IntentSender.Instance, AddText));
     }
 
-    /// <summary>Chat line record containing the displayed text and color.</summary>
     public class Structure
     {
         public string Text = string.Empty;
@@ -45,69 +37,42 @@ internal class Chat
 
     private void AddLine(string text, Color color)
     {
-        Order.Add(new Structure());
-        var i = Order.Count - 1;
-
-        Order[i].Text = text;
-        Order[i].Color = color;
-
-        if (Order.Count > MaxLines) Order.Remove(Order[0]);
-        if (i + LinesFirst > LinesVisible + LinesFirst)
-            LinesFirst = (byte)(i - LinesVisible);
-
-        // Reset chat visibility timer
+        Order.Add(new Structure { Text = text, Color = color });
+        if (Order.Count > MaxLines) Order.RemoveAt(0);
         VisibilityTimer = Environment.TickCount64 + 10000;
     }
 
     public void AddText(string message, Color color)
     {
-        var boxWidth = Textures.Panels[ChatView.Panel.TextureNum].ToSize().Width - 16;
-
-        // Trim whitespace and measure
-        message = message.Trim();
-        int messageWidth = MeasureString(message);
-
-        if (messageWidth < boxWidth)
-            AddLine(message, color);
-        else
-            for (var i = 0; i <= message.Length; i++)
-            {
-                var tempMessage = message.Substring(0, i);
-
-                if (MeasureString(tempMessage) > boxWidth)
-                {
-                    AddLine(tempMessage, color);
-                    AddText(message.Substring(tempMessage.Length), color);
-                    return;
-                }
-            }
+        AddLine(message.Trim(), color);
     }
 
     public void Type()
     {
-        var tool = ChatView.MessageTextBox;
-        var panel = ChatView.Panel;
+        if (!IguinaContext.Instance.TryGet<Panel>("ChatPanel", out var panel) ||
+            !IguinaContext.Instance.TryGet<TextInput>("ChatInput", out var input))
+            return;
 
         panel.Visible = !panel.Visible;
 
         if (panel.Visible)
         {
             VisibilityTimer = Environment.TickCount64 + SleepTimer;
-            TextBox.Focused = tool;
+            IguinaContext.Instance.UISystem!.FocusedEntity = input;
             return;
         }
 
-        TextBox.Focused = null;
+        IguinaContext.Instance.UISystem!.FocusedEntity = null;
 
-        var message = tool.Text;
+        var message = input.Value;
 
         if (message.Length < 3)
         {
-            tool.Text = string.Empty;
+            input.Value = string.Empty;
             return;
         }
 
-        tool.Text = string.Empty;
+        input.Value = string.Empty;
 
         if (!_dispatcher.TryDispatch(message))
             SendMessage(message);
@@ -127,13 +92,11 @@ internal class Chat
                     AddText("Use: '!' + Addressee + ' Message'", Color.White);
                     return;
                 }
-
                 var addressee = message.Substring(1, parts[0].Length - 1);
                 var content = message.Substring(parts[0].Length + 1);
                 intentSender.Send(new ChatMessageIntent(default, content, Message.Private, addressee));
                 return;
             default:
-                // Default: map message
                 intentSender.Send(new ChatMessageIntent(default, message, Message.Map, null));
                 break;
         }

@@ -5,7 +5,6 @@ using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Network.Transport;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Graphics;
-using CryBits.Client.Logic;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Handlers;
 using CryBits.Client.Network.Senders;
@@ -24,7 +23,6 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
 using System.Diagnostics;
 using static CryBits.Definitions.Globals;
-using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Client;
 
@@ -38,7 +36,6 @@ public sealed class Game : IDisposable
     private SystemScheduler? _scheduler;
     private bool _working = true;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
-    private long _textboxTimer;
 
     public static short Fps { get; private set; }
     public static bool Working
@@ -66,9 +63,9 @@ public sealed class Game : IDisposable
     {
         RegisterComponentTypes();
         Directories.Create();
-        ToolsRepository.Instance.Read();
         OptionsRepository.Read();
         Renderer.Instance.Init();
+        IguinaContext.Instance.Initialize((uint)Renderer.Instance.RenderWindow.Size.X, (uint)Renderer.Instance.RenderWindow.Size.Y, Renderer.Instance.RenderWindow);
 
         if (_offline)
         {
@@ -84,11 +81,6 @@ public sealed class Game : IDisposable
         }
 
         _connection.Start(onDisconnected: OnDisconnected);
-
-        new MenuScreen().Bind();
-        new GameScreen().Bind();
-        Window.Instance.Bind();
-        GameInput.Instance.Bind();
 
         IntentRegistry.Register<MoveIntent>(1);
         IntentRegistry.Register<AttackIntent>(2);
@@ -123,7 +115,7 @@ public sealed class Game : IDisposable
         var cat = DefinitionCatalog.Instance;
 
         PacketDispatcher.Register(new AuthHandler(cat));
-        PacketDispatcher.Register(new AccountHandler(audioManager, context));
+        PacketDispatcher.Register(new AccountHandler(context));
         PacketDispatcher.Register(new MapHandler(context, ContentSender.Instance, audioManager, mapRepository));
         PacketDispatcher.Register(new KeyframeHandler(new Replication.SnapshotApplier(context.World, context)));
         PacketDispatcher.Register(new ChatHandler(Chat.Instance));
@@ -138,7 +130,7 @@ public sealed class Game : IDisposable
         _renderPipeline = RenderPipeline.Instance;
         _inputManager = InputManager.Instance;
 
-        Window.Instance.OpenMenu();
+        MenuScreen.Instance.Open();
     }
 
     private void Loop()
@@ -156,10 +148,10 @@ public sealed class Game : IDisposable
                 _inputManager?.BeginFrame();
                 Renderer.Instance.RenderWindow.DispatchEvents();
 
-                UpdateTextBox();
-
                 var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
                 _stopwatch.Restart();
+
+                IguinaContext.Instance.Update(deltaTime);
 
                 _scheduler?.Simulation.Update(deltaTime);
 
@@ -175,8 +167,8 @@ public sealed class Game : IDisposable
                         if (level.TotalAttributes != total)
                             ctx.World.Set(playerEntityId, level with { TotalAttributes = total });
                     }
-                    BarsView.Update();
-                    CharacterView.Update();
+                    if (IguinaContext.Instance.CurrentScreen == ScreenType.Game)
+                        CharacterView.Update();
                 }
 
                 if (timer1000 < Environment.TickCount64)
@@ -197,20 +189,11 @@ public sealed class Game : IDisposable
         }
     }
 
-    private void UpdateTextBox()
-    {
-        if (_textboxTimer < Environment.TickCount64)
-        {
-            _textboxTimer = Environment.TickCount64 + 500;
-            TextBox.BlinkSignal = !TextBox.BlinkSignal;
-            TextBox.Focus();
-        }
-    }
-
     private void OnDisconnected()
     {
         GameContext.Instance.Reset();
-        Window.Instance.OpenMenu();
+        GameScreen.Instance.Unbind();
+        MenuScreen.Instance.Open();
     }
 
     private static void RegisterComponentTypes()

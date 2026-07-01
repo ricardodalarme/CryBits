@@ -1,3 +1,4 @@
+using CryBits.Client.UI;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Definitions.Catalog;
@@ -12,7 +13,7 @@ internal class AuthHandler(DefinitionCatalog catalog)
     internal void Alert(AlertPacket packet)
     {
         // Show alert message
-        UI.Alert.Show(packet.Message);
+        IguinaContext.Instance.UISystem?.MessageBoxes.ShowInfoMessageBox("Server", packet.Message);
     }
 
     [PacketHandler]
@@ -23,7 +24,7 @@ internal class AuthHandler(DefinitionCatalog catalog)
         catalog.Classes = [];
 
         // Open character selection panel
-        MenuScreen.CloseMenus();
-        SelectCharacterView.SelectCharacterPanel.Visible = true;
+        MenuScreen.Instance.CloseMenus();
+        MenuScreen.Instance.SelectCharacterView.SelectCharacterPanel.Visible = true;
     }
 }

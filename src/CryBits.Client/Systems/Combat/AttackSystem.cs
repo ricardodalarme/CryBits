@@ -2,9 +2,10 @@ using CryBits.Client.Components;
 using CryBits.Client.Core;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.UI.Game.Views;
+using CryBits.Client.UI;
 using CryBits.Client.Worlds;
 using CryBits.Simulation.Intents;
+using Iguina.Entities;
 using SFML.Window;
 using static CryBits.Definitions.Globals;
 
@@ -35,8 +36,8 @@ internal sealed class AttackSystem(
 
         var state = context.World.Get<AttackComponent>(entity.Value);
         if (state == null || state.AttackCountdown > 0f) return;
-        if (TradeView.Panel.Visible) return;
-        if (ShopView.Panel.Visible) return;
+        if (IguinaContext.Instance.TryGet<Panel>("Trade", out var tradePanel) && tradePanel.Visible) return;
+        if (IguinaContext.Instance.TryGet<Panel>("Shop", out var shopPanel) && shopPanel.Visible) return;
 
         context.World.Set(entity.Value, new AttackComponent(AttackSpeed / 1000f));
         intentSender.Send(new AttackIntent(default, null));

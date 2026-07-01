@@ -1,44 +1,43 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Simulation.Intents;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class PartyInvitationView(IntentSender intentSender) : IView
+internal class PartyInvitationView(IguinaContext uiContext, IntentSender intentSender) : ViewBase
 {
-    internal static Panel Panel => Tools.Panels["Party_Invitation"];
-    private static Button AcceptButton => Tools.Buttons["Party_Yes"];
-    private static Button DeclineButton => Tools.Buttons["Party_No"];
-    private static Label InviterNameLabel => Tools.Labels["Party_Invitation_Text"];
+    internal Panel Panel => uiContext.Get<Panel>("PartyInvitation");
+    private Button AcceptButton => uiContext.Get<Button>("PartyYes");
+    private Button DeclineButton => uiContext.Get<Button>("PartyNo");
+    private Label InviterNameLabel => uiContext.Get<Label>("PartyText");
 
-    public void Bind()
+    public override void Bind()
     {
-        AcceptButton.OnMouseUp += OnAcceptPressed;
-        DeclineButton.OnMouseUp += OnDeclinePressed;
+        AcceptButton.Events.OnClick += OnAcceptPressed;
+        DeclineButton.Events.OnClick += OnDeclinePressed;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        AcceptButton.OnMouseUp -= OnAcceptPressed;
-        DeclineButton.OnMouseUp -= OnDeclinePressed;
+        AcceptButton.Events.OnClick -= OnAcceptPressed;
+        DeclineButton.Events.OnClick -= OnDeclinePressed;
     }
 
-    private void OnAcceptPressed()
+    private void OnAcceptPressed(Entity _)
     {
         intentSender.Send(new PartyAcceptIntent(default));
         Panel.Visible = false;
     }
 
-    private void OnDeclinePressed()
+    private void OnDeclinePressed(Entity _)
     {
         intentSender.Send(new PartyDeclineIntent(default));
         Panel.Visible = false;
     }
 
-    public static void Show(string inviterName)
+    public void Show(string inviterName)
     {
-        InviterNameLabel.SetArguments(inviterName);
+        InviterNameLabel.Text = inviterName;
         Panel.Visible = true;
     }
 }

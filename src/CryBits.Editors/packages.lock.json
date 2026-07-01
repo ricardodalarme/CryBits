@@ -90,6 +90,24 @@
           "Dock.Settings": "12.0.0.2"
         }
       },
+      "Iguina": {
+        "type": "Direct",
+        "requested": "[1.1.5, )",
+        "resolved": "1.1.5",
+        "contentHash": "nJ/INUaV2Ha0J1vzwyEB/pmE6VVPdK3/1fvzwFE832qS8Kyydl/F3Hb7SLND/DOwFhnJT4/TFC0EoOTc9CHT3Q=="
+      },
+      "Iguina.Drivers.Sfml": {
+        "type": "Direct",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "1LFITbi1fdnsQeBuBsL1a/v+WJoqEiRXonMv/Ji+P1aoToSH9D8p4zjX/dxEt8AbfKA0oPD7O6OH3j4/Oz+03g==",
+        "dependencies": {
+          "Iguina": "1.1.4",
+          "SFML.Graphics": "3.0.0",
+          "SFML.System": "3.0.0",
+          "SFML.Window": "3.0.0"
+        }
+      },
       "LiteNetLib": {
         "type": "Direct",
         "requested": "[2.1.4, )",
@@ -475,6 +493,7 @@
           "CryBits.Persistence": "[1.0.0, )",
           "CryBits.Protocol": "[1.0.0, )",
           "CryBits.Transport": "[1.0.0, )",
+          "Iguina": "[1.1.5, )",
           "MemoryPack": "[1.21.4, )",
           "SFML.Audio": "[3.0.0, )",
           "SFML.Graphics": "[3.0.0, )",

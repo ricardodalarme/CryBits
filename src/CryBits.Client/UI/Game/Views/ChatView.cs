@@ -1,45 +1,76 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
+using Iguina.Defs;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ChatView : IView
+internal class ChatView(IguinaContext uiContext) : ViewBase
 {
-    internal static Panel Panel => Tools.Panels["Chat"];
-    internal static TextBox MessageTextBox => Tools.TextBoxes["Chat"];
-    private static Button ScrollUpButton => Tools.Buttons["Chat_Up"];
-    private static Button ScrollDownButton => Tools.Buttons["Chat_Down"];
+    internal Panel Panel => uiContext.Get<Panel>("ChatPanel");
+    internal TextInput MessageTextInput => uiContext.Get<TextInput>("ChatInput");
+    private Panel MessagesPanel => uiContext.Get<Panel>("ChatMessagesPanel");
+    private Paragraph ChatHint => uiContext.Get<Paragraph>("ChatHint");
 
-    public void Bind()
+    private readonly List<Paragraph> _messageParagraphs = [];
+    private bool _scrollbarCreated;
+
+    public override void Bind()
     {
-        MessageTextBox.OnMouseUp += OnMessagePressed;
-        ScrollUpButton.OnMouseUp += OnScrollUpPressed;
-        ScrollDownButton.OnMouseUp += OnScrollDownPressed;
+        MessageTextInput.Events.OnClick += OnMessagePressed;
+        uiContext.PostDraw += OnPostDraw;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        MessageTextBox.OnMouseUp -= OnMessagePressed;
-        ScrollUpButton.OnMouseUp -= OnScrollUpPressed;
-        ScrollDownButton.OnMouseUp -= OnScrollDownPressed;
+        MessageTextInput.Events.OnClick -= OnMessagePressed;
+        uiContext.PostDraw -= OnPostDraw;
     }
 
-    private void OnMessagePressed()
+    private void OnMessagePressed(Entity _)
     {
-        // Focus chat textbox and reset timer
         Chat.VisibilityTimer = Environment.TickCount64 + Chat.SleepTimer;
         Panel.Visible = true;
     }
 
-    private void OnScrollUpPressed()
+    private void OnPostDraw()
     {
-        if (Chat.LinesFirst > 0)
-            Chat.LinesFirst--;
-    }
+        var focused = uiContext.UISystem?.FocusedEntity;
+        var chatFocused = focused == MessageTextInput;
 
-    private void OnScrollDownPressed()
-    {
-        if (Chat.Order.Count - 1 - Chat.LinesFirst - Chat.LinesVisible > 0)
-            Chat.LinesFirst++;
+        Panel.Visible = chatFocused;
+        ChatHint.Visible = !chatFocused;
+
+        if (!_scrollbarCreated && MessagesPanel.Parent != null)
+        {
+            MessagesPanel.OverflowMode = OverflowMode.HideOverflow;
+            MessagesPanel.CreateVerticalScrollbar(true);
+            _scrollbarCreated = true;
+        }
+
+        while (_messageParagraphs.Count < Chat.Order.Count)
+        {
+            var i = _messageParagraphs.Count;
+            var line = Chat.Order[i];
+            var paragraph = new Paragraph(uiContext.UISystem!)
+            {
+                Text = line.Text,
+                TextOverflowMode = TextOverflowMode.WrapWords,
+                ShrinkHeightToMinimalSize = true,
+            };
+            paragraph.Size.SetPixels(330, 0);
+            paragraph.OverrideStyles.TextFillColor = new Iguina.Defs.Color(
+                line.Color.R, line.Color.G, line.Color.B, line.Color.A);
+            MessagesPanel.AddChild(paragraph);
+            _messageParagraphs.Add(paragraph);
+
+            if (MessagesPanel.VerticalScrollbar != null && i == Chat.Order.Count - 1)
+                MessagesPanel.VerticalScrollbar.Value = MessagesPanel.VerticalScrollbar.MaxValue;
+        }
+
+        while (_messageParagraphs.Count > Chat.Order.Count)
+        {
+            var last = _messageParagraphs[^1];
+            last.RemoveSelf();
+            _messageParagraphs.RemoveAt(_messageParagraphs.Count - 1);
+        }
     }
 }

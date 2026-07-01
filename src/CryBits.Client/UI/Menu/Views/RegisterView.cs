@@ -1,54 +1,52 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Network.Senders;
+using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class RegisterView(AuthSender authSender) : IView
+internal class RegisterView(IguinaContext uiContext, AuthSender authSender) : ViewBase
 {
-    internal static Panel RegisterPanel => Tools.Panels["Register"];
-    private static TextBox UsernameTextBox => Tools.TextBoxes["Register_Username"];
-    private static TextBox PasswordTextBox => Tools.TextBoxes["Register_Password"];
-    private static TextBox ConfirmPasswordTextBox => Tools.TextBoxes["Register_Password2"];
-    private static Button ConfirmButton => Tools.Buttons["Register_Confirm"];
-    private static Button LoginButton => Tools.Buttons["Connect"];
+    internal Panel RegisterPanel => uiContext.Get<Panel>("Register");
+    private TextInput UsernameTextBox => uiContext.Get<TextInput>("RegisterUsername");
+    private TextInput PasswordTextBox => uiContext.Get<TextInput>("RegisterPassword");
+    private TextInput ConfirmPasswordTextBox => uiContext.Get<TextInput>("RegisterConfirm");
+    private Button ConfirmButton => uiContext.Get<Button>("RegisterConfirmBtn");
+    private Button LoginButton => uiContext.Get<Button>("RegisterBackBtn");
 
-    public void Bind()
+    public override void Bind()
     {
-        ConfirmButton.OnMouseUp += OnConfirmPressed;
-        LoginButton.OnMouseUp += OnLoginPressed;
+        ConfirmButton.Events.OnClick += OnConfirmPressed;
+        LoginButton.Events.OnClick += OnLoginPressed;
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        ConfirmButton.OnMouseUp -= OnConfirmPressed;
-        LoginButton.OnMouseUp -= OnLoginPressed;
+        ConfirmButton.Events.OnClick -= OnConfirmPressed;
+        LoginButton.Events.OnClick -= OnLoginPressed;
     }
 
-    private void OnConfirmPressed()
+    private void OnConfirmPressed(Entity _)
     {
-        // Basic validation
-        if (PasswordTextBox.Text != ConfirmPasswordTextBox.Text)
+        if (PasswordTextBox.Value != ConfirmPasswordTextBox.Value)
         {
-            Alert.Show("The password don't match.");
+            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Registration", "The passwords don't match.");
             return;
         }
 
         if (!Connection.Instance.TryConnect())
         {
-            Alert.Show("The server is currently unavailable.");
+            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Server", "The server is currently unavailable.");
             return;
         }
 
-        authSender.Register(UsernameTextBox.Text, PasswordTextBox.Text);
+        authSender.Register(UsernameTextBox.Value, PasswordTextBox.Value);
     }
 
-    private void OnLoginPressed()
+    private void OnLoginPressed(Entity _)
     {
         Connection.Instance.Disconnect();
 
-        MenuScreen.CloseMenus();
-        LoginView.LoginPanel.Visible = true;
+        MenuScreen.Instance.CloseMenus();
+        MenuScreen.Instance.LoginView.LoginPanel.Visible = true;
     }
 }

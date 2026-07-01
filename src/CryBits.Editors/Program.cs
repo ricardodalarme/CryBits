@@ -6,7 +6,6 @@ using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Network.Transport;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Entities;
 using CryBits.Editors.Forms.Login;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network.Handlers;
@@ -29,8 +28,6 @@ internal static class Program
 
         // Load preferences.
         OptionsRepository.Read();
-        ToolsRepository.Instance.Read();
-        InterfaceData.Instance.BuildFromScreens();
 
         // Initialize subsystems
         var clientTransport = new UdpClientTransport();

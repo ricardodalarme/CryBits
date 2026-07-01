@@ -1,11 +1,12 @@
 using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Managers;
 using CryBits.Definitions.Common;
+using CryBits.Client.UI;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using System.Drawing;
-using static CryBits.Client.Framework.Utils.TextUtils;
 using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
 
@@ -54,7 +55,13 @@ internal sealed class Renderer(InputManager inputManager)
             OutlineThickness = 1
         };
 
-        RenderWindow.Closed += UI.Window.Instance.OnClosed;
+        RenderWindow.Closed += (_, _) =>
+        {
+            if (IguinaContext.Instance.CurrentScreen == ScreenType.Game)
+                Connection.Instance.Disconnect();
+            else
+                Game.Working = false;
+        };
         RenderWindow.LostFocus += (_, _) => inputManager.IsFocused = false;
         RenderWindow.GainedFocus += (_, _) => inputManager.IsFocused = true;
 
@@ -95,12 +102,6 @@ internal sealed class Renderer(InputManager inputManager)
         Draw(texture, source, destiny, color);
     }
 
-    public void Draw(Texture texture, Rectangle destiny, Color? color = null)
-    {
-        var source = new Rectangle(new Point(0), texture.ToSize());
-        Draw(texture, source, destiny, color);
-    }
-
     public void Draw(Texture texture, Point position, Color? color = null)
     {
         var source = new Rectangle(new Point(0), texture.ToSize());
@@ -118,72 +119,17 @@ internal sealed class Renderer(InputManager inputManager)
     /// <param name="alignment">Horizontal alignment.</param>
     public void DrawText(string text, int x, int y, Color color, TextAlign alignment = TextAlign.Left)
     {
+        _textCache.DisplayedString = text;
+
         switch (alignment)
         {
-            case TextAlign.Center: x -= MeasureString(text) / 2; break;
-            case TextAlign.Right: x -= MeasureString(text); break;
+            case TextAlign.Center: x -= (int)_textCache.GetLocalBounds().Width / 2; break;
+            case TextAlign.Right: x -= (int)_textCache.GetLocalBounds().Width; break;
         }
 
-        _textCache.DisplayedString = text;
         _textCache.FillColor = color;
         _textCache.Position = new Vector2f(x, y);
 
         RenderWindow.Draw(_textCache);
-    }
-
-    /// <summary>
-    /// Draw text and wrap it to a maximum width. Optionally cuts at word boundaries.
-    /// </summary>
-    public void DrawText(string text, int x, int y, Color color, int maxWidth, bool cut = true)
-    {
-        if (MeasureString(text) < maxWidth)
-        {
-            DrawText(text, x, y, color);
-            return;
-        }
-
-        var breakAt = FindBreakIndex(text, maxWidth);
-        if (breakAt <= 0)
-        {
-            DrawText(text, x, y, color);
-            return;
-        }
-
-        // Walk back to the last word-boundary so we cut at a natural split point.
-        var cutIndex = breakAt;
-        if (cut)
-            for (var i = breakAt - 1; i > 0; i--)
-                if (text[i] is '-' or '_' or ' ')
-                {
-                    cutIndex = i + 1;
-                    break;
-                }
-
-        DrawText(text[..cutIndex], x, y, color);
-        DrawText(text[cutIndex..], x, y + 12, color, maxWidth);
-    }
-
-    /// <summary>
-    /// Draw a box using a texture with a fixed margin (nine-slice).
-    /// </summary>
-    /// <param name="texture">Box texture.</param>
-    /// <param name="margin">Inner margin in pixels.</param>
-    /// <param name="position">Top-left position.</param>
-    /// <param name="size">Box size.</param>
-    public void DrawBox(Texture texture, byte margin, Point position, Size size)
-    {
-        var textureWidth = texture.ToSize().Width;
-        var textureHeight = texture.ToSize().Height;
-
-        // Left cap
-        Draw(texture, new Rectangle(new Point(0), new Size(margin, textureHeight)),
-            new Rectangle(position, new Size(margin, textureHeight)));
-        // Right cap
-        Draw(texture, new Rectangle(new Point(textureWidth - margin, 0), new Size(margin, textureHeight)),
-            new Rectangle(new Point(position.X + size.Width - margin, position.Y), new Size(margin, textureHeight)));
-        // Horizontal stretch (middle)
-        Draw(texture, new Rectangle(new Point(margin, 0), new Size(textureWidth - margin * 2, textureHeight)),
-            new Rectangle(new Point(position.X + margin, position.Y),
-                new Size(size.Width - margin * 2, textureHeight)));
     }
 }
