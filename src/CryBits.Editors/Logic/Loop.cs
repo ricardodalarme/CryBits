@@ -19,26 +19,33 @@ internal class Loop(MapInstance mapInstance)
 
         while (Program.Working)
         {
-            var count = Environment.TickCount64;
-
-            Connection.Instance.Poll();
-
-            mapInstance.UpdateFog();
-            mapInstance.UpdateWeather();
-            MapsMusic();
-
-            // Throttle loop to ~10ms per iteration.
-            while (Environment.TickCount64 < count + 10) Thread.Sleep(1);
-
-            if (timer1000 < Environment.TickCount64)
+            try
             {
-                Program.Fps = fps;
-                fps = 0;
-                timer1000 = Environment.TickCount64 + 1000;
+                var count = Environment.TickCount64;
+
+                Connection.Instance.Poll();
+
+                mapInstance.UpdateFog();
+                mapInstance.UpdateWeather();
+                MapsMusic();
+
+                // Throttle loop to ~10ms per iteration.
+                while (Environment.TickCount64 < count + 10) Thread.Sleep(1);
+
+                if (timer1000 < Environment.TickCount64)
+                {
+                    Program.Fps = fps;
+                    fps = 0;
+                    timer1000 = Environment.TickCount64 + 1000;
+                }
+                else
+                {
+                    fps++;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                fps++;
+                Console.WriteLine($"[Editor] Loop threw an exception: {ex}");
             }
         }
 
