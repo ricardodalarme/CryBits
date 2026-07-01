@@ -34,7 +34,9 @@ public static class PlayerSpawner
         world.Set(entityId, new PlayerAppearance(
             Name: data.Name,
             ClassId: data.ClassId,
-            TextureNum: data.Gender == Gender.Male ? @class.TextureMale[data.TextureNum] : @class.TextureFemale[data.TextureNum],
+            TextureNum: data.Gender == Gender.Male
+                ? @class.TextureMale[Math.Min(data.TextureNum, @class.TextureMale.Count - 1)]
+                : @class.TextureFemale[Math.Min(data.TextureNum, @class.TextureFemale.Count - 1)],
             Gender: data.Gender
         ));
 
