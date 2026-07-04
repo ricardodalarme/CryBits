@@ -35,7 +35,7 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
 
     public void Update(float dt)
     {
-        var map = context.CurrentMap?.Data;
+        var map = context.CurrentMap;
         if (map == null) return;
 
         var type = GetEffectiveWeather(map);

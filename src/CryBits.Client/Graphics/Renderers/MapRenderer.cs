@@ -19,7 +19,7 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
     public void DrawLayer(Layer layerType)
     {
         if (context.CurrentMap == null) return;
-        var map = context.CurrentMap.Data;
+        var map = context.CurrentMap;
         if (map == null || map.Chunks.Count == 0) return;
 
         var sight = cameraManager.TileSight;
@@ -75,7 +75,7 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
     public void DrawPanorama()
     {
         if (context.CurrentMap == null) return;
-        var panorama = context.CurrentMap.Data.Panorama;
+        var panorama = context.CurrentMap.Panorama;
         if (panorama > 0)
             renderer.Draw(Textures.Panoramas[panorama], new System.Drawing.Point(0));
     }

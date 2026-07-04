@@ -30,7 +30,7 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
 
     public void Update(float dt)
     {
-        var map = context.CurrentMap?.Data;
+        var map = context.CurrentMap;
         if (map == null) return;
         var weather = GetEffectiveWeather(map);
         if (weather == WeatherType.None) return;

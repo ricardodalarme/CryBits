@@ -13,7 +13,7 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
 {
     public void Update(float dt)
     {
-        var map = context.CurrentMap?.Data;
+        var map = context.CurrentMap;
         if (map == null) return;
 
         var type = GetEffectiveWeather(map);

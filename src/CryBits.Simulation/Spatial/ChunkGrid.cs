@@ -45,14 +45,11 @@ public sealed class ChunkGrid
         }
     }
 
-    public void Remove(EntityId entity, int tileX, int tileY) =>
-        Remove(entity);
-
     public IEnumerable<EntityId> GetEntities(ChunkCoord chunk) =>
         _chunks.TryGetValue(chunk, out var set) ? set : [];
 
     public IEnumerable<EntityId> GetEntities(IEnumerable<ChunkCoord> chunks) =>
-        chunks.SelectMany(c => GetEntities(c));
+        chunks.SelectMany(GetEntities);
 
     public HashSet<ChunkCoord> GetNeighborhood(ChunkCoord center, int radius = 2)
     {
@@ -81,12 +78,10 @@ public sealed class ChunkGrid
 
     // ── Static helpers ────────────────────────────────────────────────
 
-    public static bool IsTileBlocked(World world, Guid mapId, int x, int y)
+    public static bool IsTileBlocked(Map map, int x, int y)
     {
-        if (!world.MapDefs.TryGetValue(mapId, out var m))
-            return true;
         var chunk = FromPosition(x, y);
-        if (!m.Chunks.TryGetValue(chunk, out var mc))
+        if (!map.Chunks.TryGetValue(chunk, out var mc))
             return true;
         if (mc.Tiles == null)
             return true;
@@ -97,40 +92,21 @@ public sealed class ChunkGrid
         return mc.Tiles[localX, localY].IsBlocked;
     }
 
-    public static EntityId? FindEntityAtTile(World world, Guid mapId, int x, int y)
+    public static bool IsTileBlocked(World world, Guid mapId, int x, int y)
+    {
+        if (!world.MapDefs.TryGetValue(mapId, out var map))
+            return true;
+        return IsTileBlocked(map, x, y);
+    }
+
+    public static EntityId? FindAt<T>(World world, Guid mapId, int x, int y) where T : class
     {
         var chunk = FromPosition(x, y);
         foreach (var id in world.SpatialGrid.GetEntities(chunk))
         {
             var pos = world.Get<Position>(id);
-            if (pos != null && pos.X == x && pos.Y == y && pos.MapId == mapId)
+            if (pos != null && pos.X == x && pos.Y == y && pos.MapId == mapId && world.Get<T>(id) != null)
                 return id;
-        }
-        return null;
-    }
-
-    public static EntityId? FindGroundItemAtTile(World world, Guid mapId, int x, int y)
-    {
-        var chunk = FromPosition(x, y);
-        foreach (var id in world.SpatialGrid.GetEntities(chunk))
-        {
-            var pos = world.Get<Position>(id);
-            if (pos != null && pos.X == x && pos.Y == y && pos.MapId == mapId)
-                if (world.Get<GroundItem>(id) != null)
-                    return id;
-        }
-        return null;
-    }
-
-    public static EntityId? FindSolidEntityAtTile(World world, Guid mapId, int x, int y)
-    {
-        var chunk = FromPosition(x, y);
-        foreach (var id in world.SpatialGrid.GetEntities(chunk))
-        {
-            var pos = world.Get<Position>(id);
-            if (pos != null && pos.X == x && pos.Y == y && pos.MapId == mapId)
-                if (world.Has<CollidableTag>(id))
-                    return id;
         }
         return null;
     }

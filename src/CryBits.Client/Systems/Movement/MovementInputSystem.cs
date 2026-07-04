@@ -5,6 +5,7 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
+using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 using SFML.Window;
 using static CryBits.Definitions.Globals;
@@ -53,12 +54,6 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
 
         intentSender.Send(new MoveIntent(default, direction, desired));
 
-        if (context.CurrentMap.TileBlocked(movement.TileX, movement.TileY, direction))
-        {
-            context.World.Set(entity, movement with { Direction = direction });
-            return;
-        }
-
         var nextX = direction switch
         {
             Direction.Right => movement.TileX + 1,
@@ -71,6 +66,13 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
             Direction.Up => movement.TileY - 1,
             _ => movement.TileY
         };
+
+        var map = context.CurrentMap;
+        if (map != null && ChunkGrid.IsTileBlocked(map, nextX, nextY))
+        {
+            context.World.Set(entity, movement with { Direction = direction });
+            return;
+        }
         if (HasSolidEntityAt(nextX, nextY))
         {
             context.World.Set(entity, movement with { Direction = direction });

@@ -58,7 +58,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
                 return;
             }
 
-            victimId = ChunkGrid.FindEntityAtTile(world, pos.MapId, nextX, nextY);
+            victimId = ChunkGrid.FindAt<Vitals>(world, pos.MapId, nextX, nextY);
 
             if (victimId == null)
             {

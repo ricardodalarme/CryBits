@@ -1,3 +1,4 @@
+using CryBits.Definitions.Maps;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 
@@ -9,7 +10,7 @@ internal sealed class GameContext
 
     public World World { get; } = new(enableDirtyTracking: false);
 
-    public ClientMap CurrentMap = null!;
+    public Map? CurrentMap { get; set; }
 
     public LocalPlayer LocalPlayer { get; set; }
 
@@ -30,7 +31,7 @@ internal sealed class GameContext
     {
         World.Clear();
         _entityById.Clear();
-        CurrentMap = null!;
+        CurrentMap = null;
         LocalPlayer = new LocalPlayer(World, null);
     }
 }

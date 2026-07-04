@@ -19,7 +19,7 @@ internal class MapNameView(IguinaContext uiContext, GameContext context) : ViewB
 
     private void OnPostDraw()
     {
-        var map = context.CurrentMap?.Data;
+        var map = context.CurrentMap;
         if (map == null) { MapNameLabel.Visible = false; return; }
 
         MapNameLabel.Visible = true;

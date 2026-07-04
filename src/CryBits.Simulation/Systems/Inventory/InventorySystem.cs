@@ -257,7 +257,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         if (e == null) return;
         var pos = e.Get<Position>()!;
 
-        var groundEntityId = ChunkGrid.FindGroundItemAtTile(world, pos.MapId, pos.X, pos.Y);
+        var groundEntityId = ChunkGrid.FindAt<GroundItem>(world, pos.MapId, pos.X, pos.Y);
         if (groundEntityId == null) return;
 
         var groundEntity = world.Entities.Get(groundEntityId.Value);

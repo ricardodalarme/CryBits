@@ -27,7 +27,7 @@ internal class MapHandler(GameContext context, ContentSender contentSender, Audi
         var map = mapRepository.LoadMap(id);
         if (map is not null)
         {
-            context.CurrentMap = new ClientMap(map);
+            context.CurrentMap = map;
 
             if (string.IsNullOrEmpty(map.Music))
                 audioManager.StopMusic();
@@ -44,34 +44,34 @@ internal class MapHandler(GameContext context, ContentSender contentSender, Audi
         var map = packet.Map;
 
         // Preserve chunks that have already arrived via ChunkPayload
-        if (context.CurrentMap?.Data is { } existing && existing.Id == map.Id)
-            foreach (var (coord, chunk) in existing.Chunks)
+        if (context.CurrentMap?.Id == map.Id)
+            foreach (var (coord, chunk) in context.CurrentMap.Chunks)
                 map.Chunks.TryAdd(coord, chunk);
 
-        context.CurrentMap = new ClientMap(map);
+        context.CurrentMap = map;
 
         mapRepository.SaveMap(map);
 
-        WeatherSpawner.Reset(context.World, context.CurrentMap.Data.DefaultWeather);
-        FogSpawner.Spawn(context.World, context.CurrentMap.Data.DefaultFog);
+        WeatherSpawner.Reset(context.World, context.CurrentMap.DefaultWeather);
+        FogSpawner.Spawn(context.World, context.CurrentMap.DefaultFog);
 
-        if (string.IsNullOrEmpty(context.CurrentMap.Data.Music))
+        if (string.IsNullOrEmpty(context.CurrentMap.Music))
             audioManager.StopMusic();
         else
-            audioManager.PlayMusic(context.CurrentMap.Data.Music);
+            audioManager.PlayMusic(context.CurrentMap.Music);
     }
 
     [PacketHandler]
     internal void HandleChunkRevision(ChunkRevisionPacket packet)
     {
         if (packet.Version < 0)
-            context.CurrentMap?.Data.Chunks.Remove(new ChunkCoord(packet.ChunkX, packet.ChunkY));
+            context.CurrentMap?.Chunks.Remove(new ChunkCoord(packet.ChunkX, packet.ChunkY));
     }
 
     [PacketHandler]
     internal void ChunkPayload(ChunkPayload packet)
     {
-        var map = context.CurrentMap?.Data;
+        var map = context.CurrentMap;
         if (map == null) return;
 
         TileData[,]? tiles = null;

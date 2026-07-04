@@ -50,7 +50,7 @@ public sealed class MovementSystem : ISimulationSystem
         if (ChunkGrid.IsTileBlocked(world, pos.MapId, nextX, nextY))
             return;
 
-        if (ChunkGrid.FindSolidEntityAtTile(world, pos.MapId, nextX, nextY).HasValue)
+        if (ChunkGrid.FindAt<CollidableTag>(world, pos.MapId, nextX, nextY).HasValue)
             return;
 
         world.Update<Position>(entityId, p => p with { X = nextX, Y = nextY, Direction = dir });

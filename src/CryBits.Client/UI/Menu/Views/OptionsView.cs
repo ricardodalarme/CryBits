@@ -43,8 +43,8 @@ internal class OptionsView(IguinaContext uiContext, AudioManager audioManager, G
 
         if (!Options.Instance.Musics)
             audioManager.StopMusic();
-        else if (context.CurrentMap?.Data?.Music != null)
-            audioManager.PlayMusic(context.CurrentMap.Data.Music);
+        else if (context.CurrentMap?.Music != null)
+            audioManager.PlayMusic(context.CurrentMap.Music);
         else
             audioManager.PlayMusic(Musics.Menu);
     }
