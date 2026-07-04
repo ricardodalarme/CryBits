@@ -51,7 +51,7 @@ internal sealed class SpriteBatch(InputManager inputManager)
             if (_uiContext.CurrentScreen == ScreenType.Game)
                 Connection?.Disconnect();
             else
-                Game.Working = false;
+                RenderWindow.Close();
         };
         RenderWindow.LostFocus += (_, _) => inputManager.IsFocused = false;
         RenderWindow.GainedFocus += (_, _) => inputManager.IsFocused = true;

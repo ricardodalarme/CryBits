@@ -32,17 +32,21 @@ internal sealed class SnapshotApplier(
             if (localId == null)
             {
                 SpawnEntity(entity, serverId);
+                localId = context.GetNetworkEntity(serverId);
             }
-            else
+
+            if (localId != null)
             {
                 var state = world.Entities.Get(localId.Value);
-                if (state == null) continue;
-                foreach (var comp in entity.Components)
+                if (state != null)
                 {
-                    var type = ComponentTypeRegistry.Type(comp.Tag);
-                    if (type == null) continue;
-                    var obj = MemoryPackSerializer.Deserialize(type, comp.Data);
-                    if (obj != null) state.Set(type, obj);
+                    foreach (var comp in entity.Components)
+                    {
+                        var type = ComponentTypeRegistry.Type(comp.Tag);
+                        if (type == null) continue;
+                        var obj = MemoryPackSerializer.Deserialize(type, comp.Data);
+                        if (obj != null) world.Set(localId.Value, obj);
+                    }
                 }
             }
         }

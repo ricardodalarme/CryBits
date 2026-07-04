@@ -6,7 +6,12 @@ public sealed class DirtyTracking
 
     public void Mark<T>(EntityId id) where T : class
     {
-        _dirty.Add((id, typeof(T)));
+        Mark(id, typeof(T));
+    }
+
+    public void Mark(EntityId id, Type type)
+    {
+        _dirty.Add((id, type));
     }
 
     public IReadOnlyCollection<(EntityId EntityId, Type ComponentType)> All => _dirty;

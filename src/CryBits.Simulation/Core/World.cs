@@ -68,6 +68,11 @@ public sealed class World
 
     public void Set<T>(EntityId id, T component) where T : class
     {
+        Set(id, (object)component);
+    }
+
+    public void Set(EntityId id, object component)
+    {
         var state = Entities.Get(id);
         if (state == null) return;
 
@@ -80,8 +85,9 @@ public sealed class World
                 SpatialGrid.Add(id, newPos.X, newPos.Y);
         }
 
-        state.Set(component);
-        MarkDirty<T>(id);
+        var type = component.GetType();
+        state.Set(type, component);
+        Dirty?.Mark(id, type);
     }
 
     public void Remove<T>(EntityId id) where T : class
@@ -98,7 +104,7 @@ public sealed class World
         {
             c = new T();
             state.Set(c);
-            MarkDirty<T>(id);
+            Dirty?.Mark<T>(id);
         }
         return c;
     }
@@ -127,11 +133,6 @@ public sealed class World
     {
         var current = Entities.Get(id)?.Get<T>();
         if (current != null) Set(id, transform(current));
-    }
-
-    private void MarkDirty<T>(EntityId id) where T : class
-    {
-        Dirty?.Mark<T>(id);
     }
 
     public SpawnBuilder SpawnBuilder()

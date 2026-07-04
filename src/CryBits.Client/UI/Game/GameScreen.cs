@@ -36,32 +36,31 @@ internal class GameScreen
 
     internal readonly UiContext UiContext;
 
-    internal GameScreen(UiContext uiContext, GameContext context, IntentSender intentSender, SpriteBatch spriteBatch,
+    internal GameScreen(GameSession session, UiContext uiContext, SpriteBatch spriteBatch,
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
         InputManager inputManager, AudioManager audioManager, TooltipView tooltip,
-        MenuScreen menuScreen, Chat chat, GameInput gameInput, TradeViewModel tradeViewModel, PartyViewModel partyViewModel,
-        InventoryViewModel inventoryViewModel, HotbarViewModel hotbarViewModel, ShopViewModel shopViewModel, CharacterViewModel characterViewModel, StatsViewModel statsViewModel)
+        MenuScreen menuScreen, Chat chat, GameInput gameInput)
     {
         UiContext = uiContext;
-        ShopView = new(uiContext, itemRenderer, tooltip, shopViewModel);
+        ShopView = new(uiContext, itemRenderer, tooltip, session.ShopViewModel);
         InformationView = tooltip;
-        InventoryView = new(uiContext, itemRenderer, tooltip, ShopView, this, inventoryViewModel);
-        CharacterView = new(uiContext, equipmentRenderer, characterRenderer, tooltip, characterViewModel);
+        InventoryView = new(uiContext, itemRenderer, tooltip, ShopView, this, session.InventoryViewModel);
+        CharacterView = new(uiContext, equipmentRenderer, characterRenderer, tooltip, session.CharacterViewModel);
         ChatView = new(uiContext, chat);
-        DraggableSlotView = new(uiContext, itemRenderer, inputManager, this, inventoryViewModel, hotbarViewModel);
-        DropItemView = new(uiContext, intentSender);
-        HotbarView = new(uiContext, itemRenderer, tooltip, InventoryView, this, hotbarViewModel);
+        DraggableSlotView = new(uiContext, itemRenderer, inputManager, this, session.InventoryViewModel, session.HotbarViewModel);
+        DropItemView = new(uiContext, session.IntentSender);
+        HotbarView = new(uiContext, itemRenderer, tooltip, InventoryView, this, session.HotbarViewModel);
         MenusView = new(uiContext);
-        OptionsView = new(uiContext, audioManager, context, chat);
-        PartyInvitationView = new(uiContext, intentSender);
-        ShopSellView = new(uiContext, shopViewModel);
-        TradeAmountView = new(uiContext, intentSender);
-        TradeInvitationView = new(uiContext, intentSender);
-        TradeView = new(uiContext, itemRenderer, InventoryView, this, tradeViewModel);
-        MapNameView = new(uiContext, context);
+        OptionsView = new(uiContext, audioManager, session.Context, chat);
+        PartyInvitationView = new(uiContext, session.IntentSender);
+        ShopSellView = new(uiContext, session.ShopViewModel);
+        TradeAmountView = new(uiContext, session.IntentSender);
+        TradeInvitationView = new(uiContext, session.IntentSender);
+        TradeView = new(uiContext, itemRenderer, InventoryView, this, session.TradeViewModel);
+        MapNameView = new(uiContext, session.Context);
         MetricsView = new(uiContext);
-        PartyView = new(uiContext, spriteBatch, partyViewModel);
-        StatsView = new(uiContext, statsViewModel);
+        PartyView = new(uiContext, spriteBatch, session.PartyViewModel);
+        StatsView = new(uiContext, session.StatsViewModel);
         _chat = chat;
         _gameInput = gameInput;
         _menu = menuScreen;

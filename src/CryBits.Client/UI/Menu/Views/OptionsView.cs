@@ -1,4 +1,3 @@
-using CryBits.Client.Core;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Audio;
@@ -8,7 +7,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class OptionsView(UiContext uiContext, AudioManager audioManager, GameContext context, Connection connection, MenuScreen menuScreen) : ViewBase
+internal class OptionsView(UiContext uiContext, AudioManager audioManager, Connection connection, MenuScreen menuScreen) : ViewBase
 {
     internal Panel OptionsPanel => uiContext.Get<Panel>("Options");
     internal Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
@@ -43,8 +42,6 @@ internal class OptionsView(UiContext uiContext, AudioManager audioManager, GameC
 
         if (!Options.Instance.Musics)
             audioManager.StopMusic();
-        else if (context.CurrentMap?.Music != null)
-            audioManager.PlayMusic(context.CurrentMap.Music);
         else
             audioManager.PlayMusic(Musics.Menu);
     }

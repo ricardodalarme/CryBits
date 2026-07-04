@@ -1,4 +1,3 @@
-using CryBits.Client.Core;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Audio;
@@ -24,14 +23,14 @@ internal class MenuScreen
     private readonly UiContext _uiContext;
 
     internal MenuScreen(AudioManager audio, UiContext uiContext, AuthSender authSender, AccountSender accountSender,
-        PortraitRenderer characterRenderer, GameContext context, DefinitionCatalog catalog, Connection connection)
+        PortraitRenderer characterRenderer, DefinitionCatalog catalog, Connection connection)
     {
         _audio = audio;
         _uiContext = uiContext;
         BackgroundView = new(uiContext, connection, this);
         LoginView = new(uiContext, authSender, connection, this);
         RegisterView = new(uiContext, authSender, connection, this);
-        OptionsPanel = new(uiContext, audio, context, connection, this);
+        OptionsPanel = new(uiContext, audio, connection, this);
         SelectCharacterView = new(uiContext, accountSender, characterRenderer);
         CreateCharacterView = new(uiContext, accountSender, characterRenderer, catalog, this);
     }

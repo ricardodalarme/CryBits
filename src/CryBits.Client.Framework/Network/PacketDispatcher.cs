@@ -35,11 +35,31 @@ public static class PacketDispatcher
             var packetType = packetParam.ParameterType;
 
             if (_handlers.ContainsKey(packetType))
-                throw new InvalidOperationException(
-                    $"Duplicate [PacketHandler] for '{packetType.Name}' " +
-                    $"on '{method.DeclaringType?.Name}.{method.Name}'.");
+            {
+                Console.WriteLine($"[PacketDispatcher] Warning: Overwriting duplicate [PacketHandler] for '{packetType.Name}' with handler on '{method.DeclaringType?.Name}.{method.Name}'.");
+            }
 
             _handlers[packetType] = BuildInstanceHandler(method, handler);
+        }
+    }
+
+    /// <summary>
+    /// Unregisters all packet handlers associated with the given target object instance.
+    /// </summary>
+    public static void Unregister(object handler)
+    {
+        var methods = handler.GetType()
+            .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+            .Where(m => m.GetCustomAttribute<PacketHandlerAttribute>() is not null);
+
+        foreach (var method in methods)
+        {
+            var packetParam = method.GetParameters()
+                .FirstOrDefault(p => typeof(IServerPacket).IsAssignableFrom(p.ParameterType));
+            if (packetParam != null)
+            {
+                _handlers.Remove(packetParam.ParameterType);
+            }
         }
     }
 

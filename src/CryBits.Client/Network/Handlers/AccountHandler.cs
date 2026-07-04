@@ -1,5 +1,3 @@
-using CryBits.Client.Core;
-using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Protocol;
@@ -7,13 +5,12 @@ using CryBits.Protocol.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class AccountHandler(GameContext context, MenuScreen menuScreen, GameScreen gameScreen)
+internal class AccountHandler(ClientShell shell, MenuScreen menuScreen)
 {
     [PacketHandler]
     internal void Join(JoinPacket packet)
     {
-        context.CurrentMap = null;
-        context.LocalPlayerId = packet.PlayerId;
+        shell.StartSession(packet.PlayerId);
     }
 
     [PacketHandler]
@@ -51,6 +48,6 @@ internal class AccountHandler(GameContext context, MenuScreen menuScreen, GameSc
     [PacketHandler]
     internal void JoinGame(JoinGamePacket _)
     {
-        gameScreen.Open();
+        shell.OpenSessionScreen();
     }
 }
