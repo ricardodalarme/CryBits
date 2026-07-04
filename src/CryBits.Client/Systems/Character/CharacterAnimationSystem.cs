@@ -1,5 +1,6 @@
 using CryBits.Client.Components;
 using CryBits.Definitions.Characters;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using static CryBits.Definitions.Globals;
 
@@ -28,7 +29,8 @@ internal sealed class CharacterAnimationSystem(World world) : IClientSystem
                     world.Set(state.Id, new AttackComponent(cd));
             }
 
-            var frameY = sheet.RowForDirection(movement.Direction);
+            var dir = state.Get<Position>()?.Direction ?? movement.Direction;
+            var frameY = sheet.RowForDirection(dir);
             var showAttack = attack is { AttackCountdown: > AttackFrameTime };
 
             var frameTime = WalkFrameTime * (WalkSpeedPixelsPerSecond / movement.SpeedPixelsPerSecond);

@@ -23,7 +23,7 @@ public sealed class AggressiveBehavior : INpcBehavior
         var dx = pos.X > targetPos.X ? pos.X - targetPos.X : targetPos.X - pos.X;
         var dy = pos.Y > targetPos.Y ? pos.Y - targetPos.Y : targetPos.Y - pos.Y;
 
-        return dx <= 1 && dy <= 1
+        return dx + dy <= 1
             ? new AttackIntent(entity.Id, npcState.TargetId.Value)
             : MoveToward(pos, targetPos, entity.Id);
     }
