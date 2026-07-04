@@ -1,7 +1,7 @@
 using CryBits.Client.Framework.Persistence.Dtos;
+using Iguina.Entities;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Iguina.Entities;
 
 namespace CryBits.Editors.Forms.UI.ViewModels;
 

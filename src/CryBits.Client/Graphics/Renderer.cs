@@ -1,8 +1,8 @@
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Managers;
-using CryBits.Definitions.Common;
 using CryBits.Client.UI;
+using CryBits.Definitions.Common;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;

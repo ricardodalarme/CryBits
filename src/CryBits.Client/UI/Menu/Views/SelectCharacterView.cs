@@ -1,6 +1,6 @@
+using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.Framework.UI.Entities;
 using CryBits.Definitions.Common;
 using Iguina.Entities;
 using System.Drawing;

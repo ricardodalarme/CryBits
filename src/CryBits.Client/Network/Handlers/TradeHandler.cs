@@ -1,5 +1,6 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.UI.Game;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
@@ -8,7 +9,6 @@ using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
 using static CryBits.Definitions.Globals;
-using CryBits.Client.UI.Game;
 
 namespace CryBits.Client.Network.Handlers;
 

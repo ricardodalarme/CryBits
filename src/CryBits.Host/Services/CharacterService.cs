@@ -8,9 +8,6 @@ using CryBits.Host.Replication;
 using CryBits.Persistence.Repositories;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
-using Microsoft.Extensions.Logging;
-using ZLogger;
-
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Spatial;
@@ -19,7 +16,9 @@ using CryBits.Simulation.State;
 using CryBits.Transport;
 using CryBits.Transport.Abstractions;
 using MemoryPack;
+using Microsoft.Extensions.Logging;
 using System.Drawing;
+using ZLogger;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Host.Services;

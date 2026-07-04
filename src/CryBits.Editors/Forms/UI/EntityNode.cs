@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CryBits.Client.Framework.Persistence.Dtos;
-using System.Collections.ObjectModel;
 using Iguina.Entities;
+using System.Collections.ObjectModel;
 
 namespace CryBits.Editors.Forms.UI;
 

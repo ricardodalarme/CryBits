@@ -2,8 +2,8 @@ using CryBits.Definitions.Catalog;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
-using CryBits.Simulation.State;
 using CryBits.Simulation.Spawners;
+using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Systems.Inventory;
 

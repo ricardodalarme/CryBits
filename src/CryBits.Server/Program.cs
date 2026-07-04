@@ -1,4 +1,3 @@
-using System.Reflection;
 using CryBits.Definitions.Catalog;
 using CryBits.Host;
 using CryBits.Host.Core;
@@ -24,6 +23,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 using ZLogger;
 
 IntentRegistry.Register<MoveIntent>(1);
