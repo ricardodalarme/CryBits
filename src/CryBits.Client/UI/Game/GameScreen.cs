@@ -2,7 +2,6 @@ using CryBits.Client.Core;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Input;
-using CryBits.Client.Network.Senders;
 using CryBits.Client.Rendering;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.Views;
@@ -39,28 +38,30 @@ internal class GameScreen
     internal GameScreen(GameSession session, UiContext uiContext, SpriteBatch spriteBatch,
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
         InputManager inputManager, AudioManager audioManager, TooltipView tooltip,
-        MenuScreen menuScreen, Chat chat, GameInput gameInput)
+        MenuScreen menuScreen, Chat chat, GameInput gameInput,
+        StatsViewModel statsViewModel, CharacterViewModel characterViewModel, InventoryViewModel inventoryViewModel,
+        HotbarViewModel hotbarViewModel, TradeViewModel tradeViewModel, PartyViewModel partyViewModel, ShopViewModel shopViewModel)
     {
         UiContext = uiContext;
-        ShopView = new(uiContext, itemRenderer, tooltip, session.ShopViewModel);
+        ShopView = new(uiContext, itemRenderer, tooltip, shopViewModel);
         InformationView = tooltip;
-        InventoryView = new(uiContext, itemRenderer, tooltip, ShopView, this, session.InventoryViewModel);
-        CharacterView = new(uiContext, equipmentRenderer, characterRenderer, tooltip, session.CharacterViewModel);
+        InventoryView = new(uiContext, itemRenderer, tooltip, ShopView, this, inventoryViewModel);
+        CharacterView = new(uiContext, equipmentRenderer, characterRenderer, tooltip, characterViewModel);
         ChatView = new(uiContext, chat);
-        DraggableSlotView = new(uiContext, itemRenderer, inputManager, this, session.InventoryViewModel, session.HotbarViewModel);
+        DraggableSlotView = new(uiContext, itemRenderer, inputManager, this, inventoryViewModel, hotbarViewModel);
         DropItemView = new(uiContext, session.IntentSender);
-        HotbarView = new(uiContext, itemRenderer, tooltip, InventoryView, this, session.HotbarViewModel);
+        HotbarView = new(uiContext, itemRenderer, tooltip, InventoryView, this, hotbarViewModel);
         MenusView = new(uiContext);
         OptionsView = new(uiContext, audioManager, session.Context, chat);
         PartyInvitationView = new(uiContext, session.IntentSender);
-        ShopSellView = new(uiContext, session.ShopViewModel);
+        ShopSellView = new(uiContext, shopViewModel);
         TradeAmountView = new(uiContext, session.IntentSender);
         TradeInvitationView = new(uiContext, session.IntentSender);
-        TradeView = new(uiContext, itemRenderer, InventoryView, this, session.TradeViewModel);
+        TradeView = new(uiContext, itemRenderer, InventoryView, this, tradeViewModel);
         MapNameView = new(uiContext, session.Context);
         MetricsView = new(uiContext);
-        PartyView = new(uiContext, spriteBatch, session.PartyViewModel);
-        StatsView = new(uiContext, session.StatsViewModel);
+        PartyView = new(uiContext, spriteBatch, partyViewModel);
+        StatsView = new(uiContext, statsViewModel);
         _chat = chat;
         _gameInput = gameInput;
         _menu = menuScreen;
@@ -135,11 +136,7 @@ internal class GameScreen
         foreach (var name in new[] { "CharacterPanel", "InventoryPanel", "OptionsPanel", "ChatPanel", "Drop", "PartyInvitation", "ShopSell" })
             if (UiContext.TryGet<Panel>(name, out var p)) p.Visible = false;
 
-        TradeView.Panel.Visible = false;
-        TradeView.ConfirmOfferButton.Visible = true;
-        TradeView.AcceptOfferButton.Visible = false;
-        TradeView.DeclineOfferButton.Visible = false;
-        TradeView.OfferDisabledPanel.Visible = false;
-        ShopView.Panel.Visible = false;
+        TradeView.Close();
+        ShopView.Close();
     }
 }

@@ -16,33 +16,24 @@ internal class AccountHandler(ClientShell shell, MenuScreen menuScreen)
     [PacketHandler]
     internal void CreateCharacter(CreateCharacterPacket _)
     {
-        var createCharacterView = menuScreen.CreateCharacterView;
-        createCharacterView.NameTextBox.Value = string.Empty;
-        createCharacterView.GenderMaleRadio.Checked = true;
-        createCharacterView.GenderFemaleRadio.Checked = false;
-        createCharacterView.CurrentClass = 0;
-        createCharacterView.CurrentTexture = 0;
-
-        menuScreen.CloseMenus();
-        createCharacterView.CreateCharacterPanel.Visible = true;
+        menuScreen.ShowCreateCharacter();
     }
 
     [PacketHandler]
     internal void Characters(CharactersPacket packet)
     {
-        var selectCharacterView = menuScreen.SelectCharacterView;
-        selectCharacterView.Characters = new SelectCharacterView.TempCharacter[packet.Characters.Length];
+        var chars = new SelectCharacterView.TempCharacter[packet.Characters.Length];
 
-        for (byte i = 0; i < selectCharacterView.Characters.Length; i++)
+        for (byte i = 0; i < chars.Length; i++)
         {
-            selectCharacterView.Characters[i] = new SelectCharacterView.TempCharacter
+            chars[i] = new SelectCharacterView.TempCharacter
             {
                 Name = packet.Characters[i].Name,
                 TextureNum = packet.Characters[i].TextureNum
             };
         }
 
-        selectCharacterView.UpdateButtonVisibility();
+        menuScreen.ShowSelectCharacter(chars);
     }
 
     [PacketHandler]

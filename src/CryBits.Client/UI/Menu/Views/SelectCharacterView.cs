@@ -9,23 +9,37 @@ namespace CryBits.Client.UI.Menu.Views;
 
 internal class SelectCharacterView(UiContext uiContext, AccountSender accountSender, PortraitRenderer characterRenderer) : ViewBase
 {
-    internal Panel SelectCharacterPanel => uiContext.Get<Panel>("SelectCharacter");
-    internal Button UseButton => uiContext.Get<Button>("CharUse");
-    internal Button CreateButton => uiContext.Get<Button>("CharCreate");
-    internal Button DeleteButton => uiContext.Get<Button>("CharDelete");
-    internal Button ChangeRightButton => uiContext.Get<Button>("CharRight");
+    private Panel SelectCharacterPanel => uiContext.Get<Panel>("SelectCharacter");
+    private Button UseButton => uiContext.Get<Button>("CharUse");
+    private Button CreateButton => uiContext.Get<Button>("CharCreate");
+    private Button DeleteButton => uiContext.Get<Button>("CharDelete");
+    private Button ChangeRightButton => uiContext.Get<Button>("CharRight");
     private Button ChangeLeftButton => uiContext.Get<Button>("CharLeft");
     private Picture FacePicture => uiContext.Get<Picture>("CharFace");
     private Picture SpritePicture => uiContext.Get<Picture>("CharSprite");
     private Label CharNameLabel => uiContext.Get<Label>("CharName");
 
-    public TempCharacter[] Characters = [];
-    public int CurrentCharacter;
+    private TempCharacter[] _characters = [];
+    private int _currentCharacter;
 
     public struct TempCharacter
     {
         public string Name;
         public short TextureNum;
+    }
+
+    public void Open(TempCharacter[] characters)
+    {
+        _characters = characters;
+        _currentCharacter = 0;
+        SelectCharacterPanel.Visible = true;
+        Bind();
+    }
+
+    public void Close()
+    {
+        SelectCharacterPanel.Visible = false;
+        Unbind();
     }
 
     public override void Bind()
@@ -59,8 +73,8 @@ internal class SelectCharacterView(UiContext uiContext, AccountSender accountSen
 
     private void RenderFace()
     {
-        if (CurrentCharacter >= Characters.Length) return;
-        var textureNum = Characters[CurrentCharacter].TextureNum;
+        if (_currentCharacter >= _characters.Length) return;
+        var textureNum = _characters[_currentCharacter].TextureNum;
         if (textureNum <= 0) return;
         var pos = FacePicture.LastBoundingRect;
         characterRenderer.DrawFace(textureNum, new Point(pos.X, pos.Y));
@@ -68,32 +82,32 @@ internal class SelectCharacterView(UiContext uiContext, AccountSender accountSen
 
     private void RenderSprite()
     {
-        if (CurrentCharacter >= Characters.Length) return;
-        var textureNum = Characters[CurrentCharacter].TextureNum;
+        if (_currentCharacter >= _characters.Length) return;
+        var textureNum = _characters[_currentCharacter].TextureNum;
         if (textureNum <= 0) return;
         var pos = SpritePicture.LastBoundingRect;
         characterRenderer.DrawCharacter(textureNum, new Point(pos.X, pos.Y), Direction.Down, 1);
     }
 
-    private void OnUsePressed(Entity _) => accountSender.CharacterUse(CurrentCharacter);
-    private void OnDeletePressed(Entity _) => accountSender.CharacterDelete(CurrentCharacter);
+    private void OnUsePressed(Entity _) => accountSender.CharacterUse(_currentCharacter);
+    private void OnDeletePressed(Entity _) => accountSender.CharacterDelete(_currentCharacter);
     private void OnCreatePressed(Entity _) => accountSender.CharacterCreate();
 
     private void OnChangeRightPressed(Entity _)
     {
-        if (CurrentCharacter == Characters.Length - 1) CurrentCharacter = 0; else CurrentCharacter++;
+        if (_currentCharacter == _characters.Length - 1) _currentCharacter = 0; else _currentCharacter++;
         UpdateButtonVisibility();
     }
 
     private void OnChangeLeftPressed(Entity _)
     {
-        if (CurrentCharacter == 0) CurrentCharacter = Characters.Length; else CurrentCharacter--;
+        if (_currentCharacter == 0) _currentCharacter = _characters.Length; else _currentCharacter--;
         UpdateButtonVisibility();
     }
 
-    public bool UpdateButtonVisibility()
+    private bool UpdateButtonVisibility()
     {
-        var visibility = CurrentCharacter < Characters.Length;
+        var visibility = _currentCharacter < _characters.Length;
         CreateButton.Visible = !visibility;
         DeleteButton.Visible = visibility;
         UseButton.Visible = visibility;
@@ -103,10 +117,10 @@ internal class SelectCharacterView(UiContext uiContext, AccountSender accountSen
 
     private void UpdateNameLabel()
     {
-        var index = CurrentCharacter + 1;
-        var hasCharacter = CurrentCharacter < Characters.Length;
+        var index = _currentCharacter + 1;
+        var hasCharacter = _currentCharacter < _characters.Length;
         CharNameLabel.Text = hasCharacter
-            ? $"({index}) {Characters[CurrentCharacter].Name}"
+            ? $"({index}) {_characters[_currentCharacter].Name}"
             : $"({index}) None";
     }
 }

@@ -13,13 +13,39 @@ internal class ShopView(
     TooltipView tooltip,
     ShopViewModel viewModel) : ViewBase
 {
-    public ShopViewModel ViewModel => viewModel;
-
-    internal Panel Panel => uiContext.Get<Panel>("Shop");
+    private Panel Panel => uiContext.Get<Panel>("Shop");
     private Button CloseButton => uiContext.Get<Button>("ShopClose");
-    internal Label NameLabel => uiContext.Get<Label>("ShopName");
-    internal Label CurrencyLabel => uiContext.Get<Label>("ShopCurrency");
+    private Label NameLabel => uiContext.Get<Label>("ShopName");
+    private Label CurrencyLabel => uiContext.Get<Label>("ShopCurrency");
     private SlotGrid Grid => uiContext.Get<SlotGrid>("ShopGrid");
+
+    public bool TryGetSalePrice(Guid itemId, out short price)
+    {
+        price = 0;
+        if (!Panel.Visible || viewModel.OpenedShop == null) return false;
+        var bought = viewModel.OpenedShop.FindBought(itemId);
+        if (bought == null) return false;
+        price = bought.Price;
+        return true;
+    }
+
+    public void Open(Shop shop)
+    {
+        if (shop == null) return;
+        viewModel.Open(shop);
+        NameLabel.Text = viewModel.Name;
+        CurrencyLabel.Text = viewModel.CurrencyName;
+        Panel.Visible = true;
+        Bind();
+    }
+
+    public void Close()
+    {
+        Grid.ResetHover();
+        tooltip.Hide();
+        Panel.Visible = false;
+        Unbind();
+    }
 
     public override void Bind()
     {
@@ -41,21 +67,19 @@ internal class ShopView(
 
     private void OnSlotDoubleClick(int slot)
     {
-        ViewModel.Buy((short)slot);
+        viewModel.Buy((short)slot);
     }
 
     private void OnClosePressed(Entity _)
     {
-        Grid.ResetHover();
-        tooltip.Hide();
-        Panel.Visible = false;
-        ViewModel.Close();
+        viewModel.Close();
+        Close();
     }
 
     private void OnSlotHoverEnter(int slot)
     {
-        if (slot >= ViewModel.SoldItems.Count) return;
-        var itemVM = ViewModel.SoldItems[slot];
+        if (slot >= viewModel.SoldItems.Count) return;
+        var itemVM = viewModel.SoldItems[slot];
         if (itemVM.Definition == null) return;
 
         tooltip.Show(itemVM.ItemId,
@@ -65,24 +89,15 @@ internal class ShopView(
 
     private void OnPostDraw()
     {
-        if (!Panel.Visible || ViewModel.OpenedShop == null) return;
+        if (!Panel.Visible || viewModel.OpenedShop == null) return;
 
         for (var i = 0; i < Grid.TotalSlots; i++)
         {
-            if (i >= ViewModel.SoldItems.Count) break;
+            if (i >= viewModel.SoldItems.Count) break;
             var rect = Grid.GetSlotRect(i);
-            var itemVM = ViewModel.SoldItems[i];
+            var itemVM = viewModel.SoldItems[i];
             if (itemVM.Definition is { } item)
                 itemRenderer.DrawItem(item, itemVM.Amount, new Point(rect.X, rect.Y));
         }
-    }
-
-    public void Open(Shop shop)
-    {
-        if (shop == null) return;
-        ViewModel.Open(shop);
-        NameLabel.Text = ViewModel.Name;
-        CurrencyLabel.Text = ViewModel.CurrencyName;
-        Panel.Visible = true;
     }
 }

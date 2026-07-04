@@ -9,10 +9,24 @@ namespace CryBits.Client.UI.Menu.Views;
 
 internal class OptionsView(UiContext uiContext, AudioManager audioManager, Connection connection, MenuScreen menuScreen) : ViewBase
 {
-    internal Panel OptionsPanel => uiContext.Get<Panel>("Options");
-    internal Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
-    internal Checkbox MusicsCheckbox => uiContext.Get<Checkbox>("Musics");
+    private Panel OptionsPanel => uiContext.Get<Panel>("Options");
+    private Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
+    private Checkbox MusicsCheckbox => uiContext.Get<Checkbox>("Musics");
     private Button BackButton => uiContext.Get<Button>("OptionsBack");
+
+    public void Open()
+    {
+        SoundsCheckbox.Checked = Options.Instance.Sounds;
+        MusicsCheckbox.Checked = Options.Instance.Musics;
+        OptionsPanel.Visible = true;
+        Bind();
+    }
+
+    public void Close()
+    {
+        OptionsPanel.Visible = false;
+        Unbind();
+    }
 
     public override void Bind()
     {
@@ -49,8 +63,6 @@ internal class OptionsView(UiContext uiContext, AudioManager audioManager, Conne
     private void OnBackPressed(Entity _)
     {
         connection.Disconnect();
-
-        menuScreen.CloseMenus();
-        menuScreen.LoginView.LoginPanel.Visible = true;
+        menuScreen.ShowLogin();
     }
 }

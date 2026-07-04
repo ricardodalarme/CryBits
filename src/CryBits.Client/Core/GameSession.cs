@@ -31,7 +31,6 @@ namespace CryBits.Client.Core;
 internal sealed class GameSession : IDisposable
 {
     public GameContext Context { get; }
-    public UiContext UiContext { get; }
     public GameScreen Screen { get; }
     public SystemScheduler Scheduler { get; }
     public RenderPipeline RenderPipeline { get; }
@@ -44,14 +43,6 @@ internal sealed class GameSession : IDisposable
     private readonly PartyHandler _partyHandler;
     private readonly TradeHandler _tradeHandler;
     private readonly ShopHandler _shopHandler;
-
-    public StatsViewModel StatsViewModel { get; }
-    public CharacterViewModel CharacterViewModel { get; }
-    public InventoryViewModel InventoryViewModel { get; }
-    public HotbarViewModel HotbarViewModel { get; }
-    public TradeViewModel TradeViewModel { get; }
-    public PartyViewModel PartyViewModel { get; }
-    public ShopViewModel ShopViewModel { get; }
 
     private readonly Chat _chat;
     private readonly GameInput _gameInput;
@@ -66,18 +57,17 @@ internal sealed class GameSession : IDisposable
         MenuScreen menuScreen,
         long localPlayerId)
     {
-        UiContext = uiContext;
         Context = new GameContext(catalog, localPlayerId);
 
         IntentSender = new IntentSender(connection);
 
-        TradeViewModel = new TradeViewModel(Context, IntentSender, catalog);
-        PartyViewModel = new PartyViewModel(Context);
-        InventoryViewModel = new InventoryViewModel(Context, IntentSender, catalog);
-        HotbarViewModel = new HotbarViewModel(Context, IntentSender, catalog);
-        ShopViewModel = new ShopViewModel(IntentSender, catalog);
-        CharacterViewModel = new CharacterViewModel(Context, IntentSender, catalog);
-        StatsViewModel = new StatsViewModel(Context);
+        var tradeViewModel = new TradeViewModel(Context, IntentSender, catalog);
+        var partyViewModel = new PartyViewModel(Context);
+        var inventoryViewModel = new InventoryViewModel(Context, IntentSender, catalog);
+        var hotbarViewModel = new HotbarViewModel(Context, IntentSender, catalog);
+        var shopViewModel = new ShopViewModel(IntentSender, catalog);
+        var characterViewModel = new CharacterViewModel(Context, IntentSender, catalog);
+        var statsViewModel = new StatsViewModel(Context);
 
         _chat = new Chat(IntentSender, uiContext);
         _gameInput = new GameInput(IntentSender, _chat, inputManager, uiContext);
@@ -89,7 +79,8 @@ internal sealed class GameSession : IDisposable
 
         Screen = new GameScreen(
             this, uiContext, spriteBatch, itemIconRenderer, equipmentSlotRenderer,
-            portraitRenderer, inputManager, audioManager, tooltipView, menuScreen, _chat, _gameInput
+            portraitRenderer, inputManager, audioManager, tooltipView, menuScreen, _chat, _gameInput,
+            statsViewModel, characterViewModel, inventoryViewModel, hotbarViewModel, tradeViewModel, partyViewModel, shopViewModel
         );
 
         CameraManager = new CameraManager(spriteBatch.RenderWindow);
@@ -129,8 +120,8 @@ internal sealed class GameSession : IDisposable
         _mapHandler = new MapHandler(Context, contentSender, audioManager, mapRepo);
         _keyframeHandler = new KeyframeHandler(new Replication.SnapshotApplier(Context.World, Context, catalog));
         _chatHandler = new ChatHandler(_chat);
-        _partyHandler = new PartyHandler(IntentSender, Screen, PartyViewModel);
-        _tradeHandler = new TradeHandler(IntentSender, Screen, TradeViewModel);
+        _partyHandler = new PartyHandler(IntentSender, Screen, partyViewModel);
+        _tradeHandler = new TradeHandler(IntentSender, Screen, tradeViewModel);
         _shopHandler = new ShopHandler(catalog, Screen.ShopView);
 
         PacketDispatcher.Register(_mapHandler);
@@ -148,7 +139,6 @@ internal sealed class GameSession : IDisposable
 
     public void Update(float dt)
     {
-        UiContext.Update(dt);
         Scheduler.Update(dt);
 
         if (Context.LocalPlayerEntity is { } playerEntityId)

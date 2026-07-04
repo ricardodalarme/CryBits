@@ -14,19 +14,7 @@ internal class TradeHandler(IntentSender intentSender, GameScreen gameScreen, Tr
     [PacketHandler]
     internal void Trade(TradePacket packet)
     {
-        var state = packet.State;
-
-        gameScreen.TradeView.Panel.Visible = packet.State;
-        viewModel.IsOpen = packet.State;
-
-        if (state)
-        {
-            gameScreen.TradeView.ConfirmOfferButton.Visible = true;
-            gameScreen.TradeAmountView.Panel.Visible = gameScreen.TradeView.AcceptOfferButton.Visible = gameScreen.TradeView.DeclineOfferButton.Visible = false;
-            gameScreen.TradeView.OfferDisabledPanel.Visible = false;
-
-            viewModel.ResetOffers();
-        }
+        gameScreen.TradeView.Open(packet.State);
     }
 
     [PacketHandler]
@@ -44,20 +32,7 @@ internal class TradeHandler(IntentSender intentSender, GameScreen gameScreen, Tr
     [PacketHandler]
     internal void TradeState(TradeStatePacket packet)
     {
-        switch ((TradeStatus)packet.State)
-        {
-            case TradeStatus.Accepted:
-            case TradeStatus.Declined:
-                gameScreen.TradeView.ConfirmOfferButton.Visible = true;
-                gameScreen.TradeView.AcceptOfferButton.Visible = gameScreen.TradeView.DeclineOfferButton.Visible = false;
-                gameScreen.TradeView.OfferDisabledPanel.Visible = false;
-                break;
-            case TradeStatus.Confirmed:
-                gameScreen.TradeView.ConfirmOfferButton.Visible = false;
-                gameScreen.TradeView.AcceptOfferButton.Visible = gameScreen.TradeView.DeclineOfferButton.Visible = true;
-                gameScreen.TradeView.OfferDisabledPanel.Visible = false;
-                break;
-        }
+        gameScreen.TradeView.SetStatus((TradeStatus)packet.State);
     }
 
     [PacketHandler]

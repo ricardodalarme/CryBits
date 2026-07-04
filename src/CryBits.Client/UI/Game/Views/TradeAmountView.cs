@@ -6,19 +6,27 @@ namespace CryBits.Client.UI.Game.Views;
 
 internal class TradeAmountView(UiContext uiContext, IntentSender intentSender) : ViewBase
 {
-    internal Panel Panel => uiContext.Get<Panel>("TradeAmount");
-    internal NumericInput AmountInput => uiContext.Get<NumericInput>("TradeAmountInput");
+    private Panel Panel => uiContext.Get<Panel>("TradeAmount");
+    private NumericInput AmountInput => uiContext.Get<NumericInput>("TradeAmountInput");
     private Button ConfirmButton => uiContext.Get<Button>("TradeAmtConfirm");
     private Button CancelButton => uiContext.Get<Button>("TradeAmtCancel");
 
     private short _ownSlot;
     private short _inventorySlot;
 
-    public void Show(short ownSlot, short inventorySlot)
+    public void Open(short ownSlot, short inventorySlot)
     {
         _ownSlot = ownSlot;
         _inventorySlot = inventorySlot;
+        AmountInput.Value = string.Empty;
         Panel.Visible = true;
+        Bind();
+    }
+
+    public void Close()
+    {
+        Panel.Visible = false;
+        Unbind();
     }
 
     public override void Bind()
@@ -42,11 +50,11 @@ internal class TradeAmountView(UiContext uiContext, IntentSender intentSender) :
         }
 
         intentSender.Send(new TradeOfferIntent(default, _ownSlot, _inventorySlot, (short)AmountInput.NumericValue));
-        Panel.Visible = false;
+        Close();
     }
 
     private void OnCancelPressed(Entity _)
     {
-        Panel.Visible = false;
+        Close();
     }
 }

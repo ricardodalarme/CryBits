@@ -11,7 +11,7 @@ internal class ContentHandler(DefinitionCatalog catalog, MenuScreen menuScreen)
     internal void Classes(ClassesPacket packet)
     {
         catalog.Classes = packet.List;
-        menuScreen.CreateCharacterView.UpdateClassLabels(catalog);
+        menuScreen.UpdateClassLabels();
     }
 
     [PacketHandler]

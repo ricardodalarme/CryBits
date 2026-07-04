@@ -13,6 +13,6 @@ internal class ShopHandler(DefinitionCatalog catalog, ShopView shopView)
     {
         var shop = catalog.Shops.Get(packet.Id);
         if (shop != null) shopView.Open(shop);
-        else shopView.Panel.Visible = false;
+        else shopView.Close();
     }
 }

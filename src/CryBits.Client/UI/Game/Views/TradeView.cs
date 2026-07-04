@@ -1,6 +1,7 @@
 using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
+using CryBits.Definitions.Common;
 using Iguina.Entities;
 using System.Drawing;
 
@@ -13,17 +14,65 @@ internal class TradeView(
     GameScreen gameScreen,
     TradeViewModel viewModel) : ViewBase
 {
-    internal Panel Panel => uiContext.Get<Panel>("Trade");
-    internal Panel OfferDisabledPanel => uiContext.Get<Panel>("TradeOfferDisable");
+    private Panel Panel => uiContext.Get<Panel>("Trade");
+    private Panel OfferDisabledPanel => uiContext.Get<Panel>("TradeOfferDisable");
     private Button CloseButton => uiContext.Get<Button>("TradeClose");
-    internal Button AcceptOfferButton => uiContext.Get<Button>("TradeAccept");
-    internal Button DeclineOfferButton => uiContext.Get<Button>("TradeDecline");
-    internal Button ConfirmOfferButton => uiContext.Get<Button>("TradeConfirm");
+    private Button AcceptOfferButton => uiContext.Get<Button>("TradeAccept");
+    private Button DeclineOfferButton => uiContext.Get<Button>("TradeDecline");
+    private Button ConfirmOfferButton => uiContext.Get<Button>("TradeConfirm");
     private SlotGrid OwnGrid => uiContext.Get<SlotGrid>("TradeGridOwn");
     private SlotGrid TheirGrid => uiContext.Get<SlotGrid>("TradeGridTheir");
 
     private short _ownSlot;
     private short _inventorySlot;
+
+    public void Open(bool activeState)
+    {
+        viewModel.IsOpen = activeState;
+
+        if (activeState)
+        {
+            Panel.Visible = true;
+            ConfirmOfferButton.Visible = true;
+            AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
+            OfferDisabledPanel.Visible = false;
+
+            viewModel.ResetOffers();
+            Bind();
+        }
+        else
+        {
+            Close();
+        }
+    }
+
+    public void Close()
+    {
+        Panel.Visible = false;
+        ConfirmOfferButton.Visible = true;
+        AcceptOfferButton.Visible = false;
+        DeclineOfferButton.Visible = false;
+        OfferDisabledPanel.Visible = false;
+        Unbind();
+    }
+
+    public void SetStatus(TradeStatus status)
+    {
+        switch (status)
+        {
+            case TradeStatus.Accepted:
+            case TradeStatus.Declined:
+                ConfirmOfferButton.Visible = true;
+                AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
+                OfferDisabledPanel.Visible = false;
+                break;
+            case TradeStatus.Confirmed:
+                ConfirmOfferButton.Visible = false;
+                AcceptOfferButton.Visible = DeclineOfferButton.Visible = true;
+                OfferDisabledPanel.Visible = false;
+                break;
+        }
+    }
 
     public override void Bind()
     {
@@ -32,7 +81,7 @@ internal class TradeView(
         CloseButton.Events.OnClick += OnClosePressed;
         AcceptOfferButton.Events.OnClick += OnAcceptOfferPressed;
         DeclineOfferButton.Events.OnClick += OnDeclineOfferPressed;
-        ConfirmOfferButton.Events.OnClick += OnConfirmOfferPressed;
+        ConfirmOfferButton.Events.OnClick += OnConfirmPressed;
         uiContext.PostDraw += OnPostDraw;
     }
 
@@ -43,7 +92,7 @@ internal class TradeView(
         CloseButton.Events.OnClick -= OnClosePressed;
         AcceptOfferButton.Events.OnClick -= OnAcceptOfferPressed;
         DeclineOfferButton.Events.OnClick -= OnDeclineOfferPressed;
-        ConfirmOfferButton.Events.OnClick -= OnConfirmOfferPressed;
+        ConfirmOfferButton.Events.OnClick -= OnConfirmPressed;
         uiContext.PostDraw -= OnPostDraw;
     }
 
@@ -68,15 +117,14 @@ internal class TradeView(
         {
             _ownSlot = (short)slot;
             _inventorySlot = invSlot.Value;
-            gameScreen.TradeAmountView.Show(_ownSlot, _inventorySlot);
-            gameScreen.TradeAmountView.AmountInput.Value = string.Empty;
+            gameScreen.TradeAmountView.Open(_ownSlot, _inventorySlot);
         }
     }
 
     private void OnClosePressed(Entity _)
     {
         viewModel.Close();
-        Panel.Visible = false;
+        Close();
     }
 
     private void OnAcceptOfferPressed(Entity _)
@@ -95,7 +143,7 @@ internal class TradeView(
         viewModel.Decline();
     }
 
-    private void OnConfirmOfferPressed(Entity _)
+    private void OnConfirmPressed(Entity _)
     {
         ConfirmOfferButton.Visible = AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
         OfferDisabledPanel.Visible = true;

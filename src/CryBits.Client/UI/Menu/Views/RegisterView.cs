@@ -6,12 +6,27 @@ namespace CryBits.Client.UI.Menu.Views;
 
 internal class RegisterView(UiContext uiContext, AuthSender authSender, Connection connection, MenuScreen menuScreen) : ViewBase
 {
-    internal Panel RegisterPanel => uiContext.Get<Panel>("Register");
+    private Panel RegisterPanel => uiContext.Get<Panel>("Register");
     private TextInput UsernameTextBox => uiContext.Get<TextInput>("RegisterUsername");
     private TextInput PasswordTextBox => uiContext.Get<TextInput>("RegisterPassword");
     private TextInput ConfirmPasswordTextBox => uiContext.Get<TextInput>("RegisterConfirm");
     private Button ConfirmButton => uiContext.Get<Button>("RegisterConfirmBtn");
     private Button LoginButton => uiContext.Get<Button>("RegisterBackBtn");
+
+    public void Open()
+    {
+        UsernameTextBox.Value = string.Empty;
+        PasswordTextBox.Value = string.Empty;
+        ConfirmPasswordTextBox.Value = string.Empty;
+        RegisterPanel.Visible = true;
+        Bind();
+    }
+
+    public void Close()
+    {
+        RegisterPanel.Visible = false;
+        Unbind();
+    }
 
     public override void Bind()
     {
@@ -45,8 +60,6 @@ internal class RegisterView(UiContext uiContext, AuthSender authSender, Connecti
     private void OnLoginPressed(Entity _)
     {
         connection.Disconnect();
-
-        menuScreen.CloseMenus();
-        menuScreen.LoginView.LoginPanel.Visible = true;
+        menuScreen.ShowLogin();
     }
 }

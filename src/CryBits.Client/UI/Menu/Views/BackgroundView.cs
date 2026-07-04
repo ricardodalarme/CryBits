@@ -1,4 +1,3 @@
-using CryBits.Client.Framework;
 using CryBits.Client.Framework.Network;
 using Iguina.Entities;
 
@@ -21,11 +20,6 @@ internal class BackgroundView(UiContext uiContext, Connection connection, MenuSc
     private void OnOptionsPressed(Entity _)
     {
         connection.Disconnect();
-
-        menuScreen.OptionsPanel.SoundsCheckbox.Checked = Options.Instance.Sounds;
-        menuScreen.OptionsPanel.MusicsCheckbox.Checked = Options.Instance.Musics;
-
-        menuScreen.CloseMenus();
-        menuScreen.OptionsPanel.OptionsPanel.Visible = true;
+        menuScreen.ShowOptions();
     }
 }

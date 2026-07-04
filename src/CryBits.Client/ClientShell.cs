@@ -134,6 +134,8 @@ public sealed class ClientShell(bool offline) : IDisposable
                 var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
                 _stopwatch.Restart();
 
+                _uiContext.Update(deltaTime);
+
                 if (_activeSession != null)
                 {
                     _activeSession.Update(deltaTime);
@@ -141,7 +143,6 @@ public sealed class ClientShell(bool offline) : IDisposable
                 }
                 else
                 {
-                    _uiContext.Update(deltaTime);
                     PresentMenu();
                 }
 

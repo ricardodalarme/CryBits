@@ -17,10 +17,7 @@ internal class AuthHandler(DefinitionCatalog catalog, UiContext uiContext, MenuS
     [PacketHandler]
     internal void Connect(ConnectPacket _)
     {
-        menuScreen.SelectCharacterView.CurrentCharacter = 0;
         catalog.Classes = [];
-
-        menuScreen.CloseMenus();
-        menuScreen.SelectCharacterView.SelectCharacterPanel.Visible = true;
+        menuScreen.ShowSelectCharacter([]);
     }
 }

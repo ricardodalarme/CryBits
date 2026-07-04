@@ -6,18 +6,17 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Definitions.Catalog;
-using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu;
 
 internal class MenuScreen
 {
-    internal readonly BackgroundView BackgroundView;
-    internal readonly LoginView LoginView;
-    internal readonly RegisterView RegisterView;
-    internal readonly OptionsView OptionsPanel;
-    internal readonly SelectCharacterView SelectCharacterView;
-    internal readonly CreateCharacterView CreateCharacterView;
+    private readonly BackgroundView _backgroundView;
+    private readonly LoginView _loginView;
+    private readonly RegisterView _registerView;
+    private readonly OptionsView _optionsPanel;
+    private readonly SelectCharacterView _selectCharacterView;
+    private readonly CreateCharacterView _createCharacterView;
 
     private readonly AudioManager _audio;
     private readonly UiContext _uiContext;
@@ -27,34 +26,12 @@ internal class MenuScreen
     {
         _audio = audio;
         _uiContext = uiContext;
-        BackgroundView = new(uiContext, connection, this);
-        LoginView = new(uiContext, authSender, connection, this);
-        RegisterView = new(uiContext, authSender, connection, this);
-        OptionsPanel = new(uiContext, audio, connection, this);
-        SelectCharacterView = new(uiContext, accountSender, characterRenderer);
-        CreateCharacterView = new(uiContext, accountSender, characterRenderer, catalog, this);
-    }
-
-    private ViewBase[] Views =>
-    [
-        BackgroundView,
-        LoginView,
-        RegisterView,
-        OptionsPanel,
-        SelectCharacterView,
-        CreateCharacterView
-    ];
-
-    public void Bind()
-    {
-        foreach (var view in Views)
-            view.Bind();
-    }
-
-    public void Unbind()
-    {
-        foreach (var view in Views)
-            view.Unbind();
+        _backgroundView = new(uiContext, connection, this);
+        _loginView = new(uiContext, authSender, connection, this);
+        _registerView = new(uiContext, authSender, connection, this);
+        _optionsPanel = new(uiContext, audio, connection, this);
+        _selectCharacterView = new(uiContext, accountSender, characterRenderer);
+        _createCharacterView = new(uiContext, accountSender, characterRenderer, catalog, this);
     }
 
     public void Open()
@@ -63,22 +40,60 @@ internal class MenuScreen
         if (Options.Instance.Musics) _audio.PlayMusic(Musics.Menu);
 
         _uiContext.LoadScreen("Menu");
-        Bind();
+        _backgroundView.Bind();
 
-        LoginView.SaveUsernameCheckbox.Checked = Options.Instance.SaveUsername;
-        if (Options.Instance.SaveUsername) LoginView.UsernameTextBox.Value = Options.Instance.Username;
+        ShowLogin();
 
-        CloseMenus();
-        LoginView.LoginPanel.Visible = true;
         _uiContext.CurrentScreen = ScreenType.Menu;
     }
 
-    public void CloseMenus()
+    public void ShowLogin()
     {
-        foreach (var panelName in new[] { "Login", "Register", "Options", "SelectCharacter", "CreateCharacter" })
-        {
-            if (_uiContext.TryGet<Panel>(panelName, out var panel))
-                panel.Visible = false;
-        }
+        CloseAllViews();
+        _loginView.Open();
+    }
+
+    public void ShowRegister()
+    {
+        CloseAllViews();
+        _registerView.Open();
+    }
+
+    public void ShowOptions()
+    {
+        CloseAllViews();
+        _optionsPanel.Open();
+    }
+
+    public void ShowSelectCharacter(SelectCharacterView.TempCharacter[] characters)
+    {
+        CloseAllViews();
+        _selectCharacterView.Open(characters);
+    }
+
+    public void ShowCreateCharacter()
+    {
+        CloseAllViews();
+        _createCharacterView.Open();
+    }
+
+    public void UpdateClassLabels()
+    {
+        _createCharacterView.UpdateClassLabels();
+    }
+
+    public void CloseAllViews()
+    {
+        _loginView.Close();
+        _registerView.Close();
+        _optionsPanel.Close();
+        _selectCharacterView.Close();
+        _createCharacterView.Close();
+    }
+
+    public void Unbind()
+    {
+        _backgroundView.Unbind();
+        CloseAllViews();
     }
 }
