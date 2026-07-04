@@ -140,7 +140,7 @@ public sealed class ClientShell : IDisposable
 
                 if (_activeSession != null)
                 {
-                    _activeSession.Update(deltaTime);
+                    _activeSession.Scheduler.Update(deltaTime);
                     _activeSession.RenderPipeline.Present();
                 }
                 else

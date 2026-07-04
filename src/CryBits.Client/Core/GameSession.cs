@@ -24,7 +24,6 @@ using CryBits.Client.UI.Game.Views;
 using CryBits.Client.UI.Menu;
 using CryBits.Definitions.Catalog;
 using CryBits.Persistence.Repositories;
-using CryBits.Simulation.Components;
 
 namespace CryBits.Client.Core;
 
@@ -137,24 +136,6 @@ internal sealed class GameSession : IDisposable
     public void OpenScreen()
     {
         Screen.Open();
-    }
-
-    public void Update(float dt)
-    {
-        Scheduler.Update(dt);
-
-        if (Context.LocalPlayerEntity is { } playerEntityId)
-        {
-            var level = Context.World.Get<LevelComponent>(playerEntityId);
-            var attrs = Context.World.Get<AttributesComponent>(playerEntityId);
-            if (level != null && attrs != null)
-            {
-                short total = 0;
-                foreach (var v in attrs.Values) total += v;
-                if (level.TotalAttributes != total)
-                    Context.World.Set(playerEntityId, level with { TotalAttributes = total });
-            }
-        }
     }
 
     public void Dispose()

@@ -107,11 +107,8 @@ public sealed class LevelingSystem : ISimulationSystem
         var e = world.Entities.Get(entityId);
         if (e == null) return;
         var level = e.Get<LevelComponent>()!;
-        var attrs = e.Get<AttributesComponent>()!;
 
-        short totalAttr = 0;
-        for (byte i = 0; i < (byte)Attribute.Count; i++) totalAttr += attrs.Values[i];
-        var expNeeded = LevelingFormulas.ExperienceNeeded(level.Level, totalAttr, (byte)level.Points);
+        var expNeeded = LevelingFormulas.ExperienceNeeded(level.Level);
 
         if (level.Experience < expNeeded) return;
 
@@ -125,9 +122,7 @@ public sealed class LevelingSystem : ISimulationSystem
             newPoints += Config.NumPoints;
             newExp -= expNeeded;
 
-            totalAttr = 0;
-            for (byte i = 0; i < (byte)Attribute.Count; i++) totalAttr += attrs.Values[i];
-            expNeeded = LevelingFormulas.ExperienceNeeded(newLevel, totalAttr, (byte)newPoints);
+            expNeeded = LevelingFormulas.ExperienceNeeded(newLevel);
         }
 
         world.Set(entityId, new LevelComponent(Level: newLevel, Experience: newExp, Points: newPoints));

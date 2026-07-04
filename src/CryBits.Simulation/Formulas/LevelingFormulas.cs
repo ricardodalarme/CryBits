@@ -10,10 +10,7 @@ public static class LevelingFormulas
     /// Computes the experience required for the player to reach the next level.
     /// </summary>
     /// <param name="level">The player's current level.</param>
-    /// <param name="totalAttributes">Sum of all the player's attribute values.</param>
-    /// <param name="points">Number of unspent attribute points.</param>
-    public static int ExperienceNeeded(short level, short totalAttributes, byte points)
-        => (int)((level + 1) * 2.5 + (totalAttributes + points) / 2);
+    public static int ExperienceNeeded(short level) => 50 * level * (level + 1);
 
     /// <summary>
     /// Computes the weight factor for XP distribution to a party member based on
