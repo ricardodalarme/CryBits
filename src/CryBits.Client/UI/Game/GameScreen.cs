@@ -40,13 +40,13 @@ internal class GameScreen
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
         InputManager inputManager, AudioManager audioManager, DefinitionCatalog catalog, TooltipView tooltip,
         MenuScreen menuScreen, Chat chat, GameInput gameInput, TradeViewModel tradeViewModel, PartyViewModel partyViewModel,
-        InventoryViewModel inventoryViewModel, HotbarViewModel hotbarViewModel, ShopViewModel shopViewModel)
+        InventoryViewModel inventoryViewModel, HotbarViewModel hotbarViewModel, ShopViewModel shopViewModel, CharacterViewModel characterViewModel)
     {
         UiContext = uiContext;
         ShopView = new(uiContext, itemRenderer, tooltip, shopViewModel);
         InformationView = tooltip;
         InventoryView = new(uiContext, itemRenderer, tooltip, ShopView, this, inventoryViewModel);
-        CharacterView = new(uiContext, context, intentSender, equipmentRenderer, characterRenderer, tooltip, catalog);
+        CharacterView = new(uiContext, equipmentRenderer, characterRenderer, tooltip, characterViewModel);
         ChatView = new(uiContext, chat);
         DraggableSlotView = new(uiContext, itemRenderer, inputManager, context, catalog, this);
         DropItemView = new(uiContext, intentSender);

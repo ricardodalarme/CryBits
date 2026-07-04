@@ -1,18 +1,19 @@
-using CryBits.Client.Core;
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Network.Senders;
 using CryBits.Client.Rendering.UI;
-using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Items;
-using CryBits.Simulation.Intents;
 using Iguina.Entities;
 using System.Drawing;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class CharacterView(UiContext uiContext, GameContext context, IntentSender intentSender, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer, TooltipView tooltip, DefinitionCatalog catalog) : ViewBase
+internal class CharacterView(
+    UiContext uiContext,
+    EquipmentSlotRenderer equipmentRenderer,
+    PortraitRenderer characterRenderer,
+    TooltipView tooltip,
+    CharacterViewModel viewModel) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("CharacterPanel");
     private SlotGrid EquipmentGrid => uiContext.Get<SlotGrid>("CharEquipmentGrid");
@@ -64,41 +65,34 @@ internal class CharacterView(UiContext uiContext, GameContext context, IntentSen
 
     private void OnSlotRightClick(int slot)
     {
-        var equipment = context.LocalPlayer.GetEquipment();
-        if (equipment == null) return;
+        viewModel.Refresh();
+        var equipVM = viewModel.Equipment[slot];
+        if (equipVM == null || equipVM.ItemId == Guid.Empty) return;
 
-        var equipSlot = equipment.Slots[slot];
-        if (equipSlot == Guid.Empty) return;
-
-        var item = catalog.Items.Get(equipSlot);
+        var item = equipVM.Definition;
         if (item is not { Bind: BindOn.Equip })
-            intentSender.Send(new EquipmentRemoveIntent(default, (byte)slot));
+            viewModel.RemoveEquipment((short)slot);
     }
 
     private void OnSlotHoverEnter(int slot)
     {
-        var equipment = context.LocalPlayer.GetEquipment();
-        if (equipment == null) return;
+        viewModel.Refresh();
+        var equipVM = viewModel.Equipment[slot];
+        if (equipVM == null || equipVM.ItemId == Guid.Empty) return;
 
-        var item = catalog.Items.Get(equipment.Slots[slot]);
-        if (item == null) return;
-        tooltip.Show(item.Id, new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5));
+        tooltip.Show(equipVM.ItemId, new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5));
     }
 
     private void RenderFace()
     {
-        var appearance = context.LocalPlayer.GetAppearance();
-        if (appearance == null) return;
+        viewModel.Refresh();
         var pos = FacePicture.LastBoundingRect;
-        characterRenderer.DrawFace(appearance.TextureNum, new Point(pos.X, pos.Y));
+        characterRenderer.DrawFace(viewModel.TextureNum, new Point(pos.X, pos.Y));
     }
 
     private void OnPostDraw()
     {
         if (!Panel.Visible) return;
-
-        var equipment = context.LocalPlayer.GetEquipment();
-        if (equipment == null) return;
 
         for (var i = 0; i < EquipmentGrid.TotalSlots; i++)
         {
@@ -107,39 +101,31 @@ internal class CharacterView(UiContext uiContext, GameContext context, IntentSen
         }
     }
 
-    private void OnAddStrengthPressed(Entity _) => intentSender.Send(new AddPointIntent(default, (byte)Attribute.Strength));
-    private void OnAddResistancePressed(Entity _) => intentSender.Send(new AddPointIntent(default, (byte)Attribute.Resistance));
-    private void OnAddIntelligencePressed(Entity _) => intentSender.Send(new AddPointIntent(default, (byte)Attribute.Intelligence));
-    private void OnAddAgilityPressed(Entity _) => intentSender.Send(new AddPointIntent(default, (byte)Attribute.Agility));
-    private void OnAddVitalityPressed(Entity _) => intentSender.Send(new AddPointIntent(default, (byte)Attribute.Vitality));
+    private void OnAddStrengthPressed(Entity _) => viewModel.SpendPoint(Attribute.Strength);
+    private void OnAddResistancePressed(Entity _) => viewModel.SpendPoint(Attribute.Resistance);
+    private void OnAddIntelligencePressed(Entity _) => viewModel.SpendPoint(Attribute.Intelligence);
+    private void OnAddAgilityPressed(Entity _) => viewModel.SpendPoint(Attribute.Agility);
+    private void OnAddVitalityPressed(Entity _) => viewModel.SpendPoint(Attribute.Vitality);
 
     public void Update()
     {
-        var local = context.LocalPlayer;
+        viewModel.Refresh();
 
-        CharNameLabel.Text = local.GetName();
+        CharNameLabel.Text = viewModel.Name;
+        CharLevelLabel.Text = viewModel.Level.ToString();
+        CharPointsLabel.Text = viewModel.Points.ToString();
 
-        var level = local.GetLevel();
-        if (level != null)
-        {
-            CharLevelLabel.Text = level.Level.ToString();
-            CharPointsLabel.Text = level.Points.ToString();
+        var hasPoints = viewModel.HasPoints;
+        AddStrengthButton.Visible = hasPoints;
+        AddResistanceButton.Visible = hasPoints;
+        AddIntelligenceButton.Visible = hasPoints;
+        AddAgilityButton.Visible = hasPoints;
+        AddVitalityButton.Visible = hasPoints;
 
-            var hasPoints = level.Points > 0;
-            AddStrengthButton.Visible = hasPoints;
-            AddResistanceButton.Visible = hasPoints;
-            AddIntelligenceButton.Visible = hasPoints;
-            AddAgilityButton.Visible = hasPoints;
-            AddVitalityButton.Visible = hasPoints;
-        }
-        var attrs = local.GetAttributes();
-        if (attrs != null)
-        {
-            CharStrengthLabel.Text = attrs.Values[(byte)Attribute.Strength].ToString();
-            CharResistanceLabel.Text = attrs.Values[(byte)Attribute.Resistance].ToString();
-            CharIntelligenceLabel.Text = attrs.Values[(byte)Attribute.Intelligence].ToString();
-            CharAgilityLabel.Text = attrs.Values[(byte)Attribute.Agility].ToString();
-            CharVitalityLabel.Text = attrs.Values[(byte)Attribute.Vitality].ToString();
-        }
+        CharStrengthLabel.Text = viewModel.Strength.ToString();
+        CharResistanceLabel.Text = viewModel.Resistance.ToString();
+        CharIntelligenceLabel.Text = viewModel.Intelligence.ToString();
+        CharAgilityLabel.Text = viewModel.Agility.ToString();
+        CharVitalityLabel.Text = viewModel.Vitality.ToString();
     }
 }

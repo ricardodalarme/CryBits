@@ -154,9 +154,10 @@ public sealed class Game : IDisposable
         var inventoryViewModel = new InventoryViewModel(context, intentSender, catalog);
         var hotbarViewModel = new HotbarViewModel(context, intentSender, catalog);
         var shopViewModel = new ShopViewModel(intentSender, catalog);
+        var characterViewModel = new CharacterViewModel(context, intentSender, catalog);
         _menuScreen = new MenuScreen(audioManager, uiContext, authSender, accountSender, portraitRenderer, context, catalog, _connection);
         _gameScreen = new GameScreen(uiContext, context, intentSender, _spriteBatch, itemIconRenderer, equipmentSlotRenderer,
-            portraitRenderer, inputManager, audioManager, catalog, tooltipView, _menuScreen, chat, gameInput, tradeViewModel, partyViewModel, inventoryViewModel, hotbarViewModel, shopViewModel);
+            portraitRenderer, inputManager, audioManager, catalog, tooltipView, _menuScreen, chat, gameInput, tradeViewModel, partyViewModel, inventoryViewModel, hotbarViewModel, shopViewModel, characterViewModel);
 
         // ── System initialization ──
         _scheduler = new SystemScheduler();
