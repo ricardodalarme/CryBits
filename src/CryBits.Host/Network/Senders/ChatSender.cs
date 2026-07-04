@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace CryBits.Host.Network.Senders;
 
-internal sealed class ChatSender(PackageSender packageSender, EntityRegistry entities)
+public sealed class ChatSender(PackageSender packageSender, EntityRegistry entities)
 {
     public void Message(EntityId entityId, string text, Color color)
     {

@@ -5,6 +5,7 @@ using CryBits.Definitions.Items;
 using CryBits.Host.Core;
 using CryBits.Host.Network.Senders;
 using CryBits.Host.Replication;
+using CryBits.Host.Services.Party;
 using CryBits.Persistence.Repositories;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
@@ -34,7 +35,8 @@ internal sealed class CharacterService(
     WorldHost host,
     KeyframeEncoder keyframeEncoder,
     InterestManager interestManager,
-    ITransport transport)
+    ITransport transport,
+    PartyService partyService)
 {
     [PacketHandler]
     internal void CreateCharacter(Session session, CreateCharacterPacket packet)
@@ -162,6 +164,7 @@ internal sealed class CharacterService(
         var tickNum = host.CurrentTick?.TickNumber ?? 0;
         host.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent(tickNum, entityId));
 
+        partyService.HandleDisconnect(entityId);
         host.Sessions.Unregister(entityId);
         host.Simulation.Destroy(entityId);
         session.Character = null;

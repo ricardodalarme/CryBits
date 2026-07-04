@@ -19,6 +19,13 @@ public sealed class LevelingSystem : ISimulationSystem
         {
             if (intent is AddPointIntent add)
                 AddPoint(world, add.SourceEntityId, add.AttributeNum);
+            else if (intent is XpShareIntent share)
+            {
+                if (share.Recipients == null || share.Recipients.Count == 0)
+                    world.Remove<XpShareComponent>(share.SourceEntityId);
+                else
+                    world.Set(share.SourceEntityId, new XpShareComponent(share.Recipients));
+            }
         }
 
         foreach (var ev in tick.Events.Events)
@@ -82,9 +89,9 @@ public sealed class LevelingSystem : ISimulationSystem
     {
         var e = world.Entities.Get(entityId);
         if (e == null) return;
-        var party = e.Get<PartyState>();
+        var xpShare = e.Get<XpShareComponent>();
 
-        if (party?.Members.Count > 0 && value > 0)
+        if (xpShare?.Recipients.Count > 0 && value > 0)
             PartySplitXp(world, entityId, value);
         else
             world.Update<LevelComponent>(entityId, l => l with { Experience = l.Experience + value });
@@ -132,15 +139,15 @@ public sealed class LevelingSystem : ISimulationSystem
         var e = world.Entities.Get(entityId);
         if (e == null) return;
         var level = e.Get<LevelComponent>()!;
-        var party = e.Get<PartyState>();
-        if (party == null) return;
+        var xpShare = e.Get<XpShareComponent>();
+        if (xpShare == null) return;
 
-        var diff = new double[party.Members.Count];
+        var diff = new double[xpShare.Recipients.Count];
         double diffSum = 0;
 
-        for (byte i = 0; i < party.Members.Count; i++)
+        for (byte i = 0; i < xpShare.Recipients.Count; i++)
         {
-            var memberE = world.Entities.Get(party.Members[i]);
+            var memberE = world.Entities.Get(xpShare.Recipients[i]);
             if (memberE == null) continue;
             var memberLevel = memberE.Get<LevelComponent>()!;
             var difference = Math.Abs(level.Level - memberLevel.Level);
@@ -149,14 +156,14 @@ public sealed class LevelingSystem : ISimulationSystem
         }
 
         var experienceSum = 0;
-        for (byte i = 0; i < party.Members.Count; i++)
+        for (byte i = 0; i < xpShare.Recipients.Count; i++)
         {
             if (diffSum > 1) diff[i] *= 1 / diffSum;
 
             var givenExperience = (int)(value / 2 * diff[i]);
             experienceSum += givenExperience;
 
-            GiveExperience(world, party.Members[i], givenExperience);
+            GiveExperience(world, xpShare.Recipients[i], givenExperience);
         }
 
         world.Update<LevelComponent>(entityId, l => l with { Experience = l.Experience + value - experienceSum });

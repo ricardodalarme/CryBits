@@ -5,7 +5,7 @@ using ZLogger;
 
 namespace CryBits.Host.Scheduling;
 
-internal sealed class TickDriver(WorldHost host, ILogger<TickDriver> logger)
+public sealed class TickDriver(WorldHost host, ILogger<TickDriver> logger)
 {
     public async Task MainAsync(CancellationToken ct)
     {

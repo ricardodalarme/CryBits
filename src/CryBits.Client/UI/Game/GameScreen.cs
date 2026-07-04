@@ -39,7 +39,7 @@ internal class GameScreen
     internal GameScreen(UiContext uiContext, GameContext context, IntentSender intentSender, SpriteBatch spriteBatch,
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
         InputManager inputManager, AudioManager audioManager, DefinitionCatalog catalog, TooltipView tooltip, ShopView shop,
-        MenuScreen menuScreen, Chat chat, GameInput gameInput, TradeViewModel tradeViewModel)
+        MenuScreen menuScreen, Chat chat, GameInput gameInput, TradeViewModel tradeViewModel, PartyViewModel partyViewModel)
     {
         UiContext = uiContext;
         ShopView = shop;
@@ -59,7 +59,7 @@ internal class GameScreen
         TradeView = new(uiContext, itemRenderer, context, catalog, InventoryView, this, tradeViewModel);
         MapNameView = new(uiContext, context);
         MetricsView = new(uiContext);
-        PartyView = new(uiContext, context, spriteBatch);
+        PartyView = new(uiContext, spriteBatch, partyViewModel);
         _chat = chat;
         _gameInput = gameInput;
         _menu = menuScreen;

@@ -1,11 +1,10 @@
-using CryBits.Client.Core;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Rendering;
-using CryBits.Simulation.Components;
+using CryBits.Client.UI.Game.ViewModels;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class PartyView(UiContext uiContext, GameContext context, SpriteBatch spriteBatch) : ViewBase
+internal class PartyView(UiContext uiContext, SpriteBatch spriteBatch, PartyViewModel viewModel) : ViewBase
 {
     public override void Bind()
     {
@@ -17,34 +16,22 @@ internal class PartyView(UiContext uiContext, GameContext context, SpriteBatch s
 
     private void OnPostDraw()
     {
-        if (context.LocalPlayer.Entity == null) return;
+        viewModel.Refresh();
 
-        var world = context.World;
-        var party = context.LocalPlayer.GetParty();
-        if (party == null) return;
-
-        for (byte i = 0; i < party.Members.Count; i++)
+        for (byte i = 0; i < viewModel.Members.Count; i++)
         {
-            var entity = context.GetNetworkEntity(party.Members[i].Value);
+            var member = viewModel.Members[i];
             spriteBatch.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
             spriteBatch.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
-            if (entity != null)
-            {
-                var vitals = world.Get<Vitals>(entity.Value);
-                if (vitals != null)
-                {
-                    if (vitals.Hp > 0)
-                        spriteBatch.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
-                            vitals.Hp * 82 / vitals.MaxHp, 8);
-                    if (vitals.Mp > 0)
-                        spriteBatch.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
-                            vitals.Mp * 82 / vitals.MaxMp, 8);
-                }
-            }
-            var name = entity != null
-                ? world.Get<PlayerAppearance>(entity.Value)?.Name ?? string.Empty
-                : string.Empty;
-            spriteBatch.DrawText(name, 10, 79 + 27 * i, SFML.Graphics.Color.White);
+
+            if (member.Hp > 0)
+                spriteBatch.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
+                    member.Hp * 82 / member.MaxHp, 8);
+            if (member.Mp > 0)
+                spriteBatch.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
+                    member.Mp * 82 / member.MaxMp, 8);
+
+            spriteBatch.DrawText(member.Name, 10, 79 + 27 * i, SFML.Graphics.Color.White);
         }
     }
 }

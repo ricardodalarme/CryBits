@@ -89,14 +89,17 @@ public sealed class EmbeddedHostRunner : IDisposable
         var eventFanout = new EventFanout(ss, chatSender, contentSender, pair.Server);
         var interestManager = new InterestManager(simulation);
 
+        var partyService = new Host.Services.Party.PartyService(_host.IntentFunnel, ps, chatSender, ss, simulation);
+
         hostDispatcher.Register(new CharacterService(
             new SilentLogger<CharacterService>(),
             charRepo, authSender, contentSender,
             accountSenderHost, chatSender, catalog, _host,
-            keyframeEncoder, interestManager, pair.Server));
+            keyframeEncoder, interestManager, pair.Server,
+            partyService));
 
         var tradeService = new Host.Services.Trade.TradeService(_host.IntentFunnel, ps, ss, simulation);
-        var intentIngress = new Host.Ingress.IntentIngress(_host.IntentFunnel, tradeService, new SilentLogger<Host.Ingress.IntentIngress>());
+        var intentIngress = new Host.Ingress.IntentIngress(_host.IntentFunnel, tradeService, partyService, new SilentLogger<Host.Ingress.IntentIngress>());
         hostDispatcher.Register(intentIngress);
 
         _host.Pipeline.AddSystem(new KeyframeReplicator(

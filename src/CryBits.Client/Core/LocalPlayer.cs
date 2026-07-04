@@ -24,7 +24,5 @@ internal class LocalPlayer(World world, EntityId? entity)
 
     public EquipmentState? GetEquipment() => Entity.HasValue ? world.Get<EquipmentState>(Entity.Value) : null;
 
-    public PartyState? GetParty() => Entity.HasValue ? world.Get<PartyState>(Entity.Value) : null;
-
     public PlayerAppearance? GetAppearance() => Entity.HasValue ? world.Get<PlayerAppearance>(Entity.Value) : null;
 }

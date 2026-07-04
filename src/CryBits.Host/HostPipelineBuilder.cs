@@ -4,7 +4,6 @@ using CryBits.Simulation.Systems.Combat;
 using CryBits.Simulation.Systems.Inventory;
 using CryBits.Simulation.Systems.Movement;
 using CryBits.Simulation.Systems.Npc;
-using CryBits.Simulation.Systems.Party;
 using CryBits.Simulation.Systems.Progression;
 using CryBits.Simulation.Systems.Regeneration;
 using CryBits.Simulation.Systems.Shops;
@@ -30,7 +29,6 @@ internal static class HostPipelineBuilder
         pipeline.AddSystem(new HotbarSystem());
         pipeline.AddSystem(new ShopSystem());
         pipeline.AddSystem(new ChatSystem());
-        pipeline.AddSystem(new PartySystem());
         pipeline.AddSystem(new NpcRespawnSystem());
         return pipeline;
     }

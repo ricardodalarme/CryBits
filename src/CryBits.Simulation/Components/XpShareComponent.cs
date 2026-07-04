@@ -4,4 +4,4 @@ using MemoryPack;
 namespace CryBits.Simulation.Components;
 
 [MemoryPackable]
-public sealed partial record PartyState(List<EntityId> Members, EntityId? PendingInviterId);
+public sealed partial record XpShareComponent(List<EntityId> Recipients);

@@ -1,3 +1,4 @@
+using CryBits.Host.Services.Party;
 using CryBits.Host.Services.Trade;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
@@ -10,7 +11,7 @@ using ZLogger;
 
 namespace CryBits.Host.Ingress;
 
-public sealed class IntentIngress(IntentFunnel funnel, TradeService tradeService, ILogger<IntentIngress> logger)
+public sealed class IntentIngress(IntentFunnel funnel, TradeService tradeService, PartyService partyService, ILogger<IntentIngress> logger)
 {
     [PacketHandler]
     public void Handle(EntityId entityId, IntentPacket packet)
@@ -47,6 +48,22 @@ public sealed class IntentIngress(IntentFunnel funnel, TradeService tradeService
             else if (intent is TradeOfferStateIntent offerState)
             {
                 tradeService.HandleOfferState(entityId, offerState.State);
+            }
+            else if (intent is PartyInviteIntent partyInvite)
+            {
+                partyService.HandleInvite(entityId, partyInvite.PlayerName);
+            }
+            else if (intent is PartyAcceptIntent)
+            {
+                partyService.HandleAccept(entityId);
+            }
+            else if (intent is PartyDeclineIntent)
+            {
+                partyService.HandleDecline(entityId);
+            }
+            else if (intent is PartyLeaveIntent)
+            {
+                partyService.HandleLeave(entityId);
             }
             else
             {

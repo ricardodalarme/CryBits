@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CryBits.Host.Core;
 
-internal sealed class WorldHost
+public sealed class WorldHost
 {
     public World Simulation { get; }
     public ITransport Transport { get; }
