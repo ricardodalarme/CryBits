@@ -26,7 +26,6 @@ internal class DraggableSlotView(
 
         if (gameScreen.HotbarChange is { } hotSlot)
         {
-            hotbarViewModel.Refresh();
             var hbSlot = hotbarViewModel.Slots[hotSlot];
             if (hbSlot is { Slot: > 0, Type: SlotType.Item } && hbSlot.Definition is { } item)
             {
@@ -35,7 +34,6 @@ internal class DraggableSlotView(
         }
         else if (gameScreen.InventoryChange is { } invSlot)
         {
-            inventoryViewModel.Refresh();
             var itemVM = inventoryViewModel.Slots[invSlot];
             if (itemVM is { Definition: { } item })
             {

@@ -46,7 +46,6 @@ internal class InventoryView(
 
     private void OnSlotLeftDown(int slot)
     {
-        viewModel.Refresh();
         var item = viewModel.Slots[slot];
         if (item == null || item.ItemId == Guid.Empty) return;
 
@@ -67,7 +66,6 @@ internal class InventoryView(
 
     private void OnSlotRightClick(int slot)
     {
-        viewModel.Refresh();
         var itemVM = viewModel.Slots[slot];
         if (itemVM == null || itemVM.ItemId == Guid.Empty) return;
 
@@ -102,7 +100,6 @@ internal class InventoryView(
 
     private void OnSlotHoverEnter(int slot)
     {
-        viewModel.Refresh();
         var itemVM = viewModel.Slots[slot];
         if (itemVM == null || itemVM.ItemId == Guid.Empty) return;
         var item = itemVM.Definition;
@@ -119,8 +116,6 @@ internal class InventoryView(
     private void OnPostDraw()
     {
         if (!uiContext.Registry["InventoryPanel"].Visible) return;
-
-        viewModel.Refresh();
 
         for (var i = 0; i < Grid.TotalSlots; i++)
         {

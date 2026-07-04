@@ -56,6 +56,7 @@ internal static class PlayerSpawner
     {
         var entity = Spawn(world, networkId, name, textureNum, vitals, maxVitals, x, y, direction);
 
+        world.Set(entity, new LocalPlayerTag());
         world.Set(entity, new NameColorComponent(Color.Yellow));
 
         var equipmentSlots = new Guid[equipment.Length];
@@ -70,7 +71,6 @@ internal static class PlayerSpawner
         world.Set(entity, new EquipmentState(equipmentSlots));
         world.Set(entity, new InventoryState(new ItemSlot[Globals.MaxInventory]));
         world.Set(entity, new HotbarState(new HotbarSlot[Globals.MaxHotbar]));
-        world.Set(entity, new LocalPlayerTag());
 
         return entity;
     }

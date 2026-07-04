@@ -1,8 +1,11 @@
-using CryBits.Client.Core;
+using CryBits.Client.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
 using static CryBits.Definitions.Globals;
 
@@ -16,49 +19,58 @@ internal sealed class InventoryItemViewModel
     public Item? Definition { get; set; }
 }
 
-internal sealed class InventoryViewModel(
-    GameContext context,
-    IntentSender intentSender,
-    DefinitionCatalog catalog)
+internal sealed class InventoryViewModel : IDisposable
 {
-    public InventoryItemViewModel[] Slots { get; private set; } = new InventoryItemViewModel[MaxInventory];
-    public void Refresh()
-    {
-        if (!context.LocalPlayerEntity.HasValue) return;
-        var inv = context.World.Get<CryBits.Simulation.Components.InventoryState>(context.LocalPlayerEntity.Value);
-        if (inv == null) return;
+    private readonly DefinitionCatalog _catalog;
+    private readonly IntentSender _intentSender;
 
-        for (var i = 0; i < inv.Slots.Length; i++)
+    private readonly IDisposable _inventorySubscription;
+
+    public InventoryItemViewModel[] Slots { get; private set; } = new InventoryItemViewModel[MaxInventory];
+
+    public InventoryViewModel(World world, IntentSender intentSender, DefinitionCatalog catalog)
+    {
+        _catalog = catalog;
+        _intentSender = intentSender;
+
+        _inventorySubscription = world.Events.On<InventoryState>()
+            .With<LocalPlayerTag>()
+            .OnChanged(OnInventoryChanged);
+    }
+
+    private void OnInventoryChanged(ComponentChanged<InventoryState> evt)
+    {
+        for (var i = 0; i < evt.Component.Slots.Length; i++)
         {
-            var slot = inv.Slots[i];
+            var slot = evt.Component.Slots[i];
             if (Slots[i] == null)
-            {
                 Slots[i] = new InventoryItemViewModel { Index = (short)i };
-            }
 
             Slots[i].ItemId = slot.ItemId;
             Slots[i].Amount = slot.Amount;
-            Slots[i].Definition = slot.ItemId != Guid.Empty ? catalog.Items.Get(slot.ItemId) : null;
+            Slots[i].Definition = slot.ItemId != Guid.Empty ? _catalog.Items.Get(slot.ItemId) : null;
         }
     }
 
     public void Swap(short oldSlot, short newSlot)
     {
-        intentSender.Send(new InventorySwapIntent(default, oldSlot, newSlot));
+        _intentSender.Send(new InventorySwapIntent(default, oldSlot, newSlot));
     }
 
     public void Use(short slot)
     {
-        intentSender.Send(new InventoryUseIntent(default, (byte)slot));
+        _intentSender.Send(new InventoryUseIntent(default, (byte)slot));
     }
 
     public void Drop(short slot, short amount)
     {
-        intentSender.Send(new DropItemIntent(default, (byte)slot, amount));
+        _intentSender.Send(new DropItemIntent(default, (byte)slot, amount));
     }
 
     public void Sell(short slot, short amount)
     {
-        intentSender.Send(new ShopSellIntent(default, (byte)slot, amount));
+        _intentSender.Send(new ShopSellIntent(default, (byte)slot, amount));
     }
+
+    public void Dispose() => _inventorySubscription.Dispose();
 }

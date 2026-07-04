@@ -1,9 +1,13 @@
-using CryBits.Client.Core;
+using CryBits.Client.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
+using CryBits.Simulation.State;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.UI.Game.ViewModels;
@@ -16,29 +20,52 @@ internal sealed class HotbarItemViewModel
     public Item? Definition { get; set; }
 }
 
-internal sealed class HotbarViewModel(
-    GameContext context,
-    IntentSender intentSender,
-    DefinitionCatalog catalog)
+internal sealed class HotbarViewModel : IDisposable
 {
+    private readonly World _world;
+    private readonly IntentSender _intentSender;
+
+    private readonly DefinitionCatalog _catalog;
+    private readonly IDisposable _hotbarSubscription;
+    private readonly IDisposable _inventorySubscription;
+
     public HotbarItemViewModel[] Slots { get; private set; } = new HotbarItemViewModel[MaxHotbar];
 
-    public void Refresh()
+    public HotbarViewModel(World world, IntentSender intentSender, DefinitionCatalog catalog)
     {
-        if (!context.LocalPlayerEntity.HasValue) return;
-        var entity = context.LocalPlayerEntity.Value;
-        var hotbar = context.World.Get<CryBits.Simulation.Components.HotbarState>(entity);
-        if (hotbar == null) return;
+        _world = world;
+        _catalog = catalog;
+        _intentSender = intentSender;
 
-        var inv = context.World.Get<CryBits.Simulation.Components.InventoryState>(entity);
+        _hotbarSubscription = world.Events.On<HotbarState>()
+            .With<LocalPlayerTag>()
+            .OnChanged(OnHotbarChanged);
+
+        _inventorySubscription = world.Events.On<InventoryState>()
+            .With<LocalPlayerTag>()
+            .OnChanged(OnInventoryChanged);
+    }
+
+    private void OnHotbarChanged(ComponentChanged<HotbarState> evt)
+    {
+        Rebuild(evt.Entity, evt.Component);
+    }
+
+    private void OnInventoryChanged(ComponentChanged<InventoryState> evt)
+    {
+        var hotbar = _world.Get<HotbarState>(evt.Entity);
+        if (hotbar != null) Rebuild(evt.Entity, hotbar);
+    }
+
+    private void Rebuild(EntityId entity, HotbarState hotbar)
+    {
+        var inv = _world.Get<InventoryState>(entity);
 
         for (var i = 0; i < hotbar.Slots.Length; i++)
         {
             var slot = hotbar.Slots[i];
             if (Slots[i] == null)
-            {
                 Slots[i] = new HotbarItemViewModel { Index = (short)i };
-            }
 
             Slots[i].Type = slot.Type;
             Slots[i].Slot = slot.Slot;
@@ -46,7 +73,7 @@ internal sealed class HotbarViewModel(
             if (slot.Type == SlotType.Item && inv != null && slot.Slot >= 0 && slot.Slot < inv.Slots.Length)
             {
                 var itemId = inv.Slots[slot.Slot].ItemId;
-                Slots[i].Definition = itemId != Guid.Empty ? catalog.Items.Get(itemId) : null;
+                Slots[i].Definition = itemId != Guid.Empty ? _catalog.Items.Get(itemId) : null;
             }
             else
             {
@@ -57,21 +84,27 @@ internal sealed class HotbarViewModel(
 
     public void Swap(short oldSlot, short newSlot)
     {
-        intentSender.Send(new HotbarSwapIntent(default, oldSlot, (byte)newSlot));
+        _intentSender.Send(new HotbarSwapIntent(default, oldSlot, (byte)newSlot));
     }
 
     public void AddItem(short slot, short inventorySlot)
     {
-        intentSender.Send(new HotbarAddIntent(default, (byte)slot, SlotType.Item, inventorySlot));
+        _intentSender.Send(new HotbarAddIntent(default, (byte)slot, SlotType.Item, inventorySlot));
     }
 
     public void Remove(short slot)
     {
-        intentSender.Send(new HotbarAddIntent(default, (byte)slot, default, 0));
+        _intentSender.Send(new HotbarAddIntent(default, (byte)slot, default, 0));
     }
 
     public void Use(short slot)
     {
-        intentSender.Send(new HotbarUseIntent(default, (byte)slot));
+        _intentSender.Send(new HotbarUseIntent(default, (byte)slot));
+    }
+
+    public void Dispose()
+    {
+        _hotbarSubscription.Dispose();
+        _inventorySubscription.Dispose();
     }
 }

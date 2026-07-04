@@ -65,7 +65,6 @@ internal class CharacterView(
 
     private void OnSlotRightClick(int slot)
     {
-        viewModel.Refresh();
         var equipVM = viewModel.Equipment[slot];
         if (equipVM == null || equipVM.ItemId == Guid.Empty) return;
 
@@ -76,7 +75,6 @@ internal class CharacterView(
 
     private void OnSlotHoverEnter(int slot)
     {
-        viewModel.Refresh();
         var equipVM = viewModel.Equipment[slot];
         if (equipVM == null || equipVM.ItemId == Guid.Empty) return;
 
@@ -85,20 +83,8 @@ internal class CharacterView(
 
     private void RenderFace()
     {
-        viewModel.Refresh();
         var pos = FacePicture.LastBoundingRect;
         characterRenderer.DrawFace(viewModel.TextureNum, new Point(pos.X, pos.Y));
-    }
-
-    private void OnPostDraw()
-    {
-        if (!Panel.Visible) return;
-
-        for (var i = 0; i < EquipmentGrid.TotalSlots; i++)
-        {
-            var rect = EquipmentGrid.GetSlotRect(i);
-            equipmentRenderer.DrawSlot(i, new Point(rect.X, rect.Y));
-        }
     }
 
     private void OnAddStrengthPressed(Entity _) => viewModel.SpendPoint(Attribute.Strength);
@@ -107,10 +93,8 @@ internal class CharacterView(
     private void OnAddAgilityPressed(Entity _) => viewModel.SpendPoint(Attribute.Agility);
     private void OnAddVitalityPressed(Entity _) => viewModel.SpendPoint(Attribute.Vitality);
 
-    public void Update()
+    private void OnPostDraw()
     {
-        viewModel.Refresh();
-
         CharNameLabel.Text = viewModel.Name;
         CharLevelLabel.Text = viewModel.Level.ToString();
         CharPointsLabel.Text = viewModel.Points.ToString();
@@ -127,5 +111,14 @@ internal class CharacterView(
         CharIntelligenceLabel.Text = viewModel.Intelligence.ToString();
         CharAgilityLabel.Text = viewModel.Agility.ToString();
         CharVitalityLabel.Text = viewModel.Vitality.ToString();
+
+        if (!Panel.Visible) return;
+
+        for (var i = 0; i < EquipmentGrid.TotalSlots; i++)
+        {
+            var rect = EquipmentGrid.GetSlotRect(i);
+            var itemId = viewModel.Equipment[i]?.ItemId ?? Guid.Empty;
+            equipmentRenderer.DrawSlot(i, itemId, new Point(rect.X, rect.Y));
+        }
     }
 }

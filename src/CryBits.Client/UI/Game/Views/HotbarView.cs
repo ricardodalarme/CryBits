@@ -42,7 +42,6 @@ internal class HotbarView(
 
     private void OnSlotLeftDown(int slot)
     {
-        viewModel.Refresh();
         var hbSlot = viewModel.Slots[slot];
         if (hbSlot == null || hbSlot.Slot <= 0) return;
 
@@ -71,7 +70,6 @@ internal class HotbarView(
 
     private void OnSlotDoubleClick(int slot)
     {
-        viewModel.Refresh();
         var hbSlot = viewModel.Slots[slot];
         if (hbSlot is { Slot: > 0 })
         {
@@ -82,7 +80,6 @@ internal class HotbarView(
 
     private void OnSlotHoverEnter(int slot)
     {
-        viewModel.Refresh();
         var hbSlot = viewModel.Slots[slot];
         if (hbSlot is { Slot: > 0, Type: SlotType.Item } h)
         {
@@ -96,8 +93,6 @@ internal class HotbarView(
     private void OnPostDraw()
     {
         if (!uiContext.Registry["HotbarPanel"].Visible) return;
-
-        viewModel.Refresh();
 
         for (var i = 0; i < Grid.TotalSlots; i++)
         {

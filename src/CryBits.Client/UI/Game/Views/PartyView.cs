@@ -16,8 +16,6 @@ internal class PartyView(UiContext uiContext, SpriteBatch spriteBatch, PartyView
 
     private void OnPostDraw()
     {
-        viewModel.Refresh();
-
         for (byte i = 0; i < viewModel.Members.Count; i++)
         {
             var member = viewModel.Members[i];

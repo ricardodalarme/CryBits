@@ -1,10 +1,12 @@
-using CryBits.Client.Core;
+using CryBits.Client.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
-using CryBits.Definitions.Items;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Definitions.Items;
 using CryBits.Protocol.Packets.Server;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using static CryBits.Definitions.Globals;
 
@@ -18,8 +20,12 @@ internal sealed class TradeOfferItemViewModel
     public Item? Definition { get; set; }
 }
 
-internal sealed class TradeViewModel(GameContext context, IntentSender intentSender, DefinitionCatalog catalog)
+internal sealed class TradeViewModel(World world, IntentSender intentSender, DefinitionCatalog catalog)
 {
+    private readonly World _world = world;
+    private readonly IntentSender _intentSender = intentSender;
+    private readonly DefinitionCatalog _catalog = catalog;
+
     public bool IsOpen { get; set; }
 
     public TradeOfferItemViewModel[] OwnOffer { get; private set; } = new TradeOfferItemViewModel[MaxInventory];
@@ -28,40 +34,42 @@ internal sealed class TradeViewModel(GameContext context, IntentSender intentSen
 
     public void OfferItem(short slot, short inventorySlot, short amount)
     {
-        intentSender.Send(new TradeOfferIntent(default, (byte)slot, inventorySlot, amount));
+        _intentSender.Send(new TradeOfferIntent(default, (byte)slot, inventorySlot, amount));
     }
 
     public void RemoveOfferItem(short slot)
     {
-        if (!context.LocalPlayerEntity.HasValue || slot >= OwnOffer.Length) return;
-        var inv = context.World.Get<CryBits.Simulation.Components.InventoryState>(context.LocalPlayerEntity.Value);
+        var localPlayerId = _world.Entities.All.FirstOrDefault(s => s.Has<LocalPlayerTag>())?.Id;
+
+        if (localPlayerId == null || slot >= OwnOffer.Length) return;
+        var inv = _world.Get<InventoryState>(localPlayerId.Value);
         if (inv == null) return;
 
         var offer = OwnOffer[slot];
         if (offer == null || inv.Slots[offer.SlotNum].ItemId == Guid.Empty) return;
 
-        intentSender.Send(new TradeOfferIntent(default, (byte)slot, 0, 0));
+        _intentSender.Send(new TradeOfferIntent(default, (byte)slot, 0, 0));
     }
 
     public void Close()
     {
-        intentSender.Send(new TradeLeaveIntent(default));
+        _intentSender.Send(new TradeLeaveIntent(default));
     }
 
     public void Accept()
     {
-        intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Accepted));
+        _intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Accepted));
         OwnOffer = new TradeOfferItemViewModel[MaxInventory];
     }
 
     public void Decline()
     {
-        intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Declined));
+        _intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Declined));
     }
 
     public void Confirm()
     {
-        intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Confirmed));
+        _intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Confirmed));
     }
 
     public void UpdateOwnOffer(PacketsTradeOfferItem[] items)
@@ -74,7 +82,7 @@ internal sealed class TradeViewModel(GameContext context, IntentSender intentSen
                 SlotNum = (short)i,
                 Amount = items[i].Amount,
                 ItemId = itemId,
-                Definition = itemId != Guid.Empty ? catalog.Items.Get(itemId) : null
+                Definition = itemId != Guid.Empty ? _catalog.Items.Get(itemId) : null
             };
         }
     }
@@ -89,7 +97,7 @@ internal sealed class TradeViewModel(GameContext context, IntentSender intentSen
                 SlotNum = (short)i,
                 Amount = items[i].Amount,
                 ItemId = itemId,
-                Definition = itemId != Guid.Empty ? catalog.Items.Get(itemId) : null
+                Definition = itemId != Guid.Empty ? _catalog.Items.Get(itemId) : null
             };
         }
     }

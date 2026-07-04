@@ -1,4 +1,7 @@
-using CryBits.Client.Core;
+using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
+using CryBits.Simulation.State;
 
 namespace CryBits.Client.UI.Game.ViewModels;
 
@@ -12,28 +15,52 @@ internal sealed class PartyMemberViewModel
     public short MaxMp { get; set; } = 1;
 }
 
-internal sealed class PartyViewModel(GameContext context)
+internal sealed class PartyViewModel : IDisposable
 {
+    private readonly Func<long, EntityId?> _lookup;
+    private readonly IDisposable _vitalsSubscription;
+    private readonly IDisposable _appearanceSubscription;
+
     public List<PartyMemberViewModel> Members { get; set; } = [];
 
-    public void Refresh()
+    public PartyViewModel(World world, Func<long, EntityId?> lookup)
     {
-        var world = context.World;
+        _lookup = lookup;
+
+        _vitalsSubscription = world.Events.On<Vitals>()
+            .OnChanged(OnVitalsChanged);
+
+        _appearanceSubscription = world.Events.On<PlayerAppearance>()
+            .OnChanged(OnAppearanceChanged);
+    }
+
+    private void OnVitalsChanged(ComponentChanged<Vitals> evt)
+    {
         foreach (var member in Members)
         {
-            var entity = context.GetNetworkEntity(member.Id);
-            if (entity != null)
-            {
-                var vitals = world.Get<Simulation.Components.Vitals>(entity.Value);
-                if (vitals != null)
-                {
-                    member.Hp = vitals.Hp;
-                    member.MaxHp = vitals.MaxHp;
-                    member.Mp = vitals.Mp;
-                    member.MaxMp = vitals.MaxMp;
-                }
-                member.Name = world.Get<Simulation.Components.PlayerAppearance>(entity.Value)?.Name ?? string.Empty;
-            }
+            if (_lookup(member.Id) != evt.Entity) continue;
+            member.Hp = evt.Component.Hp;
+            member.MaxHp = evt.Component.MaxHp;
+            member.Mp = evt.Component.Mp;
+            member.MaxMp = evt.Component.MaxMp;
+            break;
         }
+    }
+
+    private void OnAppearanceChanged(ComponentChanged<PlayerAppearance> evt)
+    {
+        var name = evt.Component.Name;
+        foreach (var member in Members)
+        {
+            if (_lookup(member.Id) != evt.Entity) continue;
+            member.Name = name;
+            break;
+        }
+    }
+
+    public void Dispose()
+    {
+        _vitalsSubscription.Dispose();
+        _appearanceSubscription.Dispose();
     }
 }

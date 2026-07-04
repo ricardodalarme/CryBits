@@ -7,11 +7,16 @@ using CryBits.Client.Rendering;
 using CryBits.Client.Rendering.Camera;
 using CryBits.Client.Rendering.Effects;
 using CryBits.Client.Rendering.Entities;
-using CryBits.Client.Rendering.Map;
 using CryBits.Client.Rendering.Items;
+using CryBits.Client.Rendering.Map;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.Systems;
 using CryBits.Client.Systems.Character;
+using CryBits.Client.Systems.Combat;
+using CryBits.Client.Systems.Core;
+using CryBits.Client.Systems.Map;
+using CryBits.Client.Systems.Movement;
+using CryBits.Client.Systems.Player;
 using CryBits.Client.UI;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.ViewModels;
@@ -20,11 +25,6 @@ using CryBits.Client.UI.Menu;
 using CryBits.Definitions.Catalog;
 using CryBits.Persistence.Repositories;
 using CryBits.Simulation.Components;
-using CryBits.Client.Systems.Core;
-using CryBits.Client.Systems.Movement;
-using CryBits.Client.Systems.Player;
-using CryBits.Client.Systems.Combat;
-using CryBits.Client.Systems.Map;
 
 namespace CryBits.Client.Core;
 
@@ -61,20 +61,22 @@ internal sealed class GameSession : IDisposable
 
         IntentSender = new IntentSender(connection);
 
-        var tradeViewModel = new TradeViewModel(Context, IntentSender, catalog);
-        var partyViewModel = new PartyViewModel(Context);
-        var inventoryViewModel = new InventoryViewModel(Context, IntentSender, catalog);
-        var hotbarViewModel = new HotbarViewModel(Context, IntentSender, catalog);
+        var world = Context.World;
+
+        var tradeViewModel = new TradeViewModel(world, IntentSender, catalog);
+        var partyViewModel = new PartyViewModel(world, Context.GetNetworkEntity);
+        var inventoryViewModel = new InventoryViewModel(world, IntentSender, catalog);
+        var hotbarViewModel = new HotbarViewModel(world, IntentSender, catalog);
         var shopViewModel = new ShopViewModel(IntentSender, catalog);
-        var characterViewModel = new CharacterViewModel(Context, IntentSender, catalog);
-        var statsViewModel = new StatsViewModel(Context);
+        var characterViewModel = new CharacterViewModel(world, IntentSender, catalog);
+        var statsViewModel = new StatsViewModel(world);
 
         _chat = new Chat(IntentSender, uiContext);
         _gameInput = new GameInput(IntentSender, _chat, inputManager, uiContext);
 
         var portraitRenderer = new PortraitRenderer(spriteBatch);
         var itemIconRenderer = new ItemIconRenderer(spriteBatch);
-        var equipmentSlotRenderer = new EquipmentSlotRenderer(spriteBatch, Context, catalog);
+        var equipmentSlotRenderer = new EquipmentSlotRenderer(spriteBatch, catalog);
         var tooltipView = new TooltipView(uiContext, itemIconRenderer, catalog);
 
         Screen = new GameScreen(
@@ -152,7 +154,6 @@ internal sealed class GameSession : IDisposable
                 if (level.TotalAttributes != total)
                     Context.World.Set(playerEntityId, level with { TotalAttributes = total });
             }
-            Screen.CharacterView.Update();
         }
     }
 

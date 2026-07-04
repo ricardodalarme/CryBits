@@ -14,18 +14,16 @@ internal class StatsView(UiContext uiContext, StatsViewModel viewModel) : ViewBa
 
     public override void Bind()
     {
-        uiContext.PostDraw += Update;
+        uiContext.PostDraw += OnPostDraw;
     }
 
     public override void Unbind()
     {
-        uiContext.PostDraw -= Update;
+        uiContext.PostDraw -= OnPostDraw;
     }
 
-    private void Update()
+    private void OnPostDraw()
     {
-        viewModel.Refresh();
-
         HpBar.ValueSafe = viewModel.HpPercent;
         MpBar.ValueSafe = viewModel.MpPercent;
         ExpBar.ValueSafe = viewModel.ExpPercent;

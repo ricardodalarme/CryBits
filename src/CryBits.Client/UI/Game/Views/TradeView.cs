@@ -108,7 +108,6 @@ internal class TradeView(
         var invSlot = inventory.DragOrigin;
         if (invSlot == null) return;
 
-        inventory.ViewModel.Refresh();
         var itemVM = inventory.ViewModel.Slots[invSlot.Value];
         if (itemVM == null) return;
         if (itemVM.Amount == 1)
