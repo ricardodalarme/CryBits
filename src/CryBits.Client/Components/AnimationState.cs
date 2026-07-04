@@ -7,4 +7,4 @@ public enum CharacterAnimation : byte
     Attack = 2
 }
 
-public sealed record class AnimationState(int FrameX, int FrameY, float Timer, CharacterAnimation Current);
+public sealed record AnimationState(int FrameX, int FrameY, float Timer, CharacterAnimation Current);

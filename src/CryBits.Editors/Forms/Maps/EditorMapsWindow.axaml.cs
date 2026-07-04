@@ -93,9 +93,8 @@ internal partial class EditorMapsWindow : Window
     public int TileCanvasWidth => Math.Max(1, (int)tileSheetPane.TileViewport.Bounds.Width);
     public int TileCanvasHeight => Math.Max(1, (int)tileSheetPane.TileViewport.Bounds.Height);
 
-    public Map? SelectedMap => _selected;
+    public Map? SelectedMap { get; private set; }
 
-    private Map? _selected;
     private MapProperties? _mapProps;
     private Layer _paintLayer = Layer.Ground;
     private DefinitionsTileData[,]? _clipboardData;
@@ -229,19 +228,19 @@ internal partial class EditorMapsWindow : Window
 
         // Inject dependencies
         layersPane.ChunksPane.ZoomBorder = mapCanvasPane.ZoomBorder;
-        layersPane.ChunksPane.GetSelectedMap = () => _selected;
+        layersPane.ChunksPane.GetSelectedMap = () => SelectedMap;
 
         // Set canvas dependencies
         mapCanvasPane.Deps = new CanvasDeps
         {
-            GetSelectedMap = () => _selected,
+            GetSelectedMap = () => SelectedMap,
             GetPaintLayer = () => _paintLayer,
             ToolbarPane = toolbarPane,
             LayersPane = layersPane,
             TileSheetPane = tileSheetPane,
             AttributesPane = attributesPane,
             NpcPane = npcPane,
-            RefreshChunkList = () => layersPane.RefreshChunkList(),
+            RefreshChunkList = () => layersPane.RefreshChunkList()
         };
 
         // Wire toolbar pane with dependencies
@@ -250,7 +249,7 @@ internal partial class EditorMapsWindow : Window
             CanvasPane = mapCanvasPane,
             LayersPane = layersPane,
             TileSheetPane = tileSheetPane,
-            GetSelectedMap = () => _selected,
+            GetSelectedMap = () => SelectedMap,
             GetMapSelection = () => mapCanvasPane.MapSelection,
             MakeSetTile = () => mapCanvasPane.MakeSetTileForTool(),
             GetClipboard = () => _clipboardData,
@@ -260,7 +259,7 @@ internal partial class EditorMapsWindow : Window
             SetShowAudio = v => _showAudio = v,
             ParentWindow = this,
             SetLeftPanelMode = mode => SetMode(mode),
-            PopulateNpcCombo = () => npcPane.PopulateCombo(),
+            PopulateNpcCombo = () => npcPane.PopulateCombo()
         });
 
         // Wire cross-pane events
@@ -321,7 +320,7 @@ internal partial class EditorMapsWindow : Window
             }
         }
 
-        if (MapRenderer.Instance.WinMap != null && _selected != null)
+        if (MapRenderer.Instance.WinMap != null && SelectedMap != null)
         {
             MapRenderer.Instance.EditorMapsMap();
             SfmlRenderBlit.Blit(MapRenderer.Instance.WinMap, ref _mapBitmap, mapCanvasPane.ImgMap);
@@ -350,7 +349,7 @@ internal partial class EditorMapsWindow : Window
 
     private void SelectMap(Map map)
     {
-        _selected = map;
+        SelectedMap = map;
         layersPane.SelectedMap = map;
         zonesPane.SelectedMap = map;
         attributesPane.SelectedMap = map;
@@ -371,7 +370,7 @@ internal partial class EditorMapsWindow : Window
     private void OnMapPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MapProperties.Name))
-            explorerPane.RefreshList(_selected?.Id);
+            explorerPane.RefreshList(SelectedMap?.Id);
     }
 
     // ── STATUS BAR ─────────────────────────────────────────────────────

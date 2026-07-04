@@ -22,9 +22,8 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
     public void Update(float t)
     {
         var localPlayer = context.LocalPlayer;
-        if (localPlayer is null) return;
 
-        var entity = localPlayer.Entity;
+        var entity = localPlayer?.Entity;
         if (entity == null || !context.World.IsAlive(entity.Value)) return;
 
         _inputThrottle += t;

@@ -71,7 +71,7 @@ internal class CharacterView(UiContext uiContext, GameContext context, IntentSen
         if (equipSlot == Guid.Empty) return;
 
         var item = catalog.Items.Get(equipSlot);
-        if (item == null || item.Bind != BindOn.Equip)
+        if (item is not { Bind: BindOn.Equip })
             intentSender.Send(new EquipmentRemoveIntent(default, (byte)slot));
     }
 

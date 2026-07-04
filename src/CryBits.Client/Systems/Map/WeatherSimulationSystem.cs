@@ -47,7 +47,7 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
         }
 
         _snowMoveAccumulator += dt;
-        bool snowMove = _snowMoveAccumulator >= SnowDriftInterval;
+        var snowMove = _snowMoveAccumulator >= SnowDriftInterval;
         if (snowMove) _snowMoveAccumulator -= SnowDriftInterval;
 
         _pendingDestroy.Clear();

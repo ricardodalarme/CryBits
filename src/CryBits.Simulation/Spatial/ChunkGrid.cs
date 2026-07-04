@@ -54,8 +54,8 @@ public sealed class ChunkGrid
     public HashSet<ChunkCoord> GetNeighborhood(ChunkCoord center, int radius = 2)
     {
         var result = new HashSet<ChunkCoord>();
-        for (short dx = (short)-radius; dx <= radius; dx++)
-            for (short dy = (short)-radius; dy <= radius; dy++)
+        for (var dx = (short)-radius; dx <= radius; dx++)
+            for (var dy = (short)-radius; dy <= radius; dy++)
                 result.Add(new ChunkCoord((short)(center.X + dx), (short)(center.Y + dy)));
         return result;
     }

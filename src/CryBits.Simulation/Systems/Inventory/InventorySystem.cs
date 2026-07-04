@@ -23,7 +23,7 @@ public sealed class InventorySystem : ISimulationSystem
             switch (intent)
             {
                 case CollectItemIntent collect:
-                    CollectItem(world, tick, collect.SourceEntityId);
+                    CollectItem(world, collect.SourceEntityId);
                     break;
                 case DropItemIntent drop:
                     {
@@ -92,7 +92,6 @@ public sealed class InventorySystem : ISimulationSystem
                         if (!world.Has<PlayerTag>(equip.PlayerId)) continue;
                         var e = world.Entities.Get(equip.PlayerId);
                         if (e == null) continue;
-                        var inv = e.Get<InventoryState>()!;
                         var pos = e.Get<Position>()!;
                         var oldItem = world.Catalog.Items.Get(equip.OldItemId.Value);
                         if (oldItem == null) continue;
@@ -160,7 +159,7 @@ public sealed class InventorySystem : ISimulationSystem
                 {
                     if (newHotbarSlots[h].Type == SlotType.Item && newHotbarSlots[h].Slot == slotIndex)
                     {
-                        newHotbarSlots[h] = newHotbarSlots[h] with { Type = SlotType.None, Slot = 0 };
+                        newHotbarSlots[h] = new HotbarSlot(Type: SlotType.None, Slot: 0);
                         world.Set(entityId, new HotbarState(newHotbarSlots));
                         break;
                     }
@@ -250,7 +249,7 @@ public sealed class InventorySystem : ISimulationSystem
         }
     }
 
-    private void CollectItem(World world, Tick tick, EntityId entityId)
+    private void CollectItem(World world, EntityId entityId)
     {
         var e = world.Entities.Get(entityId);
         if (e == null) return;

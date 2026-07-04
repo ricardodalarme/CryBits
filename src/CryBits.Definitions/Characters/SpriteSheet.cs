@@ -2,7 +2,7 @@ using CryBits.Definitions.Common;
 
 namespace CryBits.Definitions.Characters;
 
-public sealed record class SpriteSheet(int Columns, int Rows, byte RowDown, byte RowLeft, byte RowRight, byte RowUp)
+public sealed record SpriteSheet(int Columns, int Rows, byte RowDown, byte RowLeft, byte RowRight, byte RowUp)
 {
     public static readonly SpriteSheet Default = new(3, 4, 0, 1, 2, 3);
 

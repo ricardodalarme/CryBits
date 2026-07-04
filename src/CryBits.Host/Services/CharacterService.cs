@@ -201,7 +201,7 @@ internal sealed class CharacterService(
             InventoryAmounts = new short[MaxInventory],
             Equipment = new Guid[(byte)Equipment.Count],
             HotbarTypes = new byte[MaxHotbar],
-            HotbarSlots = new byte[MaxHotbar],
+            HotbarSlots = new byte[MaxHotbar]
         };
 
         for (byte i = 0; i < MaxInventory; i++)
@@ -247,14 +247,14 @@ internal sealed class CharacterService(
             var payload = ChunkPayloadBuilder.Build(world, pos.MapId, chunkCoord.X, chunkCoord.Y);
             if (payload != null)
             {
-                var chunkBytes = MemoryPackSerializer.Serialize<CryBits.Protocol.Packets.Server.IServerPacket>(payload);
+                var chunkBytes = MemoryPackSerializer.Serialize<Protocol.Packets.Server.IServerPacket>(payload);
                 transport.Send(session.Id, chunkBytes, DeliveryChannel.ReliableOrdered);
             }
         }
 
         var allOnMap = GetAllEntitiesOnMap(host.Entities, pos.MapId);
         var keyframe = keyframeEncoder.Encode(pos.MapId, allOnMap);
-        var bytes = MemoryPackSerializer.Serialize<CryBits.Protocol.Packets.Server.IServerPacket>(keyframe);
+        var bytes = MemoryPackSerializer.Serialize<Protocol.Packets.Server.IServerPacket>(keyframe);
         transport.Send(session.Id, bytes, DeliveryChannel.ReliableOrdered);
 
         host.Entities.Get(entityId)?.Remove<MapLoadingTag>();

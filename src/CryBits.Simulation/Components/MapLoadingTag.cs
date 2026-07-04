@@ -3,4 +3,4 @@ using MemoryPack;
 namespace CryBits.Simulation.Components;
 
 [MemoryPackable]
-public sealed partial record class MapLoadingTag;
+public sealed partial record MapLoadingTag;

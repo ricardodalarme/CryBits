@@ -3,7 +3,7 @@ using MemoryPack;
 namespace CryBits.Definitions.Maps;
 
 [MemoryPackable]
-public sealed partial record class MapChunk(
+public sealed partial record MapChunk(
     short X,
     short Y,
     long Version,

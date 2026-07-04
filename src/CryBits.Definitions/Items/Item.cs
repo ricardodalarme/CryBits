@@ -7,7 +7,7 @@ namespace CryBits.Definitions.Items;
 
 /// <summary>Game item definition.</summary>
 [MemoryPackable]
-public partial record class Item : Definition
+public partial record Item : Definition
 {
     public string Description { get; set; } = string.Empty;
     public short Texture { get; set; }

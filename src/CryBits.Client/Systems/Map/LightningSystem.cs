@@ -53,10 +53,10 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
         }
 
         if (weather == WeatherType.Thunder)
-            TryThunder(100);
+            TryThunder();
     }
 
-    private void TryThunder(byte intensity)
+    private void TryThunder()
     {
         if (Random.Shared.Next(0, 1000) != 0) return;
 

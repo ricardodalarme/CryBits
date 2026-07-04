@@ -25,7 +25,7 @@ internal sealed class WeatherParticleRenderer(World world, SpriteBatch spriteBat
             var transform = state.Get<TransformComponent>();
             if (particle == null || transform == null) continue;
 
-            float srcX = particle.Type == WeatherType.Snow ? 32f : 0f;
+            var srcX = particle.Type == WeatherType.Snow ? 32f : 0f;
             AppendQuad(_batch, transform.X, transform.Y, srcX, 0f, 32f, 32f, _particleTint);
         }
 

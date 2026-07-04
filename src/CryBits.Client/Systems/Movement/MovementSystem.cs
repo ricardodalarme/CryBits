@@ -59,7 +59,7 @@ internal sealed class MovementSystem(World world) : IClientSystem
         if (m.MovementState == MovementState.Stopped)
             return m with { OffsetX = 0f, OffsetY = 0f };
 
-        float delta = m.SpeedPixelsPerSecond * dt;
+        var delta = m.SpeedPixelsPerSecond * dt;
         float prevX = m.OffsetX, prevY = m.OffsetY;
 
         var newOffsetX = m.Direction switch

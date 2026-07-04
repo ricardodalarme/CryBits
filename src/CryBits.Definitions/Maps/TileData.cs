@@ -3,7 +3,7 @@ using MemoryPack;
 namespace CryBits.Definitions.Maps;
 
 [MemoryPackable]
-public sealed partial record class TileData(
+public sealed partial record TileData(
     byte Texture,
     int SourceX,
     int SourceY,

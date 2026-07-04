@@ -9,7 +9,6 @@ namespace CryBits.Client.UI.Game.Views;
 
 internal class OptionsView(UiContext uiContext, AudioManager audioManager, GameContext context, Chat chat) : ViewBase
 {
-    internal Panel Panel => uiContext.Get<Panel>("OptionsPanel");
     internal Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
     internal Checkbox MusicsCheckbox => uiContext.Get<Checkbox>("Music");
     internal Checkbox ChatCheckbox => uiContext.Get<Checkbox>("ChatPreview");

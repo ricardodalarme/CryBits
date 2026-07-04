@@ -100,13 +100,7 @@ public sealed class MapRepository
             }
         }
     }
-
-    public void DeleteMap(Guid id)
-    {
-        var dir = MapDir(id);
-        if (dir.Exists) dir.Delete(true);
-    }
-
+    
     private DirectoryInfo MapDir(Guid id) =>
         new(Path.Combine(MapsDirectory.FullName, id.ToString()));
 

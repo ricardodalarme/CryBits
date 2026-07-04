@@ -71,14 +71,13 @@ public sealed class EmbeddedHostRunner : IDisposable
         new WorldInitializer(_host).Initialize();
 
         // Create an instance-based dispatcher and wire all host services
-        var hostDispatcher = new CryBits.Host.Network.PacketDispatcher(new SilentLogger<CryBits.Host.Network.PacketDispatcher>());
+        var hostDispatcher = new Host.Network.PacketDispatcher(new SilentLogger<Host.Network.PacketDispatcher>());
         var ps = _host.PackageSender;
         var es = _host.Entities;
         var ss = _host.Sessions;
 
         var authSender = new AuthSender(ps, pair.Server);
         var contentSender = new ContentSender(ps, catalog);
-        var shopSender = new ShopSender(ps);
         var accountSenderHost = new AccountSender(ps);
         var chatSender = new ChatSender(ps, es);
 
@@ -124,7 +123,7 @@ public sealed class EmbeddedHostRunner : IDisposable
     private static void RegisterComponentTypes()
     {
         ComponentTypes.RegisterDefault();
-        ComponentTypeRegistry.Register<CryBits.Client.Components.NetworkId>(18);
+        ComponentTypeRegistry.Register<Components.NetworkId>(18);
     }
 
     public void Stop()

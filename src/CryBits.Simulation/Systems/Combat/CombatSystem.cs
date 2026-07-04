@@ -44,7 +44,7 @@ public sealed class CombatSystem : ISimulationSystem
         var cooldown = attackerE.Get<AttackCooldown>()!;
         if (tick.TickNumber < cooldown.NextAllowedTick + (int)AttackSpeedTicks) return;
 
-        EntityId? victimId = intent.TargetId;
+        var victimId = intent.TargetId;
         if (victimId == null)
         {
             var dir = pos.Direction;
@@ -90,11 +90,10 @@ public sealed class CombatSystem : ISimulationSystem
             }
         }
 
-        DealDamage(world, tick, intent.SourceEntityId, victimId.Value, mapDef, cooldown);
+        DealDamage(world, tick, intent.SourceEntityId, victimId.Value);
     }
 
-    private void DealDamage(World world, Tick tick,
-        EntityId attackerId, EntityId victimId, Map mapDef, AttackCooldown cooldown)
+    private void DealDamage(World world, Tick tick, EntityId attackerId, EntityId victimId)
     {
         var attackerE = world.Entities.Get(attackerId);
         var victimE = world.Entities.Get(victimId);
@@ -104,7 +103,7 @@ public sealed class CombatSystem : ISimulationSystem
         var attackerAttrs = attackerE.Get<AttributesComponent>()!;
         var victimAttrs = victimE.Get<AttributesComponent>();
 
-        world.Update<AttackCooldown>(attackerId, c => c with { NextAllowedTick = tick.TickNumber });
+        world.Update<AttackCooldown>(attackerId, c => new AttackCooldown(NextAllowedTick: tick.TickNumber));
 
         var weaponDamage = GetWeaponDamage(world, attackerE);
         var attackerDamage = CombatFormulas.BaseDamage(attackerAttrs.Values[(byte)Attribute.Strength], weaponDamage);

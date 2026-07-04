@@ -3,4 +3,4 @@ using MemoryPack;
 namespace CryBits.Simulation.Components;
 
 [MemoryPackable]
-public sealed partial record class AttributesComponent(short[] Values);
+public sealed partial record AttributesComponent(short[] Values);

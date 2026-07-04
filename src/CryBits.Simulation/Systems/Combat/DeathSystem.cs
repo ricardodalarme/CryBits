@@ -40,13 +40,7 @@ public sealed class DeathSystem : ISimulationSystem
 
         var oldMapId = pos.MapId;
 
-        world.Update<Position>(died.EntityId, p => p with
-        {
-            Direction = (Direction)playerClass.SpawnDirection,
-            MapId = playerClass.SpawnMapId,
-            X = playerClass.SpawnX,
-            Y = playerClass.SpawnY
-        });
+        world.Update<Position>(died.EntityId, p => new Position(Direction: (Direction)playerClass.SpawnDirection, MapId: playerClass.SpawnMapId, X: playerClass.SpawnX, Y: playerClass.SpawnY));
 
         if (oldMapId != playerClass.SpawnMapId)
             world.Set(died.EntityId, new MapLoadingTag());

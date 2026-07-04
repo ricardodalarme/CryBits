@@ -104,9 +104,7 @@ internal sealed partial class EditorUILayoutViewModel : ObservableObject
     private static bool RemoveRecursive(List<Element> list, Element target)
     {
         if (list.Remove(target)) return true;
-        foreach (var el in list)
-            if (RemoveRecursive(el.Children, target)) return true;
-        return false;
+        return list.Any(el => RemoveRecursive(el.Children, target));
     }
 
     private static bool ReorderInList(List<Element> list, Element target, int dir)
@@ -120,8 +118,7 @@ internal sealed partial class EditorUILayoutViewModel : ObservableObject
             list.Insert(newIdx, target);
             return true;
         }
-        foreach (var el in list)
-            if (ReorderInList(el.Children, target, dir)) return true;
-        return false;
+
+        return list.Any(el => ReorderInList(el.Children, target, dir));
     }
 }

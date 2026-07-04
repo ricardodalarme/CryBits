@@ -28,7 +28,6 @@ internal class MenuScreen
     {
         _audio = audio;
         _uiContext = uiContext;
-        _connection = connection;
         BackgroundView = new(uiContext, connection, this);
         LoginView = new(uiContext, authSender, connection, this);
         RegisterView = new(uiContext, authSender, connection, this);
@@ -36,8 +35,6 @@ internal class MenuScreen
         SelectCharacterView = new(uiContext, accountSender, characterRenderer);
         CreateCharacterView = new(uiContext, accountSender, characterRenderer, catalog, this);
     }
-
-    private readonly Connection _connection;
 
     private ViewBase[] Views =>
     [

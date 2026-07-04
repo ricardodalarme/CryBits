@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace CryBits.Persistence.Repositories;
 
-public class ContentRepository()
+public class ContentRepository
 {
     private const string Format = ".json";
 

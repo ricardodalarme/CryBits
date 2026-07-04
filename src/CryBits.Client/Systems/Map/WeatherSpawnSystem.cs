@@ -46,8 +46,8 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
     private void SpawnParticle(WeatherType type)
     {
         int x, y, speed;
-        int start = 0;
-        bool back = false;
+        var start = 0;
+        var back = false;
 
         switch (type)
         {

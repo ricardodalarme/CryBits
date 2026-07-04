@@ -12,7 +12,7 @@ public sealed class Options
     public bool ShowMetrics { get; set; } = false;
     public bool Party { get; set; } = true;
     public bool Trade { get; set; } = true;
-    public bool PreMapGrid { get; set; } = false;
-    public bool PreMapView { get; set; } = false;
-    public bool PreMapAudio { get; set; } = false;
+    public bool PreMapGrid { get; set; }
+    public bool PreMapView { get; set; }
+    public bool PreMapAudio { get; set; }
 }

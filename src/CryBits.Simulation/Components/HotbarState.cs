@@ -4,4 +4,4 @@ using MemoryPack;
 namespace CryBits.Simulation.Components;
 
 [MemoryPackable]
-public sealed partial record class HotbarState(HotbarSlot[] Slots);
+public sealed partial record HotbarState(HotbarSlot[] Slots);

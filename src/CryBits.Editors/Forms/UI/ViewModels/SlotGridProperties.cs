@@ -8,7 +8,7 @@ namespace CryBits.Editors.Forms.UI.ViewModels;
 internal sealed class SlotGridProperties(Element config, Entity entity) : UIElementProperties(config, entity)
 {
     private readonly SlotGridElement _grid = (SlotGridElement)config;
-    private readonly CryBits.Client.Framework.UI.Entities.SlotGrid _gridEntity = (CryBits.Client.Framework.UI.Entities.SlotGrid)entity;
+    private readonly Client.Framework.UI.Entities.SlotGrid _gridEntity = (Client.Framework.UI.Entities.SlotGrid)entity;
 
     public override string GetTypeDiscriminator() => "SlotGrid";
 

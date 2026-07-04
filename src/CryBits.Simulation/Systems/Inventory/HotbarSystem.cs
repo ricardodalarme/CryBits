@@ -45,7 +45,7 @@ public sealed class HotbarSystem : ISimulationSystem
         if (hotbarSlot >= hotbar.Slots.Length) return;
 
         var newSlots = (HotbarSlot[])hotbar.Slots.Clone();
-        newSlots[hotbarSlot] = newSlots[hotbarSlot] with { Type = type, Slot = slot };
+        newSlots[hotbarSlot] = new HotbarSlot(Type: type, Slot: slot);
         world.Set(entityId, new HotbarState(newSlots));
     }
 

@@ -7,7 +7,6 @@ namespace CryBits.Client.Core;
 
 internal sealed class GameContext
 {
-    public DefinitionCatalog Catalog { get; }
     public World World { get; }
 
     public Map? CurrentMap { get; set; }
@@ -18,7 +17,6 @@ internal sealed class GameContext
 
     internal GameContext(DefinitionCatalog catalog)
     {
-        Catalog = catalog;
         World = new World(catalog, enableDirtyTracking: false);
         LocalPlayer = new LocalPlayer(World, null);
     }

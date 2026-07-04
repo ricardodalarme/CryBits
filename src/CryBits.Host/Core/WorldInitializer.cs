@@ -12,7 +12,7 @@ internal sealed class WorldInitializer(WorldHost host)
         foreach (var mapDef in world.Catalog.Maps.Values)
         {
             world.MapDefs[mapDef.Id] = mapDef;
-            for (int i = 0; i < mapDef.Npc.Count; i++)
+            for (var i = 0; i < mapDef.Npc.Count; i++)
                 NpcSpawner.Spawn(world, mapDef.Id, i);
         }
     }

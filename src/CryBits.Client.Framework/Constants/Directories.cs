@@ -15,12 +15,12 @@ public static class Directories
     public static readonly DirectoryInfo Fonts = new(Path.Combine(BaseDir, "Graphics", "Fonts"));
     public static readonly FileInfo Options = new(Path.Combine(BaseDir, "Data", "Options.json"));
     public static readonly DirectoryInfo UITheme = new(Path.Combine(BaseDir, "Data", "UI"));
-    public static readonly FileInfo ToolsData = new(Path.Combine(BaseDir, "Data", "Tools.json"));
+    private static readonly FileInfo ToolsData = new(Path.Combine(BaseDir, "Data", "Tools.json"));
 
-    public static readonly DirectoryInfo MapsData = new(Path.Combine(BaseDir, "Data", "Maps"));
+    private static readonly DirectoryInfo MapsData = new(Path.Combine(BaseDir, "Data", "Maps"));
     public static readonly DirectoryInfo Tiles = new(Path.Combine(BaseDir, "Data", "Tiles"));
-    public static readonly FileInfo TexBackground = new(Path.Combine(BaseDir, "Graphics", "Interface", "Background"));
-    public static readonly FileInfo TexChat = new(Path.Combine(BaseDir, "Graphics", "Interface", "Chat"));
+    private static readonly FileInfo TexBackground = new(Path.Combine(BaseDir, "Graphics", "Interface", "Background"));
+    private static readonly FileInfo TexChat = new(Path.Combine(BaseDir, "Graphics", "Interface", "Chat"));
     public static readonly FileInfo TexEquipments = new(Path.Combine(BaseDir, "Graphics", "Interface", "Equipments"));
     public static readonly DirectoryInfo TexPanels = new(Path.Combine(BaseDir, "Graphics", "Interface", "Panels"));
     public static readonly DirectoryInfo TexButtons = new(Path.Combine(BaseDir, "Graphics", "Interface", "Buttons"));

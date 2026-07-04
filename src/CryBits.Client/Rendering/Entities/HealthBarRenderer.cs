@@ -30,10 +30,9 @@ internal sealed class HealthBarRenderer(World world, SpriteBatch spriteBatch) : 
 
             var barX = transform.X;
             var barY = transform.Y + frameH + 4;
-            var fullWidth = frameW;
-            var fillWidth = hp * fullWidth / maxHp;
+            var fillWidth = hp * frameW / maxHp;
 
-            spriteBatch.Draw(Textures.Bars, barX, barY, 0, 4, fullWidth, 4);
+            spriteBatch.Draw(Textures.Bars, barX, barY, 0, 4, frameW, 4);
             spriteBatch.Draw(Textures.Bars, barX, barY, 0, 0, fillWidth, 4);
         }
     }

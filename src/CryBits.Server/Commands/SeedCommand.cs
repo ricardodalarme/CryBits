@@ -241,8 +241,8 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
         foreach (var (cx, cy, col) in chunks)
         {
             var tiles = new TileData[32, 32];
-            for (int x = 0; x < 32; x++)
-                for (int y = 0; y < 32; y++)
+            for (var x = 0; x < 32; x++)
+                for (var y = 0; y < 32; y++)
                     tiles[x, y] = new TileData(Texture: 4, SourceX: col, SourceY: 0, IsAutoTile: false, Attribute: new NoAttribute());
             map.Chunks[new ChunkCoord(cx, cy)] = new MapChunk(cx, cy, 1, tiles);
         }

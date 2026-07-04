@@ -17,12 +17,11 @@ internal sealed class PanelProperties(Element config, Entity entity) : UIElement
         set
         {
             _panel.Texture = value;
-            if (_entity.OverrideStyles != null)
-                _entity.OverrideStyles.FillTextureStretched = string.IsNullOrEmpty(value) ? null : new global::Iguina.Defs.StretchedTexture
-                {
-                    TextureId = value,
-                    SourceRect = new global::Iguina.Defs.Rectangle { Width = _entity.Size.X.GetValueInPixels(800), Height = _entity.Size.Y.GetValueInPixels(608) }
-                };
+            _entity.OverrideStyles?.FillTextureStretched = string.IsNullOrEmpty(value) ? null : new global::Iguina.Defs.StretchedTexture
+            {
+                TextureId = value,
+                SourceRect = new global::Iguina.Defs.Rectangle { Width = _entity.Size.X.GetValueInPixels(800), Height = _entity.Size.Y.GetValueInPixels(608) }
+            };
             RaisePropertyChanged(nameof(Texture));
         }
     }

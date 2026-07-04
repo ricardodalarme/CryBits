@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace CryBits.Definitions.Maps;
 
 [MemoryPackable]
-public partial record class Map : Definition
+public partial record Map : Definition
 {
     public Moral Moral { get; set; }
     public byte Panorama { get; set; }

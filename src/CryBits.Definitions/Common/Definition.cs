@@ -3,7 +3,7 @@ using MemoryPack;
 namespace CryBits.Definitions.Common;
 
 [MemoryPackable]
-public partial record class Definition : IEquatable<Definition>
+public partial record Definition : IEquatable<Definition>
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

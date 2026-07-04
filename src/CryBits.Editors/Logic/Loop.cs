@@ -56,8 +56,7 @@ internal class Loop(MapInstance mapInstance)
     {
         // Return early when the selected map is unavailable or audio is disabled.
         var win = EditorMapsWindow.Instance;
-        if (win == null) return;
-        if (win.SelectedMap == null) return;
+        if (win?.SelectedMap == null) return;
         if (!win.IsOpen)
         {
             AudioManager.Instance?.StopMusic();

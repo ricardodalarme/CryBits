@@ -4,13 +4,14 @@ using MemoryPack;
 namespace CryBits.Simulation.Components;
 
 [MemoryPackable]
-public sealed partial record class InventoryState(ItemSlot[] Slots)
+public sealed partial record InventoryState(ItemSlot[] Slots)
 {
     public byte CountFreeSlots()
     {
         byte count = 0;
-        for (var i = 0; i < Slots.Length; i++)
-            if (Slots[i].ItemId == Guid.Empty) count++;
+        foreach (var t in Slots)
+            if (t.ItemId == Guid.Empty) count++;
+
         return count;
     }
 }

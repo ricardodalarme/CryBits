@@ -22,7 +22,7 @@ internal partial class EditorItemsWindow : Window
         window.Show();
     }
 
-    public static short CurrentTextureIndex { get; private set; } = 0;
+    public static short CurrentTextureIndex { get; private set; }
 
     private Item? _selected;
     private WriteableBitmap? _textureBitmap;
@@ -114,8 +114,7 @@ internal partial class EditorItemsWindow : Window
 
     private void cmbReq_Class_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_selected == null) return;
-        _selected.ReqClassId = cmbReq_Class.SelectedIndex == 0
+        _selected?.ReqClassId = cmbReq_Class.SelectedIndex == 0
             ? null
             : (cmbReq_Class.SelectedItem as Class)?.Id;
     }

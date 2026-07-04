@@ -27,9 +27,9 @@ internal class DraggableSlotView(UiContext uiContext, ItemIconRenderer itemRende
             var inv = context.LocalPlayer.GetInventory();
             if (hotbar == null || inv == null) return;
             var hotbarSlot = hotbar.Slots[hotSlot];
-            if (hotbarSlot is HotbarSlot { Type: SlotType.Item } h)
+            if (hotbarSlot is { Type: SlotType.Item })
             {
-                var itemId = inv.Slots[h.Slot].ItemId;
+                var itemId = inv.Slots[hotbarSlot.Slot].ItemId;
                 if (catalog.Items.Get(itemId) is { } item) itemRenderer.DrawItem(item, 1, pos);
             }
         }

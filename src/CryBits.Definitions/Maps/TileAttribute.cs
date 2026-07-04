@@ -8,26 +8,26 @@ namespace CryBits.Definitions.Maps;
 [MemoryPackUnion(2, typeof(WarpTile))]
 [MemoryPackUnion(3, typeof(SpawnTile))]
 [MemoryPackUnion(4, typeof(ItemTile))]
-public abstract partial record class TileAttributeUnion;
+public abstract partial record TileAttributeUnion;
 
 [MemoryPackable]
-public sealed partial record class NoAttribute : TileAttributeUnion;
+public sealed partial record NoAttribute : TileAttributeUnion;
 
 [MemoryPackable]
-public sealed partial record class BlockedTile : TileAttributeUnion;
+public sealed partial record BlockedTile : TileAttributeUnion;
 
 [MemoryPackable]
-public sealed partial record class WarpTile(
+public sealed partial record WarpTile(
     Guid TargetMapId,
     int TargetX,
     int TargetY
 ) : TileAttributeUnion;
 
 [MemoryPackable]
-public sealed partial record class SpawnTile(byte Zone) : TileAttributeUnion;
+public sealed partial record SpawnTile(byte Zone) : TileAttributeUnion;
 
 [MemoryPackable]
-public sealed partial record class ItemTile(
+public sealed partial record ItemTile(
     Guid ItemId,
     int Amount
 ) : TileAttributeUnion;

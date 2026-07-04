@@ -54,10 +54,10 @@ internal class ChatView(UiContext uiContext, Chat chat) : ViewBase
             {
                 Text = line.Text,
                 TextOverflowMode = TextOverflowMode.WrapWords,
-                ShrinkHeightToMinimalSize = true,
+                ShrinkHeightToMinimalSize = true
             };
             paragraph.Size.SetPixels(330, 0);
-            paragraph.OverrideStyles.TextFillColor = new Iguina.Defs.Color(
+            paragraph.OverrideStyles.TextFillColor = new Color(
                 line.Color.R, line.Color.G, line.Color.B, line.Color.A);
             MessagesPanel.AddChild(paragraph);
             _messageParagraphs.Add(paragraph);

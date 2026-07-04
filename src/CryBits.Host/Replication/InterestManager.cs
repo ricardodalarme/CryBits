@@ -8,14 +8,13 @@ namespace CryBits.Host.Replication;
 
 public sealed class InterestManager(World world)
 {
-    private readonly World _world = world;
     private readonly ChunkGrid _grid = world.SpatialGrid;
     private readonly Dictionary<EntityId, HashSet<ChunkCoord>> _subscriptions = [];
     private const int AoiRadius = 2;
 
     public SubscriptionDiff Update(EntityId observer)
     {
-        var pos = _world.Get<Position>(observer);
+        var pos = world.Get<Position>(observer);
         if (pos == null) return new SubscriptionDiff();
 
         var center = ChunkGrid.FromPosition(pos.X, pos.Y);

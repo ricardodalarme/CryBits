@@ -14,7 +14,7 @@ public static class IntentRegistry
 
     public static Type? GetTypeForTag(byte tag) =>
         TagToType.TryGetValue(tag, out var type) ? type : null;
-    public static byte GetTag<T>() => TypeToTag[typeof(T)];
+
     public static byte? GetTag(Type type) =>
         TypeToTag.TryGetValue(type, out var tag) ? tag : null;
 }

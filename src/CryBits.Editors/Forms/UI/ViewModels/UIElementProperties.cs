@@ -24,7 +24,7 @@ internal abstract class UIElementProperties : ReactiveObject
         ["AutoInlineLTR"] = global::Iguina.Defs.Anchor.AutoInlineLTR,
         ["AutoRTL"] = global::Iguina.Defs.Anchor.AutoRTL,
         ["AutoInlineRTL"] = global::Iguina.Defs.Anchor.AutoInlineRTL,
-        ["AutoCenter"] = global::Iguina.Defs.Anchor.AutoCenter,
+        ["AutoCenter"] = global::Iguina.Defs.Anchor.AutoCenter
     };
 
     protected readonly Element _config;
@@ -42,14 +42,13 @@ internal abstract class UIElementProperties : ReactiveObject
 
     private string? GetAnchorName()
     {
-        foreach (var kv in AnchorMap)
-            if (kv.Value == _entity.Anchor) return kv.Key;
+        foreach (var kv in AnchorMap.Where(kv => kv.Value == _entity.Anchor)) return kv.Key;
         return "TopLeft";
     }
 
     private void OnAnchorChanged(object? sender, EventArgs e)
     {
-        if (_anchorOptions.SelectedValue is not string name) return;
+        if (_anchorOptions.SelectedValue is not { } name) return;
         if (AnchorMap.TryGetValue(name, out var anchor))
         {
             _config.Anchor = name;

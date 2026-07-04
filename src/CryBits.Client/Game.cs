@@ -171,7 +171,6 @@ public sealed class Game : IDisposable
             .AddSimulation(new DamageDecaySystem(context.World));
 
         // ── Packet handlers ──
-        var contentRepo = new ContentRepository();
         var mapRepo = new MapRepository();
         PacketDispatcher.Register(new AuthHandler(catalog, uiContext, _menuScreen));
         PacketDispatcher.Register(new AccountHandler(context, _menuScreen, _gameScreen));

@@ -100,7 +100,7 @@ internal sealed class Server(
     private void OnSessionDisconnected(Guid sessionId)
     {
         var session = host.Sessions.Find(s => s.Id == sessionId);
-        EntityId? characterId = session?.Character;
+        var characterId = session?.Character;
         if (characterId is { } cid)
             characterService.Leave(cid);
         if (session != null)

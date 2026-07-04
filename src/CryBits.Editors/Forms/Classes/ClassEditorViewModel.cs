@@ -10,98 +10,96 @@ namespace CryBits.Editors.Forms.Classes;
 
 internal sealed partial class ClassEditorViewModel(Class model, DefinitionCatalog catalog) : ObservableObject
 {
-    private readonly Class _model = model;
-    private readonly DefinitionCatalog _catalog = catalog;
+    public Class Model { get; } = model;
 
-    public Class Model => _model;
     public event Action? RequestClose;
     public event Action? RequestRefreshList;
 
     public string Name
     {
-        get => _model.Name;
-        set { _model.Name = value; OnPropertyChanged(); }
+        get => Model.Name;
+        set { Model.Name = value; OnPropertyChanged(); }
     }
 
     public string Description
     {
-        get => _model.Description;
-        set { _model.Description = value; OnPropertyChanged(); }
+        get => Model.Description;
+        set { Model.Description = value; OnPropertyChanged(); }
     }
 
     public short Hp
     {
-        get => _model.Vital[(byte)Vital.Hp];
-        set { _model.Vital[(byte)Vital.Hp] = value; OnPropertyChanged(); }
+        get => Model.Vital[(byte)Vital.Hp];
+        set { Model.Vital[(byte)Vital.Hp] = value; OnPropertyChanged(); }
     }
 
     public short Mp
     {
-        get => _model.Vital[(byte)Vital.Mp];
-        set { _model.Vital[(byte)Vital.Mp] = value; OnPropertyChanged(); }
+        get => Model.Vital[(byte)Vital.Mp];
+        set { Model.Vital[(byte)Vital.Mp] = value; OnPropertyChanged(); }
     }
 
     public short Strength
     {
-        get => _model.Attribute[(byte)Attribute.Strength];
-        set { _model.Attribute[(byte)Attribute.Strength] = value; OnPropertyChanged(); }
+        get => Model.Attribute[(byte)Attribute.Strength];
+        set { Model.Attribute[(byte)Attribute.Strength] = value; OnPropertyChanged(); }
     }
 
     public short Resistance
     {
-        get => _model.Attribute[(byte)Attribute.Resistance];
-        set { _model.Attribute[(byte)Attribute.Resistance] = value; OnPropertyChanged(); }
+        get => Model.Attribute[(byte)Attribute.Resistance];
+        set { Model.Attribute[(byte)Attribute.Resistance] = value; OnPropertyChanged(); }
     }
 
     public short Intelligence
     {
-        get => _model.Attribute[(byte)Attribute.Intelligence];
-        set { _model.Attribute[(byte)Attribute.Intelligence] = value; OnPropertyChanged(); }
+        get => Model.Attribute[(byte)Attribute.Intelligence];
+        set { Model.Attribute[(byte)Attribute.Intelligence] = value; OnPropertyChanged(); }
     }
 
     public short Agility
     {
-        get => _model.Attribute[(byte)Attribute.Agility];
-        set { _model.Attribute[(byte)Attribute.Agility] = value; OnPropertyChanged(); }
+        get => Model.Attribute[(byte)Attribute.Agility];
+        set { Model.Attribute[(byte)Attribute.Agility] = value; OnPropertyChanged(); }
     }
 
     public short Vitality
     {
-        get => _model.Attribute[(byte)Attribute.Vitality];
-        set { _model.Attribute[(byte)Attribute.Vitality] = value; OnPropertyChanged(); }
+        get => Model.Attribute[(byte)Attribute.Vitality];
+        set { Model.Attribute[(byte)Attribute.Vitality] = value; OnPropertyChanged(); }
     }
 
     public int SpawnX
     {
-        get => _model.SpawnX;
-        set { _model.SpawnX = value; OnPropertyChanged(); }
+        get => Model.SpawnX;
+        set { Model.SpawnX = value; OnPropertyChanged(); }
     }
 
     public int SpawnY
     {
-        get => _model.SpawnY;
-        set { _model.SpawnY = value; OnPropertyChanged(); }
+        get => Model.SpawnY;
+        set { Model.SpawnY = value; OnPropertyChanged(); }
     }
 
     public int SpawnDirectionIndex
     {
-        get => _model.SpawnDirection;
-        set { _model.SpawnDirection = (byte)value; OnPropertyChanged(); }
+        get => Model.SpawnDirection;
+        set { Model.SpawnDirection = (byte)value; OnPropertyChanged(); }
     }
 
     [RelayCommand]
     private void CreateNew()
     {
         var cls = new Class();
-        _catalog.Classes.Add(cls.Id, cls);
+        catalog.Classes.Add(cls.Id, cls);
         RequestRefreshList?.Invoke();
     }
 
     [RelayCommand]
     private void Remove()
     {
-        if (_catalog.Classes.Count == 1) return;
-        _catalog.Classes.Remove(_model.Id);
+        if (catalog.Classes.Count == 1) return;
+        catalog.Classes.Remove(Model.Id);
         RequestRefreshList?.Invoke();
     }
 

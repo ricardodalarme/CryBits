@@ -82,7 +82,6 @@ public sealed class LevelingSystem : ISimulationSystem
     {
         var e = world.Entities.Get(entityId);
         if (e == null) return;
-        var level = e.Get<LevelComponent>()!;
         var party = e.Get<PartyState>();
 
         if (party?.Members.Count > 0 && value > 0)

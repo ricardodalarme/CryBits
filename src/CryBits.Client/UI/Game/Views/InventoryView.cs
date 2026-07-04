@@ -14,9 +14,9 @@ internal class InventoryView(UiContext uiContext, IntentSender intentSender, Ite
 {
     private SlotGrid Grid => uiContext.Get<SlotGrid>("InventoryGrid");
 
-    private short? _dragOrigin;
-    internal short? DragOrigin => _dragOrigin;
-    public void ClearDrag() => _dragOrigin = null;
+    internal short? DragOrigin { get; private set; }
+
+    public void ClearDrag() => DragOrigin = null;
 
     public override void Bind()
     {
@@ -45,14 +45,14 @@ internal class InventoryView(UiContext uiContext, IntentSender intentSender, Ite
         var inv = context.LocalPlayer.GetInventory();
         if (inv == null || inv.Slots[slot].ItemId == Guid.Empty) return;
 
-        _dragOrigin = (short)slot;
+        DragOrigin = (short)slot;
         gameScreen.InventoryChange = (short)slot;
     }
 
     private void OnSlotLeftUp(int slot)
     {
-        var dragSlot = _dragOrigin;
-        _dragOrigin = null;
+        var dragSlot = DragOrigin;
+        DragOrigin = null;
         gameScreen.InventoryChange = null;
         if (dragSlot == null) return;
 

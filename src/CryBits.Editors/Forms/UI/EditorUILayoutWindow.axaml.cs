@@ -103,7 +103,7 @@ internal sealed partial class EditorUILayoutWindow : Window
     {
         _viewModel.SelectedNode = e.AddedItems.Count > 0 ? e.AddedItems[0] as EntityNode : null;
 
-        if (_viewModel.SelectedNode?.Entity != null && _viewModel.SelectedNode?.ConfigElement != null)
+        if (_viewModel.SelectedNode is { Entity: not null, ConfigElement: not null })
         {
             var vm = ElementViewModelFactory.Create(_viewModel.SelectedNode.ConfigElement, _viewModel.SelectedNode.Entity);
             propertyGrid.DataContext = vm;
@@ -122,7 +122,7 @@ internal sealed partial class EditorUILayoutWindow : Window
             ("NumericInput", "Numeric Input"), ("Label", "Label"), ("Title", "Title"),
             ("Paragraph", "Paragraph"), ("ProgressBar", "Progress Bar"),
             ("Slider", "Slider"),             ("Picture", "Picture"), ("SlotGrid", "Slot Grid"),
-            ("ListBox", "List Box"), ("DropDown", "Drop Down"),
+            ("ListBox", "List Box"), ("DropDown", "Drop Down")
         };
 
         var flyout = new MenuFlyout();

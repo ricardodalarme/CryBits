@@ -10,115 +10,113 @@ namespace CryBits.Editors.Forms.Items;
 
 internal sealed partial class ItemEditorViewModel(Item model, DefinitionCatalog catalog) : ObservableObject
 {
-    private readonly Item _model = model;
-    private readonly DefinitionCatalog _catalog = catalog;
+    public Item Model { get; } = model;
 
-    public Item Model => _model;
     public event Action? RequestClose;
     public event Action? RequestRefreshList;
     public event Action<Item>? RequestSelectItem;
 
     public string Name
     {
-        get => _model.Name;
-        set { _model.Name = value; OnPropertyChanged(); }
+        get => Model.Name;
+        set { Model.Name = value; OnPropertyChanged(); }
     }
 
     public string Description
     {
-        get => _model.Description;
-        set { _model.Description = value; OnPropertyChanged(); }
+        get => Model.Description;
+        set { Model.Description = value; OnPropertyChanged(); }
     }
 
     public short Texture
     {
-        get => _model.Texture;
-        set { _model.Texture = value; OnPropertyChanged(); }
+        get => Model.Texture;
+        set { Model.Texture = value; OnPropertyChanged(); }
     }
 
     public bool Stackable
     {
-        get => _model.Stackable;
-        set { _model.Stackable = value; OnPropertyChanged(); }
+        get => Model.Stackable;
+        set { Model.Stackable = value; OnPropertyChanged(); }
     }
 
     public int RarityIndex
     {
-        get => (int)_model.Rarity;
-        set { _model.Rarity = (Rarity)value; OnPropertyChanged(); }
+        get => (int)Model.Rarity;
+        set { Model.Rarity = (Rarity)value; OnPropertyChanged(); }
     }
 
     public int BindIndex
     {
-        get => (int)_model.Bind;
-        set { _model.Bind = (BindOn)value; OnPropertyChanged(); }
+        get => (int)Model.Bind;
+        set { Model.Bind = (BindOn)value; OnPropertyChanged(); }
     }
 
     public short ReqLevel
     {
-        get => _model.ReqLevel;
-        set { _model.ReqLevel = value; OnPropertyChanged(); }
+        get => Model.ReqLevel;
+        set { Model.ReqLevel = value; OnPropertyChanged(); }
     }
 
     public short PotionHp
     {
-        get => _model.PotionVital[(byte)Vital.Hp];
-        set { _model.PotionVital[(byte)Vital.Hp] = value; OnPropertyChanged(); }
+        get => Model.PotionVital[(byte)Vital.Hp];
+        set { Model.PotionVital[(byte)Vital.Hp] = value; OnPropertyChanged(); }
     }
 
     public short PotionMp
     {
-        get => _model.PotionVital[(byte)Vital.Mp];
-        set { _model.PotionVital[(byte)Vital.Mp] = value; OnPropertyChanged(); }
+        get => Model.PotionVital[(byte)Vital.Mp];
+        set { Model.PotionVital[(byte)Vital.Mp] = value; OnPropertyChanged(); }
     }
 
     public int PotionExperience
     {
-        get => _model.PotionExperience;
-        set { _model.PotionExperience = value; OnPropertyChanged(); }
+        get => Model.PotionExperience;
+        set { Model.PotionExperience = value; OnPropertyChanged(); }
     }
 
     public short EquipStrength
     {
-        get => _model.EquipAttribute[(byte)Attribute.Strength];
-        set { _model.EquipAttribute[(byte)Attribute.Strength] = value; OnPropertyChanged(); }
+        get => Model.EquipAttribute[(byte)Attribute.Strength];
+        set { Model.EquipAttribute[(byte)Attribute.Strength] = value; OnPropertyChanged(); }
     }
 
     public short EquipResistance
     {
-        get => _model.EquipAttribute[(byte)Attribute.Resistance];
-        set { _model.EquipAttribute[(byte)Attribute.Resistance] = value; OnPropertyChanged(); }
+        get => Model.EquipAttribute[(byte)Attribute.Resistance];
+        set { Model.EquipAttribute[(byte)Attribute.Resistance] = value; OnPropertyChanged(); }
     }
 
     public short EquipIntelligence
     {
-        get => _model.EquipAttribute[(byte)Attribute.Intelligence];
-        set { _model.EquipAttribute[(byte)Attribute.Intelligence] = value; OnPropertyChanged(); }
+        get => Model.EquipAttribute[(byte)Attribute.Intelligence];
+        set { Model.EquipAttribute[(byte)Attribute.Intelligence] = value; OnPropertyChanged(); }
     }
 
     public short EquipAgility
     {
-        get => _model.EquipAttribute[(byte)Attribute.Agility];
-        set { _model.EquipAttribute[(byte)Attribute.Agility] = value; OnPropertyChanged(); }
+        get => Model.EquipAttribute[(byte)Attribute.Agility];
+        set { Model.EquipAttribute[(byte)Attribute.Agility] = value; OnPropertyChanged(); }
     }
 
     public short EquipVitality
     {
-        get => _model.EquipAttribute[(byte)Attribute.Vitality];
-        set { _model.EquipAttribute[(byte)Attribute.Vitality] = value; OnPropertyChanged(); }
+        get => Model.EquipAttribute[(byte)Attribute.Vitality];
+        set { Model.EquipAttribute[(byte)Attribute.Vitality] = value; OnPropertyChanged(); }
     }
 
     public short WeaponDamage
     {
-        get => _model.WeaponDamage;
-        set { _model.WeaponDamage = value; OnPropertyChanged(); }
+        get => Model.WeaponDamage;
+        set { Model.WeaponDamage = value; OnPropertyChanged(); }
     }
 
     [RelayCommand]
     private void CreateNew()
     {
         var item = new Item();
-        _catalog.Items.Add(item.Id, item);
+        catalog.Items.Add(item.Id, item);
         RequestRefreshList?.Invoke();
         RequestSelectItem?.Invoke(item);
     }
@@ -126,7 +124,7 @@ internal sealed partial class ItemEditorViewModel(Item model, DefinitionCatalog 
     [RelayCommand]
     private void Remove()
     {
-        _catalog.Items.Remove(_model.Id);
+        catalog.Items.Remove(Model.Id);
         RequestRefreshList?.Invoke();
     }
 

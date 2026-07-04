@@ -4,4 +4,4 @@ using MemoryPack;
 namespace CryBits.Simulation.Components;
 
 [MemoryPackable]
-public sealed partial record class PlayerAppearance(string Name, Guid ClassId, short TextureNum, Gender Gender);
+public sealed partial record PlayerAppearance(string Name, Guid ClassId, short TextureNum, Gender Gender);

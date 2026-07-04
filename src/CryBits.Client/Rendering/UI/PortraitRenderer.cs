@@ -28,11 +28,11 @@ internal sealed class PortraitRenderer(SpriteBatch spriteBatch)
         var recDestiny = new Rectangle(position, recSource.Size);
         var color = hurt ? new Color(205, 125, 125) : new Color(255, 255, 255);
 
-        DrawShadow(textureNum, position, frameW, frameH);
+        DrawShadow(position, frameW, frameH);
         spriteBatch.Draw(Textures.Characters[textureNum], recSource, recDestiny, color);
     }
 
-    public void DrawShadow(short textureNum, Point position, int frameW, int frameH)
+    public void DrawShadow(Point position, int frameW, int frameH)
     {
         var shadowSize = Textures.Shadow.ToSize();
         spriteBatch.Draw(Textures.Shadow, position.X,

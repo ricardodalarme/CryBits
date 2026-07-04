@@ -21,8 +21,8 @@ public sealed class TradeSystem : ISimulationSystem
                 case TradeInviteIntent i: Invite(world, tick, i.SourceEntityId, i.PlayerName); break;
                 case TradeAcceptIntent a: Accept(world, tick, a.SourceEntityId); break;
                 case TradeDeclineIntent d: Decline(world, tick, d.SourceEntityId); break;
-                case TradeLeaveIntent l: Leave(world, tick, l.SourceEntityId); break;
-                case TradeOfferIntent o: Offer(world, tick, o.SourceEntityId, o.OfferSlot, o.InventorySlot, o.Amount); break;
+                case TradeLeaveIntent l: Leave(world, l.SourceEntityId); break;
+                case TradeOfferIntent o: Offer(world, o.SourceEntityId, o.OfferSlot, o.InventorySlot, o.Amount); break;
                 case TradeOfferStateIntent s: OfferState(world, tick, s.SourceEntityId, s.State); break;
             }
         }
@@ -33,17 +33,17 @@ public sealed class TradeSystem : ISimulationSystem
             {
                 case PlayerStartedMovingEvent e:
                     {
-                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, tick, e.PlayerId);
+                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, e.PlayerId);
                         break;
                     }
                 case PlayerWarpedEvent e:
                     {
-                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, tick, e.PlayerId);
+                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, e.PlayerId);
                         break;
                     }
                 case PlayerDisconnectedEvent e:
                     {
-                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, tick, e.PlayerId);
+                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, e.PlayerId);
                         break;
                     }
             }
@@ -54,7 +54,7 @@ public sealed class TradeSystem : ISimulationSystem
     {
         var e = world.Entities.Get(entityId);
         if (e == null) return;
-        var appearance = e.Get<PlayerAppearance>()!;
+
         var pos = e.Get<Position>()!;
         var shop = e.Get<ShopState>();
 
@@ -121,7 +121,6 @@ public sealed class TradeSystem : ISimulationSystem
         var appearance = e.Get<PlayerAppearance>()!;
         var pos = e.Get<Position>()!;
         var trade = e.Get<TradeState>();
-        var shop = e.Get<ShopState>();
 
         var invitedId = trade?.PendingInviterId;
 
@@ -174,7 +173,7 @@ public sealed class TradeSystem : ISimulationSystem
         world.Remove<TradeState>(entityId);
     }
 
-    private void Leave(World world, Tick tick, EntityId entityId)
+    private void Leave(World world, EntityId entityId)
     {
         var e = world.Entities.Get(entityId);
         if (e == null) return;
@@ -185,7 +184,7 @@ public sealed class TradeSystem : ISimulationSystem
         world.Remove<TradeState>(entityId);
     }
 
-    private void Offer(World world, Tick tick, EntityId entityId, short slot, short inventorySlot, short amount)
+    private void Offer(World world, EntityId entityId, short slot, short inventorySlot, short amount)
     {
         var e = world.Entities.Get(entityId);
         if (e == null) return;
@@ -203,7 +202,7 @@ public sealed class TradeSystem : ISimulationSystem
                 if (newOffer[i].SlotNum == inventorySlot)
                     return;
 
-            newOffer[slot] = newOffer[slot] with { SlotNum = inventorySlot, Amount = amount };
+            newOffer[slot] = new TradeSlot { SlotNum = inventorySlot, Amount = amount };
         }
         else
             newOffer[slot] = new TradeSlot();

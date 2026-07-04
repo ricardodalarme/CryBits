@@ -12,7 +12,7 @@ namespace CryBits.Client.UI;
 public enum ScreenType
 {
     Menu,
-    Game,
+    Game
 }
 
 internal sealed class UiContext : IDisposable
@@ -75,7 +75,7 @@ internal sealed class UiContext : IDisposable
         {
             "Menu" => ScreenType.Menu,
             "Game" => ScreenType.Game,
-            _ => ScreenType.Menu,
+            _ => ScreenType.Menu
         };
     }
 

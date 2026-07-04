@@ -31,7 +31,6 @@ public sealed class NpcBrainSystem : ISimulationSystem
             if (!e.Has<NpcTag>()) continue;
             var npcState = e.Get<NpcState>();
             if (npcState == null) continue;
-            var pos = e.Get<Position>()!;
 
             UpdateTarget(world, e.Id, tick);
             if (npcState.TargetId.HasValue)

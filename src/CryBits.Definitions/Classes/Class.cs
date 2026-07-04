@@ -6,7 +6,7 @@ namespace CryBits.Definitions.Classes;
 
 /// <summary>Character class metadata (stats, textures and spawn info).</summary>
 [MemoryPackable]
-public partial record class Class : Definition
+public partial record Class : Definition
 {
     public string Description { get; set; } = string.Empty;
     public IList<short> TextureMale { get; set; } = [];

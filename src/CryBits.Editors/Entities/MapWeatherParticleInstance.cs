@@ -7,9 +7,9 @@ public struct MapWeatherParticleInstance
     public bool Visible { get; set; }
     public int X { get; set; }
     public int Y { get; set; }
-    public int Speed { get; set; }
-    public int Start { get; set; }
-    public bool Back { get; set; }
+    private int Speed { get; set; }
+    private int Start { get; set; }
+    private bool Back { get; set; }
 
     public void MoveRain()
     {

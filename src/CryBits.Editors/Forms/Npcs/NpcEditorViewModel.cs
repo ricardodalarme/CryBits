@@ -10,109 +10,107 @@ namespace CryBits.Editors.Forms.Npcs;
 
 internal sealed partial class NpcEditorViewModel(Npc model, DefinitionCatalog catalog) : ObservableObject
 {
-    private readonly Npc _model = model;
-    private readonly DefinitionCatalog _catalog = catalog;
+    private Npc Model { get; } = model;
 
-    public Npc Model => _model;
     public event Action? RequestClose;
     public event Action? RequestRefreshList;
 
     public string Name
     {
-        get => _model.Name;
-        set { _model.Name = value; OnPropertyChanged(); }
+        get => Model.Name;
+        set { Model.Name = value; OnPropertyChanged(); }
     }
 
     public string SayMsg
     {
-        get => _model.SayMsg;
-        set { _model.SayMsg = value; OnPropertyChanged(); }
+        get => Model.SayMsg;
+        set { Model.SayMsg = value; OnPropertyChanged(); }
     }
 
     public short Texture
     {
-        get => _model.Texture;
-        set { _model.Texture = value; OnPropertyChanged(); }
+        get => Model.Texture;
+        set { Model.Texture = value; OnPropertyChanged(); }
     }
 
     public byte Sight
     {
-        get => _model.Sight;
-        set { _model.Sight = value; OnPropertyChanged(); }
+        get => Model.Sight;
+        set { Model.Sight = value; OnPropertyChanged(); }
     }
 
     public byte SpawnTime
     {
-        get => _model.SpawnTime;
-        set { _model.SpawnTime = value; OnPropertyChanged(); }
+        get => Model.SpawnTime;
+        set { Model.SpawnTime = value; OnPropertyChanged(); }
     }
 
     public int Experience
     {
-        get => _model.Experience;
-        set { _model.Experience = value; OnPropertyChanged(); }
+        get => Model.Experience;
+        set { Model.Experience = value; OnPropertyChanged(); }
     }
 
     public short Hp
     {
-        get => _model.Vital[(byte)Vital.Hp];
-        set { _model.Vital[(byte)Vital.Hp] = value; OnPropertyChanged(); }
+        get => Model.Vital[(byte)Vital.Hp];
+        set { Model.Vital[(byte)Vital.Hp] = value; OnPropertyChanged(); }
     }
 
     public short Mp
     {
-        get => _model.Vital[(byte)Vital.Mp];
-        set { _model.Vital[(byte)Vital.Mp] = value; OnPropertyChanged(); }
+        get => Model.Vital[(byte)Vital.Mp];
+        set { Model.Vital[(byte)Vital.Mp] = value; OnPropertyChanged(); }
     }
 
     public short Strength
     {
-        get => _model.Attribute[(byte)Attribute.Strength];
-        set { _model.Attribute[(byte)Attribute.Strength] = value; OnPropertyChanged(); }
+        get => Model.Attribute[(byte)Attribute.Strength];
+        set { Model.Attribute[(byte)Attribute.Strength] = value; OnPropertyChanged(); }
     }
 
     public short Resistance
     {
-        get => _model.Attribute[(byte)Attribute.Resistance];
-        set { _model.Attribute[(byte)Attribute.Resistance] = value; OnPropertyChanged(); }
+        get => Model.Attribute[(byte)Attribute.Resistance];
+        set { Model.Attribute[(byte)Attribute.Resistance] = value; OnPropertyChanged(); }
     }
 
     public short Intelligence
     {
-        get => _model.Attribute[(byte)Attribute.Intelligence];
-        set { _model.Attribute[(byte)Attribute.Intelligence] = value; OnPropertyChanged(); }
+        get => Model.Attribute[(byte)Attribute.Intelligence];
+        set { Model.Attribute[(byte)Attribute.Intelligence] = value; OnPropertyChanged(); }
     }
 
     public short Agility
     {
-        get => _model.Attribute[(byte)Attribute.Agility];
-        set { _model.Attribute[(byte)Attribute.Agility] = value; OnPropertyChanged(); }
+        get => Model.Attribute[(byte)Attribute.Agility];
+        set { Model.Attribute[(byte)Attribute.Agility] = value; OnPropertyChanged(); }
     }
 
     public short Vitality
     {
-        get => _model.Attribute[(byte)Attribute.Vitality];
-        set { _model.Attribute[(byte)Attribute.Vitality] = value; OnPropertyChanged(); }
+        get => Model.Attribute[(byte)Attribute.Vitality];
+        set { Model.Attribute[(byte)Attribute.Vitality] = value; OnPropertyChanged(); }
     }
 
     public byte FleeHealth
     {
-        get => _model.FleeHealth;
-        set { _model.FleeHealth = value; OnPropertyChanged(); }
+        get => Model.FleeHealth;
+        set { Model.FleeHealth = value; OnPropertyChanged(); }
     }
 
     [RelayCommand]
     private void CreateNew()
     {
         var npc = new Npc();
-        _catalog.Npcs.Add(npc.Id, npc);
+        catalog.Npcs.Add(npc.Id, npc);
         RequestRefreshList?.Invoke();
     }
 
     [RelayCommand]
     private void Remove()
     {
-        _catalog.Npcs.Remove(_model.Id);
+        catalog.Npcs.Remove(Model.Id);
         RequestRefreshList?.Invoke();
     }
 

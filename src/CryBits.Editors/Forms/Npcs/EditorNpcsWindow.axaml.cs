@@ -93,7 +93,7 @@ internal partial class EditorNpcsWindow : Window
         _selected = npc;
         _viewModel = new NpcEditorViewModel(npc, _catalog);
         DataContext = _viewModel;
-        _viewModel.RequestClose += () => Close();
+        _viewModel.RequestClose += Close;
         _viewModel.RequestRefreshList += RefreshNpcList;
 
         numTexture.Maximum = Math.Max(0, Textures.Characters.Count - 1);
@@ -145,8 +145,7 @@ internal partial class EditorNpcsWindow : Window
 
     private void cmbMovement_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_selected == null) return;
-        _selected.Movement = (MovementStyle)cmbMovement.SelectedIndex;
+        _selected?.Movement = (MovementStyle)cmbMovement.SelectedIndex;
     }
 
     private void cmbShop_SelectionChanged(object? sender, SelectionChangedEventArgs e)

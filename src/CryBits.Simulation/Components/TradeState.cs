@@ -5,4 +5,4 @@ using MemoryPack;
 namespace CryBits.Simulation.Components;
 
 [MemoryPackable]
-public sealed partial record class TradeState(EntityId? Partner = null, EntityId? PendingInviterId = null, TradeSlot[]? Offer = null, TradeSlot[]? TheirOffer = null);
+public sealed partial record TradeState(EntityId? Partner = null, EntityId? PendingInviterId = null, TradeSlot[]? Offer = null, TradeSlot[]? TheirOffer = null);

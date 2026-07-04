@@ -71,7 +71,7 @@ internal sealed class SnapshotApplier(
 
         if (appearance == null || position == null) return;
 
-        bool isLocal = serverId == context.LocalPlayer.Id;
+        var isLocal = serverId == context.LocalPlayer.Id;
 
         var vitalArray = vitals != null
             ? new short[] { vitals.Hp, vitals.Mp }

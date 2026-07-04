@@ -26,7 +26,7 @@ public static class LayoutBuilder
         [typeof(PictureElement)] = (ui, e) => BuildPicture(ui, (PictureElement)e),
         [typeof(SlotGridElement)] = (ui, e) => BuildSlotGrid(ui, (SlotGridElement)e),
         [typeof(ListBoxElement)] = (ui, e) => BuildListBox(ui, (ListBoxElement)e),
-        [typeof(DropDownElement)] = (ui, e) => BuildDropDown(ui, (DropDownElement)e),
+        [typeof(DropDownElement)] = (ui, e) => BuildDropDown(ui, (DropDownElement)e)
     };
 
     public static (Panel panel, Dictionary<string, Entity> registry) BuildScreen(
@@ -118,20 +118,13 @@ public static class LayoutBuilder
 
     private static Checkbox BuildCheckbox(UISystem ui, CheckboxElement el)
     {
-        var cb = new Checkbox(ui);
-        cb.Paragraph.Text = el.Text;
-        cb.Checked = el.Checked;
-        cb.ExclusiveSelection = el.ExclusiveSelection;
-        cb.Paragraph.OverrideStyles = new StyleSheetState { Padding = new Sides { Left = 18 } };
+        var cb = new Checkbox(ui) { Paragraph = { Text = el.Text, OverrideStyles = new StyleSheetState { Padding = new Sides { Left = 18 } } }, Checked = el.Checked, ExclusiveSelection = el.ExclusiveSelection };
         return cb;
     }
 
     private static RadioButton BuildRadioButton(UISystem ui, RadioButtonElement el)
     {
-        var rb = new RadioButton(ui);
-        rb.Paragraph.Text = el.Text;
-        rb.Checked = el.Checked;
-        rb.Paragraph.OverrideStyles = new StyleSheetState { Padding = new Sides { Left = 18 } };
+        var rb = new RadioButton(ui) { Paragraph = { Text = el.Text, OverrideStyles = new StyleSheetState { Padding = new Sides { Left = 18 } } }, Checked = el.Checked };
         return rb;
     }
 
@@ -200,12 +193,14 @@ public static class LayoutBuilder
 
     private static SlotGrid BuildSlotGrid(UISystem ui, SlotGridElement el)
     {
-        var grid = new SlotGrid(ui, el.Columns, el.Rows, el.SlotSize, el.Spacing);
-        grid.OverrideStyles.FillTextureStretched = new StretchedTexture
+        var grid = new SlotGrid(ui, el.Columns, el.Rows, el.SlotSize, el.Spacing) { OverrideStyles =
         {
-            TextureId = DefaultSlotGridTexture,
-            SourceRect = new Rectangle { Width = 1, Height = 1 }
-        };
+            FillTextureStretched = new StretchedTexture
+            {
+                TextureId = DefaultSlotGridTexture,
+                SourceRect = new Rectangle { Width = 1, Height = 1 }
+            }
+        } };
         return grid;
     }
 

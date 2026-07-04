@@ -90,7 +90,7 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<World>();
     services.AddSingleton(sp => sp.GetRequiredService<World>().Entities);
     services.AddSingleton<SessionManager>();
-    services.AddSingleton(sp => HostPipelineBuilder.Build());
+    services.AddSingleton(_ => HostPipelineBuilder.Build());
     services.AddSingleton<PackageSender>();
     services.AddSingleton<WorldHost>();
     services.AddSingleton(sp => sp.GetRequiredService<WorldHost>().IntentFunnel);
@@ -103,9 +103,6 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<ChatSender>();
     services.AddSingleton<ContentSender>();
     services.AddSingleton<ContentSender>();
-    services.AddSingleton<PartySender>();
-    services.AddSingleton<ShopSender>();
-    services.AddSingleton<TradeSender>();
 
     services.AddSingleton<AuthService>();
     services.AddSingleton<CharacterService>();

@@ -16,7 +16,6 @@ internal sealed class TilemapRenderer(SpriteBatch spriteBatch, GameContext conte
 
     public void DrawLayer(Layer layerType)
     {
-        if (context.CurrentMap == null) return;
         var map = context.CurrentMap;
         if (map == null || map.Chunks.Count == 0) return;
 

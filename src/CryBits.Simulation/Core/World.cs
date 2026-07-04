@@ -142,13 +142,11 @@ public sealed class World
 
 public sealed class SpawnBuilder(World world)
 {
-    private readonly EntityId _id = world.Spawn();
-
     public SpawnBuilder With<T>(T component) where T : class
     {
-        world.Set(_id, component);
+        world.Set(Id, component);
         return this;
     }
 
-    public EntityId Id => _id;
+    public EntityId Id { get; } = world.Spawn();
 }

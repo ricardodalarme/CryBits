@@ -23,9 +23,8 @@ internal sealed class AttackSystem(
     public void Update(float t)
     {
         var localPlayer = context.LocalPlayer;
-        if (localPlayer is null) return;
 
-        var entity = localPlayer.Entity;
+        var entity = localPlayer?.Entity;
         if (entity is null || !context.World.IsAlive(entity.Value)) return;
 
         _inputThrottle += t;

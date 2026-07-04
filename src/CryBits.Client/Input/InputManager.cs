@@ -77,14 +77,6 @@ public class InputManager
         return Keyboard.IsKeyPressed(key);
     }
 
-    public bool WasKeyPressed(Keyboard.Key key)
-    {
-        if (!IsFocused) return false;
-        if (_uiSystem?.FocusedEntity != null) return false;
-
-        return _pressedThisFrame.Contains(key);
-    }
-
     public bool WasKeyReleased(Keyboard.Key key)
     {
         if (!IsFocused) return false;

@@ -53,8 +53,7 @@ internal static class Program
             var loop = new Loop(MapInstance.Instance); EditorLoop = loop; Loop.Instance = loop;
             LoginWindow.Open();
             loop.Init();
-        });
-        loopThread.IsBackground = true;
+        }) { IsBackground = true };
         loopThread.Start();
 
         BuildAvaloniaApp()

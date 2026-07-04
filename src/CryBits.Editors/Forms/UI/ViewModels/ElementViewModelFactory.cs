@@ -21,7 +21,7 @@ internal static class ElementViewModelFactory
         [typeof(PictureElement)] = (c, e) => new PictureProperties(c, e),
         [typeof(SlotGridElement)] = (c, e) => new SlotGridProperties(c, e),
         [typeof(ListBoxElement)] = (c, e) => new ListBoxProperties(c, e),
-        [typeof(DropDownElement)] = (c, e) => new DropDownProperties(c, e),
+        [typeof(DropDownElement)] = (c, e) => new DropDownProperties(c, e)
     };
 
     private static readonly Dictionary<string, Type> DiscriminatorToDto = new()
@@ -40,7 +40,7 @@ internal static class ElementViewModelFactory
         ["Picture"] = typeof(PictureElement),
         ["SlotGrid"] = typeof(SlotGridElement),
         ["ListBox"] = typeof(ListBoxElement),
-        ["DropDown"] = typeof(DropDownElement),
+        ["DropDown"] = typeof(DropDownElement)
     };
 
     private static readonly Dictionary<Type, string> DtoToDiscriminator = DiscriminatorToDto

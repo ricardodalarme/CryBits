@@ -32,7 +32,7 @@ internal partial class MapCanvasPane : UserControl
 
     public CanvasDeps? Deps { get; set; }
     public ZoomBorder ZoomBorder => zoomBorder;
-    public Avalonia.Controls.Image ImgMap => imgMap;
+    public Image ImgMap => imgMap;
 
     public SystemPoint MapMouse => _mapMouse;
     public SystemRect MapSelection => ComputeMapSelection();

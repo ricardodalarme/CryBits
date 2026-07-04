@@ -14,9 +14,8 @@ public sealed class AggroSystem : ISimulationSystem
             if (!attack.VictimId.HasValue) continue;
 
             var victimE = world.Entities.Get(attack.VictimId.Value);
-            if (victimE == null) continue;
 
-            var npcState = victimE.Get<NpcState>();
+            var npcState = victimE?.Get<NpcState>();
             if (npcState == null) continue;
 
             if (npcState.TargetId == null)

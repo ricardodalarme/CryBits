@@ -21,7 +21,7 @@ internal sealed class CharacterAnimationSystem(World world) : IClientSystem
             var sheet = SpriteSheet.Default;
 
             var attack = state.Get<AttackComponent>();
-            if (attack != null && attack.AttackCountdown > 0f)
+            if (attack is { AttackCountdown: > 0f })
             {
                 var cd = MathF.Max(0f, attack.AttackCountdown - dt);
                 if (cd != attack.AttackCountdown)
@@ -29,7 +29,7 @@ internal sealed class CharacterAnimationSystem(World world) : IClientSystem
             }
 
             var frameY = sheet.RowForDirection(movement.Direction);
-            var showAttack = attack != null && attack.AttackCountdown > AttackFrameTime;
+            var showAttack = attack is { AttackCountdown: > AttackFrameTime };
 
             var frameTime = WalkFrameTime * (WalkSpeedPixelsPerSecond / movement.SpeedPixelsPerSecond);
             var (current, frameX, timer) = Determine(anim, dt, movement.IsMoving, showAttack, sheet.Columns, frameTime);

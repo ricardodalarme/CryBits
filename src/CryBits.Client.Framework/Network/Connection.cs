@@ -31,19 +31,10 @@ public class Connection(IClientTransport transport)
     public void Poll() => transport.Poll();
 
     public bool IsConnected => transport.IsConnected;
-
-    public void Send(byte[] data, DeliveryChannel delivery) => transport.Send(data, delivery);
-
+    
     public void SendPacket<T>(T packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered) where T : IClientPacket
     {
         transport.Send(PacketSerializer.Serialize<IClientPacket>(packet), delivery);
-    }
-
-    public bool TryConnect(string address, int port, string key)
-    {
-        if (IsConnected) return true;
-        transport.Connect(address, port, key);
-        return IsConnected;
     }
 
     public bool TryConnect()

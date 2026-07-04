@@ -34,8 +34,8 @@ internal class TileRenderer(Renderer renderer)
         renderer.Draw(WinTile, texture, new Rectangle(position, texture.ToSize()),
             new Rectangle(new Point(0), texture.ToSize()));
 
-        for (int x = 0; x <= 298 / Grid; x++)
-            for (int y = 0; y <= 443 / Grid; y++)
+        for (var x = 0; x <= 298 / Grid; x++)
+            for (var y = 0; y <= 443 / Grid; y++)
             {
                 if (modeAttributes)
                     TileAttributes(textureNum, scrollX, scrollY, x, y);
