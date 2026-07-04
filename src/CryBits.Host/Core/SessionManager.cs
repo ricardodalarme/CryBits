@@ -10,7 +10,6 @@ internal sealed class SessionManager : IEnumerable<Session>
 
     public void Add(Session session) => _sessions.Add(session);
     public void Remove(Session session) => _sessions.Remove(session);
-    public int Count => _sessions.Count;
     public Session this[int index] => _sessions[index];
     public Session? Find(Predicate<Session> match) => _sessions.Find(match);
 

@@ -5,6 +5,7 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
+using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Spawners;
@@ -49,7 +50,7 @@ public static class NpcSpawner
         var allChunks = mapData.Chunks.Values.Where(c => c.Tiles != null).ToList();
         if (allChunks.Count == 0) return (0, 0);
 
-        var chunkSize = 32;
+        var chunkSize = ChunkGrid.ChunkSize;
         var candidates = new List<(int x, int y)>();
 
         foreach (var chunk in allChunks)

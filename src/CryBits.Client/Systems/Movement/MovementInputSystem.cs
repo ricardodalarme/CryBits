@@ -95,13 +95,9 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
 
     private bool HasSolidEntityAt(int tileX, int tileY)
     {
-        foreach (var state in context.World.Entities.All)
-        {
-            var mov = state.Get<MovementComponent>();
-            if (mov == null || mov.TileX != tileX || mov.TileY != tileY) continue;
-            if (state.Has<CollidableTag>())
-                return true;
-        }
-        return false;
+        var playerPos = context.World.Get<Position>(context.LocalPlayer.Entity!.Value);
+        if (playerPos == null) return false;
+
+        return ChunkGrid.FindAt<CollidableTag>(context.World, playerPos.MapId, tileX, tileY).HasValue;
     }
 }
