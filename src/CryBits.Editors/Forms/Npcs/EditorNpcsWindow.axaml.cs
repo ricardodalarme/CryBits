@@ -190,7 +190,7 @@ internal partial class EditorNpcsWindow : Window
     private void RefreshAlliesList()
     {
         lstAllies.ItemsSource = null;
-        lstAllies.ItemsSource = _selected?.AllieIds.Select(id => _catalog.Npcs.Get(id)).Where(n => n != null).ToList();
+        lstAllies.ItemsSource = _selected?.AllyIds.Select(id => _catalog.Npcs.Get(id)).Where(n => n != null).ToList();
     }
 
     private void chkAttackNpc_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -200,7 +200,7 @@ internal partial class EditorNpcsWindow : Window
         lstAllies.IsEnabled = _selected.AttackNpc;
         if (!_selected.AttackNpc)
         {
-            _selected.AllieIds.Clear();
+            _selected.AllyIds.Clear();
             RefreshAlliesList();
         }
     }
@@ -218,8 +218,8 @@ internal partial class EditorNpcsWindow : Window
     private void butAllie_Ok_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null || cmbAllie_Npc.SelectedItem is not Npc allie) return;
-        if (!_selected.AllieIds.Contains(allie.Id))
-            _selected.AllieIds.Add(allie.Id);
+        if (!_selected.AllyIds.Contains(allie.Id))
+            _selected.AllyIds.Add(allie.Id);
         pnlAllie_Add.IsVisible = false;
         RefreshAlliesList();
     }
@@ -227,7 +227,7 @@ internal partial class EditorNpcsWindow : Window
     private void butAllie_Delete_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null || lstAllies.SelectedItem is not Npc allie) return;
-        _selected.AllieIds.Remove(allie.Id);
+        _selected.AllyIds.Remove(allie.Id);
         RefreshAlliesList();
     }
 }

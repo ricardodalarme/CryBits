@@ -18,7 +18,7 @@ public partial record class Npc : Definition
     public IList<NpcDrop> Drop { get; set; } = [];
     public bool AttackNpc { get; set; }
 
-    public List<Guid> AllieIds { get; set; } = [];
+    public List<Guid> AllyIds { get; set; } = [];
 
     public MovementStyle Movement { get; set; }
     public byte FleeHealth { get; set; }
@@ -29,5 +29,5 @@ public partial record class Npc : Definition
         Name = "New Npc";
     }
 
-    public bool IsAllied(Guid npcId) => AllieIds.Contains(npcId);
+    public bool IsAlly(Guid npcId) => AllyIds.Contains(npcId);
 }

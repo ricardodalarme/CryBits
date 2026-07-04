@@ -160,7 +160,7 @@ public sealed class NpcBrainSystem : ISimulationSystem
                 var otherNpcState = world.Get<NpcState>(id);
                 if (otherNpcState == null) continue;
                 var otherData = world.Catalog.Npcs.Get(otherNpcState.NpcDefId);
-                if (otherData is null || npcData.IsAllied(otherData.Id)) continue;
+                if (otherData is null || npcData.IsAlly(otherData.Id)) continue;
                 world.Update<NpcState>(npcId, s => s with { TargetId = id });
                 return;
             }
