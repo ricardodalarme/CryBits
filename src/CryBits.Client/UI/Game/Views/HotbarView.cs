@@ -1,18 +1,19 @@
-using CryBits.Client.Core;
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Network.Senders;
 using CryBits.Client.Rendering.UI;
+using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
-using CryBits.Definitions.Slots;
-using CryBits.Simulation.Components;
-using CryBits.Simulation.Intents;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class HotbarView(UiContext uiContext, IntentSender intentSender, ItemIconRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, TooltipView tooltip, InventoryView inventory, GameScreen gameScreen) : ViewBase
+internal class HotbarView(
+    UiContext uiContext,
+    ItemIconRenderer itemRenderer,
+    TooltipView tooltip,
+    InventoryView inventory,
+    GameScreen gameScreen,
+    HotbarViewModel viewModel) : ViewBase
 {
     private SlotGrid Grid => uiContext.Get<SlotGrid>("HotbarGrid");
 
@@ -42,8 +43,9 @@ internal class HotbarView(UiContext uiContext, IntentSender intentSender, ItemIc
 
     private void OnSlotLeftDown(int slot)
     {
-        var hotbarSlot = context.LocalPlayer.GetHotbar()?.Slots[slot];
-        if (hotbarSlot is not { Slot: not 0 }) return;
+        viewModel.Refresh();
+        var hbSlot = viewModel.Slots[slot];
+        if (hbSlot == null || hbSlot.Slot <= 0) return;
 
         _hotbarDragOrigin = (short)slot;
         gameScreen.HotbarChange = (short)slot;
@@ -56,34 +58,36 @@ internal class HotbarView(UiContext uiContext, IntentSender intentSender, ItemIc
         gameScreen.HotbarChange = null;
         gameScreen.InventoryChange = null;
         if (hotSlot is not null)
-            intentSender.Send(new HotbarSwapIntent(default, hotSlot.Value, (byte)slot));
+            viewModel.Swap(hotSlot.Value, (short)slot);
 
         var invSlot = inventory.DragOrigin;
         if (invSlot is not null)
-            intentSender.Send(new HotbarAddIntent(default, (byte)slot, SlotType.Item, invSlot.Value));
+            viewModel.AddItem((short)slot, invSlot.Value);
     }
 
     private void OnSlotRightClick(int slot)
     {
-        intentSender.Send(new HotbarAddIntent(default, (byte)slot, default, 0));
+        viewModel.Remove((short)slot);
     }
 
     private void OnSlotDoubleClick(int slot)
     {
-        var hbSlot = context.LocalPlayer.GetHotbar()?.Slots[slot];
+        viewModel.Refresh();
+        var hbSlot = viewModel.Slots[slot];
         if (hbSlot is { Slot: > 0 })
         {
-            intentSender.Send(new HotbarUseIntent(default, (byte)slot));
+            viewModel.Use((short)slot);
             uiContext.Registry["Drop"].Visible = false;
         }
     }
 
     private void OnSlotHoverEnter(int slot)
     {
-        var hotbarSlot = context.LocalPlayer.GetHotbar()?.Slots[slot];
-        if (hotbarSlot is { Slot: > 0, Type: SlotType.Item } h)
+        viewModel.Refresh();
+        var hbSlot = viewModel.Slots[slot];
+        if (hbSlot is { Slot: > 0, Type: SlotType.Item } h)
         {
-            var item = catalog.Items.Get(context.LocalPlayer.GetInventory()?.Slots[h.Slot] is { } s ? s.ItemId : Guid.Empty);
+            var item = h.Definition;
             if (item == null) return;
             var panelRect = uiContext.Registry["HotbarPanel"].LastBoundingRect;
             tooltip.Show(item.Id, new Point(panelRect.X, panelRect.Y + 42));
@@ -92,19 +96,17 @@ internal class HotbarView(UiContext uiContext, IntentSender intentSender, ItemIc
 
     private void OnPostDraw()
     {
-        if (context.LocalPlayer.Entity == null) return;
-        var hotbar = context.World.Get<HotbarState>(context.LocalPlayer.Entity.Value);
-        if (hotbar == null) return;
+        if (!uiContext.Registry["HotbarPanel"].Visible) return;
+
+        viewModel.Refresh();
 
         for (var i = 0; i < Grid.TotalSlots; i++)
         {
             var rect = Grid.GetSlotRect(i);
-            var hotbarSlot = hotbar.Slots[i];
-            if (hotbarSlot is { Slot: > 0, Type: SlotType.Item })
+            var hbSlot = viewModel.Slots[i];
+            if (hbSlot is { Slot: > 0, Type: SlotType.Item } && hbSlot.Definition is { } item)
             {
-                var itemId = context.LocalPlayer.GetInventory()?.Slots[hotbarSlot.Slot] is { } s ? s.ItemId : Guid.Empty;
-                if (catalog.Items.Get(itemId) is { } item)
-                    itemRenderer.DrawItem(item, 1, new Point(rect.X, rect.Y));
+                itemRenderer.DrawItem(item, 1, new Point(rect.X, rect.Y));
             }
         }
     }
