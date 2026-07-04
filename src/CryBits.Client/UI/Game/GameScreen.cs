@@ -33,6 +33,7 @@ internal class GameScreen
     internal readonly MapNameView MapNameView;
     internal readonly MetricsView MetricsView;
     internal readonly PartyView PartyView;
+    internal readonly StatsView StatsView;
 
     internal readonly UiContext UiContext;
 
@@ -40,7 +41,7 @@ internal class GameScreen
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
         InputManager inputManager, AudioManager audioManager, DefinitionCatalog catalog, TooltipView tooltip,
         MenuScreen menuScreen, Chat chat, GameInput gameInput, TradeViewModel tradeViewModel, PartyViewModel partyViewModel,
-        InventoryViewModel inventoryViewModel, HotbarViewModel hotbarViewModel, ShopViewModel shopViewModel, CharacterViewModel characterViewModel)
+        InventoryViewModel inventoryViewModel, HotbarViewModel hotbarViewModel, ShopViewModel shopViewModel, CharacterViewModel characterViewModel, StatsViewModel statsViewModel)
     {
         UiContext = uiContext;
         ShopView = new(uiContext, itemRenderer, tooltip, shopViewModel);
@@ -61,6 +62,7 @@ internal class GameScreen
         MapNameView = new(uiContext, context);
         MetricsView = new(uiContext);
         PartyView = new(uiContext, spriteBatch, partyViewModel);
+        StatsView = new(uiContext, statsViewModel);
         _chat = chat;
         _gameInput = gameInput;
         _menu = menuScreen;
@@ -90,6 +92,7 @@ internal class GameScreen
         PartyInvitationView,
         ShopSellView,
         ShopView,
+        StatsView,
         TradeAmountView,
         TradeInvitationView,
         TradeView
