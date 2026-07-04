@@ -1,7 +1,7 @@
 using CryBits.Client.Components;
+using CryBits.Client.Core;
 using CryBits.Client.Input;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.Worlds;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.Spatial;

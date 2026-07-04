@@ -1,7 +1,7 @@
+using CryBits.Client.Core;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game;
-using CryBits.Client.Worlds;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
 using CryBits.Protocol;

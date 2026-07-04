@@ -2,7 +2,7 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 
-namespace CryBits.Client.Worlds;
+namespace CryBits.Client.Core;
 
 internal class LocalPlayer(World world, EntityId? entity)
 {

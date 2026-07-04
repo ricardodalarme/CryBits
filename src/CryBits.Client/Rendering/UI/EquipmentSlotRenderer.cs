@@ -1,5 +1,5 @@
+using CryBits.Client.Core;
 using CryBits.Client.Framework.Assets;
-using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using System.Drawing;

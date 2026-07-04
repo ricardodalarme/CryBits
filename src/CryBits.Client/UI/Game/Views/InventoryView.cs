@@ -1,7 +1,7 @@
+using CryBits.Client.Core;
 using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Rendering.UI;
-using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;

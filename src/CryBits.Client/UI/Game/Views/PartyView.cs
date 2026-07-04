@@ -1,6 +1,6 @@
+using CryBits.Client.Core;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Rendering;
-using CryBits.Client.Worlds;
 using CryBits.Simulation.Components;
 
 namespace CryBits.Client.UI.Game.Views;

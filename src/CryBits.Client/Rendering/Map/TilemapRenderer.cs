@@ -1,6 +1,6 @@
+using CryBits.Client.Core;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Rendering.Camera;
-using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Spatial;
 using SFML.Graphics;

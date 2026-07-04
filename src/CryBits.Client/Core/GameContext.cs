@@ -3,7 +3,7 @@ using CryBits.Definitions.Maps;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 
-namespace CryBits.Client.Worlds;
+namespace CryBits.Client.Core;
 
 internal sealed class GameContext
 {

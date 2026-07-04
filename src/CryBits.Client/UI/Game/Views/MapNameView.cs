@@ -1,4 +1,4 @@
-using CryBits.Client.Worlds;
+using CryBits.Client.Core;
 using CryBits.Definitions.Maps;
 using Iguina.Entities;
 using Color = Iguina.Defs.Color;

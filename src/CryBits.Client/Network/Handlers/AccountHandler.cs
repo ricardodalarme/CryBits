@@ -1,7 +1,7 @@
+using CryBits.Client.Core;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
-using CryBits.Client.Worlds;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
 
