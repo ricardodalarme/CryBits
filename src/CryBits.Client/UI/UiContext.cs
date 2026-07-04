@@ -19,8 +19,8 @@ internal sealed class UiContext : IDisposable
 {
     private Entity? _currentScreen;
 
-    public RenderTexture? Target { get; private set; }
-    public UISystem? UISystem { get; private set; }
+    public RenderTexture Target { get; }
+    public UISystem UISystem { get; }
     public Dictionary<string, Entity> Registry { get; } = [];
     public ScreenType CurrentScreen { get; set; }
 
@@ -39,10 +39,11 @@ internal sealed class UiContext : IDisposable
         return false;
     }
 
-    public void Initialize(uint width, uint height, RenderWindow window)
+    public UiContext(uint width, uint height, RenderWindow window)
     {
         var themePath = Directories.UITheme.FullName;
-        if (!Directory.Exists(themePath)) return;
+        if (!Directory.Exists(themePath))
+            throw new DirectoryNotFoundException($"UI theme directory not found: {themePath}");
 
         Target = new RenderTexture(new Vector2u(width, height));
 

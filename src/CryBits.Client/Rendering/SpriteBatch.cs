@@ -1,7 +1,4 @@
 using CryBits.Client.Framework.Assets;
-using CryBits.Client.Framework.Network;
-using CryBits.Client.Input;
-using CryBits.Client.UI;
 using CryBits.Definitions.Common;
 using SFML.Graphics;
 using SFML.System;
@@ -16,20 +13,21 @@ namespace CryBits.Client.Rendering;
 /// Central sprite batch and drawing utility. Owns the <see cref="RenderWindow"/> and exposes
 /// a thin API for drawing sprites and text.
 /// </summary>
-internal sealed class SpriteBatch(InputManager inputManager)
+internal sealed class SpriteBatch
 {
-    private UiContext? _uiContext;
-    internal Connection? Connection { get; set; }
+    /// <summary>Invoked when the user closes the window (e.g. Alt+F4 or close button).</summary>
+    public event Action? WindowCloseRequested;
 
-    public RenderWindow RenderWindow { get; private set; } = null!;
+    /// <summary>Invoked when the window gains or loses focus.</summary>
+    public event Action<bool>? WindowFocusChanged;
+
+    public RenderWindow RenderWindow { get; }
 
     private Sprite? _spriteCache;
-    private Text _textCache = null!;
+    private readonly Text _textCache;
 
-    public void Init(UiContext uiContext)
+    public SpriteBatch()
     {
-        _uiContext = uiContext;
-
         RenderWindow = new RenderWindow(
             new VideoMode(new Vector2u((uint)ScreenWidth, (uint)ScreenHeight)),
             Config.GameName,
@@ -46,17 +44,9 @@ internal sealed class SpriteBatch(InputManager inputManager)
             OutlineThickness = 1
         };
 
-        RenderWindow.Closed += (_, _) =>
-        {
-            if (_uiContext.CurrentScreen == ScreenType.Game)
-                Connection?.Disconnect();
-            else
-                RenderWindow.Close();
-        };
-        RenderWindow.LostFocus += (_, _) => inputManager.IsFocused = false;
-        RenderWindow.GainedFocus += (_, _) => inputManager.IsFocused = true;
-
-        inputManager.BindEvents(RenderWindow);
+        RenderWindow.Closed += (_, _) => WindowCloseRequested?.Invoke();
+        RenderWindow.LostFocus += (_, _) => WindowFocusChanged?.Invoke(false);
+        RenderWindow.GainedFocus += (_, _) => WindowFocusChanged?.Invoke(true);
     }
 
     /// <summary>

@@ -22,19 +22,19 @@ using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client;
 
-public sealed class ClientShell(bool offline) : IDisposable
+public sealed class ClientShell : IDisposable
 {
-    private readonly bool _offline = offline;
+    private readonly bool _offline;
     private EmbeddedHostRunner? _hostRunner;
     private Connection? _connection;
     private UiContext _uiContext = null!;
     private SpriteBatch _spriteBatch = null!;
-    private InputManager? _inputManager;
+    private InputManager _inputManager = null!;
     private MenuScreen _menuScreen = null!;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
-    private DefinitionCatalog _catalog = null!;
-    private AudioManager _audioManager = null!;
+    private readonly AudioManager _audioManager = new();
+    private readonly DefinitionCatalog _catalog = new();
 
     // Transient session management
     private GameSession? _activeSession;
@@ -43,28 +43,31 @@ public sealed class ClientShell(bool offline) : IDisposable
 
     public void Run()
     {
-        Initialize();
         Loop();
         Dispose();
     }
 
-    private void Initialize()
+    public ClientShell(bool offline)
     {
+        _offline = offline;
         RegisterComponentTypes();
         Directories.Create();
         OptionsRepository.Read();
 
-        // ── Create all infrastructure instances FIRST ──
-        _audioManager = new AudioManager();
-        _uiContext = new UiContext();
-        _inputManager = new InputManager();
-        _spriteBatch = new SpriteBatch(_inputManager);
-        _catalog = new DefinitionCatalog();
+        _spriteBatch = new SpriteBatch();
+        var windowSize = _spriteBatch.RenderWindow.Size;
+        _uiContext = new UiContext(windowSize.X, windowSize.Y, _spriteBatch.RenderWindow);
+        _inputManager = new InputManager(_uiContext.UISystem, _spriteBatch.RenderWindow);
 
-        // ── Initialize in dependency order ──
-        _spriteBatch.Init(_uiContext);
-        _uiContext.Initialize((uint)_spriteBatch.RenderWindow.Size.X, (uint)_spriteBatch.RenderWindow.Size.Y, _spriteBatch.RenderWindow);
-        _inputManager.Initialize(_uiContext.UISystem!, _spriteBatch.RenderWindow);
+        // Wire up window lifecycle callbacks (SpriteBatch is pure — no knowledge of UI, network, or input)
+        _spriteBatch.WindowCloseRequested += () =>
+        {
+            if (_uiContext.CurrentScreen == ScreenType.Game)
+                _connection?.Disconnect();
+            else
+                _spriteBatch.RenderWindow.Close();
+        };
+        _spriteBatch.WindowFocusChanged += focused => _inputManager.IsFocused = focused;
 
         // ── Network ──
         if (_offline)
@@ -79,7 +82,6 @@ public sealed class ClientShell(bool offline) : IDisposable
             clientTransport.Connect("localhost", Config.Port, Config.GameName);
             _connection = new Connection(clientTransport);
         }
-        _spriteBatch.Connection = _connection;
         _connection.Start(onDisconnected: OnDisconnected);
 
         // ── Intent registrations ──

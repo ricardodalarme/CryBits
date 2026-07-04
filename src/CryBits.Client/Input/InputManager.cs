@@ -7,8 +7,8 @@ namespace CryBits.Client.Input;
 
 public class InputManager
 {
-    private UISystem? _uiSystem;
-    private RenderWindow? _renderWindow;
+    private readonly UISystem _uiSystem;
+    private readonly RenderWindow _renderWindow;
 
     /// <summary>
     /// Tracks window focus state. Set by LostFocus/GainedFocus events in Renderer.Init().
@@ -25,20 +25,11 @@ public class InputManager
     private readonly HashSet<Keyboard.Key> _pressedThisFrame = [];
     private readonly HashSet<Keyboard.Key> _releasedThisFrame = [];
 
-    public void Initialize(UISystem system, RenderWindow window)
+    public InputManager(UISystem system, RenderWindow window)
     {
         _uiSystem = system;
         _renderWindow = window;
-    }
 
-    public void BeginFrame()
-    {
-        _pressedThisFrame.Clear();
-        _releasedThisFrame.Clear();
-    }
-
-    public void BindEvents(RenderWindow window)
-    {
         window.MouseButtonPressed += (s, e) => MouseButtonPressed?.Invoke(s, e);
         window.MouseButtonReleased += (s, e) => MouseButtonReleased?.Invoke(s, e);
         window.MouseMoved += (s, e) => MouseMoved?.Invoke(s, e);
@@ -55,6 +46,12 @@ public class InputManager
         window.TextEntered += (s, e) => TextEntered?.Invoke(s, e);
     }
 
+    public void BeginFrame()
+    {
+        _pressedThisFrame.Clear();
+        _releasedThisFrame.Clear();
+    }
+
     /// <summary>
     /// Checks if a key is currently held down using layout-independent scancodes.
     /// Preferred for movement and game actions where physical key position matters.
@@ -62,8 +59,7 @@ public class InputManager
     public bool IsScancodePressed(Keyboard.Scancode scancode)
     {
         if (!IsFocused) return false;
-
-        if (_uiSystem?.FocusedEntity != null) return false;
+        if (_uiSystem.FocusedEntity != null) return false;
 
         return Keyboard.IsScancodePressed(scancode);
     }
@@ -71,8 +67,7 @@ public class InputManager
     public bool IsKeyPressed(Keyboard.Key key)
     {
         if (!IsFocused) return false;
-
-        if (_uiSystem?.FocusedEntity != null) return false;
+        if (_uiSystem.FocusedEntity != null) return false;
 
         return Keyboard.IsKeyPressed(key);
     }
@@ -80,7 +75,7 @@ public class InputManager
     public bool WasKeyReleased(Keyboard.Key key)
     {
         if (!IsFocused) return false;
-        if (_uiSystem?.FocusedEntity != null) return false;
+        if (_uiSystem.FocusedEntity != null) return false;
 
         return _releasedThisFrame.Contains(key);
     }
@@ -89,12 +84,5 @@ public class InputManager
     /// Current mouse position relative to the game window in screen pixels.
     /// Use this for UI hit-testing.
     /// </summary>
-    public Vector2i MousePosition
-    {
-        get
-        {
-            if (_renderWindow == null) return new Vector2i();
-            return Mouse.GetPosition(_renderWindow);
-        }
-    }
+    public Vector2i MousePosition => Mouse.GetPosition(_renderWindow);
 }
