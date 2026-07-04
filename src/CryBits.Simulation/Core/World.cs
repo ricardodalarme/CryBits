@@ -1,6 +1,7 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Events;
 using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 
@@ -13,6 +14,7 @@ public sealed class World
     public ChunkGrid SpatialGrid { get; set; } = new();
     public long TickCount { get; set; }
     public EntityRegistry Entities { get; } = new();
+    public WorldEvents Events { get; } = new();
 
     public World(DefinitionCatalog catalog, bool enableDirtyTracking = true)
     {
@@ -41,6 +43,13 @@ public sealed class World
 
     public void Destroy(EntityId id)
     {
+        var state = Entities.Get(id);
+        if (state != null)
+        {
+            foreach (var (type, value) in state.GetAllComponents())
+                Events.Raise(this, id, type, value, null, ComponentAction.Removed);
+        }
+
         SpatialGrid.Remove(id);
         Entities.Destroy(id);
     }
@@ -66,6 +75,11 @@ public sealed class World
         return Entities.Get(id)?.Has<T>() ?? false;
     }
 
+    public bool Has(EntityId id, Type type)
+    {
+        return Entities.Get(id)?.Has(type) ?? false;
+    }
+
     public void Set<T>(EntityId id, T component) where T : class
     {
         Set(id, (object)component);
@@ -86,13 +100,24 @@ public sealed class World
         }
 
         var type = component.GetType();
+        var oldValue = state.Get(type);
         state.Set(type, component);
         Dirty?.Mark(id, type);
+
+        if (oldValue == null)
+            Events.Raise(this, id, type, null, component, ComponentAction.Added);
+        else if (!Equals(oldValue, component))
+            Events.Raise(this, id, type, oldValue, component, ComponentAction.Changed);
     }
 
     public void Remove<T>(EntityId id) where T : class
     {
-        Entities.Get(id)?.Remove<T>();
+        var state = Entities.Get(id);
+        if (state == null) return;
+        var oldValue = state.Get<T>();
+        state.Remove<T>();
+        if (oldValue != null)
+            Events.Raise(this, id, typeof(T), oldValue, null, ComponentAction.Removed);
     }
 
     public T? AddOrGet<T>(EntityId id) where T : class, new()
