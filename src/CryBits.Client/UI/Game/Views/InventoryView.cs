@@ -1,16 +1,21 @@
 using CryBits.Client.Core;
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Network.Senders;
 using CryBits.Client.Rendering.UI;
+using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
-using CryBits.Simulation.Intents;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class InventoryView(UiContext uiContext, IntentSender intentSender, ItemIconRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, TooltipView tooltip, ShopView shop, GameScreen gameScreen) : ViewBase
+internal class InventoryView(
+    UiContext uiContext,
+    ItemIconRenderer itemRenderer,
+    TooltipView tooltip,
+    ShopView shop,
+    GameScreen gameScreen,
+    InventoryViewModel viewModel) : ViewBase
 {
     private SlotGrid Grid => uiContext.Get<SlotGrid>("InventoryGrid");
 
@@ -42,8 +47,9 @@ internal class InventoryView(UiContext uiContext, IntentSender intentSender, Ite
 
     private void OnSlotLeftDown(int slot)
     {
-        var inv = context.LocalPlayer.GetInventory();
-        if (inv == null || inv.Slots[slot].ItemId == Guid.Empty) return;
+        viewModel.Refresh();
+        var item = viewModel.Slots[slot];
+        if (item == null || item.ItemId == Guid.Empty) return;
 
         DragOrigin = (short)slot;
         gameScreen.InventoryChange = (short)slot;
@@ -56,49 +62,51 @@ internal class InventoryView(UiContext uiContext, IntentSender intentSender, Ite
         gameScreen.InventoryChange = null;
         if (dragSlot == null) return;
 
-        intentSender.Send(new InventorySwapIntent(default, dragSlot.Value, (short)slot));
+        viewModel.Swap(dragSlot.Value, (short)slot);
         uiContext.Registry["Drop"].Visible = false;
     }
 
     private void OnSlotRightClick(int slot)
     {
-        var inv = context.LocalPlayer.GetInventory();
-        if (inv == null || inv.Slots[slot].ItemId == Guid.Empty) return;
+        viewModel.Refresh();
+        var itemVM = viewModel.Slots[slot];
+        if (itemVM == null || itemVM.ItemId == Guid.Empty) return;
 
-        var item = catalog.Items.Get(inv.Slots[slot].ItemId);
+        var item = itemVM.Definition;
         if (item?.Bind == BindOn.Pickup) return;
 
         if (uiContext.Registry["Shop"].Visible)
         {
-            if (inv.Slots[slot].Amount != 1)
+            if (itemVM.Amount != 1)
             {
                 gameScreen.ShopSellView.Show((short)slot);
                 gameScreen.ShopSellView.AmountInput.Value = string.Empty;
             }
-            else intentSender.Send(new ShopSellIntent(default, (byte)slot, 1));
+            else viewModel.Sell((short)slot, 1);
         }
         else if (!uiContext.Registry["Trade"].Visible)
         {
-            if (inv.Slots[slot].Amount != 1)
+            if (itemVM.Amount != 1)
             {
                 gameScreen.DropItemView.Show((short)slot);
                 gameScreen.DropItemView.AmountInput.Value = string.Empty;
             }
-            else intentSender.Send(new DropItemIntent(default, (byte)slot, 1));
+            else viewModel.Drop((short)slot, 1);
         }
     }
 
     private void OnSlotDoubleClick(int slot)
     {
-        intentSender.Send(new InventoryUseIntent(default, (byte)slot));
+        viewModel.Use((short)slot);
         uiContext.Registry["Drop"].Visible = false;
     }
 
     private void OnSlotHoverEnter(int slot)
     {
-        var inv = context.LocalPlayer.GetInventory();
-        if (inv == null) return;
-        var item = catalog.Items.Get(inv.Slots[slot].ItemId);
+        viewModel.Refresh();
+        var itemVM = viewModel.Slots[slot];
+        if (itemVM == null || itemVM.ItemId == Guid.Empty) return;
+        var item = itemVM.Definition;
         if (item == null) return;
 
         string? additionalInfo = null;
@@ -114,16 +122,16 @@ internal class InventoryView(UiContext uiContext, IntentSender intentSender, Ite
     {
         if (!uiContext.Registry["InventoryPanel"].Visible) return;
 
-        var inv = context.LocalPlayer.GetInventory();
-        if (inv == null) return;
+        viewModel.Refresh();
 
         for (var i = 0; i < Grid.TotalSlots; i++)
         {
             var rect = Grid.GetSlotRect(i);
-            var s = inv.Slots[i];
-            if (s.ItemId == Guid.Empty) continue;
-            if (catalog.Items.Get(s.ItemId) is { } item)
-                itemRenderer.DrawItem(item, s.Amount, new Point(rect.X, rect.Y));
+            var itemVM = viewModel.Slots[i];
+            if (itemVM == null || itemVM.ItemId == Guid.Empty) continue;
+            var item = itemVM.Definition;
+            if (item != null)
+                itemRenderer.DrawItem(item, itemVM.Amount, new Point(rect.X, rect.Y));
         }
     }
 }
