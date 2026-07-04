@@ -1,6 +1,6 @@
-using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Network;
-using CryBits.Client.Managers;
+using CryBits.Client.Input;
 using CryBits.Client.UI;
 using CryBits.Definitions.Common;
 using SFML.Graphics;
@@ -10,13 +10,13 @@ using System.Drawing;
 using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
 
-namespace CryBits.Client.Graphics;
+namespace CryBits.Client.Rendering;
 
 /// <summary>
-/// Central rendering service. Owns the <see cref="RenderWindow"/> and exposes
+/// Central sprite batch and drawing utility. Owns the <see cref="RenderWindow"/> and exposes
 /// a thin API for drawing sprites and text.
 /// </summary>
-internal sealed class Renderer(InputManager inputManager)
+internal sealed class SpriteBatch(InputManager inputManager)
 {
     private UiContext? _uiContext;
     internal Connection? Connection { get; set; }

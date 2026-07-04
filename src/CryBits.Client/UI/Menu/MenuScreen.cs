@@ -1,9 +1,9 @@
 using CryBits.Client.Framework;
+using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Audio;
-using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
-using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
@@ -24,7 +24,7 @@ internal class MenuScreen
     private readonly UiContext _uiContext;
 
     internal MenuScreen(AudioManager audio, UiContext uiContext, AuthSender authSender, AccountSender accountSender,
-        CharacterRenderer characterRenderer, GameContext context, DefinitionCatalog catalog, Connection connection)
+        PortraitRenderer characterRenderer, GameContext context, DefinitionCatalog catalog, Connection connection)
     {
         _audio = audio;
         _uiContext = uiContext;

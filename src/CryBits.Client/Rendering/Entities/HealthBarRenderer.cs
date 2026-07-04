@@ -1,14 +1,12 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
-using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Characters;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 
-namespace CryBits.Client.Systems.Character;
+namespace CryBits.Client.Rendering.Entities;
 
-internal sealed class VitalBarRenderSystem(World world, Renderer renderer) : IClientRenderSystem
+internal sealed class HealthBarRenderer(World world, SpriteBatch spriteBatch) : IRenderer
 {
     public void Render()
     {
@@ -35,8 +33,8 @@ internal sealed class VitalBarRenderSystem(World world, Renderer renderer) : ICl
             var fullWidth = frameW;
             var fillWidth = hp * fullWidth / maxHp;
 
-            renderer.Draw(Textures.Bars, barX, barY, 0, 4, fullWidth, 4);
-            renderer.Draw(Textures.Bars, barX, barY, 0, 0, fillWidth, 4);
+            spriteBatch.Draw(Textures.Bars, barX, barY, 0, 4, fullWidth, 4);
+            spriteBatch.Draw(Textures.Bars, barX, barY, 0, 0, fillWidth, 4);
         }
     }
 }

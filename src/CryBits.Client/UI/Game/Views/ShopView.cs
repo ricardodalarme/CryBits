@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Rendering.UI;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Shops;
@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ShopView(UiContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, DefinitionCatalog catalog, TooltipView tooltip) : ViewBase
+internal class ShopView(UiContext uiContext, IntentSender intentSender, ItemIconRenderer itemRenderer, DefinitionCatalog catalog, TooltipView tooltip) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("Shop");
     private Button CloseButton => uiContext.Get<Button>("ShopClose");

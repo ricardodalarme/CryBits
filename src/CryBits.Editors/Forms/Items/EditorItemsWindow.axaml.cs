@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
-using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Classes;
 using CryBits.Definitions.Helpers.Extensions;

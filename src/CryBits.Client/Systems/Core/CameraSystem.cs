@@ -1,6 +1,5 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
-using CryBits.Client.Managers;
+using CryBits.Client.Rendering.Camera;
 using CryBits.Client.Worlds;
 using CryBits.Simulation.State;
 using SFML.System;

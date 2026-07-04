@@ -1,7 +1,7 @@
 using CryBits.Client.Framework.Constants;
 using SFML.Graphics;
 
-namespace CryBits.Client.Framework.Graphics;
+namespace CryBits.Client.Framework.Assets;
 
 public static class Fonts
 {

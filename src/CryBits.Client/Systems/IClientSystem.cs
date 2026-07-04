@@ -1,4 +1,4 @@
-namespace CryBits.Client.Core;
+namespace CryBits.Client.Systems;
 
 public interface IClientSystem
 {

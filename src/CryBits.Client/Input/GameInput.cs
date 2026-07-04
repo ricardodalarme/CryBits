@@ -1,11 +1,10 @@
-using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI;
 using CryBits.Client.UI.Game;
 using CryBits.Simulation.Intents;
 using SFML.Window;
 
-namespace CryBits.Client.Logic;
+namespace CryBits.Client.Input;
 
 /// <summary>
 /// Registers and handles keyboard shortcuts that are active during gameplay.

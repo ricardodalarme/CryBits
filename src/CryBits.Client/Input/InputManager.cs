@@ -3,7 +3,7 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-namespace CryBits.Client.Managers;
+namespace CryBits.Client.Input;
 
 public class InputManager
 {

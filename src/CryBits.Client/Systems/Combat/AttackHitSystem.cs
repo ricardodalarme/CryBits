@@ -1,5 +1,4 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
 using CryBits.Simulation.Components;

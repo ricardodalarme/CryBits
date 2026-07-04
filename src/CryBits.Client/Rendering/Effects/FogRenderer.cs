@@ -1,13 +1,11 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
-using CryBits.Client.Graphics;
 using CryBits.Simulation.Core;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
 
-namespace CryBits.Client.Systems.Map;
+namespace CryBits.Client.Rendering.Effects;
 
-internal sealed class FogRenderSystem(World world, Renderer renderer) : IClientRenderSystem
+internal sealed class FogRenderer(World world, SpriteBatch spriteBatch) : IRenderer
 {
     public void Render()
     {
@@ -24,7 +22,7 @@ internal sealed class FogRenderSystem(World world, Renderer renderer) : IClientR
                 (int)fog.OffsetY,
                 ScreenWidth,
                 ScreenHeight);
-            renderer.Draw(sprite.Texture, source, screenDest, sprite.Tint);
+            spriteBatch.Draw(sprite.Texture, source, screenDest, sprite.Tint);
         }
     }
 }

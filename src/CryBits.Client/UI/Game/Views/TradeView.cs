@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Rendering.UI;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
@@ -14,7 +14,7 @@ using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeView(UiContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, InventoryView inventory, GameScreen gameScreen) : ViewBase
+internal class TradeView(UiContext uiContext, IntentSender intentSender, ItemIconRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, InventoryView inventory, GameScreen gameScreen) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("Trade");
     internal Panel OfferDisabledPanel => uiContext.Get<Panel>("TradeOfferDisable");

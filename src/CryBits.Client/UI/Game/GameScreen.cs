@@ -1,10 +1,9 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
-using CryBits.Client.Graphics;
-using CryBits.Client.Graphics.Renderers;
-using CryBits.Client.Logic;
-using CryBits.Client.Managers;
+using CryBits.Client.Input;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Rendering;
+using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.Worlds;
@@ -36,8 +35,8 @@ internal class GameScreen
 
     internal readonly UiContext UiContext;
 
-    internal GameScreen(UiContext uiContext, GameContext context, IntentSender intentSender, Renderer renderer,
-        ItemRenderer itemRenderer, EquipmentRenderer equipmentRenderer, CharacterRenderer characterRenderer,
+    internal GameScreen(UiContext uiContext, GameContext context, IntentSender intentSender, SpriteBatch spriteBatch,
+        ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
         InputManager inputManager, AudioManager audioManager, DefinitionCatalog catalog, TooltipView tooltip, ShopView shop,
         MenuScreen menuScreen, Chat chat, GameInput gameInput)
     {
@@ -59,7 +58,7 @@ internal class GameScreen
         TradeView = new(uiContext, intentSender, itemRenderer, context, catalog, InventoryView, this);
         MapNameView = new(uiContext, context);
         MetricsView = new(uiContext);
-        PartyView = new(uiContext, context, renderer);
+        PartyView = new(uiContext, context, spriteBatch);
         _chat = chat;
         _gameInput = gameInput;
         _menu = menuScreen;

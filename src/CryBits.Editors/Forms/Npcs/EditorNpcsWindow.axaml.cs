@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
@@ -46,7 +46,7 @@ internal partial class EditorNpcsWindow : Window
         cmbDrop_Item.ItemsSource = _catalog.Items.Values.ToList();
         cmbShop.ItemsSource = _catalog.Shops.Values.ToList();
 
-        CharacterRenderer.Instance.WinCharacter = new RenderTexture(new Vector2u(80, 80));
+        PortraitRenderer.Instance.WinCharacter = new RenderTexture(new Vector2u(80, 80));
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
         _timer.Tick += OnRenderTick;
@@ -58,18 +58,18 @@ internal partial class EditorNpcsWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
-        CharacterRenderer.Instance.WinCharacter?.Dispose();
-        CharacterRenderer.Instance.WinCharacter = null;
+        PortraitRenderer.Instance.WinCharacter?.Dispose();
+        PortraitRenderer.Instance.WinCharacter = null;
         _previewBitmap?.Dispose();
         base.OnClosed(e);
     }
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
-        if (CharacterRenderer.Instance.WinCharacter == null || CurrentTextureIndex <= 0) return;
+        if (PortraitRenderer.Instance.WinCharacter == null || CurrentTextureIndex <= 0) return;
 
-        CharacterRenderer.Instance.Character();
-        SfmlRenderBlit.Blit(CharacterRenderer.Instance.WinCharacter, ref _previewBitmap, imgTexture);
+        PortraitRenderer.Instance.Character();
+        SfmlRenderBlit.Blit(PortraitRenderer.Instance.WinCharacter, ref _previewBitmap, imgTexture);
     }
 
     private void RefreshNpcList()

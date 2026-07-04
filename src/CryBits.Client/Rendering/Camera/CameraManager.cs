@@ -3,7 +3,7 @@ using SFML.System;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
 
-namespace CryBits.Client.Managers;
+namespace CryBits.Client.Rendering.Camera;
 
 /// <summary>
 /// Owns the SFML <see cref="View"/> that controls world-space rendering.
@@ -17,14 +17,14 @@ internal class CameraManager(RenderWindow renderWindow)
     private readonly RenderWindow _renderWindow = renderWindow;
 
     /// <summary>
-    /// The range of tile indices currently visible, used for culling by <see cref="Graphics.Renderers.MapRenderer"/>.
+    /// The range of tile indices currently visible, used for culling by <see cref="CryBits.Client.Rendering.Map.TilemapRenderer"/>.
     /// (X/Y = first tile column/row, Width/Height = last tile column/row inclusive)
     /// </summary>
     public Rectangle TileSight { get; private set; }
 
     /// <summary>
     /// Apply a computed camera frame. Called once per tick by
-    /// <see cref="Systems.Core.CameraSystem"/>.
+    /// <see cref="CryBits.Client.Systems.Core.CameraSystem"/>.
     /// </summary>
     public void ApplyFrame(Vector2f center, Rectangle tileSight)
     {

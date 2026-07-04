@@ -1,5 +1,5 @@
-using CryBits.Client.Graphics.Renderers;
-using CryBits.Client.Managers;
+using CryBits.Client.Input;
+using CryBits.Client.Rendering.UI;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
@@ -8,7 +8,7 @@ using CryBits.Definitions.Slots;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class DraggableSlotView(UiContext uiContext, ItemRenderer itemRenderer, InputManager inputManager, GameContext context, DefinitionCatalog catalog, GameScreen gameScreen) : ViewBase
+internal class DraggableSlotView(UiContext uiContext, ItemIconRenderer itemRenderer, InputManager inputManager, GameContext context, DefinitionCatalog catalog, GameScreen gameScreen) : ViewBase
 {
     public override void Bind() => uiContext.PostDraw += OnPostDraw;
 

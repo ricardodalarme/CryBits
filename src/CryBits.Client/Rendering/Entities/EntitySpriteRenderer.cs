@@ -1,7 +1,5 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
-using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Characters;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
@@ -10,9 +8,9 @@ using System.Drawing;
 using Color = SFML.Graphics.Color;
 using TextAlign = CryBits.Definitions.Common.TextAlign;
 
-namespace CryBits.Client.Systems.Character;
+namespace CryBits.Client.Rendering.Entities;
 
-internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IClientRenderSystem
+internal sealed class EntitySpriteRenderer(World world, SpriteBatch spriteBatch) : IRenderer
 {
     private readonly List<(int Y, EntityId Entity)> _drawList = [];
 
@@ -66,7 +64,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IC
             frameW,
             shadowSize.Height);
 
-        renderer.Draw(texture, source, dest);
+        spriteBatch.Draw(texture, source, dest);
     }
 
     private void DrawSprite(
@@ -89,7 +87,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IC
             ? new Color(205, 125, 125, sprite.Tint.A)
             : sprite.Tint;
 
-        renderer.Draw(sprite.Texture, source, dest, tint);
+        spriteBatch.Draw(sprite.Texture, source, dest, tint);
     }
 
     private void DrawName(
@@ -102,6 +100,6 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : IC
         var x = transform.X + frameW / 2;
         var y = transform.Y - frameH / 2;
         var color = nameColor?.Value ?? Color.White;
-        renderer.DrawText(appearance.Name, x, y, color, TextAlign.Center);
+        spriteBatch.DrawText(appearance.Name, x, y, color, TextAlign.Center);
     }
 }

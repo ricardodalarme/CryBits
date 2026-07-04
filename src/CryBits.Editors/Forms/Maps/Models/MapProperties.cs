@@ -1,4 +1,4 @@
-using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Maps;
 using CryBits.Editors.Entities;
 using PropertyModels.ComponentModel;

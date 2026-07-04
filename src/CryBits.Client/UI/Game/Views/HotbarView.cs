@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Rendering.UI;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
@@ -12,7 +12,7 @@ using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class HotbarView(UiContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, TooltipView tooltip, InventoryView inventory, GameScreen gameScreen) : ViewBase
+internal class HotbarView(UiContext uiContext, IntentSender intentSender, ItemIconRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, TooltipView tooltip, InventoryView inventory, GameScreen gameScreen) : ViewBase
 {
     private SlotGrid Grid => uiContext.Get<SlotGrid>("HotbarGrid");
 

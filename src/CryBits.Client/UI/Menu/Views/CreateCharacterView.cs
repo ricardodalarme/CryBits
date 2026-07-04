@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Rendering.UI;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using Iguina.Entities;
@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class CreateCharacterView(UiContext uiContext, AccountSender accountSender, CharacterRenderer characterRenderer, DefinitionCatalog catalog, MenuScreen menuScreen) : ViewBase
+internal class CreateCharacterView(UiContext uiContext, AccountSender accountSender, PortraitRenderer characterRenderer, DefinitionCatalog catalog, MenuScreen menuScreen) : ViewBase
 {
     internal Panel CreateCharacterPanel => uiContext.Get<Panel>("CreateCharacter");
     internal TextInput NameTextBox => uiContext.Get<TextInput>("CreateName");

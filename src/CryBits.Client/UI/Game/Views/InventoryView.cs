@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Rendering.UI;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class InventoryView(UiContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, TooltipView tooltip, ShopView shop, GameScreen gameScreen) : ViewBase
+internal class InventoryView(UiContext uiContext, IntentSender intentSender, ItemIconRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, TooltipView tooltip, ShopView shop, GameScreen gameScreen) : ViewBase
 {
     private SlotGrid Grid => uiContext.Get<SlotGrid>("InventoryGrid");
 

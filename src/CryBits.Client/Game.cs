@@ -4,14 +4,24 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Network.Transport;
 using CryBits.Client.Framework.Persistence.Repositories;
-using CryBits.Client.Graphics;
-using CryBits.Client.Graphics.Renderers;
-using CryBits.Client.Logic;
-using CryBits.Client.Managers;
+using CryBits.Client.Input;
 using CryBits.Client.Network.Handlers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Offline;
+using CryBits.Client.Rendering;
+using CryBits.Client.Rendering.Camera;
+using CryBits.Client.Rendering.Effects;
+using CryBits.Client.Rendering.Entities;
+using CryBits.Client.Rendering.Items;
+using CryBits.Client.Rendering.Map;
+using CryBits.Client.Rendering.UI;
 using CryBits.Client.Systems;
+using CryBits.Client.Systems.Character;
+using CryBits.Client.Systems.Combat;
+using CryBits.Client.Systems.Core;
+using CryBits.Client.Systems.Map;
+using CryBits.Client.Systems.Movement;
+using CryBits.Client.Systems.Player;
 using CryBits.Client.UI;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
@@ -34,12 +44,12 @@ public sealed class Game : IDisposable
     private EmbeddedHostRunner? _hostRunner;
     private Connection? _connection;
     private UiContext _uiContext = null!;
-    private Renderer _renderer = null!;
+    private SpriteBatch _spriteBatch = null!;
     private RenderPipeline? _renderPipeline;
     private InputManager? _inputManager;
     private SystemScheduler? _scheduler;
     private GameContext _context = null!;
-    private MenuScreen _menu = null!;
+    private MenuScreen _menuScreen = null!;
     private GameScreen? _gameScreen;
     private bool _working = true;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
@@ -73,23 +83,19 @@ public sealed class Game : IDisposable
         OptionsRepository.Read();
 
         // ── Create all infrastructure instances FIRST ──
-        var audio = new AudioManager();
+        var audioManager = new AudioManager();
         var uiContext = new UiContext(); _uiContext = uiContext;
-        var input = new InputManager();
-        var renderer = new Renderer(input); _renderer = renderer;
-        var cat = new DefinitionCatalog();
-        var context = new GameContext(cat); _context = context;
+        var inputManager = new InputManager();
+        var spriteBatch = new SpriteBatch(inputManager); _spriteBatch = spriteBatch;
+        var catalog = new DefinitionCatalog();
+        var context = new GameContext(catalog); _context = context;
 
         // ── Initialize in dependency order ──
-        _renderer.Init(uiContext);
-        _uiContext.Initialize((uint)_renderer.RenderWindow.Size.X, (uint)_renderer.RenderWindow.Size.Y, _renderer.RenderWindow);
-        input.Initialize(_uiContext.UISystem!, _renderer.RenderWindow);
+        _spriteBatch.Init(uiContext);
+        _uiContext.Initialize((uint)_spriteBatch.RenderWindow.Size.X, (uint)_spriteBatch.RenderWindow.Size.Y, _spriteBatch.RenderWindow);
+        inputManager.Initialize(_uiContext.UISystem!, _spriteBatch.RenderWindow);
 
-        var camera = new CameraManager(renderer.RenderWindow);
-        var mapRenderer = new MapRenderer(renderer, context, camera);
-        var characterRenderer = new CharacterRenderer(renderer);
-        var itemRenderer = new ItemRenderer(renderer);
-        var equipmentRenderer = new EquipmentRenderer(renderer, context, cat);
+        var cameraManager = new CameraManager(_spriteBatch.RenderWindow);
 
         // ── Network ──
         if (_offline)
@@ -104,79 +110,81 @@ public sealed class Game : IDisposable
             clientTransport.Connect("localhost", Config.Port, Config.GameName);
             _connection = new Connection(clientTransport);
         }
-        _renderer.Connection = _connection;
+        _spriteBatch.Connection = _connection;
         _connection.Start(onDisconnected: OnDisconnected);
+
+        // Rendering
+        var groundRenderers = new List<IRenderer>
+        {
+            new GroundSpriteRenderer(context.World, _spriteBatch),
+            new EntitySpriteRenderer(context.World, _spriteBatch)
+        };
+        var fringeRenderers = new List<IRenderer>
+        {
+            new HealthBarRenderer(context.World, _spriteBatch),
+            new WeatherParticleRenderer(context.World, _spriteBatch),
+            new FogRenderer(context.World, _spriteBatch)
+        };
+
+        var tilemapRenderer = new TilemapRenderer(_spriteBatch, context, cameraManager);
+        var portraitRenderer = new PortraitRenderer(_spriteBatch);
+        var itemIconRenderer = new ItemIconRenderer(_spriteBatch);
+        var equipmentSlotRenderer = new EquipmentSlotRenderer(_spriteBatch, context, catalog);
+        var renderPipeline = new RenderPipeline(_spriteBatch, cameraManager, tilemapRenderer, uiContext, groundRenderers, fringeRenderers);
+
+        _renderPipeline = renderPipeline;
+        _inputManager = inputManager;
 
         var intentSender = new IntentSender(_connection);
         var authSender = new AuthSender(_connection);
-        var accountSender = new AccountSender(_connection, cat);
+        var accountSender = new AccountSender(_connection, catalog);
         var contentSender = new ContentSender(_connection);
 
         // ── Intent registrations ──
-        IntentRegistry.Register<MoveIntent>(1);
-        IntentRegistry.Register<AttackIntent>(2);
-        IntentRegistry.Register<AddPointIntent>(3);
-        IntentRegistry.Register<CollectItemIntent>(4);
-        IntentRegistry.Register<DropItemIntent>(5);
-        IntentRegistry.Register<InventorySwapIntent>(6);
-        IntentRegistry.Register<InventoryUseIntent>(7);
-        IntentRegistry.Register<EquipmentRemoveIntent>(8);
-        IntentRegistry.Register<HotbarAddIntent>(9);
-        IntentRegistry.Register<HotbarSwapIntent>(10);
-        IntentRegistry.Register<HotbarUseIntent>(11);
-        IntentRegistry.Register<ChatMessageIntent>(12);
-        IntentRegistry.Register<PartyInviteIntent>(13);
-        IntentRegistry.Register<PartyAcceptIntent>(14);
-        IntentRegistry.Register<PartyDeclineIntent>(15);
-        IntentRegistry.Register<PartyLeaveIntent>(16);
-        IntentRegistry.Register<TradeInviteIntent>(17);
-        IntentRegistry.Register<TradeAcceptIntent>(18);
-        IntentRegistry.Register<TradeDeclineIntent>(19);
-        IntentRegistry.Register<TradeLeaveIntent>(20);
-        IntentRegistry.Register<TradeOfferIntent>(21);
-        IntentRegistry.Register<TradeOfferStateIntent>(22);
-        IntentRegistry.Register<ShopBuyIntent>(23);
-        IntentRegistry.Register<ShopSellIntent>(24);
-        IntentRegistry.Register<ShopCloseIntent>(25);
+        RegisterIntentTypes();
 
-        // ── Scheduler ──
-        var scheduler = new SystemScheduler(context, input, intentSender, audio, camera, renderer, uiContext);
-        _scheduler = scheduler;
-
-        // ── Chat ──
         var chat = new Chat(intentSender, uiContext);
+        var gameInput = new GameInput(intentSender, chat, inputManager, uiContext);
 
-        // ── Views that other views depend on ──
-        var tooltipView = new TooltipView(uiContext, itemRenderer, cat);
-        var shopView = new ShopView(uiContext, intentSender, itemRenderer, cat, tooltipView);
-
-        // ── Screens ──
-        _menu = new MenuScreen(audio, uiContext, authSender, accountSender, characterRenderer, context, cat, _connection);
-        var gameInput = new GameInput(intentSender, chat, input, uiContext);
-        _gameScreen = new GameScreen(uiContext, context, intentSender, renderer, itemRenderer, equipmentRenderer,
-            characterRenderer, input, audio, cat, tooltipView, shopView, _menu, chat, gameInput);
+        // UI
+        var tooltipView = new TooltipView(uiContext, itemIconRenderer, catalog);
+        var shopView = new ShopView(uiContext, intentSender, itemIconRenderer, catalog, tooltipView);
+        _menuScreen = new MenuScreen(audioManager, uiContext, authSender, accountSender, portraitRenderer, context, catalog, _connection);
+        _gameScreen = new GameScreen(uiContext, context, intentSender, _spriteBatch, itemIconRenderer, equipmentSlotRenderer,
+            portraitRenderer, inputManager, audioManager, catalog, tooltipView, shopView, _menuScreen, chat, gameInput);
 
         // ── System initialization ──
-        scheduler.Initialize();
-        var renderPipeline = new RenderPipeline(renderer, camera, mapRenderer, scheduler, uiContext);
-        _renderPipeline = renderPipeline;
-        _inputManager = input;
+        _scheduler = new SystemScheduler();
+        _scheduler
+            .AddSimulation(new FadeSystem(context.World))
+            .AddSimulation(new FogSystem(context.World))
+            .AddSimulation(new WeatherSimulationSystem(context))
+            .AddSimulation(new WeatherSpawnSystem(context))
+            .AddSimulation(new LightningSystem(context, audioManager))
+            .AddSimulation(new MovementInputSystem(context, inputManager, intentSender))
+            .AddSimulation(new ItemPickupSystem(context, inputManager, intentSender))
+            .AddSimulation(new MovementSystem(context.World))
+            .AddSimulation(new CameraSystem(context, cameraManager))
+            .AddSimulation(new CharacterAnimationSystem(context.World))
+            .AddSimulation(new AttackHitSystem(context))
+            .AddSimulation(new AttackSystem(context, inputManager, intentSender, uiContext))
+            .AddSimulation(new DamageDecaySystem(context.World));
 
         // ── Packet handlers ──
         var contentRepo = new ContentRepository();
         var mapRepo = new MapRepository();
-        PacketDispatcher.Register(new AuthHandler(cat, uiContext, _menu));
-        PacketDispatcher.Register(new AccountHandler(context, _menu, _gameScreen));
-        PacketDispatcher.Register(new MapHandler(context, contentSender, audio, mapRepo));
-        PacketDispatcher.Register(new KeyframeHandler(new Replication.SnapshotApplier(context.World, context, cat)));
+        PacketDispatcher.Register(new AuthHandler(catalog, uiContext, _menuScreen));
+        PacketDispatcher.Register(new AccountHandler(context, _menuScreen, _gameScreen));
+        PacketDispatcher.Register(new MapHandler(context, contentSender, audioManager, mapRepo));
+        PacketDispatcher.Register(new KeyframeHandler(new Replication.SnapshotApplier(context.World, context, catalog)));
         PacketDispatcher.Register(new ChatHandler(chat));
         PacketDispatcher.Register(new PartyHandler(intentSender, context, _gameScreen));
         PacketDispatcher.Register(new TradeHandler(intentSender, context, _gameScreen));
-        PacketDispatcher.Register(new ContentHandler(cat, _menu));
-        PacketDispatcher.Register(new ShopHandler(cat, _gameScreen));
+        PacketDispatcher.Register(new ContentHandler(catalog, _menuScreen));
+        PacketDispatcher.Register(new ShopHandler(catalog, _gameScreen));
 
-        audio.LoadSounds();
-        _menu.Open();
+        audioManager.LoadSounds();
+        _menuScreen.Open();
     }
 
     private void Loop()
@@ -192,14 +200,14 @@ public sealed class Game : IDisposable
                 _renderPipeline?.Present();
 
                 _inputManager?.BeginFrame();
-                _renderer.RenderWindow.DispatchEvents();
+                _spriteBatch.RenderWindow.DispatchEvents();
 
                 var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
                 _stopwatch.Restart();
 
                 _uiContext.Update(deltaTime);
 
-                _scheduler?.Simulation.Update(deltaTime);
+                _scheduler?.Update(deltaTime);
 
                 var ctx = _context;
                 if (ctx.LocalPlayer.Entity is { } playerEntityId)
@@ -239,13 +247,42 @@ public sealed class Game : IDisposable
     {
         _context.Reset();
         _gameScreen?.Unbind();
-        _menu.Open();
+        _menuScreen.Open();
     }
 
     private static void RegisterComponentTypes()
     {
         ComponentTypes.RegisterDefault();
         ComponentTypeRegistry.Register<NetworkId>(18);
+    }
+
+    private static void RegisterIntentTypes()
+    {
+        IntentRegistry.Register<MoveIntent>(1);
+        IntentRegistry.Register<AttackIntent>(2);
+        IntentRegistry.Register<AddPointIntent>(3);
+        IntentRegistry.Register<CollectItemIntent>(4);
+        IntentRegistry.Register<DropItemIntent>(5);
+        IntentRegistry.Register<InventorySwapIntent>(6);
+        IntentRegistry.Register<InventoryUseIntent>(7);
+        IntentRegistry.Register<EquipmentRemoveIntent>(8);
+        IntentRegistry.Register<HotbarAddIntent>(9);
+        IntentRegistry.Register<HotbarSwapIntent>(10);
+        IntentRegistry.Register<HotbarUseIntent>(11);
+        IntentRegistry.Register<ChatMessageIntent>(12);
+        IntentRegistry.Register<PartyInviteIntent>(13);
+        IntentRegistry.Register<PartyAcceptIntent>(14);
+        IntentRegistry.Register<PartyDeclineIntent>(15);
+        IntentRegistry.Register<PartyLeaveIntent>(16);
+        IntentRegistry.Register<TradeInviteIntent>(17);
+        IntentRegistry.Register<TradeAcceptIntent>(18);
+        IntentRegistry.Register<TradeDeclineIntent>(19);
+        IntentRegistry.Register<TradeLeaveIntent>(20);
+        IntentRegistry.Register<TradeOfferIntent>(21);
+        IntentRegistry.Register<TradeOfferStateIntent>(22);
+        IntentRegistry.Register<ShopBuyIntent>(23);
+        IntentRegistry.Register<ShopSellIntent>(24);
+        IntentRegistry.Register<ShopCloseIntent>(25);
     }
 
     public void Dispose()

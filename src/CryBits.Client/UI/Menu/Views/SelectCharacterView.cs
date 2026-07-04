@@ -1,13 +1,13 @@
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Rendering.UI;
 using CryBits.Definitions.Common;
 using Iguina.Entities;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class SelectCharacterView(UiContext uiContext, AccountSender accountSender, CharacterRenderer characterRenderer) : ViewBase
+internal class SelectCharacterView(UiContext uiContext, AccountSender accountSender, PortraitRenderer characterRenderer) : ViewBase
 {
     internal Panel SelectCharacterPanel => uiContext.Get<Panel>("SelectCharacter");
     internal Button UseButton => uiContext.Get<Button>("CharUse");

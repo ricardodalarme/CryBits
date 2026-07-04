@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;

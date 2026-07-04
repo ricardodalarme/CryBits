@@ -2,7 +2,7 @@ using CryBits.Client.Framework.Constants;
 using SFML.Graphics;
 using System.Drawing;
 
-namespace CryBits.Client.Framework.Graphics;
+namespace CryBits.Client.Framework.Assets;
 
 public static class Textures
 {

@@ -1,7 +1,5 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
-using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Core;
 using SFML.Graphics;
@@ -9,9 +7,9 @@ using SFML.System;
 using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
 
-namespace CryBits.Client.Systems.Map;
+namespace CryBits.Client.Rendering.Effects;
 
-internal sealed class WeatherRenderSystem(World world, Renderer renderer) : IClientRenderSystem
+internal sealed class WeatherParticleRenderer(World world, SpriteBatch spriteBatch) : IRenderer
 {
     private readonly VertexArray _batch = new(PrimitiveType.Triangles);
 
@@ -32,7 +30,7 @@ internal sealed class WeatherRenderSystem(World world, Renderer renderer) : ICli
         }
 
         if (_batch.VertexCount > 0)
-            renderer.RenderWindow.Draw(_batch, new RenderStates(Textures.Weather));
+            spriteBatch.RenderWindow.Draw(_batch, new RenderStates(Textures.Weather));
 
         foreach (var state in world.All)
         {
@@ -40,7 +38,7 @@ internal sealed class WeatherRenderSystem(World world, Renderer renderer) : ICli
             if (lightning == null) continue;
 
             if (lightning.Intensity > 0)
-                renderer.Draw(
+                spriteBatch.Draw(
                     Textures.Blank,
                     0, 0, 0, 0, ScreenWidth, ScreenHeight,
                     new Color(255, 255, 255, lightning.Intensity));

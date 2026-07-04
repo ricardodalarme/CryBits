@@ -1,5 +1,4 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
 using CryBits.Simulation.Core;
 
 namespace CryBits.Client.Systems.Map;

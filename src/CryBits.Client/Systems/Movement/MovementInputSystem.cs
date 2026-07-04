@@ -1,6 +1,5 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
-using CryBits.Client.Managers;
+using CryBits.Client.Input;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Simulation.Components;

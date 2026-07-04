@@ -1,13 +1,13 @@
-using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Editors.Forms.Npcs;
 using SFML.Graphics;
 using System.Drawing;
 
 namespace CryBits.Editors.Graphics.Renderers;
 
-internal class CharacterRenderer(Renderer renderer)
+internal class PortraitRenderer(Renderer renderer)
 {
-    public static CharacterRenderer Instance { get; } = new(Renderer.Instance);
+    public static PortraitRenderer Instance { get; } = new(Renderer.Instance);
 
     public RenderTexture? WinCharacter;
 

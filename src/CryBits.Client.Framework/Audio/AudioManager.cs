@@ -34,7 +34,6 @@ public class AudioManager
         sound.Volume = 20;
         sound.IsLooping = loop;
         sound.Play();
-
     }
 
     public bool IsPlaying(string soundName)

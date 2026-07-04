@@ -1,4 +1,4 @@
-using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
 using SFML.Graphics;

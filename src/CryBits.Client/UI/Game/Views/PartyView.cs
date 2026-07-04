@@ -1,11 +1,11 @@
-using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Graphics;
+using CryBits.Client.Framework.Assets;
+using CryBits.Client.Rendering;
 using CryBits.Client.Worlds;
 using CryBits.Simulation.Components;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class PartyView(UiContext uiContext, GameContext context, Renderer renderer) : ViewBase
+internal class PartyView(UiContext uiContext, GameContext context, SpriteBatch spriteBatch) : ViewBase
 {
     public override void Bind()
     {
@@ -26,25 +26,25 @@ internal class PartyView(UiContext uiContext, GameContext context, Renderer rend
         for (byte i = 0; i < party.Members.Count; i++)
         {
             var entity = context.GetNetworkEntity(party.Members[i].Value);
-            renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
-            renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
+            spriteBatch.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
+            spriteBatch.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
             if (entity != null)
             {
                 var vitals = world.Get<Vitals>(entity.Value);
                 if (vitals != null)
                 {
                     if (vitals.Hp > 0)
-                        renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
+                        spriteBatch.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
                             vitals.Hp * 82 / vitals.MaxHp, 8);
                     if (vitals.Mp > 0)
-                        renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
+                        spriteBatch.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
                             vitals.Mp * 82 / vitals.MaxMp, 8);
                 }
             }
             var name = entity != null
                 ? world.Get<PlayerAppearance>(entity.Value)?.Name ?? string.Empty
                 : string.Empty;
-            renderer.DrawText(name, 10, 79 + 27 * i, SFML.Graphics.Color.White);
+            spriteBatch.DrawText(name, 10, 79 + 27 * i, SFML.Graphics.Color.White);
         }
     }
 }

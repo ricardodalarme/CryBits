@@ -1,12 +1,12 @@
-using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using System.Drawing;
 
-namespace CryBits.Client.Graphics.Renderers;
+namespace CryBits.Client.Rendering.UI;
 
-internal sealed class EquipmentRenderer(Renderer renderer, GameContext context, DefinitionCatalog catalog)
+internal sealed class EquipmentSlotRenderer(SpriteBatch spriteBatch, GameContext context, DefinitionCatalog catalog)
 {
     public void DrawSlot(int slot, Point pos)
     {
@@ -15,12 +15,12 @@ internal sealed class EquipmentRenderer(Renderer renderer, GameContext context, 
 
         var itemId = equipment.Slots[slot];
         if (itemId == Guid.Empty)
-            renderer.Draw(Textures.Equipments, pos.X, pos.Y, slot * 32, 0, 32, 32);
+            spriteBatch.Draw(Textures.Equipments, pos.X, pos.Y, slot * 32, 0, 32, 32);
         else
         {
             var item = catalog.Items.Get(itemId);
             if (item != null)
-                renderer.Draw(Textures.Items[item.Texture], pos);
+                spriteBatch.Draw(Textures.Items[item.Texture], pos);
         }
     }
 }

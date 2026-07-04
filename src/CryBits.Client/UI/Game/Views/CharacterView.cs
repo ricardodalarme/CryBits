@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Rendering.UI;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
@@ -12,7 +12,7 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class CharacterView(UiContext uiContext, GameContext context, IntentSender intentSender, EquipmentRenderer equipmentRenderer, CharacterRenderer characterRenderer, TooltipView tooltip, DefinitionCatalog catalog) : ViewBase
+internal class CharacterView(UiContext uiContext, GameContext context, IntentSender intentSender, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer, TooltipView tooltip, DefinitionCatalog catalog) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("CharacterPanel");
     private SlotGrid EquipmentGrid => uiContext.Get<SlotGrid>("CharEquipmentGrid");

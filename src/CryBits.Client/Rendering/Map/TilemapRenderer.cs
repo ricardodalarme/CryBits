@@ -1,5 +1,5 @@
-using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Managers;
+using CryBits.Client.Framework.Assets;
+using CryBits.Client.Rendering.Camera;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Spatial;
@@ -8,9 +8,9 @@ using SFML.System;
 using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
 
-namespace CryBits.Client.Graphics.Renderers;
+namespace CryBits.Client.Rendering.Map;
 
-internal sealed class MapRenderer(Renderer renderer, GameContext context, CameraManager cameraManager)
+internal sealed class TilemapRenderer(SpriteBatch spriteBatch, GameContext context, CameraManager cameraManager)
 {
     private readonly Dictionary<int, VertexArray> _batches = [];
 
@@ -66,7 +66,7 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
         foreach (var (texIndex, va) in _batches)
         {
             if (va.VertexCount == 0) continue;
-            renderer.RenderWindow.Draw(va, new RenderStates(Textures.Tiles[texIndex]));
+            spriteBatch.RenderWindow.Draw(va, new RenderStates(Textures.Tiles[texIndex]));
         }
     }
 
@@ -75,7 +75,7 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
         if (context.CurrentMap == null) return;
         var panorama = context.CurrentMap.Panorama;
         if (panorama > 0)
-            renderer.Draw(Textures.Panoramas[panorama], new System.Drawing.Point(0));
+            spriteBatch.Draw(Textures.Panoramas[panorama], new System.Drawing.Point(0));
     }
 
     private VertexArray GetBatch(int textureIndex)

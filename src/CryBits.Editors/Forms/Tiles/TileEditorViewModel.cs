@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Entities.Tile;
-using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Persistence.Repositories;
 using G = CryBits.Definitions.Globals;
 

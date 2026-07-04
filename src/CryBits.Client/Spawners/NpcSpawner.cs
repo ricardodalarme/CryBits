@@ -1,5 +1,5 @@
 using CryBits.Client.Components;
-using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Definitions;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Npcs;

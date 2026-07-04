@@ -1,5 +1,5 @@
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Graphics.Renderers;
+using CryBits.Client.Rendering.UI;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
@@ -11,7 +11,7 @@ using DrawingPoint = System.Drawing.Point;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TooltipView(UiContext uiContext, ItemRenderer itemRenderer, DefinitionCatalog catalog) : ViewBase
+internal class TooltipView(UiContext uiContext, ItemIconRenderer itemRenderer, DefinitionCatalog catalog) : ViewBase
 {
     private Panel Panel => uiContext.Get<Panel>("Information");
     private Label TitleLabel => uiContext.Get<Label>("InfoTitle");

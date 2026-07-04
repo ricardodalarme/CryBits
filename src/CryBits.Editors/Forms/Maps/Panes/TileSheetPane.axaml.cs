@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
-using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Assets;
 using CryBits.Definitions;
 using SystemPoint = System.Drawing.Point;
 using SystemRect = System.Drawing.Rectangle;
