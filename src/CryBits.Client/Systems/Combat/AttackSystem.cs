@@ -22,9 +22,7 @@ internal sealed class AttackSystem(
 
     public void Update(float t)
     {
-        var localPlayer = context.LocalPlayer;
-
-        var entity = localPlayer?.Entity;
+        var entity = context.LocalPlayerEntity;
         if (entity is null || !context.World.IsAlive(entity.Value)) return;
 
         _inputThrottle += t;

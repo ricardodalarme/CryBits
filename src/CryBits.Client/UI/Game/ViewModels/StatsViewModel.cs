@@ -14,11 +14,11 @@ internal sealed class StatsViewModel(GameContext context)
     public int HpPercent { get; private set; }
     public int MpPercent { get; private set; }
     public int ExpPercent { get; private set; }
-
     public void Refresh()
     {
-        var vitals = context.LocalPlayer.GetVitals();
-        var level = context.LocalPlayer.GetLevel();
+        if (!context.LocalPlayerEntity.HasValue) return;
+        var vitals = context.World.Get<CryBits.Simulation.Components.Vitals>(context.LocalPlayerEntity.Value);
+        var level = context.World.Get<CryBits.Simulation.Components.LevelComponent>(context.LocalPlayerEntity.Value);
         if (vitals == null || level == null) return;
 
         Hp = vitals.Hp;

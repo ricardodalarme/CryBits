@@ -1,14 +1,17 @@
-using CryBits.Client.Core;
 using CryBits.Client.Input;
 using CryBits.Client.Rendering.UI;
-using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Items;
-using CryBits.Definitions.Slots;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class DraggableSlotView(UiContext uiContext, ItemIconRenderer itemRenderer, InputManager inputManager, GameContext context, DefinitionCatalog catalog, GameScreen gameScreen) : ViewBase
+internal class DraggableSlotView(
+    UiContext uiContext,
+    ItemIconRenderer itemRenderer,
+    InputManager inputManager,
+    GameScreen gameScreen,
+    InventoryViewModel inventoryViewModel,
+    HotbarViewModel hotbarViewModel) : ViewBase
 {
     public override void Bind() => uiContext.PostDraw += OnPostDraw;
 
@@ -23,22 +26,21 @@ internal class DraggableSlotView(UiContext uiContext, ItemIconRenderer itemRende
 
         if (gameScreen.HotbarChange is { } hotSlot)
         {
-            var hotbar = context.LocalPlayer.GetHotbar();
-            var inv = context.LocalPlayer.GetInventory();
-            if (hotbar == null || inv == null) return;
-            var hotbarSlot = hotbar.Slots[hotSlot];
-            if (hotbarSlot is { Type: SlotType.Item })
+            hotbarViewModel.Refresh();
+            var hbSlot = hotbarViewModel.Slots[hotSlot];
+            if (hbSlot is { Slot: > 0, Type: SlotType.Item } && hbSlot.Definition is { } item)
             {
-                var itemId = inv.Slots[hotbarSlot.Slot].ItemId;
-                if (catalog.Items.Get(itemId) is { } item) itemRenderer.DrawItem(item, 1, pos);
+                itemRenderer.DrawItem(item, 1, pos);
             }
         }
         else if (gameScreen.InventoryChange is { } invSlot)
         {
-            var inv = context.LocalPlayer.GetInventory();
-            if (inv == null) return;
-            var itemId = inv.Slots[invSlot].ItemId;
-            if (catalog.Items.Get(itemId) is { } item) itemRenderer.DrawItem(item, 1, pos);
+            inventoryViewModel.Refresh();
+            var itemVM = inventoryViewModel.Slots[invSlot];
+            if (itemVM is { Definition: { } item })
+            {
+                itemRenderer.DrawItem(item, 1, pos);
+            }
         }
     }
 }

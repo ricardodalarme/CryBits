@@ -71,7 +71,7 @@ internal sealed class SnapshotApplier(
 
         if (appearance == null || position == null) return;
 
-        var isLocal = serverId == context.LocalPlayer.Id;
+        var isLocal = serverId == context.LocalPlayerId;
 
         var vitalArray = vitals != null
             ? new short[] { vitals.Hp, vitals.Mp }
@@ -101,7 +101,6 @@ internal sealed class SnapshotApplier(
 
         if (isLocal)
         {
-            context.LocalPlayer.Entity = localEntity;
             var inv = DeserializeComp<InventoryState>(entity);
             var hotbar = DeserializeComp<HotbarState>(entity);
             if (stat != null) world.Set(localEntity, stat);

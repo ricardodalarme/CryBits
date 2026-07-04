@@ -13,7 +13,7 @@ internal class AccountHandler(GameContext context, MenuScreen menuScreen, GameSc
     internal void Join(JoinPacket packet)
     {
         context.CurrentMap = null;
-        context.LocalPlayer.Id = packet.PlayerId;
+        context.LocalPlayerId = packet.PlayerId;
     }
 
     [PacketHandler]

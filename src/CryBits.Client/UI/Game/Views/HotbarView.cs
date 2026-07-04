@@ -1,7 +1,6 @@
 using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Items;
 using System.Drawing;
 

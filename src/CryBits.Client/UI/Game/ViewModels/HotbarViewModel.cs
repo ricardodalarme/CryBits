@@ -3,7 +3,6 @@ using CryBits.Client.Network.Senders;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
-using CryBits.Definitions.Slots;
 using CryBits.Simulation.Intents;
 using static CryBits.Definitions.Globals;
 
@@ -26,10 +25,12 @@ internal sealed class HotbarViewModel(
 
     public void Refresh()
     {
-        var hotbar = context.LocalPlayer.GetHotbar();
+        if (!context.LocalPlayerEntity.HasValue) return;
+        var entity = context.LocalPlayerEntity.Value;
+        var hotbar = context.World.Get<CryBits.Simulation.Components.HotbarState>(entity);
         if (hotbar == null) return;
 
-        var inv = context.LocalPlayer.GetInventory();
+        var inv = context.World.Get<CryBits.Simulation.Components.InventoryState>(entity);
 
         for (var i = 0; i < hotbar.Slots.Length; i++)
         {

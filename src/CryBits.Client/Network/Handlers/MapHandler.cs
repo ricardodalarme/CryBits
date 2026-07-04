@@ -18,7 +18,7 @@ internal class MapHandler(GameContext context, ContentSender contentSender, Audi
     {
         var id = packet.MapId;
 
-        var myEntity = context.LocalPlayer.Entity;
+        var myEntity = context.LocalPlayerEntity;
         if (myEntity.HasValue)
             context.World.DestroyWhere(s => s.Has<PlayerTag>() && s.Id != myEntity.Value);
         else

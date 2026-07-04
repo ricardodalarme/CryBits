@@ -25,7 +25,7 @@ internal sealed class ItemPickupSystem(
 
         if (!inputManager.WasKeyReleased(Keyboard.Key.Space)) return;
 
-        var entity = context.LocalPlayer.Entity;
+        var entity = context.LocalPlayerEntity;
         if (entity is null || !context.World.IsAlive(entity.Value)) return;
         if (_cooldown > 0f) return;
 

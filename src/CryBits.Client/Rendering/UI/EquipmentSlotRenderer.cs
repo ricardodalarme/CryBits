@@ -10,7 +10,9 @@ internal sealed class EquipmentSlotRenderer(SpriteBatch spriteBatch, GameContext
 {
     public void DrawSlot(int slot, Point pos)
     {
-        var equipment = context.LocalPlayer.GetEquipment();
+        var equipment = context.LocalPlayerEntity.HasValue
+            ? context.World.Get<CryBits.Simulation.Components.EquipmentState>(context.LocalPlayerEntity.Value)
+            : null;
         if (equipment == null) return;
 
         var itemId = equipment.Slots[slot];

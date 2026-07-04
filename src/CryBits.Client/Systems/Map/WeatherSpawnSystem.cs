@@ -33,7 +33,7 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
 
     private WeatherType GetEffectiveWeather(MapDef map)
     {
-        var playerId = context.LocalPlayer.Entity;
+        var playerId = context.LocalPlayerEntity;
         if (playerId == null) return map.DefaultWeather;
         var pos = context.World.Get<Position>(playerId.Value);
         if (pos == null) return map.DefaultWeather;

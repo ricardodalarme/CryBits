@@ -149,7 +149,7 @@ public sealed class Game : IDisposable
 
         // UI
         var tooltipView = new TooltipView(uiContext, itemIconRenderer, catalog);
-        var tradeViewModel = new TradeViewModel(context, intentSender);
+        var tradeViewModel = new TradeViewModel(context, intentSender, catalog);
         var partyViewModel = new PartyViewModel(context);
         var inventoryViewModel = new InventoryViewModel(context, intentSender, catalog);
         var hotbarViewModel = new HotbarViewModel(context, intentSender, catalog);
@@ -158,7 +158,7 @@ public sealed class Game : IDisposable
         var statsViewModel = new StatsViewModel(context);
         _menuScreen = new MenuScreen(audioManager, uiContext, authSender, accountSender, portraitRenderer, context, catalog, _connection);
         _gameScreen = new GameScreen(uiContext, context, intentSender, _spriteBatch, itemIconRenderer, equipmentSlotRenderer,
-            portraitRenderer, inputManager, audioManager, catalog, tooltipView, _menuScreen, chat, gameInput, tradeViewModel, partyViewModel, inventoryViewModel, hotbarViewModel, shopViewModel, characterViewModel, statsViewModel);
+            portraitRenderer, inputManager, audioManager, tooltipView, _menuScreen, chat, gameInput, tradeViewModel, partyViewModel, inventoryViewModel, hotbarViewModel, shopViewModel, characterViewModel, statsViewModel);
 
         // ── System initialization ──
         _scheduler = new SystemScheduler();
@@ -216,7 +216,7 @@ public sealed class Game : IDisposable
                 _scheduler?.Update(deltaTime);
 
                 var ctx = _context;
-                if (ctx.LocalPlayer.Entity is { } playerEntityId)
+                if (ctx.LocalPlayerEntity is { } playerEntityId)
                 {
                     var level = ctx.World.Get<LevelComponent>(playerEntityId);
                     var attrs = ctx.World.Get<AttributesComponent>(playerEntityId);

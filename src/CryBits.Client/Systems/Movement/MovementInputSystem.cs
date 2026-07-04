@@ -21,9 +21,7 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
 
     public void Update(float t)
     {
-        var localPlayer = context.LocalPlayer;
-
-        var entity = localPlayer?.Entity;
+        var entity = context.LocalPlayerEntity;
         if (entity == null || !context.World.IsAlive(entity.Value)) return;
 
         _inputThrottle += t;
@@ -93,7 +91,7 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
 
     private bool HasSolidEntityAt(int tileX, int tileY)
     {
-        var playerPos = context.World.Get<Position>(context.LocalPlayer.Entity!.Value);
+        var playerPos = context.World.Get<Position>(context.LocalPlayerEntity!.Value);
         if (playerPos == null) return false;
 
         return ChunkGrid.FindAt<CollidableTag>(context.World, playerPos.MapId, tileX, tileY).HasValue;

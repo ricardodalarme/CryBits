@@ -1,4 +1,3 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Classes;
 using CryBits.Definitions.Common;

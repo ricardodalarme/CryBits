@@ -25,9 +25,7 @@ internal sealed class CameraSystem(GameContext context, CameraManager cameraMana
 
         if (target is null)
         {
-            var localPlayer = context.LocalPlayer;
-            if (localPlayer is null) return;
-            target = localPlayer.Entity;
+            target = context.LocalPlayerEntity;
         }
 
         if (target is null || !context.World.IsAlive(target.Value)) return;

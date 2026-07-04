@@ -1,9 +1,6 @@
-using CryBits.Client.Core;
 using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
-using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Helpers.Extensions;
 using Iguina.Entities;
 using System.Drawing;
 
@@ -12,8 +9,6 @@ namespace CryBits.Client.UI.Game.Views;
 internal class TradeView(
     UiContext uiContext,
     ItemIconRenderer itemRenderer,
-    GameContext context,
-    DefinitionCatalog catalog,
     InventoryView inventory,
     GameScreen gameScreen,
     TradeViewModel viewModel) : ViewBase
@@ -64,9 +59,10 @@ internal class TradeView(
         var invSlot = inventory.DragOrigin;
         if (invSlot == null) return;
 
-        var inv = context.LocalPlayer.GetInventory();
-        if (inv == null) return;
-        if (inv.Slots[invSlot.Value].Amount == 1)
+        inventory.ViewModel.Refresh();
+        var itemVM = inventory.ViewModel.Slots[invSlot.Value];
+        if (itemVM == null) return;
+        if (itemVM.Amount == 1)
             viewModel.OfferItem((short)slot, invSlot.Value, 1);
         else
         {
@@ -112,16 +108,13 @@ internal class TradeView(
 
         var ownOffer = viewModel.OwnOffer;
         var theirOffer = viewModel.TheirOffer;
-        var inv = context.LocalPlayer.GetInventory();
-        if (ownOffer == null || inv == null) return;
 
         for (var i = 0; i < OwnGrid.TotalSlots; i++)
         {
             if (i >= ownOffer.Length) break;
             var rect = OwnGrid.GetSlotRect(i);
             var offer = ownOffer[i];
-            var inventorySlot = inv.Slots[offer.SlotNum];
-            if (catalog.Items.Get(inventorySlot.ItemId) is { } item)
+            if (offer != null && offer.Definition is { } item)
                 itemRenderer.DrawItem(item, offer.Amount, new Point(rect.X, rect.Y));
         }
 
@@ -131,8 +124,7 @@ internal class TradeView(
             if (i >= theirOffer.Length) break;
             var rect = TheirGrid.GetSlotRect(i);
             var offer = theirOffer[i];
-            var inventorySlot = inv.Slots[offer.SlotNum];
-            if (catalog.Items.Get(inventorySlot.ItemId) is { } item)
+            if (offer != null && offer.Definition is { } item)
                 itemRenderer.DrawItem(item, offer.Amount, new Point(rect.X, rect.Y));
         }
     }

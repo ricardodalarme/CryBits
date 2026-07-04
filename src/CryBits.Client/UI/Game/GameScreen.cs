@@ -8,7 +8,6 @@ using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Client.UI.Menu;
-using CryBits.Definitions.Catalog;
 using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game;
@@ -39,7 +38,7 @@ internal class GameScreen
 
     internal GameScreen(UiContext uiContext, GameContext context, IntentSender intentSender, SpriteBatch spriteBatch,
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
-        InputManager inputManager, AudioManager audioManager, DefinitionCatalog catalog, TooltipView tooltip,
+        InputManager inputManager, AudioManager audioManager, TooltipView tooltip,
         MenuScreen menuScreen, Chat chat, GameInput gameInput, TradeViewModel tradeViewModel, PartyViewModel partyViewModel,
         InventoryViewModel inventoryViewModel, HotbarViewModel hotbarViewModel, ShopViewModel shopViewModel, CharacterViewModel characterViewModel, StatsViewModel statsViewModel)
     {
@@ -49,7 +48,7 @@ internal class GameScreen
         InventoryView = new(uiContext, itemRenderer, tooltip, ShopView, this, inventoryViewModel);
         CharacterView = new(uiContext, equipmentRenderer, characterRenderer, tooltip, characterViewModel);
         ChatView = new(uiContext, chat);
-        DraggableSlotView = new(uiContext, itemRenderer, inputManager, context, catalog, this);
+        DraggableSlotView = new(uiContext, itemRenderer, inputManager, this, inventoryViewModel, hotbarViewModel);
         DropItemView = new(uiContext, intentSender);
         HotbarView = new(uiContext, itemRenderer, tooltip, InventoryView, this, hotbarViewModel);
         MenusView = new(uiContext);
@@ -58,7 +57,7 @@ internal class GameScreen
         ShopSellView = new(uiContext, shopViewModel);
         TradeAmountView = new(uiContext, intentSender);
         TradeInvitationView = new(uiContext, intentSender);
-        TradeView = new(uiContext, itemRenderer, context, catalog, InventoryView, this, tradeViewModel);
+        TradeView = new(uiContext, itemRenderer, InventoryView, this, tradeViewModel);
         MapNameView = new(uiContext, context);
         MetricsView = new(uiContext);
         PartyView = new(uiContext, spriteBatch, partyViewModel);

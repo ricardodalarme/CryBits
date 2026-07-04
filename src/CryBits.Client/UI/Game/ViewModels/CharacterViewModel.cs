@@ -35,20 +35,21 @@ internal sealed class CharacterViewModel(
 
     public void Refresh()
     {
-        var local = context.LocalPlayer;
-        Name = local.GetName();
+        if (!context.LocalPlayerEntity.HasValue) return;
+        var entity = context.LocalPlayerEntity.Value;
 
-        var appearance = local.GetAppearance();
+        var appearance = context.World.Get<CryBits.Simulation.Components.PlayerAppearance>(entity);
+        Name = appearance?.Name ?? string.Empty;
         TextureNum = (byte)(appearance?.TextureNum ?? 0);
 
-        var lvl = local.GetLevel();
+        var lvl = context.World.Get<CryBits.Simulation.Components.LevelComponent>(entity);
         if (lvl != null)
         {
             Level = lvl.Level;
             Points = lvl.Points;
         }
 
-        var attrs = local.GetAttributes();
+        var attrs = context.World.Get<CryBits.Simulation.Components.AttributesComponent>(entity);
         if (attrs != null)
         {
             Strength = attrs.Values[(byte)Attribute.Strength];
@@ -58,7 +59,7 @@ internal sealed class CharacterViewModel(
             Vitality = attrs.Values[(byte)Attribute.Vitality];
         }
 
-        var equip = local.GetEquipment();
+        var equip = context.World.Get<CryBits.Simulation.Components.EquipmentState>(entity);
         if (equip != null)
         {
             for (var i = 0; i < equip.Slots.Length; i++)

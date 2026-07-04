@@ -5,7 +5,6 @@ using CryBits.Host.Replication;
 using CryBits.Host.Services;
 using CryBits.Persistence;
 using CryBits.Simulation;
-using CryBits.Simulation.State;
 using CryBits.Transport.Abstractions;
 using LinqToDB.Data;
 using Microsoft.Extensions.Hosting;

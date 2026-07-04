@@ -1,9 +1,6 @@
-using CryBits.Client.Core;
 using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
-using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using System.Drawing;
 
@@ -17,6 +14,8 @@ internal class InventoryView(
     GameScreen gameScreen,
     InventoryViewModel viewModel) : ViewBase
 {
+    internal InventoryViewModel ViewModel => viewModel;
+
     private SlotGrid Grid => uiContext.Get<SlotGrid>("InventoryGrid");
 
     internal short? DragOrigin { get; private set; }

@@ -3,7 +3,6 @@ using CryBits.Client.Network.Senders;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
-using CryBits.Definitions.Slots;
 using CryBits.Simulation.Intents;
 using static CryBits.Definitions.Globals;
 
@@ -23,10 +22,10 @@ internal sealed class InventoryViewModel(
     DefinitionCatalog catalog)
 {
     public InventoryItemViewModel[] Slots { get; private set; } = new InventoryItemViewModel[MaxInventory];
-
     public void Refresh()
     {
-        var inv = context.LocalPlayer.GetInventory();
+        if (!context.LocalPlayerEntity.HasValue) return;
+        var inv = context.World.Get<CryBits.Simulation.Components.InventoryState>(context.LocalPlayerEntity.Value);
         if (inv == null) return;
 
         for (var i = 0; i < inv.Slots.Length; i++)

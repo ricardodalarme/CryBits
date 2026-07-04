@@ -1,4 +1,3 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Simulation.Spawners;
 
 namespace CryBits.Host.Core;

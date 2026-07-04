@@ -11,14 +11,15 @@ internal sealed class GameContext
 
     public Map? CurrentMap { get; set; }
 
-    public LocalPlayer LocalPlayer { get; set; }
+    public long LocalPlayerId { get; set; }
+
+    public EntityId? LocalPlayerEntity => GetNetworkEntity(LocalPlayerId);
 
     private readonly Dictionary<long, EntityId> _entityById = [];
 
     internal GameContext(DefinitionCatalog catalog)
     {
         World = new World(catalog, enableDirtyTracking: false);
-        LocalPlayer = new LocalPlayer(World, null);
     }
 
     public void RegisterNetworkEntity(long id, EntityId entity) => _entityById[id] = entity;
@@ -32,6 +33,6 @@ internal sealed class GameContext
         World.Clear();
         _entityById.Clear();
         CurrentMap = null;
-        LocalPlayer = new LocalPlayer(World, null);
+        LocalPlayerId = 0;
     }
 }
