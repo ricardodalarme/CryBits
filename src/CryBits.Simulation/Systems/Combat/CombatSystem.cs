@@ -111,6 +111,8 @@ public sealed class CombatSystem : ISimulationSystem
             : (short)0;
         var netDamage = CombatFormulas.NetDamage(attackerDamage, victimDefense);
 
+        tick.Events.Emit(new CombatAttackEvent(tick.TickNumber, attackerId, victimId, attackerPos.MapId, netDamage > 0));
+
         var victimPos = victimE.Get<Position>();
         if (netDamage > 0)
         {
