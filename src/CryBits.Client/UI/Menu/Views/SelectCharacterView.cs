@@ -7,20 +7,20 @@ using System.Drawing;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class SelectCharacterView(IguinaContext uiContext, AccountSender accountSender, CharacterRenderer characterRenderer) : ViewBase
+internal class SelectCharacterView(UiContext uiContext, AccountSender accountSender, CharacterRenderer characterRenderer) : ViewBase
 {
     internal Panel SelectCharacterPanel => uiContext.Get<Panel>("SelectCharacter");
-    internal static Button UseButton => IguinaContext.Instance.Get<Button>("CharUse");
-    internal static Button CreateButton => IguinaContext.Instance.Get<Button>("CharCreate");
-    internal static Button DeleteButton => IguinaContext.Instance.Get<Button>("CharDelete");
-    internal static Button ChangeRightButton => IguinaContext.Instance.Get<Button>("CharRight");
+    internal Button UseButton => uiContext.Get<Button>("CharUse");
+    internal Button CreateButton => uiContext.Get<Button>("CharCreate");
+    internal Button DeleteButton => uiContext.Get<Button>("CharDelete");
+    internal Button ChangeRightButton => uiContext.Get<Button>("CharRight");
     private Button ChangeLeftButton => uiContext.Get<Button>("CharLeft");
     private Picture FacePicture => uiContext.Get<Picture>("CharFace");
     private Picture SpritePicture => uiContext.Get<Picture>("CharSprite");
-    private static Label CharNameLabel => IguinaContext.Instance.Get<Label>("CharName");
+    private Label CharNameLabel => uiContext.Get<Label>("CharName");
 
-    public static TempCharacter[] Characters = [];
-    public static int CurrentCharacter;
+    public TempCharacter[] Characters = [];
+    public int CurrentCharacter;
 
     public struct TempCharacter
     {
@@ -91,7 +91,7 @@ internal class SelectCharacterView(IguinaContext uiContext, AccountSender accoun
         UpdateButtonVisibility();
     }
 
-    public static bool UpdateButtonVisibility()
+    public bool UpdateButtonVisibility()
     {
         var visibility = CurrentCharacter < Characters.Length;
         CreateButton.Visible = !visibility;
@@ -101,7 +101,7 @@ internal class SelectCharacterView(IguinaContext uiContext, AccountSender accoun
         return visibility;
     }
 
-    private static void UpdateNameLabel()
+    private void UpdateNameLabel()
     {
         var index = CurrentCharacter + 1;
         var hasCharacter = CurrentCharacter < Characters.Length;

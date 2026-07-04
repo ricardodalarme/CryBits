@@ -8,8 +8,6 @@ namespace CryBits.Definitions.Catalog;
 
 public class DefinitionCatalog
 {
-    public static DefinitionCatalog Instance { get; } = new();
-
     public Dictionary<Guid, Class> Classes { get; set; } = [];
     public Dictionary<Guid, Item> Items { get; set; } = [];
     public Dictionary<Guid, Map> Maps { get; set; } = [];

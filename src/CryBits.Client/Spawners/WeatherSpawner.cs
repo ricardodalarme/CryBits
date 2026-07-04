@@ -8,24 +8,24 @@ namespace CryBits.Client.Spawners;
 
 internal static class WeatherSpawner
 {
-    public static void Reset(World world, WeatherType weatherType)
+    public static void Reset(World world, WeatherType weatherType, AudioManager audioManager)
     {
         world.DestroyWhere(s => s.Has<WeatherParticleComponent>());
         world.DestroyWhere(s => s.Has<LightningComponent>());
 
-        AudioManager.Instance.StopAllSounds();
+        audioManager.StopAllSounds();
 
         switch (weatherType)
         {
             case WeatherType.Thunder:
-                AudioManager.Instance.PlaySound(Sounds.Rain, true);
+                audioManager.PlaySound(Sounds.Rain, true);
                 _ = world.SpawnBuilder()
                     .With(new LightningComponent())
                     .Id;
                 break;
 
             case WeatherType.Rain:
-                AudioManager.Instance.PlaySound(Sounds.Rain, true);
+                audioManager.PlaySound(Sounds.Rain, true);
                 break;
         }
     }

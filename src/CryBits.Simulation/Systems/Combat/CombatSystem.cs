@@ -1,4 +1,3 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
@@ -17,7 +16,7 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Simulation.Systems.Combat;
 
-public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class CombatSystem : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
@@ -79,7 +78,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         if (victimE.Has<NpcTag>())
         {
             var victimNpcState = victimE.Get<NpcState>()!;
-            var victimData = catalog.Npcs.Get(victimNpcState.NpcDefId);
+            var victimData = world.Catalog.Npcs.Get(victimNpcState.NpcDefId);
             if (victimData != null)
             {
                 if (victimData.Behaviour == Behaviour.Friendly) return;
@@ -107,7 +106,7 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
 
         world.Update<AttackCooldown>(attackerId, c => c with { NextAllowedTick = tick.TickNumber });
 
-        var weaponDamage = GetWeaponDamage(attackerE);
+        var weaponDamage = GetWeaponDamage(world, attackerE);
         var attackerDamage = CombatFormulas.BaseDamage(attackerAttrs.Values[(byte)Attribute.Strength], weaponDamage);
         var victimDefense = victimAttrs != null
             ? CombatFormulas.BaseDefense(victimAttrs.Values[(byte)Attribute.Resistance])
@@ -139,11 +138,11 @@ public sealed class CombatSystem(DefinitionCatalog catalog) : ISimulationSystem
         world.Set(entityId, new AttackHit(null));
     }
 
-    private short GetWeaponDamage(EntityState e)
+    private static short GetWeaponDamage(World world, EntityState e)
     {
         var equip = e.Get<EquipmentState>();
         if (equip == null || equip.Slots[(byte)Equipment.Weapon] == Guid.Empty)
             return 0;
-        return catalog.Items.Get(equip.Slots[(byte)Equipment.Weapon])?.WeaponDamage ?? 0;
+        return world.Catalog.Items.Get(equip.Slots[(byte)Equipment.Weapon])?.WeaponDamage ?? 0;
     }
 }

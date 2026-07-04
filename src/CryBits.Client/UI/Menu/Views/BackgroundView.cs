@@ -4,7 +4,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class BackgroundView(IguinaContext uiContext) : ViewBase
+internal class BackgroundView(UiContext uiContext, Connection connection, MenuScreen menuScreen) : ViewBase
 {
     private Button OptionsButton => uiContext.Get<Button>("OptionsButton");
 
@@ -20,12 +20,12 @@ internal class BackgroundView(IguinaContext uiContext) : ViewBase
 
     private void OnOptionsPressed(Entity _)
     {
-        Connection.Instance.Disconnect();
+        connection.Disconnect();
 
-        MenuScreen.Instance.OptionsPanel.SoundsCheckbox.Checked = Options.Instance.Sounds;
-        MenuScreen.Instance.OptionsPanel.MusicsCheckbox.Checked = Options.Instance.Musics;
+        menuScreen.OptionsPanel.SoundsCheckbox.Checked = Options.Instance.Sounds;
+        menuScreen.OptionsPanel.MusicsCheckbox.Checked = Options.Instance.Musics;
 
-        MenuScreen.Instance.CloseMenus();
-        MenuScreen.Instance.OptionsPanel.OptionsPanel.Visible = true;
+        menuScreen.CloseMenus();
+        menuScreen.OptionsPanel.OptionsPanel.Visible = true;
     }
 }

@@ -7,8 +7,6 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal sealed class ItemRenderer(Renderer renderer)
 {
-    public static ItemRenderer Instance { get; } = new(Renderer.Instance);
-
     /// <summary>
     /// Render an item icon and its amount at an already-computed screen position.
     /// </summary>

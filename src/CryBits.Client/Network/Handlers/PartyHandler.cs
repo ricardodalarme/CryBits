@@ -10,7 +10,7 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class PartyHandler(IntentSender intentSender, GameContext context)
+internal class PartyHandler(IntentSender intentSender, GameContext context, GameScreen gameScreen)
 {
     [PacketHandler]
     internal void Party(PartyPacket packet)
@@ -22,7 +22,6 @@ internal class PartyHandler(IntentSender intentSender, GameContext context)
 
         if (packet.MemberIds.Length == 0)
         {
-            // No members — party disbanded or player left; drop the component.
             if (world.Has<PartyState>(entity))
                 world.Remove<PartyState>(entity);
             return;
@@ -37,14 +36,12 @@ internal class PartyHandler(IntentSender intentSender, GameContext context)
     [PacketHandler]
     internal void PartyInvitation(PartyInvitationPacket packet)
     {
-        // Decline if player disabled party invites
         if (!Options.Instance.Party)
         {
             intentSender.Send(new PartyDeclineIntent(default));
             return;
         }
 
-        // Show party invitation panel
-        GameScreen.Instance.PartyInvitationView.Show(packet.PlayerInvitation);
+        gameScreen.PartyInvitationView.Show(packet.PlayerInvitation);
     }
 }

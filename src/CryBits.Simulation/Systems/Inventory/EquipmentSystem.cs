@@ -10,7 +10,7 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Simulation.Systems.Inventory;
 
-public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class EquipmentSystem : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
@@ -25,7 +25,7 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
         {
             if (events[i] is not ItemUsedEvent use) continue;
             if (!world.Has<PlayerTag>(use.PlayerId)) continue;
-            var item = catalog.Items.Get(use.ItemId);
+            var item = world.Catalog.Items.Get(use.ItemId);
             if (item == null || item.Type != ItemType.Equipment) continue;
             Equip(world, tick, use.PlayerId, item);
             tick.Events.Emit(new ItemTakenEvent(tick.TickNumber, use.PlayerId, (byte)use.SlotIndex, (short)1));
@@ -40,7 +40,7 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
         var attrs = e.Get<AttributesComponent>()!;
 
         var oldItemId = equip.Slots[item.EquipType];
-        var oldItem = oldItemId != Guid.Empty ? catalog.Items.Get(oldItemId) : null;
+        var oldItem = oldItemId != Guid.Empty ? world.Catalog.Items.Get(oldItemId) : null;
 
         var newSlots = (Guid[])equip.Slots.Clone();
         newSlots[item.EquipType] = item.Id;
@@ -67,7 +67,7 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
 
         var oldItemId = equip.Slots[equipSlot];
         if (oldItemId == Guid.Empty) return;
-        var oldItem = catalog.Items.Get(oldItemId);
+        var oldItem = world.Catalog.Items.Get(oldItemId);
         if (oldItem is null || oldItem.Bind == BindOn.Equip) return;
 
         var newValues = (short[])attrs.Values.Clone();

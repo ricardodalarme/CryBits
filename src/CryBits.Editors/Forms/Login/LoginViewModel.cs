@@ -33,7 +33,7 @@ internal sealed partial class LoginViewModel : ObservableObject
             return;
         }
 
-        PackageSender.Instance.Connect(Username, Password);
+        PackageSender.Instance!.Connect(Username, Password);
 
         if (SaveUsername)
         {

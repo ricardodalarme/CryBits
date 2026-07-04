@@ -8,7 +8,7 @@ using CryBits.Definitions.Slots;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class DraggableSlotView(IguinaContext uiContext, ItemRenderer itemRenderer, InputManager inputManager, GameContext context, DefinitionCatalog catalog) : ViewBase
+internal class DraggableSlotView(UiContext uiContext, ItemRenderer itemRenderer, InputManager inputManager, GameContext context, DefinitionCatalog catalog, GameScreen gameScreen) : ViewBase
 {
     public override void Bind() => uiContext.PostDraw += OnPostDraw;
 
@@ -21,7 +21,7 @@ internal class DraggableSlotView(IguinaContext uiContext, ItemRenderer itemRende
              inputManager.MousePosition.Y + 6
          );
 
-        if (GameScreen.HotbarChange is { } hotSlot)
+        if (gameScreen.HotbarChange is { } hotSlot)
         {
             var hotbar = context.LocalPlayer.GetHotbar();
             var inv = context.LocalPlayer.GetInventory();
@@ -33,7 +33,7 @@ internal class DraggableSlotView(IguinaContext uiContext, ItemRenderer itemRende
                 if (catalog.Items.Get(itemId) is { } item) itemRenderer.DrawItem(item, 1, pos);
             }
         }
-        else if (GameScreen.InventoryChange is { } invSlot)
+        else if (gameScreen.InventoryChange is { } invSlot)
         {
             var inv = context.LocalPlayer.GetInventory();
             if (inv == null) return;

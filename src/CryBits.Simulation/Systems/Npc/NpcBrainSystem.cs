@@ -13,7 +13,7 @@ using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Simulation.Systems.Npc;
 
-public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class NpcBrainSystem : ISimulationSystem
 {
     private readonly INpcBehavior _idle = new IdleBehavior();
     private readonly INpcBehavior _wander = new WanderBehavior();
@@ -40,7 +40,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
                 FaceTarget(world, e, targetE?.Get<Position>());
             }
 
-            var npcData = catalog.Npcs.Get(npcState.NpcDefId);
+            var npcData = world.Catalog.Npcs.Get(npcState.NpcDefId);
             if (npcData == null) continue;
 
             var behavior = PickBehavior(e, npcData, npcState);
@@ -83,7 +83,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
         if (e == null) return;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
-        var npcData = catalog.Npcs.Get(npcState.NpcDefId);
+        var npcData = world.Catalog.Npcs.Get(npcState.NpcDefId);
         if (npcData is null) return;
 
         if (npcData.Behaviour == Behaviour.AttackOnSight && !npcState.TargetId.HasValue)
@@ -129,7 +129,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
         if (e == null) return;
         var npcState = e.Get<NpcState>()!;
         var pos = e.Get<Position>()!;
-        var npcData = catalog.Npcs.Get(npcState.NpcDefId);
+        var npcData = world.Catalog.Npcs.Get(npcState.NpcDefId);
         if (npcData is null) return;
 
         var npcChunk = ChunkGrid.FromPosition(pos.X, pos.Y);
@@ -159,7 +159,7 @@ public sealed class NpcBrainSystem(DefinitionCatalog catalog) : ISimulationSyste
             {
                 var otherNpcState = world.Get<NpcState>(id);
                 if (otherNpcState == null) continue;
-                var otherData = catalog.Npcs.Get(otherNpcState.NpcDefId);
+                var otherData = world.Catalog.Npcs.Get(otherNpcState.NpcDefId);
                 if (otherData is null || npcData.IsAllied(otherData.Id)) continue;
                 world.Update<NpcState>(npcId, s => s with { TargetId = id });
                 return;

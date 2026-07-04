@@ -15,7 +15,8 @@ namespace CryBits.Client.Replication;
 
 internal sealed class SnapshotApplier(
     World world,
-    GameContext context)
+    GameContext context,
+    DefinitionCatalog catalog)
 {
     public void Apply(Protocol.Packets.Server.KeyframePacket packet)
     {
@@ -79,7 +80,7 @@ internal sealed class SnapshotApplier(
             ? new short[] { vitals.MaxHp, vitals.MaxMp }
             : [0, 0];
         var equipItems = equip != null
-            ? Array.ConvertAll(equip.Slots, id => DefinitionCatalog.Instance.Items.Get(id))
+            ? Array.ConvertAll(equip.Slots, id => catalog.Items.Get(id))
             : [];
 
         EntityId localEntity;
@@ -118,7 +119,7 @@ internal sealed class SnapshotApplier(
         var vitals = DeserializeComp<Vitals>(entity);
         if (npcState == null || position == null) return;
 
-        var npcDef = DefinitionCatalog.Instance.Npcs.Get(npcState.NpcDefId);
+        var npcDef = catalog.Npcs.Get(npcState.NpcDefId);
         if (npcDef == null) return;
 
         var localEntity = NpcSpawner.Spawn(world, serverId, npcDef,
@@ -132,7 +133,7 @@ internal sealed class SnapshotApplier(
         var position = DeserializeComp<Position>(entity);
         if (groundItem == null || position == null) return;
 
-        var item = DefinitionCatalog.Instance.Items.Get(groundItem.ItemDefId);
+        var item = catalog.Items.Get(groundItem.ItemDefId);
         if (item == null) return;
 
         var localEntity = GroundItemSpawner.Spawn(world, serverId, item, position);

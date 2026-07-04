@@ -111,7 +111,7 @@ internal partial class ToolbarPane : UserControl
 
     private void OnSaveAll(object? sender, RoutedEventArgs e)
     {
-        PackageSender.Instance.WriteMaps();
+        PackageSender.Instance!.WriteMaps();
         MessageBox.Show("All maps has been saved");
     }
 
@@ -119,7 +119,7 @@ internal partial class ToolbarPane : UserControl
     {
         var map = _deps?.GetSelectedMap();
         if (map == null) return;
-        PackageSender.Instance.RequestMap(map);
+        PackageSender.Instance!.RequestMap(map);
     }
 
     // ── Mode handlers ───────────────────────────────────────────────

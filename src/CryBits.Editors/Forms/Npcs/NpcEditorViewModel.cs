@@ -119,14 +119,14 @@ internal sealed partial class NpcEditorViewModel(Npc model, DefinitionCatalog ca
     [RelayCommand]
     private void Save()
     {
-        PackageSender.Instance.WriteNpcs();
+        PackageSender.Instance!.WriteNpcs();
         RequestClose?.Invoke();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        PackageSender.Instance.RequestNpcs();
+        PackageSender.Instance!.RequestNpcs();
         RequestClose?.Invoke();
     }
 }

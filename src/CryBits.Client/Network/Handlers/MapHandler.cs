@@ -52,7 +52,7 @@ internal class MapHandler(GameContext context, ContentSender contentSender, Audi
 
         mapRepository.SaveMap(map);
 
-        WeatherSpawner.Reset(context.World, context.CurrentMap.DefaultWeather);
+        WeatherSpawner.Reset(context.World, context.CurrentMap.DefaultWeather, audioManager);
         FogSpawner.Spawn(context.World, context.CurrentMap.DefaultFog);
 
         if (string.IsNullOrEmpty(context.CurrentMap.Music))

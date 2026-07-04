@@ -7,7 +7,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class OptionsView(IguinaContext uiContext, AudioManager audioManager, GameContext context) : ViewBase
+internal class OptionsView(UiContext uiContext, AudioManager audioManager, GameContext context, Chat chat) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("OptionsPanel");
     internal Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
@@ -61,7 +61,7 @@ internal class OptionsView(IguinaContext uiContext, AudioManager audioManager, G
     {
         Options.Instance.Chat = ChatCheckbox.Checked;
         OptionsRepository.Write();
-        if (Options.Instance.Chat) Chat.VisibilityTimer = Environment.TickCount64 + Chat.SleepTimer;
+        if (Options.Instance.Chat) chat.VisibilityTimer = Environment.TickCount64 + Chat.SleepTimer;
     }
 
     private void OnMetricsChanged(Entity _)

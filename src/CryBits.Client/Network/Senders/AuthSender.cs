@@ -5,8 +5,6 @@ namespace CryBits.Client.Network.Senders;
 
 internal class AuthSender(Connection connection)
 {
-    public static AuthSender Instance { get; } = new(Connection.Instance);
-
     public void Connect(string username, string password) => connection.SendPacket(new ConnectPacket
     {
         Username = username,

@@ -7,7 +7,7 @@ using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Simulation.Systems.Spawning;
 
-public sealed class NpcRespawnSystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class NpcRespawnSystem : ISimulationSystem
 {
     private readonly List<Entry> _pendingRespawns = [];
     private readonly record struct Entry(Guid MapId, int NpcIndex, long RespawnTick);
@@ -18,7 +18,7 @@ public sealed class NpcRespawnSystem(DefinitionCatalog catalog) : ISimulationSys
         {
             if (ev is not NpcDiedEvent died) continue;
 
-            var npcData = catalog.Npcs.Get(died.NpcDefId);
+            var npcData = world.Catalog.Npcs.Get(died.NpcDefId);
             if (npcData == null) continue;
 
             _pendingRespawns.Add(new Entry(
@@ -37,7 +37,7 @@ public sealed class NpcRespawnSystem(DefinitionCatalog catalog) : ISimulationSys
                 continue;
             }
 
-            NpcSpawner.Spawn(world, catalog, entry.MapId, entry.NpcIndex);
+            NpcSpawner.Spawn(world, entry.MapId, entry.NpcIndex);
             _pendingRespawns.RemoveAt(i);
         }
     }

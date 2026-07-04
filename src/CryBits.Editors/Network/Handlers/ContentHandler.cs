@@ -4,44 +4,44 @@ using CryBits.Protocol.Packets.Server;
 
 namespace CryBits.Editors.Network.Handlers;
 
-internal class ContentHandler
+internal class ContentHandler(DefinitionCatalog catalog)
 {
     [PacketHandler]
     internal void Classes(ClassesPacket packet)
     {
-        DefinitionCatalog.Instance.Classes = packet.List;
+        catalog.Classes = packet.List;
     }
 
     [PacketHandler]
     internal void Items(ItemsPacket packet)
     {
-        DefinitionCatalog.Instance.Items = packet.List;
+        catalog.Items = packet.List;
     }
 
     [PacketHandler]
     internal void Maps(MapsPacket packet)
     {
-        DefinitionCatalog.Instance.Maps.Clear();
+        catalog.Maps.Clear();
         foreach (var (id, map) in packet.List)
-            DefinitionCatalog.Instance.Maps[id] = map;
+            catalog.Maps[id] = map;
     }
 
     [PacketHandler]
     internal void Map(MapPacket packet)
     {
         var map = packet.Map;
-        DefinitionCatalog.Instance.Maps[map.Id] = map;
+        catalog.Maps[map.Id] = map;
     }
 
     [PacketHandler]
     internal void Npcs(NpcsPacket packet)
     {
-        DefinitionCatalog.Instance.Npcs = packet.List;
+        catalog.Npcs = packet.List;
     }
 
     [PacketHandler]
     internal void Shops(ShopsPacket packet)
     {
-        DefinitionCatalog.Instance.Shops = packet.List;
+        catalog.Shops = packet.List;
     }
 }

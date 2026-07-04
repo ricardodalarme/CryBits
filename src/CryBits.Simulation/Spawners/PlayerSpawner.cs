@@ -15,9 +15,9 @@ namespace CryBits.Simulation.Spawners;
 
 public static class PlayerSpawner
 {
-    public static EntityId Spawn(World world, DefinitionCatalog catalog, Character data)
+    public static EntityId Spawn(World world, Character data)
     {
-        var @class = catalog.Classes.Get(data.ClassId);
+        var @class = world.Catalog.Classes.Get(data.ClassId);
         ArgumentNullException.ThrowIfNull(@class);
 
         var maxHp = VitalFormulas.MaxVital(Vital.Hp, @class.Vital[(byte)Vital.Hp],
@@ -73,7 +73,7 @@ public static class PlayerSpawner
         return entityId;
     }
 
-    public static EntityId Spawn(World world, DefinitionCatalog catalog, string name,
+    public static EntityId Spawn(World world, string name,
         Class @class, Gender gender, short textureNum)
     {
         var entityId = world.Entities.Create();

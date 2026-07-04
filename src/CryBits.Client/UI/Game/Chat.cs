@@ -9,24 +9,24 @@ namespace CryBits.Client.UI.Game;
 
 internal class Chat
 {
-    public static Chat Instance { get; } = new Chat(IntentSender.Instance);
-
     private readonly ChatCommandDispatcher _dispatcher;
     private readonly IntentSender intentSender;
+    private readonly UiContext _uiContext;
 
-    public static List<Structure> Order = [];
-    public static long VisibilityTimer;
+    public List<Structure> Order = [];
+    public long VisibilityTimer;
     public const byte LinesVisible = 9;
     private const byte MaxLines = 50;
     public const short SleepTimer = 10000;
 
-    public Chat(IntentSender intentSender)
+    public Chat(IntentSender intentSender, UiContext uiContext)
     {
         this.intentSender = intentSender;
+        _uiContext = uiContext;
         _dispatcher = new ChatCommandDispatcher(AddText)
-            .Register(new PartyInviteCommand(IntentSender.Instance, AddText))
-            .Register(new PartyLeaveCommand(IntentSender.Instance))
-            .Register(new TradeInviteCommand(IntentSender.Instance, AddText));
+            .Register(new PartyInviteCommand(intentSender, AddText))
+            .Register(new PartyLeaveCommand(intentSender))
+            .Register(new TradeInviteCommand(intentSender, AddText));
     }
 
     public class Structure
@@ -49,8 +49,8 @@ internal class Chat
 
     public void Type()
     {
-        if (!IguinaContext.Instance.TryGet<Panel>("ChatPanel", out var panel) ||
-            !IguinaContext.Instance.TryGet<TextInput>("ChatInput", out var input))
+        if (!_uiContext.TryGet<Panel>("ChatPanel", out var panel) ||
+            !_uiContext.TryGet<TextInput>("ChatInput", out var input))
             return;
 
         panel.Visible = !panel.Visible;
@@ -58,11 +58,11 @@ internal class Chat
         if (panel.Visible)
         {
             VisibilityTimer = Environment.TickCount64 + SleepTimer;
-            IguinaContext.Instance.UISystem!.FocusedEntity = input;
+            _uiContext.UISystem!.FocusedEntity = input;
             return;
         }
 
-        IguinaContext.Instance.UISystem!.FocusedEntity = null;
+        _uiContext.UISystem!.FocusedEntity = null;
 
         var message = input.Value;
 

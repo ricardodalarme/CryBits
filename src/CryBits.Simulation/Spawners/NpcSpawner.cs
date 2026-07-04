@@ -12,13 +12,13 @@ namespace CryBits.Simulation.Spawners;
 
 public static class NpcSpawner
 {
-    public static EntityId Spawn(World world, DefinitionCatalog catalog, Guid mapId, int npcIndex)
+    public static EntityId Spawn(World world, Guid mapId, int npcIndex)
     {
         if (!world.MapDefs.TryGetValue(mapId, out var mapDef))
             return default;
 
         var npcSpawn = mapDef.Npc[npcIndex];
-        var npcData = catalog.Npcs.Get(npcSpawn.NpcId);
+        var npcData = world.Catalog.Npcs.Get(npcSpawn.NpcId);
         if (npcData == null) return default;
 
         var entityId = world.Entities.Create();

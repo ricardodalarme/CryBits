@@ -8,7 +8,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class OptionsView(IguinaContext uiContext, AudioManager audioManager, GameContext context) : ViewBase
+internal class OptionsView(UiContext uiContext, AudioManager audioManager, GameContext context, Connection connection, MenuScreen menuScreen) : ViewBase
 {
     internal Panel OptionsPanel => uiContext.Get<Panel>("Options");
     internal Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
@@ -51,9 +51,9 @@ internal class OptionsView(IguinaContext uiContext, AudioManager audioManager, G
 
     private void OnBackPressed(Entity _)
     {
-        Connection.Instance.Disconnect();
+        connection.Disconnect();
 
-        MenuScreen.Instance.CloseMenus();
-        MenuScreen.Instance.LoginView.LoginPanel.Visible = true;
+        menuScreen.CloseMenus();
+        menuScreen.LoginView.LoginPanel.Visible = true;
     }
 }

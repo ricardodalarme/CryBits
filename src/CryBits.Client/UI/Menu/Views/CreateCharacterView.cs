@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class CreateCharacterView(IguinaContext uiContext, AccountSender accountSender, CharacterRenderer characterRenderer, DefinitionCatalog catalog) : ViewBase
+internal class CreateCharacterView(UiContext uiContext, AccountSender accountSender, CharacterRenderer characterRenderer, DefinitionCatalog catalog, MenuScreen menuScreen) : ViewBase
 {
     internal Panel CreateCharacterPanel => uiContext.Get<Panel>("CreateCharacter");
     internal TextInput NameTextBox => uiContext.Get<TextInput>("CreateName");
@@ -22,11 +22,11 @@ internal class CreateCharacterView(IguinaContext uiContext, AccountSender accoun
     private Picture FacePicture => uiContext.Get<Picture>("CreateFace");
     private Picture SpritePicture => uiContext.Get<Picture>("CreateSprite");
     private Button BackButton => uiContext.Get<Button>("CreateBackBtn");
-    private static Label ClassNameLabel => IguinaContext.Instance.Get<Label>("CreateClassName");
-    private static Label ClassDescLabel => IguinaContext.Instance.Get<Label>("CreateClassDesc");
+    private Label ClassNameLabel => uiContext.Get<Label>("CreateClassName");
+    private Label ClassDescLabel => uiContext.Get<Label>("CreateClassDesc");
 
-    public static byte CurrentClass;
-    public static byte CurrentTexture;
+    public byte CurrentClass;
+    public byte CurrentTexture;
 
     public override void Bind()
     {
@@ -123,8 +123,8 @@ internal class CreateCharacterView(IguinaContext uiContext, AccountSender accoun
 
     private void OnBackPressed(Entity _)
     {
-        MenuScreen.Instance.CloseMenus();
-        MenuScreen.Instance.SelectCharacterView.SelectCharacterPanel.Visible = true;
+        menuScreen.CloseMenus();
+        menuScreen.SelectCharacterView.SelectCharacterPanel.Visible = true;
     }
 
     private short GetCurrentTextureNum()
@@ -138,7 +138,7 @@ internal class CreateCharacterView(IguinaContext uiContext, AccountSender accoun
         return 0;
     }
 
-    internal static void UpdateClassLabels(DefinitionCatalog catalog)
+    internal void UpdateClassLabels(DefinitionCatalog catalog)
     {
         if (catalog.Classes.Count == 0) return;
         var @class = catalog.Classes.ElementAt(CurrentClass).Value;

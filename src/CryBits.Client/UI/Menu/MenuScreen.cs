@@ -1,6 +1,7 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Menu.Views;
@@ -10,16 +11,33 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu;
 
-internal class MenuScreen(AudioManager audioManager)
+internal class MenuScreen
 {
-    public static MenuScreen Instance { get; } = new(AudioManager.Instance);
+    internal readonly BackgroundView BackgroundView;
+    internal readonly LoginView LoginView;
+    internal readonly RegisterView RegisterView;
+    internal readonly OptionsView OptionsPanel;
+    internal readonly SelectCharacterView SelectCharacterView;
+    internal readonly CreateCharacterView CreateCharacterView;
 
-    internal readonly BackgroundView BackgroundView = new(IguinaContext.Instance);
-    internal readonly LoginView LoginView = new(IguinaContext.Instance, AuthSender.Instance);
-    internal readonly RegisterView RegisterView = new(IguinaContext.Instance, AuthSender.Instance);
-    internal readonly OptionsView OptionsPanel = new(IguinaContext.Instance, AudioManager.Instance, GameContext.Instance);
-    internal readonly SelectCharacterView SelectCharacterView = new(IguinaContext.Instance, AccountSender.Instance, CharacterRenderer.Instance);
-    internal readonly CreateCharacterView CreateCharacterView = new(IguinaContext.Instance, AccountSender.Instance, CharacterRenderer.Instance, DefinitionCatalog.Instance);
+    private readonly AudioManager _audio;
+    private readonly UiContext _uiContext;
+
+    internal MenuScreen(AudioManager audio, UiContext uiContext, AuthSender authSender, AccountSender accountSender,
+        CharacterRenderer characterRenderer, GameContext context, DefinitionCatalog catalog, Connection connection)
+    {
+        _audio = audio;
+        _uiContext = uiContext;
+        _connection = connection;
+        BackgroundView = new(uiContext, connection, this);
+        LoginView = new(uiContext, authSender, connection, this);
+        RegisterView = new(uiContext, authSender, connection, this);
+        OptionsPanel = new(uiContext, audio, context, connection, this);
+        SelectCharacterView = new(uiContext, accountSender, characterRenderer);
+        CreateCharacterView = new(uiContext, accountSender, characterRenderer, catalog, this);
+    }
+
+    private readonly Connection _connection;
 
     private ViewBase[] Views =>
     [
@@ -45,25 +63,25 @@ internal class MenuScreen(AudioManager audioManager)
 
     public void Open()
     {
-        audioManager.StopAllSounds();
-        if (Options.Instance.Musics) audioManager.PlayMusic(Musics.Menu);
+        _audio.StopAllSounds();
+        if (Options.Instance.Musics) _audio.PlayMusic(Musics.Menu);
 
-        IguinaContext.Instance.LoadScreen("Menu");
-        Instance.Bind();
+        _uiContext.LoadScreen("Menu");
+        Bind();
 
         LoginView.SaveUsernameCheckbox.Checked = Options.Instance.SaveUsername;
         if (Options.Instance.SaveUsername) LoginView.UsernameTextBox.Value = Options.Instance.Username;
 
         CloseMenus();
         LoginView.LoginPanel.Visible = true;
-        IguinaContext.Instance.CurrentScreen = ScreenType.Menu;
+        _uiContext.CurrentScreen = ScreenType.Menu;
     }
 
     public void CloseMenus()
     {
         foreach (var panelName in new[] { "Login", "Register", "Options", "SelectCharacter", "CreateCharacter" })
         {
-            if (IguinaContext.Instance.TryGet<Panel>(panelName, out var panel))
+            if (_uiContext.TryGet<Panel>(panelName, out var panel))
                 panel.Visible = false;
         }
     }

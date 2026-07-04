@@ -5,9 +5,12 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Network.Transport;
 using CryBits.Client.Framework.Persistence.Repositories;
+using CryBits.Definitions.Catalog;
 using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Entities;
 using CryBits.Editors.Forms.Login;
 using CryBits.Editors.Logic;
+using CryBits.Editors.Network;
 using CryBits.Editors.Network.Handlers;
 using static CryBits.Definitions.Globals;
 
@@ -15,50 +18,50 @@ namespace CryBits.Editors;
 
 internal static class Program
 {
-    /// <summary>Indicates whether the application main loop is running.</summary>
     public static bool Working = true;
-
-    // Measured frames per second.
     public static short Fps;
+
+    internal static DefinitionCatalog Catalog = null!;
+    internal static PackageSender Sender = null!;
+    internal static Loop EditorLoop = null!;
 
     private static void Main()
     {
-        // Ensure required directories exist.
         Directories.Create();
-
-        // Load preferences.
         OptionsRepository.Read();
 
-        // Initialize subsystems
+        // ── Create all infrastructure ──
+        var audio = new AudioManager(); AudioManager.Instance = audio;
+        var catalog = new DefinitionCatalog(); Catalog = catalog;
         var clientTransport = new UdpClientTransport();
         clientTransport.Connect("localhost", Config.Port, Config.GameName);
-        _ = new Connection(clientTransport);
-        Connection.Instance.Start(onDisconnected: Leave);
-        PacketDispatcher.Register(new AuthHandler());
-        PacketDispatcher.Register(new ContentHandler());
-        AudioManager.Instance.LoadSounds();
+        var connection = new Connection(clientTransport);
+        Connection.Instance = connection;
+        connection.Start(onDisconnected: Leave);
+        var sender = new PackageSender(connection, catalog);
+        PackageSender.Instance = Sender = sender;
 
-        // Start the game loop on a background thread.
-        // It will block until Avalonia is ready before creating windows.
+        audio.LoadSounds();
+        PacketDispatcher.Register(new AuthHandler());
+        PacketDispatcher.Register(new ContentHandler(catalog));
+
+        // ── Start game loop ──
         var loopThread = new Thread(() =>
         {
-            // Wait until Avalonia is fully initialised on the main thread
             App.WaitUntilReady();
 
-            // Show login window and start the editor loop
+            var loop = new Loop(MapInstance.Instance); EditorLoop = loop; Loop.Instance = loop;
             LoginWindow.Open();
-            Loop.Instance.Init();
+            loop.Init();
         });
         loopThread.IsBackground = true;
         loopThread.Start();
 
-        // Run Avalonia on the main thread (required by macOS/Cocoa and Linux/X11)
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime([],
                 desktop => desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown);
     }
 
-    // Required by the Avalonia XAML previewer.
     public static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<App>()
             .UsePlatformDetect()
@@ -66,7 +69,6 @@ internal static class Program
 
     private static void Leave()
     {
-        // Close all open windows and show the login menu.
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
             if (Application.Current?.ApplicationLifetime is
@@ -84,14 +86,11 @@ internal static class Program
     {
         var waitTimer = Environment.TickCount64;
 
-        // Disconnect from network
-        Connection.Instance.Disconnect();
+        Connection.Instance!.Disconnect();
 
-        // Wait until the player is disconnected
         while (Connection.Instance.IsConnected && Environment.TickCount64 <= waitTimer + 1000)
             Thread.Sleep(10);
 
-        // Close the application
         Working = false;
     }
 }

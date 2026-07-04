@@ -11,27 +11,27 @@ using DrawingPoint = System.Drawing.Point;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TooltipView(ItemRenderer itemRenderer) : ViewBase
+internal class TooltipView(UiContext uiContext, ItemRenderer itemRenderer, DefinitionCatalog catalog) : ViewBase
 {
-    private static Panel Panel => IguinaContext.Instance.Get<Panel>("Information");
-    private static Label TitleLabel => IguinaContext.Instance.Get<Label>("InfoTitle");
-    private static Label DescriptionLabel => IguinaContext.Instance.Get<Label>("InfoDesc");
-    private static Label AdditionalContextLabel => IguinaContext.Instance.Get<Label>("InfoContext");
-    private static Picture ItemPicture => IguinaContext.Instance.Get<Picture>("InfoItem");
+    private Panel Panel => uiContext.Get<Panel>("Information");
+    private Label TitleLabel => uiContext.Get<Label>("InfoTitle");
+    private Label DescriptionLabel => uiContext.Get<Label>("InfoDesc");
+    private Label AdditionalContextLabel => uiContext.Get<Label>("InfoContext");
+    private Picture ItemPicture => uiContext.Get<Picture>("InfoItem");
 
-    private static Item? _currentItem;
+    private Item? _currentItem;
 
-    public override void Bind() => IguinaContext.Instance.PostDraw += OnPostDraw;
+    public override void Bind() => uiContext.PostDraw += OnPostDraw;
 
     public override void Unbind()
     {
-        IguinaContext.Instance.PostDraw -= OnPostDraw;
+        uiContext.PostDraw -= OnPostDraw;
         Hide();
     }
 
-    public static void Show(Guid itemId, DrawingPoint position, string? contextLine = null)
+    public void Show(Guid itemId, DrawingPoint position, string? contextLine = null)
     {
-        var item = DefinitionCatalog.Instance.Items.Get(itemId);
+        var item = catalog.Items.Get(itemId);
         if (item == null) { Hide(); return; }
 
         _currentItem = item;
@@ -83,7 +83,7 @@ internal class TooltipView(ItemRenderer itemRenderer) : ViewBase
         Panel.Visible = true;
     }
 
-    public static void Hide()
+    public void Hide()
     {
         Panel.Visible = false;
         _currentItem = null;

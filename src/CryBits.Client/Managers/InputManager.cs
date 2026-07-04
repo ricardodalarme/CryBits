@@ -1,4 +1,3 @@
-using CryBits.Client.UI;
 using Iguina;
 using SFML.Graphics;
 using SFML.System;
@@ -6,13 +5,13 @@ using SFML.Window;
 
 namespace CryBits.Client.Managers;
 
-public class InputManager(UISystem? uiSystem = null)
+public class InputManager
 {
-    public static InputManager Instance { get; } = new(IguinaContext.Instance.UISystem);
+    private UISystem? _uiSystem;
+    private RenderWindow? _renderWindow;
 
     /// <summary>
     /// Tracks window focus state. Set by LostFocus/GainedFocus events in Renderer.Init().
-    /// More efficient than polling HasFocus() on every frame.
     /// </summary>
     public bool IsFocused { get; set; } = true;
 
@@ -23,13 +22,15 @@ public class InputManager(UISystem? uiSystem = null)
     public event EventHandler<KeyEventArgs>? KeyReleased;
     public event EventHandler<TextEventArgs>? TextEntered;
 
-    // Edge-detection: keys pressed or released during the current frame.
     private readonly HashSet<Keyboard.Key> _pressedThisFrame = [];
     private readonly HashSet<Keyboard.Key> _releasedThisFrame = [];
 
-    /// <summary>
-    /// Clears per-frame edge state. Must be called once per frame, before DispatchEvents.
-    /// </summary>
+    public void Initialize(UISystem system, RenderWindow window)
+    {
+        _uiSystem = system;
+        _renderWindow = window;
+    }
+
     public void BeginFrame()
     {
         _pressedThisFrame.Clear();
@@ -62,46 +63,32 @@ public class InputManager(UISystem? uiSystem = null)
     {
         if (!IsFocused) return false;
 
-        // Disable game keyboard inputs when a text box is focused.
-        if (uiSystem?.FocusedEntity != null) return false;
+        if (_uiSystem?.FocusedEntity != null) return false;
 
         return Keyboard.IsScancodePressed(scancode);
     }
 
-    /// <summary>
-    /// Checks if a key is currently held down using layout-dependent key codes.
-    /// Use for keys whose label matters (e.g. Enter, Escape, Tab, number row).
-    /// </summary>
     public bool IsKeyPressed(Keyboard.Key key)
     {
         if (!IsFocused) return false;
 
-        // Disable game keyboard inputs when a text box is focused.
-        if (uiSystem?.FocusedEntity != null) return false;
+        if (_uiSystem?.FocusedEntity != null) return false;
 
         return Keyboard.IsKeyPressed(key);
     }
 
-    /// <summary>
-    /// Returns true if the key was pressed (went down) during the current frame.
-    /// Use for one-shot actions triggered on key press.
-    /// </summary>
     public bool WasKeyPressed(Keyboard.Key key)
     {
         if (!IsFocused) return false;
-        if (uiSystem?.FocusedEntity != null) return false;
+        if (_uiSystem?.FocusedEntity != null) return false;
 
         return _pressedThisFrame.Contains(key);
     }
 
-    /// <summary>
-    /// Returns true if the key was released (went up) during the current frame.
-    /// Use for one-shot actions triggered on key release.
-    /// </summary>
     public bool WasKeyReleased(Keyboard.Key key)
     {
         if (!IsFocused) return false;
-        if (uiSystem?.FocusedEntity != null) return false;
+        if (_uiSystem?.FocusedEntity != null) return false;
 
         return _releasedThisFrame.Contains(key);
     }
@@ -114,8 +101,8 @@ public class InputManager(UISystem? uiSystem = null)
     {
         get
         {
-            if (Graphics.Renderer.Instance.RenderWindow == null) return new Vector2i();
-            return Mouse.GetPosition(Graphics.Renderer.Instance.RenderWindow);
+            if (_renderWindow == null) return new Vector2i();
+            return Mouse.GetPosition(_renderWindow);
         }
     }
 }

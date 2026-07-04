@@ -15,14 +15,14 @@ internal partial class EditorShopsWindow : Window
 
     public static void Open(Window owner)
     {
-        if (DefinitionCatalog.Instance.Items.Count == 0)
+        if (Program.Catalog.Items.Count == 0)
         {
             MessageBox.Show("It must have at least one item registered to open the store editor.");
             return;
         }
 
         owner.Hide();
-        var window = new EditorShopsWindow(DefinitionCatalog.Instance);
+        var window = new EditorShopsWindow(Program.Catalog);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }

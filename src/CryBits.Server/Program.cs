@@ -90,7 +90,7 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<World>();
     services.AddSingleton(sp => sp.GetRequiredService<World>().Entities);
     services.AddSingleton<SessionManager>();
-    services.AddSingleton(sp => HostPipelineBuilder.Build(sp.GetRequiredService<DefinitionCatalog>()));
+    services.AddSingleton(sp => HostPipelineBuilder.Build());
     services.AddSingleton<PackageSender>();
     services.AddSingleton<WorldHost>();
     services.AddSingleton(sp => sp.GetRequiredService<WorldHost>().IntentFunnel);

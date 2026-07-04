@@ -226,7 +226,7 @@ internal sealed class CharacterService(
     private void Join(Session session, Character data)
     {
         logger.ZLogInformation($"Player {data.Name} joined world on map {data.MapId}");
-        var entityId = PlayerSpawner.Spawn(host.Simulation, catalog, data);
+        var entityId = PlayerSpawner.Spawn(host.Simulation, data);
         var state = host.Entities.Get(entityId)!;
         var pos = state.Get<Position>()!;
         if (!host.Maps.TryGetValue(pos.MapId, out var mapDef)) return;

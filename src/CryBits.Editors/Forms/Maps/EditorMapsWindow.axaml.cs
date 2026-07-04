@@ -27,7 +27,7 @@ internal partial class EditorMapsWindow : Window
     {
         Dispatcher.UIThread.Post(() =>
         {
-            var window = new EditorMapsWindow(DefinitionCatalog.Instance);
+            var window = new EditorMapsWindow(Program.Catalog);
             window.Show();
         });
     }
@@ -37,7 +37,7 @@ internal partial class EditorMapsWindow : Window
         Dispatcher.UIThread.Post(async () =>
         {
             parent.Hide();
-            var window = new EditorMapsWindow(DefinitionCatalog.Instance);
+            var window = new EditorMapsWindow(Program.Catalog);
             await window.ShowDialog(parent);
             parent.Show();
         });

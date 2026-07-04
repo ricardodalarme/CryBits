@@ -14,7 +14,7 @@ using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Simulation.Systems.Inventory;
 
-public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class InventorySystem : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
@@ -82,7 +82,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                     }
                 case ItemGivenEvent give:
                     {
-                        var item = catalog.Items.Get(give.ItemId);
+                        var item = world.Catalog.Items.Get(give.ItemId);
                         if (item != null)
                             GiveItem(world, give.EntityId, item, give.Amount);
                         break;
@@ -94,7 +94,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                         if (e == null) continue;
                         var inv = e.Get<InventoryState>()!;
                         var pos = e.Get<Position>()!;
-                        var oldItem = catalog.Items.Get(equip.OldItemId.Value);
+                        var oldItem = world.Catalog.Items.Get(equip.OldItemId.Value);
                         if (oldItem == null) continue;
                         if (!GiveItem(world, equip.PlayerId, oldItem, 1))
                         {
@@ -182,7 +182,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         var trade = e.Get<TradeState>();
 
         if (inv.Slots[slotIndex].ItemId == Guid.Empty) return;
-        var item = catalog.Items.Get(inv.Slots[slotIndex].ItemId);
+        var item = world.Catalog.Items.Get(inv.Slots[slotIndex].ItemId);
         if (item == null || item.Bind == BindOn.Pickup) return;
         if (trade?.Partner != null) return;
 
@@ -201,7 +201,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         var appearance = e.Get<PlayerAppearance>()!;
         var trade = e.Get<TradeState>();
 
-        var item = catalog.Items.Get(slot.ItemId);
+        var item = world.Catalog.Items.Get(slot.ItemId);
         if (item == null) return;
         if (trade?.Partner != null) return;
 
@@ -262,7 +262,7 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
         var groundEntity = world.Entities.Get(groundEntityId.Value);
         if (groundEntity == null) return;
         var comp = groundEntity.Get<GroundItem>()!;
-        var item = catalog.Items.Get(comp.ItemDefId);
+        var item = world.Catalog.Items.Get(comp.ItemDefId);
         if (item == null) return;
 
         if (GiveItem(world, entityId, item, comp.Amount))

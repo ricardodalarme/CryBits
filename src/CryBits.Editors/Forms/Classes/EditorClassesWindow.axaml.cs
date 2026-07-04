@@ -17,14 +17,14 @@ internal partial class EditorClassesWindow : Window
 
     public static void Open(Window owner)
     {
-        if (DefinitionCatalog.Instance.Maps.Count == 0)
+        if (Program.Catalog.Maps.Count == 0)
         {
             MessageBox.Show("It must have at least one map registered before editing classes.");
             return;
         }
 
         owner.Hide();
-        var window = new EditorClassesWindow(DefinitionCatalog.Instance);
+        var window = new EditorClassesWindow(Program.Catalog);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }

@@ -4,7 +4,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeInvitationView(IguinaContext uiContext, IntentSender intentSender) : ViewBase
+internal class TradeInvitationView(UiContext uiContext, IntentSender intentSender) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("TradeInvitation");
     private Button AcceptButton => uiContext.Get<Button>("TradeYes");

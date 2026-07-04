@@ -9,8 +9,6 @@ namespace CryBits.Client.Network.Senders;
 
 internal class IntentSender(Connection connection)
 {
-    public static IntentSender Instance { get; } = new(Connection.Instance);
-
     public void Send(Intent intent)
     {
         var tag = IntentRegistry.GetTag(intent.GetType());

@@ -40,7 +40,7 @@ public sealed class EmbeddedHostRunner : IDisposable
     public void Start()
     {
         var pair = new LoopbackPair();
-        var catalog = DefinitionCatalog.Instance;
+        var catalog = new DefinitionCatalog();
         var baseDir = AppContext.BaseDirectory;
 
         // Load content definitions
@@ -61,14 +61,14 @@ public sealed class EmbeddedHostRunner : IDisposable
 
         // Build simulation host
         RegisterComponentTypes();
-        var simulation = new World();
+        var simulation = new World(catalog);
         var sessions = new SessionManager();
         var packageSender = new PackageSender(pair.Server, sessions, simulation.Entities);
-        var pipeline = HostPipelineBuilder.Build(catalog);
+        var pipeline = HostPipelineBuilder.Build();
         _host = new WorldHost(pair.Server, simulation, pipeline, sessions, packageSender, new SilentLogger<TickDriver>());
         pair.Server.Start(0, Config.GameName, 1);
 
-        new WorldInitializer(_host, catalog).Initialize();
+        new WorldInitializer(_host).Initialize();
 
         // Create an instance-based dispatcher and wire all host services
         var hostDispatcher = new CryBits.Host.Network.PacketDispatcher(new SilentLogger<CryBits.Host.Network.PacketDispatcher>());

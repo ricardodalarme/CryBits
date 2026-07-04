@@ -5,7 +5,7 @@ using Color = Iguina.Defs.Color;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class MapNameView(IguinaContext uiContext, GameContext context) : ViewBase
+internal class MapNameView(UiContext uiContext, GameContext context) : ViewBase
 {
     private Label MapNameLabel => uiContext.Get<Label>("MapName");
 

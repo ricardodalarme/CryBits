@@ -7,7 +7,7 @@ using CryBits.Protocol.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class AccountHandler(GameContext context)
+internal class AccountHandler(GameContext context, MenuScreen menuScreen, GameScreen gameScreen)
 {
     [PacketHandler]
     internal void Join(JoinPacket packet)
@@ -19,40 +19,38 @@ internal class AccountHandler(GameContext context)
     [PacketHandler]
     internal void CreateCharacter(CreateCharacterPacket _)
     {
-        // Reset character-creation inputs
-        MenuScreen.Instance.CreateCharacterView.NameTextBox.Value = string.Empty;
-        MenuScreen.Instance.CreateCharacterView.GenderMaleRadio.Checked = true;
-        MenuScreen.Instance.CreateCharacterView.GenderFemaleRadio.Checked = false;
-        CreateCharacterView.CurrentClass = 0;
-        CreateCharacterView.CurrentTexture = 0;
+        var createCharacterView = menuScreen.CreateCharacterView;
+        createCharacterView.NameTextBox.Value = string.Empty;
+        createCharacterView.GenderMaleRadio.Checked = true;
+        createCharacterView.GenderFemaleRadio.Checked = false;
+        createCharacterView.CurrentClass = 0;
+        createCharacterView.CurrentTexture = 0;
 
-        // Show character creation panel
-        MenuScreen.Instance.CloseMenus();
-        MenuScreen.Instance.CreateCharacterView.CreateCharacterPanel.Visible = true;
+        menuScreen.CloseMenus();
+        createCharacterView.CreateCharacterPanel.Visible = true;
     }
 
     [PacketHandler]
     internal void Characters(CharactersPacket packet)
     {
-        // Resize character list
-        SelectCharacterView.Characters = new SelectCharacterView.TempCharacter[packet.Characters.Length];
+        var selectCharacterView = menuScreen.SelectCharacterView;
+        selectCharacterView.Characters = new SelectCharacterView.TempCharacter[packet.Characters.Length];
 
-        for (byte i = 0; i < SelectCharacterView.Characters.Length; i++)
+        for (byte i = 0; i < selectCharacterView.Characters.Length; i++)
         {
-            // Read character data
-            SelectCharacterView.Characters[i] = new SelectCharacterView.TempCharacter
+            selectCharacterView.Characters[i] = new SelectCharacterView.TempCharacter
             {
                 Name = packet.Characters[i].Name,
                 TextureNum = packet.Characters[i].TextureNum
             };
         }
 
-        SelectCharacterView.UpdateButtonVisibility();
+        selectCharacterView.UpdateButtonVisibility();
     }
 
     [PacketHandler]
     internal void JoinGame(JoinGamePacket _)
     {
-        GameScreen.Instance.Open();
+        gameScreen.Open();
     }
 }

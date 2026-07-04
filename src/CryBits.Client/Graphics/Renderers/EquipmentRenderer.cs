@@ -6,10 +6,8 @@ using System.Drawing;
 
 namespace CryBits.Client.Graphics.Renderers;
 
-internal sealed class EquipmentRenderer(Renderer renderer, GameContext context)
+internal sealed class EquipmentRenderer(Renderer renderer, GameContext context, DefinitionCatalog catalog)
 {
-    public static EquipmentRenderer Instance { get; } = new(Renderer.Instance, GameContext.Instance);
-
     public void DrawSlot(int slot, Point pos)
     {
         var equipment = context.LocalPlayer.GetEquipment();
@@ -20,7 +18,7 @@ internal sealed class EquipmentRenderer(Renderer renderer, GameContext context)
             renderer.Draw(Textures.Equipments, pos.X, pos.Y, slot * 32, 0, 32, 32);
         else
         {
-            var item = DefinitionCatalog.Instance.Items.Get(itemId);
+            var item = catalog.Items.Get(itemId);
             if (item != null)
                 renderer.Draw(Textures.Items[item.Texture], pos);
         }

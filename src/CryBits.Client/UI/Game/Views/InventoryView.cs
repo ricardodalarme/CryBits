@@ -10,23 +10,22 @@ using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class InventoryView(IguinaContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : ViewBase
+internal class InventoryView(UiContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, TooltipView tooltip, ShopView shop, GameScreen gameScreen) : ViewBase
 {
     private SlotGrid Grid => uiContext.Get<SlotGrid>("InventoryGrid");
 
     private short? _dragOrigin;
-    internal static short? DragOrigin => Instance?._dragOrigin;
-    private static InventoryView? Instance;
+    internal short? DragOrigin => _dragOrigin;
+    public void ClearDrag() => _dragOrigin = null;
 
     public override void Bind()
     {
-        Instance = this;
         Grid.OnSlotLeftDown += OnSlotLeftDown;
         Grid.OnSlotLeftUp += OnSlotLeftUp;
         Grid.OnSlotRightClick += OnSlotRightClick;
         Grid.OnSlotDoubleClick += OnSlotDoubleClick;
         Grid.OnSlotHoverEnter += OnSlotHoverEnter;
-        Grid.OnSlotHoverLeave += TooltipView.Hide;
+        Grid.OnSlotHoverLeave += tooltip.Hide;
         uiContext.PostDraw += OnPostDraw;
     }
 
@@ -37,7 +36,7 @@ internal class InventoryView(IguinaContext uiContext, IntentSender intentSender,
         Grid.OnSlotRightClick -= OnSlotRightClick;
         Grid.OnSlotDoubleClick -= OnSlotDoubleClick;
         Grid.OnSlotHoverEnter -= OnSlotHoverEnter;
-        Grid.OnSlotHoverLeave -= TooltipView.Hide;
+        Grid.OnSlotHoverLeave -= tooltip.Hide;
         uiContext.PostDraw -= OnPostDraw;
     }
 
@@ -47,14 +46,14 @@ internal class InventoryView(IguinaContext uiContext, IntentSender intentSender,
         if (inv == null || inv.Slots[slot].ItemId == Guid.Empty) return;
 
         _dragOrigin = (short)slot;
-        GameScreen.InventoryChange = (short)slot;
+        gameScreen.InventoryChange = (short)slot;
     }
 
     private void OnSlotLeftUp(int slot)
     {
         var dragSlot = _dragOrigin;
         _dragOrigin = null;
-        GameScreen.InventoryChange = null;
+        gameScreen.InventoryChange = null;
         if (dragSlot == null) return;
 
         intentSender.Send(new InventorySwapIntent(default, dragSlot.Value, (short)slot));
@@ -73,9 +72,8 @@ internal class InventoryView(IguinaContext uiContext, IntentSender intentSender,
         {
             if (inv.Slots[slot].Amount != 1)
             {
-                ShopSellView.InventorySlot = (short)slot;
-                GameScreen.Instance.ShopSellView.AmountInput.Value = string.Empty;
-                GameScreen.Instance.ShopSellView.Panel.Visible = true;
+                gameScreen.ShopSellView.Show((short)slot);
+                gameScreen.ShopSellView.AmountInput.Value = string.Empty;
             }
             else intentSender.Send(new ShopSellIntent(default, (byte)slot, 1));
         }
@@ -83,9 +81,8 @@ internal class InventoryView(IguinaContext uiContext, IntentSender intentSender,
         {
             if (inv.Slots[slot].Amount != 1)
             {
-                DropItemView.InventorySlot = (short)slot;
-                GameScreen.Instance.DropItemView.AmountInput.Value = string.Empty;
-                GameScreen.Instance.DropItemView.Panel.Visible = true;
+                gameScreen.DropItemView.Show((short)slot);
+                gameScreen.DropItemView.AmountInput.Value = string.Empty;
             }
             else intentSender.Send(new DropItemIntent(default, (byte)slot, 1));
         }
@@ -106,11 +103,11 @@ internal class InventoryView(IguinaContext uiContext, IntentSender intentSender,
 
         string? additionalInfo = null;
         if (uiContext.Registry["Shop"].Visible &&
-            ShopView.OpenedShop?.FindBought(item.Id) != null)
-            additionalInfo = "Sale price: " + ShopView.OpenedShop.FindBought(item.Id).Price;
+            shop.OpenedShop?.FindBought(item.Id) != null)
+            additionalInfo = "Sale price: " + shop.OpenedShop.FindBought(item.Id).Price;
 
         var panelRect = uiContext.Registry["InventoryPanel"].LastBoundingRect;
-        TooltipView.Show(item.Id, new Point(panelRect.X - 186, panelRect.Y + 3), additionalInfo);
+        tooltip.Show(item.Id, new Point(panelRect.X - 186, panelRect.Y + 3), additionalInfo);
     }
 
     private void OnPostDraw()

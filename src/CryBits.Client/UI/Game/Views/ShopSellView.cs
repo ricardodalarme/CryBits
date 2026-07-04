@@ -4,14 +4,20 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ShopSellView(IguinaContext uiContext, IntentSender intentSender) : ViewBase
+internal class ShopSellView(UiContext uiContext, IntentSender intentSender) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("ShopSell");
     internal NumericInput AmountInput => uiContext.Get<NumericInput>("SellAmount");
     private Button ConfirmButton => uiContext.Get<Button>("SellConfirm");
     private Button CancelButton => uiContext.Get<Button>("SellCancel");
 
-    public static short InventorySlot;
+    private short _inventorySlot;
+
+    public void Show(short slot)
+    {
+        _inventorySlot = slot;
+        Panel.Visible = true;
+    }
 
     public override void Bind()
     {
@@ -33,7 +39,7 @@ internal class ShopSellView(IguinaContext uiContext, IntentSender intentSender) 
             return;
         }
 
-        intentSender.Send(new ShopSellIntent(default, (byte)InventorySlot, (short)AmountInput.NumericValue));
+        intentSender.Send(new ShopSellIntent(default, (byte)_inventorySlot, (short)AmountInput.NumericValue));
         Panel.Visible = false;
     }
 

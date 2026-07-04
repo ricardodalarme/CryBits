@@ -4,12 +4,22 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeAmountView(IguinaContext uiContext, IntentSender intentSender) : ViewBase
+internal class TradeAmountView(UiContext uiContext, IntentSender intentSender) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("TradeAmount");
     internal NumericInput AmountInput => uiContext.Get<NumericInput>("TradeAmountInput");
     private Button ConfirmButton => uiContext.Get<Button>("TradeAmtConfirm");
     private Button CancelButton => uiContext.Get<Button>("TradeAmtCancel");
+
+    private short _ownSlot;
+    private short _inventorySlot;
+
+    public void Show(short ownSlot, short inventorySlot)
+    {
+        _ownSlot = ownSlot;
+        _inventorySlot = inventorySlot;
+        Panel.Visible = true;
+    }
 
     public override void Bind()
     {
@@ -31,7 +41,7 @@ internal class TradeAmountView(IguinaContext uiContext, IntentSender intentSende
             return;
         }
 
-        intentSender.Send(new TradeOfferIntent(default, TradeView.OwnSlot, TradeView.InventorySlot, (short)AmountInput.NumericValue));
+        intentSender.Send(new TradeOfferIntent(default, _ownSlot, _inventorySlot, (short)AmountInput.NumericValue));
         Panel.Visible = false;
     }
 

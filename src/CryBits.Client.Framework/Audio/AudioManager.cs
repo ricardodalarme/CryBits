@@ -5,7 +5,7 @@ namespace CryBits.Client.Framework.Audio;
 
 public class AudioManager
 {
-    public static AudioManager Instance { get; } = new();
+    public static AudioManager? Instance { get; set; }
 
     /// <summary>Loaded sound instances keyed by filename.</summary>
     public readonly Dictionary<string, Sound> Sounds = [];

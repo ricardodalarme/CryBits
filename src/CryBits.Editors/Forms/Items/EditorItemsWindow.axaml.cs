@@ -17,7 +17,7 @@ internal partial class EditorItemsWindow : Window
     public static void Open(Window owner)
     {
         owner.Hide();
-        var window = new EditorItemsWindow(DefinitionCatalog.Instance);
+        var window = new EditorItemsWindow(Program.Catalog);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }

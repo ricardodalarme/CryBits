@@ -6,7 +6,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class LoginView(IguinaContext uiContext, AuthSender authSender) : ViewBase
+internal class LoginView(UiContext uiContext, AuthSender authSender, Connection connection, MenuScreen menuScreen) : ViewBase
 {
     internal Panel LoginPanel => uiContext.Get<Panel>("Login");
     internal TextInput UsernameTextBox => uiContext.Get<TextInput>("Username");
@@ -40,7 +40,7 @@ internal class LoginView(IguinaContext uiContext, AuthSender authSender) : ViewB
         Options.Instance.Username = UsernameTextBox.Value;
         OptionsRepository.Write();
 
-        if (!Connection.Instance.TryConnect())
+        if (!connection.TryConnect())
         {
             uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Server", "The server is currently unavailable.");
             return;
@@ -51,9 +51,9 @@ internal class LoginView(IguinaContext uiContext, AuthSender authSender) : ViewB
 
     private void OnRegisterPressed(Entity _)
     {
-        Connection.Instance.Disconnect();
+        connection.Disconnect();
 
-        MenuScreen.Instance.CloseMenus();
-        MenuScreen.Instance.RegisterView.RegisterPanel.Visible = true;
+        menuScreen.CloseMenus();
+        menuScreen.RegisterView.RegisterPanel.Visible = true;
     }
 }

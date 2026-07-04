@@ -12,8 +12,6 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal sealed class MapRenderer(Renderer renderer, GameContext context, CameraManager cameraManager)
 {
-    public static MapRenderer Instance { get; } = new(Renderer.Instance, GameContext.Instance, CameraManager.Instance);
-
     private readonly Dictionary<int, VertexArray> _batches = [];
 
     public void DrawLayer(Layer layerType)

@@ -3,7 +3,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ChatView(IguinaContext uiContext) : ViewBase
+internal class ChatView(UiContext uiContext, Chat chat) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("ChatPanel");
     internal TextInput MessageTextInput => uiContext.Get<TextInput>("ChatInput");
@@ -27,7 +27,7 @@ internal class ChatView(IguinaContext uiContext) : ViewBase
 
     private void OnMessagePressed(Entity _)
     {
-        Chat.VisibilityTimer = Environment.TickCount64 + Chat.SleepTimer;
+        chat.VisibilityTimer = Environment.TickCount64 + Chat.SleepTimer;
         Panel.Visible = true;
     }
 
@@ -46,10 +46,10 @@ internal class ChatView(IguinaContext uiContext) : ViewBase
             _scrollbarCreated = true;
         }
 
-        while (_messageParagraphs.Count < Chat.Order.Count)
+        while (_messageParagraphs.Count < chat.Order.Count)
         {
             var i = _messageParagraphs.Count;
-            var line = Chat.Order[i];
+            var line = chat.Order[i];
             var paragraph = new Paragraph(uiContext.UISystem!)
             {
                 Text = line.Text,
@@ -62,11 +62,11 @@ internal class ChatView(IguinaContext uiContext) : ViewBase
             MessagesPanel.AddChild(paragraph);
             _messageParagraphs.Add(paragraph);
 
-            if (MessagesPanel.VerticalScrollbar != null && i == Chat.Order.Count - 1)
+            if (MessagesPanel.VerticalScrollbar != null && i == chat.Order.Count - 1)
                 MessagesPanel.VerticalScrollbar.Value = MessagesPanel.VerticalScrollbar.MaxValue;
         }
 
-        while (_messageParagraphs.Count > Chat.Order.Count)
+        while (_messageParagraphs.Count > chat.Order.Count)
         {
             var last = _messageParagraphs[^1];
             last.RemoveSelf();

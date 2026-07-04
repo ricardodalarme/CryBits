@@ -8,8 +8,6 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal sealed class CharacterRenderer(Renderer renderer)
 {
-    public static CharacterRenderer Instance { get; } = new(Renderer.Instance);
-
     public void DrawFace(short textureNum, Point position) =>
         renderer.Draw(Textures.Faces[textureNum], position);
 

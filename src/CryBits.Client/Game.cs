@@ -5,9 +5,11 @@ using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Network.Transport;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Graphics;
+using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Handlers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Logic;
 using CryBits.Client.Offline;
 using CryBits.Client.Systems;
 using CryBits.Client.UI;
@@ -31,9 +33,14 @@ public sealed class Game : IDisposable
     private readonly bool _offline;
     private EmbeddedHostRunner? _hostRunner;
     private Connection? _connection;
+    private UiContext _uiContext = null!;
+    private Renderer _renderer = null!;
     private RenderPipeline? _renderPipeline;
     private InputManager? _inputManager;
     private SystemScheduler? _scheduler;
+    private GameContext _context = null!;
+    private MenuScreen _menu = null!;
+    private GameScreen? _gameScreen;
     private bool _working = true;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
@@ -64,9 +71,27 @@ public sealed class Game : IDisposable
         RegisterComponentTypes();
         Directories.Create();
         OptionsRepository.Read();
-        Renderer.Instance.Init();
-        IguinaContext.Instance.Initialize((uint)Renderer.Instance.RenderWindow.Size.X, (uint)Renderer.Instance.RenderWindow.Size.Y, Renderer.Instance.RenderWindow);
 
+        // ── Create all infrastructure instances FIRST ──
+        var audio = new AudioManager();
+        var uiContext = new UiContext(); _uiContext = uiContext;
+        var input = new InputManager();
+        var renderer = new Renderer(input); _renderer = renderer;
+        var cat = new DefinitionCatalog();
+        var context = new GameContext(cat); _context = context;
+
+        // ── Initialize in dependency order ──
+        _renderer.Init(uiContext);
+        _uiContext.Initialize((uint)_renderer.RenderWindow.Size.X, (uint)_renderer.RenderWindow.Size.Y, _renderer.RenderWindow);
+        input.Initialize(_uiContext.UISystem!, _renderer.RenderWindow);
+
+        var camera = new CameraManager(renderer.RenderWindow);
+        var mapRenderer = new MapRenderer(renderer, context, camera);
+        var characterRenderer = new CharacterRenderer(renderer);
+        var itemRenderer = new ItemRenderer(renderer);
+        var equipmentRenderer = new EquipmentRenderer(renderer, context, cat);
+
+        // ── Network ──
         if (_offline)
         {
             _hostRunner = new EmbeddedHostRunner();
@@ -79,9 +104,15 @@ public sealed class Game : IDisposable
             clientTransport.Connect("localhost", Config.Port, Config.GameName);
             _connection = new Connection(clientTransport);
         }
-
+        _renderer.Connection = _connection;
         _connection.Start(onDisconnected: OnDisconnected);
 
+        var intentSender = new IntentSender(_connection);
+        var authSender = new AuthSender(_connection);
+        var accountSender = new AccountSender(_connection, cat);
+        var contentSender = new ContentSender(_connection);
+
+        // ── Intent registrations ──
         IntentRegistry.Register<MoveIntent>(1);
         IntentRegistry.Register<AttackIntent>(2);
         IntentRegistry.Register<AddPointIntent>(3);
@@ -108,29 +139,44 @@ public sealed class Game : IDisposable
         IntentRegistry.Register<ShopSellIntent>(24);
         IntentRegistry.Register<ShopCloseIntent>(25);
 
-        var context = GameContext.Instance;
-        var audioManager = AudioManager.Instance;
-        var contentRepository = new ContentRepository();
-        var mapRepository = new MapRepository();
-        var cat = DefinitionCatalog.Instance;
+        // ── Scheduler ──
+        var scheduler = new SystemScheduler(context, input, intentSender, audio, camera, renderer, uiContext);
+        _scheduler = scheduler;
 
-        PacketDispatcher.Register(new AuthHandler(cat));
-        PacketDispatcher.Register(new AccountHandler(context));
-        PacketDispatcher.Register(new MapHandler(context, ContentSender.Instance, audioManager, mapRepository));
-        PacketDispatcher.Register(new KeyframeHandler(new Replication.SnapshotApplier(context.World, context)));
-        PacketDispatcher.Register(new ChatHandler(Chat.Instance));
-        PacketDispatcher.Register(new PartyHandler(IntentSender.Instance, context));
-        PacketDispatcher.Register(new TradeHandler(IntentSender.Instance, context));
-        PacketDispatcher.Register(new ContentHandler(cat));
-        PacketDispatcher.Register(new ShopHandler(cat));
-        AudioManager.Instance.LoadSounds();
+        // ── Chat ──
+        var chat = new Chat(intentSender, uiContext);
 
-        _scheduler = SystemScheduler.Instance;
-        _scheduler.Initialize();
-        _renderPipeline = RenderPipeline.Instance;
-        _inputManager = InputManager.Instance;
+        // ── Views that other views depend on ──
+        var tooltipView = new TooltipView(uiContext, itemRenderer, cat);
+        var shopView = new ShopView(uiContext, intentSender, itemRenderer, cat, tooltipView);
 
-        MenuScreen.Instance.Open();
+        // ── Screens ──
+        _menu = new MenuScreen(audio, uiContext, authSender, accountSender, characterRenderer, context, cat, _connection);
+        var gameInput = new GameInput(intentSender, chat, input, uiContext);
+        _gameScreen = new GameScreen(uiContext, context, intentSender, renderer, itemRenderer, equipmentRenderer,
+            characterRenderer, input, audio, cat, tooltipView, shopView, _menu, chat, gameInput);
+
+        // ── System initialization ──
+        scheduler.Initialize();
+        var renderPipeline = new RenderPipeline(renderer, camera, mapRenderer, scheduler, uiContext);
+        _renderPipeline = renderPipeline;
+        _inputManager = input;
+
+        // ── Packet handlers ──
+        var contentRepo = new ContentRepository();
+        var mapRepo = new MapRepository();
+        PacketDispatcher.Register(new AuthHandler(cat, uiContext, _menu));
+        PacketDispatcher.Register(new AccountHandler(context, _menu, _gameScreen));
+        PacketDispatcher.Register(new MapHandler(context, contentSender, audio, mapRepo));
+        PacketDispatcher.Register(new KeyframeHandler(new Replication.SnapshotApplier(context.World, context, cat)));
+        PacketDispatcher.Register(new ChatHandler(chat));
+        PacketDispatcher.Register(new PartyHandler(intentSender, context, _gameScreen));
+        PacketDispatcher.Register(new TradeHandler(intentSender, context, _gameScreen));
+        PacketDispatcher.Register(new ContentHandler(cat, _menu));
+        PacketDispatcher.Register(new ShopHandler(cat, _gameScreen));
+
+        audio.LoadSounds();
+        _menu.Open();
     }
 
     private void Loop()
@@ -146,16 +192,16 @@ public sealed class Game : IDisposable
                 _renderPipeline?.Present();
 
                 _inputManager?.BeginFrame();
-                Renderer.Instance.RenderWindow.DispatchEvents();
+                _renderer.RenderWindow.DispatchEvents();
 
                 var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
                 _stopwatch.Restart();
 
-                IguinaContext.Instance.Update(deltaTime);
+                _uiContext.Update(deltaTime);
 
                 _scheduler?.Simulation.Update(deltaTime);
 
-                var ctx = GameContext.Instance;
+                var ctx = _context;
                 if (ctx.LocalPlayer.Entity is { } playerEntityId)
                 {
                     var level = ctx.World.Get<LevelComponent>(playerEntityId);
@@ -167,8 +213,8 @@ public sealed class Game : IDisposable
                         if (level.TotalAttributes != total)
                             ctx.World.Set(playerEntityId, level with { TotalAttributes = total });
                     }
-                    if (IguinaContext.Instance.CurrentScreen == ScreenType.Game)
-                        CharacterView.Update();
+                    if (_gameScreen != null && _uiContext.CurrentScreen == ScreenType.Game)
+                        _gameScreen.CharacterView.Update();
                 }
 
                 if (timer1000 < Environment.TickCount64)
@@ -191,9 +237,9 @@ public sealed class Game : IDisposable
 
     private void OnDisconnected()
     {
-        GameContext.Instance.Reset();
-        GameScreen.Instance.Unbind();
-        MenuScreen.Instance.Open();
+        _context.Reset();
+        _gameScreen?.Unbind();
+        _menu.Open();
     }
 
     private static void RegisterComponentTypes()

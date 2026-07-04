@@ -39,14 +39,14 @@ internal sealed partial class ShopEditorViewModel(Shop model, DefinitionCatalog 
     [RelayCommand]
     private void Save()
     {
-        PackageSender.Instance.WriteShops();
+        PackageSender.Instance!.WriteShops();
         RequestClose?.Invoke();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        PackageSender.Instance.RequestShops();
+        PackageSender.Instance!.RequestShops();
         RequestClose?.Invoke();
     }
 }

@@ -7,8 +7,6 @@ namespace CryBits.Client.Network.Senders;
 
 internal class AccountSender(Connection connection, DefinitionCatalog catalog)
 {
-    public static AccountSender Instance { get; } = new(Connection.Instance, DefinitionCatalog.Instance);
-
     public void CreateCharacter(string name, bool isMale, short @class, short textureNum) =>
         connection.SendPacket(new CreateCharacterPacket
         {

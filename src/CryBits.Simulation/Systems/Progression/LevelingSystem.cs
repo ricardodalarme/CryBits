@@ -11,7 +11,7 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Simulation.Systems.Progression;
 
-public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class LevelingSystem : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
@@ -56,7 +56,7 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
             {
                 if (!world.Has<PlayerTag>(npcDied.SourceId.Value)) continue;
 
-                var xp = catalog.Npcs.Get(npcDied.NpcDefId)?.Experience ?? 0;
+                var xp = world.Catalog.Npcs.Get(npcDied.NpcDefId)?.Experience ?? 0;
                 if (xp > 0)
                     GiveExperience(world, npcDied.SourceId.Value, xp);
             }

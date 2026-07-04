@@ -15,10 +15,8 @@ public enum ScreenType
     Game,
 }
 
-internal sealed class IguinaContext : IDisposable
+internal sealed class UiContext : IDisposable
 {
-    public static IguinaContext Instance { get; } = new();
-
     private Entity? _currentScreen;
 
     public RenderTexture? Target { get; private set; }

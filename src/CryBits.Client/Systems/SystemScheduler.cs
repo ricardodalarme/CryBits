@@ -3,6 +3,7 @@ using CryBits.Client.Graphics;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Systems.Character;
+using CryBits.Client.UI;
 using CryBits.Client.Systems.Combat;
 using CryBits.Client.Systems.Core;
 using CryBits.Client.Systems.Map;
@@ -18,16 +19,9 @@ internal sealed class SystemScheduler(
     IntentSender intentSender,
     AudioManager audioManager,
     CameraManager cameraManager,
-    Renderer renderer)
+    Renderer renderer,
+    UiContext uiContext)
 {
-    public static SystemScheduler Instance { get; } = new(
-        GameContext.Instance,
-        InputManager.Instance,
-        IntentSender.Instance,
-        AudioManager.Instance,
-        CameraManager.Instance,
-        Renderer.Instance);
-
     public Client.Core.SystemScheduler Simulation { get; } = new();
     public Client.Core.SystemScheduler Ground { get; } = new();
     public Client.Core.SystemScheduler Fringe { get; } = new();
@@ -46,7 +40,7 @@ internal sealed class SystemScheduler(
             .AddSimulation(new CameraSystem(context, cameraManager))
             .AddSimulation(new CharacterAnimationSystem(context.World))
             .AddSimulation(new AttackHitSystem(context))
-            .AddSimulation(new AttackSystem(context, inputManager, intentSender))
+            .AddSimulation(new AttackSystem(context, inputManager, intentSender, uiContext))
             .AddSimulation(new DamageDecaySystem(context.World));
 
         Ground

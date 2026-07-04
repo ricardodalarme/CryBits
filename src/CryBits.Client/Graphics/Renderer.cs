@@ -18,25 +18,18 @@ namespace CryBits.Client.Graphics;
 /// </summary>
 internal sealed class Renderer(InputManager inputManager)
 {
-    public static Renderer Instance { get; } = new(InputManager.Instance);
+    private UiContext? _uiContext;
+    internal Connection? Connection { get; set; }
 
-    /// <summary>The SFML render window.</summary>
     public RenderWindow RenderWindow { get; private set; } = null!;
 
-    // Reused across every Draw() call — avoids per-frame heap allocations.
-    // SFML Sprite is a reference type whose state is fully overwritten before each draw.
-    // Initialized lazily on the first Draw() call (Sprite requires a Texture argument).
     private Sprite? _spriteCache;
-
-    // Reused across every DrawText() call for the same reason.
-    // Initialized in Init() once the font is available.
     private Text _textCache = null!;
 
-    /// <summary>
-    /// Create the render window and wire up input / focus events.
-    /// </summary>
-    public void Init()
+    public void Init(UiContext uiContext)
     {
+        _uiContext = uiContext;
+
         RenderWindow = new RenderWindow(
             new VideoMode(new Vector2u((uint)ScreenWidth, (uint)ScreenHeight)),
             Config.GameName,
@@ -44,10 +37,8 @@ internal sealed class Renderer(InputManager inputManager)
             State.Windowed
         );
 
-        // VSync — prevents tearing and GPU spin.
         RenderWindow.SetVerticalSyncEnabled(true);
 
-        // Pre-allocate the text cache now that the font is accessible.
         _textCache = new Text(Fonts.Default, string.Empty)
         {
             CharacterSize = 10,
@@ -57,8 +48,8 @@ internal sealed class Renderer(InputManager inputManager)
 
         RenderWindow.Closed += (_, _) =>
         {
-            if (IguinaContext.Instance.CurrentScreen == ScreenType.Game)
-                Connection.Instance.Disconnect();
+            if (_uiContext.CurrentScreen == ScreenType.Game)
+                Connection?.Disconnect();
             else
                 Game.Working = false;
         };

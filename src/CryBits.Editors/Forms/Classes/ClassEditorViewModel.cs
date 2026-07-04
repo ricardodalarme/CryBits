@@ -108,14 +108,14 @@ internal sealed partial class ClassEditorViewModel(Class model, DefinitionCatalo
     [RelayCommand]
     private void Save()
     {
-        PackageSender.Instance.WriteClasses();
+        PackageSender.Instance!.WriteClasses();
         RequestClose?.Invoke();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        PackageSender.Instance.RequestClasses();
+        PackageSender.Instance!.RequestClasses();
         RequestClose?.Invoke();
     }
 }

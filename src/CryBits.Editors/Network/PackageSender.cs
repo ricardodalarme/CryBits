@@ -8,7 +8,7 @@ namespace CryBits.Editors.Network;
 
 internal class PackageSender(Connection connection, DefinitionCatalog catalog)
 {
-    public static PackageSender Instance { get; } = new(Connection.Instance, DefinitionCatalog.Instance);
+    public static PackageSender? Instance { get; set; }
 
     public void Connect(string username, string password) => connection.SendPacket(new ConnectPacket { Username = username, Password = password, IsClientAccess = true });
     public void RequestClasses() => connection.SendPacket(new RequestClassesPacket(), DeliveryChannel.ReliableUnordered);

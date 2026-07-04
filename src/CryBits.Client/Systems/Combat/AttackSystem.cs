@@ -14,7 +14,8 @@ namespace CryBits.Client.Systems.Combat;
 internal sealed class AttackSystem(
     GameContext context,
     InputManager inputManager,
-    IntentSender intentSender
+    IntentSender intentSender,
+    UiContext uiContext
 ) : IClientSystem
 {
     private const float ThrottleInterval = 0.030f;
@@ -36,8 +37,8 @@ internal sealed class AttackSystem(
 
         var state = context.World.Get<AttackComponent>(entity.Value);
         if (state == null || state.AttackCountdown > 0f) return;
-        if (IguinaContext.Instance.TryGet<Panel>("Trade", out var tradePanel) && tradePanel.Visible) return;
-        if (IguinaContext.Instance.TryGet<Panel>("Shop", out var shopPanel) && shopPanel.Visible) return;
+        if (uiContext.TryGet<Panel>("Trade", out var tradePanel) && tradePanel.Visible) return;
+        if (uiContext.TryGet<Panel>("Shop", out var shopPanel) && shopPanel.Visible) return;
 
         context.World.Set(entity.Value, new AttackComponent(AttackSpeed / 1000f));
         intentSender.Send(new AttackIntent(default, null));

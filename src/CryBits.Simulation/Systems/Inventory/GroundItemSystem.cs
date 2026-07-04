@@ -7,14 +7,15 @@ using CryBits.Simulation.Spawners;
 
 namespace CryBits.Simulation.Systems.Inventory;
 
-public sealed class GroundItemSystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class GroundItemSystem : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
         foreach (var ev in tick.Events.Events)
         {
             if (ev is LootDroppedEvent loot)
-                GroundItemSpawner.Spawn(world, catalog, loot.MapId, loot.X, loot.Y,
+                GroundItemSpawner.Spawn(world,
+                    loot.MapId, loot.X, loot.Y,
                     loot.ItemId, loot.Amount, loot.DespawnTick);
         }
 

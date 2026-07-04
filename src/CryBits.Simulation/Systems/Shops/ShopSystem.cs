@@ -11,7 +11,7 @@ using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Systems.Shops;
 
-public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class ShopSystem : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
@@ -45,11 +45,11 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
                         var npcE = world.Entities.Get(e.NpcInstanceId);
                         if (npcE == null) break;
                         var npcState = npcE.Get<NpcState>()!;
-                        var npcData = catalog.Npcs.Get(npcState.NpcDefId);
+                        var npcData = world.Catalog.Npcs.Get(npcState.NpcDefId);
                         if (npcData is null) break;
                         if (npcData.Behaviour == Behaviour.ShopKeeper)
                         {
-                            var shop = catalog.Shops.Get(npcData.ShopId);
+                            var shop = world.Catalog.Shops.Get(npcData.ShopId);
                             if (shop != null) Open(world, e.AttackerId, shop);
                         }
                         break;
@@ -75,7 +75,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
         var shopState = e.Get<ShopState>();
         if (shopState?.ShopId == null) return;
         var inv = e.Get<InventoryState>()!;
-        var shop = catalog.Shops.Get(shopState.ShopId.Value);
+        var shop = world.Catalog.Shops.Get(shopState.ShopId.Value);
         if (shop is null) return;
         var shopSold = shop.Sold[shopSoldIndex];
 
@@ -103,7 +103,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
             return;
         }
 
-        var soldItem = catalog.Items.Get(shopSold.ItemId);
+        var soldItem = world.Catalog.Items.Get(shopSold.ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
         tick.Events.Emit(new ItemTakenEvent(tick.TickNumber, entityId, (byte)currencySlot.Value, shopSold.Price));
         tick.Events.Emit(new ItemGivenEvent(tick.TickNumber, entityId, shopSold.ItemId, shopSold.Amount));
@@ -118,7 +118,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
         if (shopState?.ShopId == null) return;
         var inv = e.Get<InventoryState>()!;
 
-        var shop = catalog.Shops.Get(shopState.ShopId.Value);
+        var shop = world.Catalog.Shops.Get(shopState.ShopId.Value);
         if (shop is null) return;
 
         amount = Math.Min(amount, inv.Slots[inventorySlotIndex].Amount);
@@ -136,7 +136,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
             return;
         }
 
-        var soldItem = catalog.Items.Get(inv.Slots[inventorySlotIndex].ItemId);
+        var soldItem = world.Catalog.Items.Get(inv.Slots[inventorySlotIndex].ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
 
         tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You sold " + amount + "x " + soldItemName + " for " + buy.Price * amount + ".", ChatColors.Green));

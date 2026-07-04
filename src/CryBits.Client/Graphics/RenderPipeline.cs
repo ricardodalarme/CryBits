@@ -12,14 +12,9 @@ internal sealed class RenderPipeline(
     Renderer renderer,
     CameraManager cameraManager,
     MapRenderer mapRenderer,
-    SystemScheduler scheduler)
+    SystemScheduler scheduler,
+    UiContext uiContext)
 {
-    public static RenderPipeline Instance { get; } = new(
-        Renderer.Instance,
-        CameraManager.Instance,
-        MapRenderer.Instance,
-        SystemScheduler.Instance);
-
     public void Present()
     {
         renderer.RenderWindow.Clear(Color.Black);
@@ -33,7 +28,7 @@ internal sealed class RenderPipeline(
 
     private void InGame()
     {
-        if (IguinaContext.Instance.CurrentScreen != ScreenType.Game) return;
+        if (uiContext.CurrentScreen != ScreenType.Game) return;
 
         cameraManager.BeginWorldDraw();
 
@@ -50,15 +45,15 @@ internal sealed class RenderPipeline(
     {
         cameraManager.BeginUIDraw();
 
-        IguinaContext.Instance.Draw();
+        uiContext.Draw();
 
-        var iguinaTarget = IguinaContext.Instance.Target;
-        if (iguinaTarget != null)
+        var uiTarget = uiContext.Target;
+        if (uiTarget != null)
         {
-            var sprite = new Sprite(iguinaTarget.Texture);
+            var sprite = new Sprite(uiTarget.Texture);
             renderer.RenderWindow.Draw(sprite);
         }
 
-        IguinaContext.Instance.PostDraw?.Invoke();
+        uiContext.PostDraw?.Invoke();
     }
 }

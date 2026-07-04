@@ -1,3 +1,4 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Spatial;
@@ -7,13 +8,15 @@ namespace CryBits.Simulation.Core;
 
 public sealed class World
 {
+    public DefinitionCatalog Catalog { get; }
     public Dictionary<Guid, Map> MapDefs { get; } = [];
     public ChunkGrid SpatialGrid { get; set; } = new();
     public long TickCount { get; set; }
     public EntityRegistry Entities { get; } = new();
 
-    public World(bool enableDirtyTracking = true)
+    public World(DefinitionCatalog catalog, bool enableDirtyTracking = true)
     {
+        Catalog = catalog;
         if (enableDirtyTracking) Dirty = new DirtyTracking();
     }
 

@@ -12,7 +12,7 @@ using CryBits.Client.UI.Game;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class TradeHandler(IntentSender intentSender, GameContext context)
+internal class TradeHandler(IntentSender intentSender, GameContext context, GameScreen gameScreen)
 {
     [PacketHandler]
     internal void Trade(TradePacket packet)
@@ -23,22 +23,18 @@ internal class TradeHandler(IntentSender intentSender, GameContext context)
 
         var state = packet.State;
 
-        // Set trade panel visibility
-        GameScreen.Instance.TradeView.Panel.Visible = packet.State;
+        gameScreen.TradeView.Panel.Visible = packet.State;
 
         if (state)
         {
-            // Reset trade buttons
-            GameScreen.Instance.TradeView.ConfirmOfferButton.Visible = true;
-            GameScreen.Instance.TradeAmountView.Panel.Visible = GameScreen.Instance.TradeView.AcceptOfferButton.Visible = GameScreen.Instance.TradeView.DeclineOfferButton.Visible = false;
-            GameScreen.Instance.TradeView.OfferDisabledPanel.Visible = false;
+            gameScreen.TradeView.ConfirmOfferButton.Visible = true;
+            gameScreen.TradeAmountView.Panel.Visible = gameScreen.TradeView.AcceptOfferButton.Visible = gameScreen.TradeView.DeclineOfferButton.Visible = false;
+            gameScreen.TradeView.OfferDisabledPanel.Visible = false;
 
-            // Attach fresh trade state to the local player entity for the duration of this session.
             context.World.Set(entity, new TradeState());
         }
         else
         {
-            // Detach trade state — removal is the reset; no leftover data.
             context.World.Remove<TradeState>(entity);
         }
     }
@@ -46,15 +42,13 @@ internal class TradeHandler(IntentSender intentSender, GameContext context)
     [PacketHandler]
     internal void TradeInvitation(TradeInvitationPacket packet)
     {
-        // Decline if player disabled trade invitations
         if (!Options.Instance.Trade)
         {
             intentSender.Send(new TradeDeclineIntent(default));
             return;
         }
 
-        // Show trade invitation panel
-        GameScreen.Instance.TradeInvitationView.Show(packet.PlayerInvitation);
+        gameScreen.TradeInvitationView.Show(packet.PlayerInvitation);
     }
 
     [PacketHandler]
@@ -64,14 +58,14 @@ internal class TradeHandler(IntentSender intentSender, GameContext context)
         {
             case TradeStatus.Accepted:
             case TradeStatus.Declined:
-                GameScreen.Instance.TradeView.ConfirmOfferButton.Visible = true;
-                GameScreen.Instance.TradeView.AcceptOfferButton.Visible = GameScreen.Instance.TradeView.DeclineOfferButton.Visible = false;
-                GameScreen.Instance.TradeView.OfferDisabledPanel.Visible = false;
+                gameScreen.TradeView.ConfirmOfferButton.Visible = true;
+                gameScreen.TradeView.AcceptOfferButton.Visible = gameScreen.TradeView.DeclineOfferButton.Visible = false;
+                gameScreen.TradeView.OfferDisabledPanel.Visible = false;
                 break;
             case TradeStatus.Confirmed:
-                GameScreen.Instance.TradeView.ConfirmOfferButton.Visible = false;
-                GameScreen.Instance.TradeView.AcceptOfferButton.Visible = GameScreen.Instance.TradeView.DeclineOfferButton.Visible = true;
-                GameScreen.Instance.TradeView.OfferDisabledPanel.Visible = false;
+                gameScreen.TradeView.ConfirmOfferButton.Visible = false;
+                gameScreen.TradeView.AcceptOfferButton.Visible = gameScreen.TradeView.DeclineOfferButton.Visible = true;
+                gameScreen.TradeView.OfferDisabledPanel.Visible = false;
                 break;
         }
     }

@@ -12,30 +12,30 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class CharacterView(IguinaContext uiContext, GameContext context, IntentSender intentSender, EquipmentRenderer equipmentRenderer, CharacterRenderer characterRenderer) : ViewBase
+internal class CharacterView(UiContext uiContext, GameContext context, IntentSender intentSender, EquipmentRenderer equipmentRenderer, CharacterRenderer characterRenderer, TooltipView tooltip, DefinitionCatalog catalog) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("CharacterPanel");
     private SlotGrid EquipmentGrid => uiContext.Get<SlotGrid>("CharEquipmentGrid");
-    internal static Button AddStrengthButton => IguinaContext.Instance.Get<Button>("AttrStrength");
-    internal static Button AddResistanceButton => IguinaContext.Instance.Get<Button>("AttrResistance");
-    internal static Button AddIntelligenceButton => IguinaContext.Instance.Get<Button>("AttrIntelligence");
-    internal static Button AddAgilityButton => IguinaContext.Instance.Get<Button>("AttrAgility");
-    internal static Button AddVitalityButton => IguinaContext.Instance.Get<Button>("AttrVitality");
-    private static Label CharNameLabel => IguinaContext.Instance.Get<Label>("CharName");
+    private Button AddStrengthButton => uiContext.Get<Button>("AttrStrength");
+    private Button AddResistanceButton => uiContext.Get<Button>("AttrResistance");
+    private Button AddIntelligenceButton => uiContext.Get<Button>("AttrIntelligence");
+    private Button AddAgilityButton => uiContext.Get<Button>("AttrAgility");
+    private Button AddVitalityButton => uiContext.Get<Button>("AttrVitality");
+    private Label CharNameLabel => uiContext.Get<Label>("CharName");
     private Picture FacePicture => uiContext.Get<Picture>("CharFace");
-    private static Label CharLevelLabel => IguinaContext.Instance.Get<Label>("CharLevel");
-    private static Label CharPointsLabel => IguinaContext.Instance.Get<Label>("CharPoints");
-    private static Label CharStrengthLabel => IguinaContext.Instance.Get<Label>("CharStrength");
-    private static Label CharResistanceLabel => IguinaContext.Instance.Get<Label>("CharResistance");
-    private static Label CharIntelligenceLabel => IguinaContext.Instance.Get<Label>("CharIntelligence");
-    private static Label CharAgilityLabel => IguinaContext.Instance.Get<Label>("CharAgility");
-    private static Label CharVitalityLabel => IguinaContext.Instance.Get<Label>("CharVitality");
+    private Label CharLevelLabel => uiContext.Get<Label>("CharLevel");
+    private Label CharPointsLabel => uiContext.Get<Label>("CharPoints");
+    private Label CharStrengthLabel => uiContext.Get<Label>("CharStrength");
+    private Label CharResistanceLabel => uiContext.Get<Label>("CharResistance");
+    private Label CharIntelligenceLabel => uiContext.Get<Label>("CharIntelligence");
+    private Label CharAgilityLabel => uiContext.Get<Label>("CharAgility");
+    private Label CharVitalityLabel => uiContext.Get<Label>("CharVitality");
 
     public override void Bind()
     {
         EquipmentGrid.OnSlotRightClick += OnSlotRightClick;
         EquipmentGrid.OnSlotHoverEnter += OnSlotHoverEnter;
-        EquipmentGrid.OnSlotHoverLeave += TooltipView.Hide;
+        EquipmentGrid.OnSlotHoverLeave += tooltip.Hide;
         AddStrengthButton.Events.OnClick += OnAddStrengthPressed;
         AddResistanceButton.Events.OnClick += OnAddResistancePressed;
         AddIntelligenceButton.Events.OnClick += OnAddIntelligencePressed;
@@ -53,7 +53,7 @@ internal class CharacterView(IguinaContext uiContext, GameContext context, Inten
         uiContext.PostDraw -= FacePicture.Render;
         EquipmentGrid.OnSlotRightClick -= OnSlotRightClick;
         EquipmentGrid.OnSlotHoverEnter -= OnSlotHoverEnter;
-        EquipmentGrid.OnSlotHoverLeave -= TooltipView.Hide;
+        EquipmentGrid.OnSlotHoverLeave -= tooltip.Hide;
         AddStrengthButton.Events.OnClick -= OnAddStrengthPressed;
         AddResistanceButton.Events.OnClick -= OnAddResistancePressed;
         AddIntelligenceButton.Events.OnClick -= OnAddIntelligencePressed;
@@ -70,7 +70,7 @@ internal class CharacterView(IguinaContext uiContext, GameContext context, Inten
         var equipSlot = equipment.Slots[slot];
         if (equipSlot == Guid.Empty) return;
 
-        var item = DefinitionCatalog.Instance.Items.Get(equipSlot);
+        var item = catalog.Items.Get(equipSlot);
         if (item == null || item.Bind != BindOn.Equip)
             intentSender.Send(new EquipmentRemoveIntent(default, (byte)slot));
     }
@@ -80,9 +80,9 @@ internal class CharacterView(IguinaContext uiContext, GameContext context, Inten
         var equipment = context.LocalPlayer.GetEquipment();
         if (equipment == null) return;
 
-        var item = DefinitionCatalog.Instance.Items.Get(equipment.Slots[slot]);
+        var item = catalog.Items.Get(equipment.Slots[slot]);
         if (item == null) return;
-        TooltipView.Show(item.Id, new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5));
+        tooltip.Show(item.Id, new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5));
     }
 
     private void RenderFace()
@@ -113,9 +113,9 @@ internal class CharacterView(IguinaContext uiContext, GameContext context, Inten
     private void OnAddAgilityPressed(Entity _) => intentSender.Send(new AddPointIntent(default, (byte)Attribute.Agility));
     private void OnAddVitalityPressed(Entity _) => intentSender.Send(new AddPointIntent(default, (byte)Attribute.Vitality));
 
-    public static void Update()
+    public void Update()
     {
-        var local = GameContext.Instance.LocalPlayer;
+        var local = context.LocalPlayer;
 
         CharNameLabel.Text = local.GetName();
 

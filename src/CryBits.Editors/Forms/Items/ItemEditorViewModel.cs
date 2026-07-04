@@ -133,14 +133,14 @@ internal sealed partial class ItemEditorViewModel(Item model, DefinitionCatalog 
     [RelayCommand]
     private void Save()
     {
-        PackageSender.Instance.WriteItems();
+        PackageSender.Instance!.WriteItems();
         RequestClose?.Invoke();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        PackageSender.Instance.RequestItems();
+        PackageSender.Instance!.RequestItems();
         RequestClose?.Invoke();
     }
 }

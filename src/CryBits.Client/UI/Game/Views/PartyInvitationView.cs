@@ -4,7 +4,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class PartyInvitationView(IguinaContext uiContext, IntentSender intentSender) : ViewBase
+internal class PartyInvitationView(UiContext uiContext, IntentSender intentSender) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("PartyInvitation");
     private Button AcceptButton => uiContext.Get<Button>("PartyYes");

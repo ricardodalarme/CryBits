@@ -1,3 +1,4 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
@@ -6,9 +7,8 @@ namespace CryBits.Client.Worlds;
 
 internal sealed class GameContext
 {
-    public static GameContext Instance { get; } = new();
-
-    public World World { get; } = new(enableDirtyTracking: false);
+    public DefinitionCatalog Catalog { get; }
+    public World World { get; }
 
     public Map? CurrentMap { get; set; }
 
@@ -16,8 +16,10 @@ internal sealed class GameContext
 
     private readonly Dictionary<long, EntityId> _entityById = [];
 
-    internal GameContext()
+    internal GameContext(DefinitionCatalog catalog)
     {
+        Catalog = catalog;
+        World = new World(catalog, enableDirtyTracking: false);
         LocalPlayer = new LocalPlayer(World, null);
     }
 

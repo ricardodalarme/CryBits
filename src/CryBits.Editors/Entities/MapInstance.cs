@@ -98,18 +98,18 @@ internal class MapInstance
         var weatherType = win.SelectedMap.DefaultWeather;
         if (!win.IsOpen || weatherType == WeatherType.None || !win.ShowVisualizationSafe)
         {
-            if (AudioManager.Instance.IsPlaying(Sounds.Rain))
-                AudioManager.Instance.StopAllSounds();
+            if (AudioManager.Instance!.IsPlaying(Sounds.Rain))
+                AudioManager.Instance?.StopAllSounds();
             return;
         }
 
         if (weatherType is WeatherType.Rain or WeatherType.Thunder)
         {
-            if (!AudioManager.Instance.IsPlaying(Sounds.Rain))
-                AudioManager.Instance.PlaySound(Sounds.Rain, true);
+            if (!AudioManager.Instance!.IsPlaying(Sounds.Rain))
+                AudioManager.Instance?.PlaySound(Sounds.Rain, true);
         }
-        else if (AudioManager.Instance.IsPlaying(Sounds.Rain))
-            AudioManager.Instance.StopAllSounds();
+        else if (AudioManager.Instance!.IsPlaying(Sounds.Rain))
+            AudioManager.Instance?.StopAllSounds();
 
         if (_snowTimer < Environment.TickCount64)
         {
@@ -170,7 +170,7 @@ internal class MapInstance
                     Sounds.Thunder4
                 };
                 var thunder = Random.Shared.Next(0, thunderList.Length);
-                AudioManager.Instance.PlaySound(thunderList[thunder]);
+                AudioManager.Instance?.PlaySound(thunderList[thunder]);
 
                 if (thunder < 3) Lightning = 190;
             }

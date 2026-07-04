@@ -4,7 +4,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class MetricsView(IguinaContext uiContext) : ViewBase
+internal class MetricsView(UiContext uiContext) : ViewBase
 {
     private Label FpsLabel => uiContext.Get<Label>("FpsLabel");
     private Label LatencyLabel => uiContext.Get<Label>("LatencyLabel");

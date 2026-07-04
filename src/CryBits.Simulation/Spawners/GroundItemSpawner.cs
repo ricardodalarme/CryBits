@@ -8,7 +8,7 @@ namespace CryBits.Simulation.Spawners;
 
 public static class GroundItemSpawner
 {
-    public static EntityId? Spawn(World world, DefinitionCatalog catalog,
+    public static EntityId? Spawn(World world,
         Guid mapId, int x, int y, Guid itemDefId, short amount, long despawnTick)
     {
         if (!world.MapDefs.TryGetValue(mapId, out _))

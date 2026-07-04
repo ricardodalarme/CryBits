@@ -8,7 +8,7 @@ using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Simulation.Systems.Combat;
 
-public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
+public sealed class DeathSystem : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
@@ -33,7 +33,7 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
         var vitals = e.Get<Vitals>()!;
         var pos = e.Get<Position>()!;
         var appearance = e.Get<PlayerAppearance>()!;
-        var playerClass = catalog.Classes.Get(appearance.ClassId);
+        var playerClass = world.Catalog.Classes.Get(appearance.ClassId);
         if (playerClass is null) return;
 
         world.Set(died.EntityId, new Vitals(Hp: vitals.MaxHp, Mp: vitals.MaxMp, MaxHp: vitals.MaxHp, MaxMp: vitals.MaxMp));
@@ -61,7 +61,7 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
 
         var pos = e.Get<Position>()!;
 
-        var npcData = catalog.Npcs.Get(died.NpcDefId);
+        var npcData = world.Catalog.Npcs.Get(died.NpcDefId);
         if (npcData == null) return;
 
         for (byte d = 0; d < npcData.Drop.Count; d++)

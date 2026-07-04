@@ -12,7 +12,7 @@ using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class HotbarView(IguinaContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : ViewBase
+internal class HotbarView(UiContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, TooltipView tooltip, InventoryView inventory, GameScreen gameScreen) : ViewBase
 {
     private SlotGrid Grid => uiContext.Get<SlotGrid>("HotbarGrid");
 
@@ -25,7 +25,7 @@ internal class HotbarView(IguinaContext uiContext, IntentSender intentSender, It
         Grid.OnSlotRightClick += OnSlotRightClick;
         Grid.OnSlotDoubleClick += OnSlotDoubleClick;
         Grid.OnSlotHoverEnter += OnSlotHoverEnter;
-        Grid.OnSlotHoverLeave += TooltipView.Hide;
+        Grid.OnSlotHoverLeave += tooltip.Hide;
         uiContext.PostDraw += OnPostDraw;
     }
 
@@ -36,7 +36,7 @@ internal class HotbarView(IguinaContext uiContext, IntentSender intentSender, It
         Grid.OnSlotRightClick -= OnSlotRightClick;
         Grid.OnSlotDoubleClick -= OnSlotDoubleClick;
         Grid.OnSlotHoverEnter -= OnSlotHoverEnter;
-        Grid.OnSlotHoverLeave -= TooltipView.Hide;
+        Grid.OnSlotHoverLeave -= tooltip.Hide;
         uiContext.PostDraw -= OnPostDraw;
     }
 
@@ -46,19 +46,19 @@ internal class HotbarView(IguinaContext uiContext, IntentSender intentSender, It
         if (hotbarSlot is not HotbarSlot { Slot: not 0 }) return;
 
         _hotbarDragOrigin = (short)slot;
-        GameScreen.HotbarChange = (short)slot;
+        gameScreen.HotbarChange = (short)slot;
     }
 
     private void OnSlotLeftUp(int slot)
     {
         var hotSlot = _hotbarDragOrigin;
         _hotbarDragOrigin = null;
-        GameScreen.HotbarChange = null;
-        GameScreen.InventoryChange = null;
+        gameScreen.HotbarChange = null;
+        gameScreen.InventoryChange = null;
         if (hotSlot is { })
             intentSender.Send(new HotbarSwapIntent(default, hotSlot.Value, (byte)slot));
 
-        var invSlot = InventoryView.DragOrigin;
+        var invSlot = inventory.DragOrigin;
         if (invSlot is { })
             intentSender.Send(new HotbarAddIntent(default, (byte)slot, SlotType.Item, invSlot.Value));
     }
@@ -86,7 +86,7 @@ internal class HotbarView(IguinaContext uiContext, IntentSender intentSender, It
             var item = catalog.Items.Get(context.LocalPlayer.GetInventory()?.Slots[h.Slot] is ItemSlot s ? s.ItemId : Guid.Empty);
             if (item == null) return;
             var panelRect = uiContext.Registry["HotbarPanel"].LastBoundingRect;
-            TooltipView.Show(item.Id, new Point(panelRect.X, panelRect.Y + 42));
+            tooltip.Show(item.Id, new Point(panelRect.X, panelRect.Y + 42));
         }
     }
 

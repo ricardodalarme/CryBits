@@ -23,7 +23,7 @@ namespace CryBits.Server.Commands;
         "Seeds the server with starter items, NPCs, shops and a map. Skips if data already exists (use -f to overwrite).")]
 internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer worldInitializer, ILogger<SeedCommand> logger) : IConsoleCommand
 {
-    public SeedCommand() : this(ServerContext.Catalog!, new WorldInitializer(ServerContext.Host!, ServerContext.Catalog!), ServerContext.LoggerFactory!.CreateLogger<SeedCommand>()) { }
+    public SeedCommand() : this(ServerContext.Catalog!, new WorldInitializer(ServerContext.Host!), ServerContext.LoggerFactory!.CreateLogger<SeedCommand>()) { }
 
     [Option('f', "force", HelpText = "Overwrite existing data even if it is already present.")]
     public bool Force { get; set; }

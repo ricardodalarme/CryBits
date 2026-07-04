@@ -7,7 +7,7 @@ namespace CryBits.Editors.Logic;
 
 internal class Loop(MapInstance mapInstance)
 {
-    public static Loop Instance { get; } = new(MapInstance.Instance);
+    public static Loop? Instance { get; set; }
 
     /// <summary>
     /// Start the editor main loop: process incoming data, update state and present render targets.
@@ -60,31 +60,31 @@ internal class Loop(MapInstance mapInstance)
         if (win.SelectedMap == null) return;
         if (!win.IsOpen)
         {
-            AudioManager.Instance.StopMusic();
+            AudioManager.Instance?.StopMusic();
             return;
         }
 
         if (!win.ShowAudioSafe)
         {
-            AudioManager.Instance.StopMusic();
+            AudioManager.Instance?.StopMusic();
             return;
         }
 
         if (!win.ShowVisualizationSafe)
         {
-            AudioManager.Instance.StopMusic();
+            AudioManager.Instance?.StopMusic();
             return;
         }
 
         if (string.IsNullOrEmpty(win.SelectedMap?.Music))
         {
-            AudioManager.Instance.StopMusic();
+            AudioManager.Instance?.StopMusic();
             return;
         }
 
         // Start the map music if not already playing.
-        if (AudioManager.Instance.CurrentMusicDevice == null ||
-            AudioManager.Instance.CurrentMusicName != win.SelectedMap?.Music)
-            AudioManager.Instance.PlayMusic(win.SelectedMap!.Music);
+        if (AudioManager.Instance?.CurrentMusicDevice == null ||
+            AudioManager.Instance?.CurrentMusicName != win.SelectedMap?.Music)
+            AudioManager.Instance?.PlayMusic(win.SelectedMap!.Music);
     }
 }

@@ -23,7 +23,7 @@ internal partial class EditorNpcsWindow : Window
     public static void Open(Window owner)
     {
         owner.Hide();
-        var window = new EditorNpcsWindow(DefinitionCatalog.Instance);
+        var window = new EditorNpcsWindow(Program.Catalog);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }

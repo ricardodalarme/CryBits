@@ -1,4 +1,3 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Systems.Chat;
 using CryBits.Simulation.Systems.Combat;
@@ -16,25 +15,25 @@ namespace CryBits.Host;
 
 internal static class HostPipelineBuilder
 {
-    public static TickPipeline Build(DefinitionCatalog catalog)
+    public static TickPipeline Build()
     {
         var pipeline = new TickPipeline();
         pipeline.AddSystem(new VitalsRegenSystem());
-        pipeline.AddSystem(new NpcBrainSystem(catalog));
+        pipeline.AddSystem(new NpcBrainSystem());
         pipeline.AddSystem(new MovementSystem());
-        pipeline.AddSystem(new CombatSystem(catalog));
+        pipeline.AddSystem(new CombatSystem());
         pipeline.AddSystem(new AggroSystem());
-        pipeline.AddSystem(new LevelingSystem(catalog));
-        pipeline.AddSystem(new DeathSystem(catalog));
-        pipeline.AddSystem(new GroundItemSystem(catalog));
-        pipeline.AddSystem(new EquipmentSystem(catalog));
-        pipeline.AddSystem(new InventorySystem(catalog));
+        pipeline.AddSystem(new LevelingSystem());
+        pipeline.AddSystem(new DeathSystem());
+        pipeline.AddSystem(new GroundItemSystem());
+        pipeline.AddSystem(new EquipmentSystem());
+        pipeline.AddSystem(new InventorySystem());
         pipeline.AddSystem(new HotbarSystem());
         pipeline.AddSystem(new TradeSystem());
-        pipeline.AddSystem(new ShopSystem(catalog));
+        pipeline.AddSystem(new ShopSystem());
         pipeline.AddSystem(new ChatSystem());
         pipeline.AddSystem(new PartySystem());
-        pipeline.AddSystem(new NpcRespawnSystem(catalog));
+        pipeline.AddSystem(new NpcRespawnSystem());
         return pipeline;
     }
 }

@@ -2,7 +2,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class MenusView(IguinaContext uiContext) : ViewBase
+internal class MenusView(UiContext uiContext) : ViewBase
 {
     private Button CharacterButton => uiContext.Get<Button>("MenuCharacter");
     private Button InventoryButton => uiContext.Get<Button>("MenuInventory");

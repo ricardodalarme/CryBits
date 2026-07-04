@@ -3,7 +3,7 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class BarsView(IguinaContext uiContext) : ViewBase
+internal class BarsView(UiContext uiContext, GameContext context) : ViewBase
 {
     private Label HpValueLabel => uiContext.Get<Label>("HP_Value");
     private Label MpValueLabel => uiContext.Get<Label>("MP_Value");
@@ -24,8 +24,8 @@ internal class BarsView(IguinaContext uiContext) : ViewBase
 
     private void Update()
     {
-        var vitals = GameContext.Instance.LocalPlayer.GetVitals();
-        var level = GameContext.Instance.LocalPlayer.GetLevel();
+        var vitals = context.LocalPlayer.GetVitals();
+        var level = context.LocalPlayer.GetLevel();
         if (vitals == null || level == null) return;
 
         var maxHp = vitals.MaxHp;

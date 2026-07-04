@@ -1,4 +1,3 @@
-using CryBits.Client.Graphics;
 using SFML.Graphics;
 using SFML.System;
 using System.Drawing;
@@ -11,8 +10,6 @@ namespace CryBits.Client.Managers;
 /// </summary>
 internal class CameraManager(RenderWindow renderWindow)
 {
-    public static CameraManager Instance { get; } = new(Renderer.Instance.RenderWindow);
-
     /// <summary>The SFML view used for world rendering.</summary>
     private readonly View _gameView = new(new FloatRect(new Vector2f(0, 0), new Vector2f(ScreenWidth, ScreenHeight)));
 

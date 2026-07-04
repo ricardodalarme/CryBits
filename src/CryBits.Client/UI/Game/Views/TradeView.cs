@@ -14,7 +14,7 @@ using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeView(IguinaContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : ViewBase
+internal class TradeView(UiContext uiContext, IntentSender intentSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, InventoryView inventory, GameScreen gameScreen) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("Trade");
     internal Panel OfferDisabledPanel => uiContext.Get<Panel>("TradeOfferDisable");
@@ -25,8 +25,8 @@ internal class TradeView(IguinaContext uiContext, IntentSender intentSender, Ite
     private SlotGrid OwnGrid => uiContext.Get<SlotGrid>("TradeGridOwn");
     private SlotGrid TheirGrid => uiContext.Get<SlotGrid>("TradeGridTheir");
 
-    public static short OwnSlot;
-    public static short InventorySlot;
+    private short _ownSlot;
+    private short _inventorySlot;
 
     public override void Bind()
     {
@@ -65,8 +65,8 @@ internal class TradeView(IguinaContext uiContext, IntentSender intentSender, Ite
 
     private void OnOwnSlotLeftUp(int slot)
     {
-        GameScreen.InventoryChange = null;
-        var invSlot = InventoryView.DragOrigin;
+        gameScreen.InventoryChange = null;
+        var invSlot = inventory.DragOrigin;
         if (invSlot == null) return;
 
         var inv = context.LocalPlayer.GetInventory();
@@ -75,10 +75,10 @@ internal class TradeView(IguinaContext uiContext, IntentSender intentSender, Ite
             intentSender.Send(new TradeOfferIntent(default, (byte)slot, invSlot.Value, 1));
         else
         {
-            OwnSlot = (short)slot;
-            InventorySlot = invSlot.Value;
-            GameScreen.Instance.TradeAmountView.AmountInput.Value = string.Empty;
-            GameScreen.Instance.TradeAmountView.Panel.Visible = true;
+            _ownSlot = (short)slot;
+            _inventorySlot = invSlot.Value;
+            gameScreen.TradeAmountView.Show(_ownSlot, _inventorySlot);
+            gameScreen.TradeAmountView.AmountInput.Value = string.Empty;
         }
     }
 
