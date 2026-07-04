@@ -23,9 +23,9 @@ internal static class HostPipelineBuilder
         pipeline.AddSystem(new AggroSystem());
         pipeline.AddSystem(new LevelingSystem());
         pipeline.AddSystem(new DeathSystem());
-        pipeline.AddSystem(new GroundItemSystem());
         pipeline.AddSystem(new EquipmentSystem());
         pipeline.AddSystem(new InventorySystem());
+        pipeline.AddSystem(new GroundItemSystem());
         pipeline.AddSystem(new HotbarSystem());
         pipeline.AddSystem(new ShopSystem());
         pipeline.AddSystem(new ChatSystem());
