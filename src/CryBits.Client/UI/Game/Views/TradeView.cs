@@ -1,20 +1,22 @@
 using CryBits.Client.Core;
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Network.Senders;
 using CryBits.Client.Rendering.UI;
+using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Definitions.Slots;
-using CryBits.Simulation.Components;
-using CryBits.Simulation.Intents;
 using Iguina.Entities;
 using System.Drawing;
-using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeView(UiContext uiContext, IntentSender intentSender, ItemIconRenderer itemRenderer, GameContext context, DefinitionCatalog catalog, InventoryView inventory, GameScreen gameScreen) : ViewBase
+internal class TradeView(
+    UiContext uiContext,
+    ItemIconRenderer itemRenderer,
+    GameContext context,
+    DefinitionCatalog catalog,
+    InventoryView inventory,
+    GameScreen gameScreen,
+    TradeViewModel viewModel) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("Trade");
     internal Panel OfferDisabledPanel => uiContext.Get<Panel>("TradeOfferDisable");
@@ -53,14 +55,7 @@ internal class TradeView(UiContext uiContext, IntentSender intentSender, ItemIco
     private void OnOwnSlotRightClick(int slot)
     {
         if (!Panel.Visible) return;
-
-        var trade = context.LocalPlayer.GetTrade();
-        var inv = context.LocalPlayer.GetInventory();
-        if (trade?.Offer == null || inv == null) return;
-        if (slot >= trade.Offer.Length) return;
-        if (inv.Slots[trade.Offer[slot].SlotNum].ItemId == Guid.Empty) return;
-
-        intentSender.Send(new TradeOfferIntent(default, (byte)slot, 0, 0));
+        viewModel.RemoveOfferItem((short)slot);
     }
 
     private void OnOwnSlotLeftUp(int slot)
@@ -72,7 +67,7 @@ internal class TradeView(UiContext uiContext, IntentSender intentSender, ItemIco
         var inv = context.LocalPlayer.GetInventory();
         if (inv == null) return;
         if (inv.Slots[invSlot.Value].Amount == 1)
-            intentSender.Send(new TradeOfferIntent(default, (byte)slot, invSlot.Value, 1));
+            viewModel.OfferItem((short)slot, invSlot.Value, 1);
         else
         {
             _ownSlot = (short)slot;
@@ -84,7 +79,7 @@ internal class TradeView(UiContext uiContext, IntentSender intentSender, ItemIco
 
     private void OnClosePressed(Entity _)
     {
-        intentSender.Send(new TradeLeaveIntent(default));
+        viewModel.Close();
         Panel.Visible = false;
     }
 
@@ -93,15 +88,7 @@ internal class TradeView(UiContext uiContext, IntentSender intentSender, ItemIco
         ConfirmOfferButton.Visible = true;
         AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
         OfferDisabledPanel.Visible = false;
-        intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Accepted));
-
-        var playerEntity = context.LocalPlayer.Entity;
-        if (playerEntity != null)
-        {
-            var trade = context.World.Get<TradeState>(playerEntity.Value);
-            if (trade != null)
-                context.World.Set(playerEntity.Value, trade with { Offer = new TradeSlot[MaxInventory] });
-        }
+        viewModel.Accept();
     }
 
     private void OnDeclineOfferPressed(Entity _)
@@ -109,40 +96,41 @@ internal class TradeView(UiContext uiContext, IntentSender intentSender, ItemIco
         ConfirmOfferButton.Visible = true;
         AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
         OfferDisabledPanel.Visible = false;
-        intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Declined));
+        viewModel.Decline();
     }
 
     private void OnConfirmOfferPressed(Entity _)
     {
         ConfirmOfferButton.Visible = AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
         OfferDisabledPanel.Visible = true;
-        intentSender.Send(new TradeOfferStateIntent(default, TradeStatus.Confirmed));
+        viewModel.Confirm();
     }
 
     private void OnPostDraw()
     {
         if (!Panel.Visible) return;
 
-        var trade = context.LocalPlayer.GetTrade();
+        var ownOffer = viewModel.OwnOffer;
+        var theirOffer = viewModel.TheirOffer;
         var inv = context.LocalPlayer.GetInventory();
-        if (trade?.Offer == null || inv == null) return;
+        if (ownOffer == null || inv == null) return;
 
         for (var i = 0; i < OwnGrid.TotalSlots; i++)
         {
-            if (i >= trade.Offer.Length) break;
+            if (i >= ownOffer.Length) break;
             var rect = OwnGrid.GetSlotRect(i);
-            var offer = trade.Offer[i];
+            var offer = ownOffer[i];
             var inventorySlot = inv.Slots[offer.SlotNum];
             if (catalog.Items.Get(inventorySlot.ItemId) is { } item)
                 itemRenderer.DrawItem(item, offer.Amount, new Point(rect.X, rect.Y));
         }
 
-        if (trade.TheirOffer == null) return;
+        if (theirOffer == null) return;
         for (var i = 0; i < TheirGrid.TotalSlots; i++)
         {
-            if (i >= trade.TheirOffer.Length) break;
+            if (i >= theirOffer.Length) break;
             var rect = TheirGrid.GetSlotRect(i);
-            var offer = trade.TheirOffer[i];
+            var offer = theirOffer[i];
             var inventorySlot = inv.Slots[offer.SlotNum];
             if (catalog.Items.Get(inventorySlot.ItemId) is { } item)
                 itemRenderer.DrawItem(item, offer.Amount, new Point(rect.X, rect.Y));

@@ -8,7 +8,7 @@ using CryBits.Transport.Abstractions;
 
 namespace CryBits.Host.Network;
 
-internal sealed class PackageSender(ITransport transport, SessionManager sessions, EntityRegistry entities)
+public sealed class PackageSender(ITransport transport, SessionManager sessions, EntityRegistry entities)
 {
     public void ToPlayer(Session session, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
     {

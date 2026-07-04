@@ -9,7 +9,6 @@ using CryBits.Simulation.Systems.Progression;
 using CryBits.Simulation.Systems.Regeneration;
 using CryBits.Simulation.Systems.Shops;
 using CryBits.Simulation.Systems.Spawning;
-using CryBits.Simulation.Systems.Trade;
 
 namespace CryBits.Host;
 
@@ -29,7 +28,6 @@ internal static class HostPipelineBuilder
         pipeline.AddSystem(new EquipmentSystem());
         pipeline.AddSystem(new InventorySystem());
         pipeline.AddSystem(new HotbarSystem());
-        pipeline.AddSystem(new TradeSystem());
         pipeline.AddSystem(new ShopSystem());
         pipeline.AddSystem(new ChatSystem());
         pipeline.AddSystem(new PartySystem());

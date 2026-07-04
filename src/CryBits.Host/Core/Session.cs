@@ -6,7 +6,7 @@ namespace CryBits.Host.Core;
 /// Represents a single connected client session: the transport session ID,
 /// the authenticated account, and the active character (if any).
 /// </summary>
-internal sealed class Session(Guid id)
+public sealed class Session(Guid id)
 {
     /// <summary>Unique identifier for this session, assigned by the transport layer.</summary>
     public Guid Id { get; } = id;

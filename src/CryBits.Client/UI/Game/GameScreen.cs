@@ -6,6 +6,7 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.Rendering;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.Views;
+using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Client.UI.Menu;
 using CryBits.Definitions.Catalog;
 using Iguina.Entities;
@@ -38,7 +39,7 @@ internal class GameScreen
     internal GameScreen(UiContext uiContext, GameContext context, IntentSender intentSender, SpriteBatch spriteBatch,
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
         InputManager inputManager, AudioManager audioManager, DefinitionCatalog catalog, TooltipView tooltip, ShopView shop,
-        MenuScreen menuScreen, Chat chat, GameInput gameInput)
+        MenuScreen menuScreen, Chat chat, GameInput gameInput, TradeViewModel tradeViewModel)
     {
         UiContext = uiContext;
         ShopView = shop;
@@ -55,7 +56,7 @@ internal class GameScreen
         ShopSellView = new(uiContext, intentSender);
         TradeAmountView = new(uiContext, intentSender);
         TradeInvitationView = new(uiContext, intentSender);
-        TradeView = new(uiContext, intentSender, itemRenderer, context, catalog, InventoryView, this);
+        TradeView = new(uiContext, itemRenderer, context, catalog, InventoryView, this, tradeViewModel);
         MapNameView = new(uiContext, context);
         MetricsView = new(uiContext);
         PartyView = new(uiContext, context, spriteBatch);

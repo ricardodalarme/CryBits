@@ -95,6 +95,10 @@ public sealed class EmbeddedHostRunner : IDisposable
             accountSenderHost, chatSender, catalog, _host,
             keyframeEncoder, interestManager, pair.Server));
 
+        var tradeService = new Host.Services.Trade.TradeService(_host.IntentFunnel, ps, ss, simulation);
+        var intentIngress = new Host.Ingress.IntentIngress(_host.IntentFunnel, tradeService, new SilentLogger<Host.Ingress.IntentIngress>());
+        hostDispatcher.Register(intentIngress);
+
         _host.Pipeline.AddSystem(new KeyframeReplicator(
             simulation, ss, keyframeEncoder, eventFanout, pair.Server, interestManager));
 

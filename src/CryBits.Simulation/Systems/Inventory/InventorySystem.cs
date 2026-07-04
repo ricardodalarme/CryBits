@@ -45,14 +45,47 @@ public sealed class InventorySystem : ISimulationSystem
                     {
                         var state = world.Entities.Get(swap.SourceEntityId);
                         var inv = state?.Get<InventoryState>();
-                        var trade = state?.Get<TradeState>();
                         if (inv == null || inv.Slots[swap.SlotOld].ItemId == Guid.Empty) break;
                         if (swap.SlotOld == swap.SlotNew) break;
-                        if (trade?.Partner != null) break;
                         var newSlots = (ItemSlot[])inv.Slots.Clone();
                         (newSlots[swap.SlotOld], newSlots[swap.SlotNew]) = (newSlots[swap.SlotNew], newSlots[swap.SlotOld]);
                         world.Set(swap.SourceEntityId, new InventoryState(newSlots));
                         tick.Events.Emit(new InventorySwappedEvent(tick.TickNumber, swap.SourceEntityId, swap.SlotOld, swap.SlotNew));
+                        break;
+                    }
+                case TradeCommitIntent commit:
+                    {
+                        var source = world.Entities.Get(commit.SourceEntityId);
+                        var partner = world.Entities.Get(commit.PartnerId);
+                        if (source == null || partner == null) break;
+
+                        var sourceInv = source.Get<InventoryState>();
+                        var partnerInv = partner.Get<InventoryState>();
+                        if (sourceInv == null || partnerInv == null) break;
+
+                        // Authoritative Inventory Transfer (sim level)
+                        // Take source items & give to partner
+                        foreach (var item in commit.SourceItems)
+                        {
+                            var invItem = world.Catalog.Items.Get(item.ItemId);
+                            if (invItem != null)
+                            {
+                                TakeItem(world, commit.SourceEntityId, item.SlotNum, item.Amount);
+                                GiveItem(world, commit.PartnerId, invItem, item.Amount);
+                            }
+                        }
+
+                        // Take partner items & give to source
+                        foreach (var item in commit.PartnerItems)
+                        {
+                            var invItem = world.Catalog.Items.Get(item.ItemId);
+                            if (invItem != null)
+                            {
+                                TakeItem(world, commit.PartnerId, item.SlotNum, item.Amount);
+                                GiveItem(world, commit.SourceEntityId, invItem, item.Amount);
+                            }
+                        }
+
                         break;
                     }
             }
@@ -178,12 +211,10 @@ public sealed class InventorySystem : ISimulationSystem
         if (e == null) return;
         var inv = e.Get<InventoryState>()!;
         var pos = e.Get<Position>()!;
-        var trade = e.Get<TradeState>();
 
         if (inv.Slots[slotIndex].ItemId == Guid.Empty) return;
         var item = world.Catalog.Items.Get(inv.Slots[slotIndex].ItemId);
         if (item == null || item.Bind == BindOn.Pickup) return;
-        if (trade?.Partner != null) return;
 
         if (amount > inv.Slots[slotIndex].Amount) amount = inv.Slots[slotIndex].Amount;
 
@@ -198,11 +229,9 @@ public sealed class InventorySystem : ISimulationSystem
         var level = e.Get<LevelComponent>()!;
         var vitals = e.Get<Vitals>()!;
         var appearance = e.Get<PlayerAppearance>()!;
-        var trade = e.Get<TradeState>();
 
         var item = world.Catalog.Items.Get(slot.ItemId);
         if (item == null) return;
-        if (trade?.Partner != null) return;
 
         if (level.Level < item.ReqLevel)
         {

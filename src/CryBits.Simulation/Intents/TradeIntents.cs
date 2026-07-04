@@ -16,3 +16,18 @@ public sealed partial record TradeLeaveIntent(EntityId SourceEntityId) : Intent(
 public sealed partial record TradeOfferIntent(EntityId SourceEntityId, short OfferSlot, short InventorySlot, short Amount) : Intent(SourceEntityId);
 [MemoryPackable]
 public sealed partial record TradeOfferStateIntent(EntityId SourceEntityId, TradeStatus State) : Intent(SourceEntityId);
+
+[MemoryPackable]
+public sealed partial record TradeCommitIntent(
+    EntityId SourceEntityId,
+    EntityId PartnerId,
+    TradeCommitItem[] SourceItems,
+    TradeCommitItem[] PartnerItems
+) : Intent(SourceEntityId);
+
+[MemoryPackable]
+public sealed partial record TradeCommitItem(
+    Guid ItemId,
+    short SlotNum,
+    short Amount
+);

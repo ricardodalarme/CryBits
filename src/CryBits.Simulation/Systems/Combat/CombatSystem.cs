@@ -39,7 +39,6 @@ public sealed class CombatSystem : ISimulationSystem
         if (!world.MapDefs.TryGetValue(pos.MapId, out var mapDef))
             return;
 
-        if (attackerE.Get<TradeState>()?.Partner != null) return;
         if (attackerE.Get<ShopState>()?.ShopId != null) return;
         var cooldown = attackerE.Get<AttackCooldown>()!;
         if (tick.TickNumber < cooldown.NextAllowedTick + (int)AttackSpeedTicks) return;

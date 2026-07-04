@@ -26,6 +26,7 @@ using CryBits.Client.Systems.Player;
 using CryBits.Client.UI;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
+using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Client.UI.Menu;
 using CryBits.Definitions.Catalog;
 using CryBits.Persistence.Repositories;
@@ -149,9 +150,10 @@ public sealed class Game : IDisposable
         // UI
         var tooltipView = new TooltipView(uiContext, itemIconRenderer, catalog);
         var shopView = new ShopView(uiContext, intentSender, itemIconRenderer, catalog, tooltipView);
+        var tradeViewModel = new TradeViewModel(context, intentSender);
         _menuScreen = new MenuScreen(audioManager, uiContext, authSender, accountSender, portraitRenderer, context, catalog, _connection);
         _gameScreen = new GameScreen(uiContext, context, intentSender, _spriteBatch, itemIconRenderer, equipmentSlotRenderer,
-            portraitRenderer, inputManager, audioManager, catalog, tooltipView, shopView, _menuScreen, chat, gameInput);
+            portraitRenderer, inputManager, audioManager, catalog, tooltipView, shopView, _menuScreen, chat, gameInput, tradeViewModel);
 
         // ── System initialization ──
         _scheduler = new SystemScheduler();
@@ -178,7 +180,7 @@ public sealed class Game : IDisposable
         PacketDispatcher.Register(new KeyframeHandler(new Replication.SnapshotApplier(context.World, context, catalog)));
         PacketDispatcher.Register(new ChatHandler(chat));
         PacketDispatcher.Register(new PartyHandler(intentSender, context, _gameScreen));
-        PacketDispatcher.Register(new TradeHandler(intentSender, context, _gameScreen));
+        PacketDispatcher.Register(new TradeHandler(intentSender, _gameScreen, tradeViewModel));
         PacketDispatcher.Register(new ContentHandler(catalog, _menuScreen));
         PacketDispatcher.Register(new ShopHandler(catalog, _gameScreen));
 

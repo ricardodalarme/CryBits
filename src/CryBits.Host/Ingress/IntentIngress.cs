@@ -1,3 +1,4 @@
+using CryBits.Host.Services.Trade;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
 using CryBits.Protocol.Serialization;
@@ -9,7 +10,7 @@ using ZLogger;
 
 namespace CryBits.Host.Ingress;
 
-public sealed class IntentIngress(IntentFunnel funnel, ILogger<IntentIngress> logger)
+public sealed class IntentIngress(IntentFunnel funnel, TradeService tradeService, ILogger<IntentIngress> logger)
 {
     [PacketHandler]
     public void Handle(EntityId entityId, IntentPacket packet)
@@ -23,7 +24,34 @@ public sealed class IntentIngress(IntentFunnel funnel, ILogger<IntentIngress> lo
 
         if (MemoryPackSerializer.Deserialize(intentType, packet.Data) is Intent intent)
         {
-            funnel.Submit(intent with { SourceEntityId = entityId });
+            if (intent is TradeInviteIntent invite)
+            {
+                tradeService.HandleInvite(entityId, invite.PlayerName);
+            }
+            else if (intent is TradeAcceptIntent)
+            {
+                tradeService.HandleAccept(entityId);
+            }
+            else if (intent is TradeDeclineIntent)
+            {
+                tradeService.HandleDecline(entityId);
+            }
+            else if (intent is TradeLeaveIntent)
+            {
+                tradeService.HandleLeave(entityId);
+            }
+            else if (intent is TradeOfferIntent offer)
+            {
+                tradeService.HandleOffer(entityId, offer.OfferSlot, offer.InventorySlot, offer.Amount);
+            }
+            else if (intent is TradeOfferStateIntent offerState)
+            {
+                tradeService.HandleOfferState(entityId, offerState.State);
+            }
+            else
+            {
+                funnel.Submit(intent with { SourceEntityId = entityId });
+            }
         }
         else
         {

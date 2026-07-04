@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace CryBits.Host.Core;
 
-internal sealed class SessionManager : IEnumerable<Session>
+public sealed class SessionManager : IEnumerable<Session>
 {
     private readonly List<Session> _sessions = [];
     private readonly Dictionary<EntityId, Session> _entityMap = [];

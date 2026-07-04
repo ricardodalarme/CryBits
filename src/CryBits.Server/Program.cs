@@ -7,6 +7,7 @@ using CryBits.Host.Network;
 using CryBits.Host.Network.Senders;
 using CryBits.Host.Replication;
 using CryBits.Host.Services;
+using CryBits.Host.Services.Trade;
 using CryBits.Persistence;
 using CryBits.Persistence.Repositories;
 using CryBits.Protocol.Serialization;
@@ -104,6 +105,7 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<ContentSender>();
     services.AddSingleton<ContentSender>();
 
+    services.AddSingleton<TradeService>();
     services.AddSingleton<AuthService>();
     services.AddSingleton<CharacterService>();
     services.AddSingleton<ContentService>();

@@ -23,7 +23,6 @@ public static class ComponentTypes
         ComponentTypeRegistry.Register<GroundItemTag>(14);
         ComponentTypeRegistry.Register<ShopState>(15);
         ComponentTypeRegistry.Register<PartyState>(16);
-        ComponentTypeRegistry.Register<TradeState>(17);
         ComponentTypeRegistry.Register<MapLoadingTag>(19);
         ComponentTypeRegistry.Register<AttackHit>(20);
         ComponentTypeRegistry.Register<CollidableTag>(21);
