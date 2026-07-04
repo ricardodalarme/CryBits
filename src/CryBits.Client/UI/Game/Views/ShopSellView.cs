@@ -1,10 +1,11 @@
-using CryBits.Client.Network.Senders;
-using CryBits.Simulation.Intents;
+using CryBits.Client.UI.Game.ViewModels;
 using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ShopSellView(UiContext uiContext, IntentSender intentSender) : ViewBase
+internal class ShopSellView(
+    UiContext uiContext,
+    ShopViewModel viewModel) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("ShopSell");
     internal NumericInput AmountInput => uiContext.Get<NumericInput>("SellAmount");
@@ -39,7 +40,7 @@ internal class ShopSellView(UiContext uiContext, IntentSender intentSender) : Vi
             return;
         }
 
-        intentSender.Send(new ShopSellIntent(default, (byte)_inventorySlot, (short)AmountInput.NumericValue));
+        viewModel.Sell(_inventorySlot, (short)AmountInput.NumericValue);
         Panel.Visible = false;
     }
 

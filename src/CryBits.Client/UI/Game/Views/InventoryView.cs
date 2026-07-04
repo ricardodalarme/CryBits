@@ -111,8 +111,8 @@ internal class InventoryView(
 
         string? additionalInfo = null;
         if (uiContext.Registry["Shop"].Visible &&
-            shop.OpenedShop?.FindBought(item.Id) != null)
-            additionalInfo = "Sale price: " + shop.OpenedShop.FindBought(item.Id).Price;
+            shop.ViewModel.OpenedShop?.FindBought(item.Id) != null)
+            additionalInfo = "Sale price: " + shop.ViewModel.OpenedShop.FindBought(item.Id).Price;
 
         var panelRect = uiContext.Registry["InventoryPanel"].LastBoundingRect;
         tooltip.Show(item.Id, new Point(panelRect.X - 186, panelRect.Y + 3), additionalInfo);

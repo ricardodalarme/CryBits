@@ -149,14 +149,14 @@ public sealed class Game : IDisposable
 
         // UI
         var tooltipView = new TooltipView(uiContext, itemIconRenderer, catalog);
-        var shopView = new ShopView(uiContext, intentSender, itemIconRenderer, catalog, tooltipView);
         var tradeViewModel = new TradeViewModel(context, intentSender);
         var partyViewModel = new PartyViewModel(context);
         var inventoryViewModel = new InventoryViewModel(context, intentSender, catalog);
         var hotbarViewModel = new HotbarViewModel(context, intentSender, catalog);
+        var shopViewModel = new ShopViewModel(intentSender, catalog);
         _menuScreen = new MenuScreen(audioManager, uiContext, authSender, accountSender, portraitRenderer, context, catalog, _connection);
         _gameScreen = new GameScreen(uiContext, context, intentSender, _spriteBatch, itemIconRenderer, equipmentSlotRenderer,
-            portraitRenderer, inputManager, audioManager, catalog, tooltipView, shopView, _menuScreen, chat, gameInput, tradeViewModel, partyViewModel, inventoryViewModel, hotbarViewModel);
+            portraitRenderer, inputManager, audioManager, catalog, tooltipView, _menuScreen, chat, gameInput, tradeViewModel, partyViewModel, inventoryViewModel, hotbarViewModel, shopViewModel);
 
         // ── System initialization ──
         _scheduler = new SystemScheduler();
@@ -185,7 +185,7 @@ public sealed class Game : IDisposable
         PacketDispatcher.Register(new PartyHandler(intentSender, _gameScreen, partyViewModel));
         PacketDispatcher.Register(new TradeHandler(intentSender, _gameScreen, tradeViewModel));
         PacketDispatcher.Register(new ContentHandler(catalog, _menuScreen));
-        PacketDispatcher.Register(new ShopHandler(catalog, _gameScreen));
+        PacketDispatcher.Register(new ShopHandler(catalog, _gameScreen.ShopView));
 
         audioManager.LoadSounds();
         _menuScreen.Open();

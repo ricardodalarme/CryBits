@@ -38,13 +38,14 @@ internal class GameScreen
 
     internal GameScreen(UiContext uiContext, GameContext context, IntentSender intentSender, SpriteBatch spriteBatch,
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
-        InputManager inputManager, AudioManager audioManager, DefinitionCatalog catalog, TooltipView tooltip, ShopView shop,
-        MenuScreen menuScreen, Chat chat, GameInput gameInput, TradeViewModel tradeViewModel, PartyViewModel partyViewModel, InventoryViewModel inventoryViewModel, HotbarViewModel hotbarViewModel)
+        InputManager inputManager, AudioManager audioManager, DefinitionCatalog catalog, TooltipView tooltip,
+        MenuScreen menuScreen, Chat chat, GameInput gameInput, TradeViewModel tradeViewModel, PartyViewModel partyViewModel,
+        InventoryViewModel inventoryViewModel, HotbarViewModel hotbarViewModel, ShopViewModel shopViewModel)
     {
         UiContext = uiContext;
-        ShopView = shop;
+        ShopView = new(uiContext, itemRenderer, tooltip, shopViewModel);
         InformationView = tooltip;
-        InventoryView = new(uiContext, itemRenderer, tooltip, shop, this, inventoryViewModel);
+        InventoryView = new(uiContext, itemRenderer, tooltip, ShopView, this, inventoryViewModel);
         CharacterView = new(uiContext, context, intentSender, equipmentRenderer, characterRenderer, tooltip, catalog);
         ChatView = new(uiContext, chat);
         DraggableSlotView = new(uiContext, itemRenderer, inputManager, context, catalog, this);
@@ -53,7 +54,7 @@ internal class GameScreen
         MenusView = new(uiContext);
         OptionsView = new(uiContext, audioManager, context, chat);
         PartyInvitationView = new(uiContext, intentSender);
-        ShopSellView = new(uiContext, intentSender);
+        ShopSellView = new(uiContext, shopViewModel);
         TradeAmountView = new(uiContext, intentSender);
         TradeInvitationView = new(uiContext, intentSender);
         TradeView = new(uiContext, itemRenderer, context, catalog, InventoryView, this, tradeViewModel);

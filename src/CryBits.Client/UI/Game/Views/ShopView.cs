@@ -1,24 +1,25 @@
 using CryBits.Client.Framework.UI.Entities;
-using CryBits.Client.Network.Senders;
 using CryBits.Client.Rendering.UI;
-using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Shops;
-using CryBits.Simulation.Intents;
 using Iguina.Entities;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ShopView(UiContext uiContext, IntentSender intentSender, ItemIconRenderer itemRenderer, DefinitionCatalog catalog, TooltipView tooltip) : ViewBase
+internal class ShopView(
+    UiContext uiContext,
+    ItemIconRenderer itemRenderer,
+    TooltipView tooltip,
+    ShopViewModel viewModel) : ViewBase
 {
+    public ShopViewModel ViewModel => viewModel;
+
     internal Panel Panel => uiContext.Get<Panel>("Shop");
     private Button CloseButton => uiContext.Get<Button>("ShopClose");
     internal Label NameLabel => uiContext.Get<Label>("ShopName");
     internal Label CurrencyLabel => uiContext.Get<Label>("ShopCurrency");
     private SlotGrid Grid => uiContext.Get<SlotGrid>("ShopGrid");
-
-    public Shop? OpenedShop;
 
     public override void Bind()
     {
@@ -40,8 +41,7 @@ internal class ShopView(UiContext uiContext, IntentSender intentSender, ItemIcon
 
     private void OnSlotDoubleClick(int slot)
     {
-        if (OpenedShop != null)
-            intentSender.Send(new ShopBuyIntent(default, (byte)slot));
+        ViewModel.Buy((short)slot);
     }
 
     private void OnClosePressed(Entity _)
@@ -49,38 +49,40 @@ internal class ShopView(UiContext uiContext, IntentSender intentSender, ItemIcon
         Grid.ResetHover();
         tooltip.Hide();
         Panel.Visible = false;
-        intentSender.Send(new ShopCloseIntent(default));
+        ViewModel.Close();
     }
 
     private void OnSlotHoverEnter(int slot)
     {
-        if (OpenedShop == null || slot >= OpenedShop.Sold.Count) return;
-        var item = catalog.Items.Get(OpenedShop.Sold[slot].ItemId);
-        if (item == null) return;
-        tooltip.Show(item.Id,
+        if (slot >= ViewModel.SoldItems.Count) return;
+        var itemVM = ViewModel.SoldItems[slot];
+        if (itemVM.Definition == null) return;
+
+        tooltip.Show(itemVM.ItemId,
             new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5),
-            "Price: " + OpenedShop.Sold[slot].Price);
+            "Price: " + itemVM.Price);
     }
 
     private void OnPostDraw()
     {
-        if (!Panel.Visible || OpenedShop == null) return;
+        if (!Panel.Visible || ViewModel.OpenedShop == null) return;
 
         for (var i = 0; i < Grid.TotalSlots; i++)
         {
-            if (i >= OpenedShop.Sold.Count) break;
+            if (i >= ViewModel.SoldItems.Count) break;
             var rect = Grid.GetSlotRect(i);
-            if (catalog.Items.Get(OpenedShop.Sold[i].ItemId) is { } item)
-                itemRenderer.DrawItem(item, OpenedShop.Sold[i].Amount, new Point(rect.X, rect.Y));
+            var itemVM = ViewModel.SoldItems[i];
+            if (itemVM.Definition is { } item)
+                itemRenderer.DrawItem(item, itemVM.Amount, new Point(rect.X, rect.Y));
         }
     }
 
     public void Open(Shop shop)
     {
         if (shop == null) return;
-        OpenedShop = shop;
-        NameLabel.Text = shop.Name;
-        CurrencyLabel.Text = catalog.Items.Get(shop.CurrencyId)?.Name ?? "Unknown";
+        ViewModel.Open(shop);
+        NameLabel.Text = ViewModel.Name;
+        CurrencyLabel.Text = ViewModel.CurrencyName;
         Panel.Visible = true;
     }
 }
