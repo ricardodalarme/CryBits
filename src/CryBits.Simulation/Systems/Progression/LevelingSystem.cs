@@ -25,45 +25,40 @@ public sealed class LevelingSystem(DefinitionCatalog catalog) : ISimulationSyste
         {
             if (ev is XpAwardedEvent xpEvent)
             {
-                var playerId = world.FindPlayer(xpEvent.EntityId);
-                if (playerId != null)
-                    GiveExperience(world, playerId.Value, xpEvent.Amount);
+                if (world.Has<PlayerTag>(xpEvent.EntityId))
+                    GiveExperience(world, xpEvent.EntityId, xpEvent.Amount);
             }
 
             if (ev is PlayerDiedEvent playerDied)
             {
                 if (playerDied.SourceId.HasValue)
                 {
-                    var killerId = world.FindPlayer(playerDied.SourceId.Value);
-                    if (killerId != null)
+                    if (world.Has<PlayerTag>(playerDied.SourceId.Value))
                     {
-                        var victimId = world.FindPlayer(playerDied.EntityId);
-                        if (victimId != null)
+                        if (world.Has<PlayerTag>(playerDied.EntityId))
                         {
-                            var victimLevel = world.Get<LevelComponent>(victimId.Value);
+                            var victimLevel = world.Get<LevelComponent>(playerDied.EntityId);
                             if (victimLevel != null && victimLevel.Experience / 10 > 0)
-                                GiveExperience(world, killerId.Value, victimLevel.Experience / 10);
+                                GiveExperience(world, playerDied.SourceId.Value, victimLevel.Experience / 10);
                         }
                     }
                 }
 
-                var victimId2 = world.FindPlayer(playerDied.EntityId);
-                if (victimId2 != null)
+                if (world.Has<PlayerTag>(playerDied.EntityId))
                 {
-                    var victimLevel = world.Get<LevelComponent>(victimId2.Value);
+                    var victimLevel = world.Get<LevelComponent>(playerDied.EntityId);
                     if (victimLevel == null) continue;
-                    world.Update<LevelComponent>(victimId2.Value, l => l with { Experience = l.Experience / 10 });
+                    world.Update<LevelComponent>(playerDied.EntityId, l => l with { Experience = l.Experience / 10 });
                 }
             }
 
             if (ev is NpcDiedEvent npcDied && npcDied.SourceId.HasValue)
             {
-                var killerId = world.FindPlayer(npcDied.SourceId.Value);
-                if (killerId == null) continue;
+                if (!world.Has<PlayerTag>(npcDied.SourceId.Value)) continue;
 
                 var xp = catalog.Npcs.Get(npcDied.NpcDefId)?.Experience ?? 0;
                 if (xp > 0)
-                    GiveExperience(world, killerId.Value, xp);
+                    GiveExperience(world, npcDied.SourceId.Value, xp);
             }
         }
     }

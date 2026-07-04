@@ -24,11 +24,10 @@ public sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSyst
         for (var i = 0; i < events.Count; i++)
         {
             if (events[i] is not ItemUsedEvent use) continue;
-            var playerId = world.FindPlayer(use.PlayerId);
-            if (playerId == null) continue;
+            if (!world.Has<PlayerTag>(use.PlayerId)) continue;
             var item = catalog.Items.Get(use.ItemId);
             if (item == null || item.Type != ItemType.Equipment) continue;
-            Equip(world, tick, playerId.Value, item);
+            Equip(world, tick, use.PlayerId, item);
             tick.Events.Emit(new ItemTakenEvent(tick.TickNumber, use.PlayerId, (byte)use.SlotIndex, (short)1));
         }
     }

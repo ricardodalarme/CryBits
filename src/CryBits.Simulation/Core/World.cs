@@ -31,20 +31,6 @@ public sealed class World
         return null;
     }
 
-    public EntityId? FindPlayer(EntityId id)
-    {
-        var state = Entities.Get(id);
-        if (state != null && state.Has<PlayerTag>()) return id;
-        return null;
-    }
-
-    public EntityId? FindNpcInstance(EntityId id)
-    {
-        var state = Entities.Get(id);
-        if (state != null && state.Has<NpcTag>()) return id;
-        return null;
-    }
-
     public EntityId Spawn()
     {
         return Entities.Create();

@@ -26,10 +26,9 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
 
     private void HandlePlayerDeath(World world, Tick tick, PlayerDiedEvent died)
     {
-        var playerId = world.FindPlayer(died.EntityId);
-        if (playerId == null) return;
+        if (!world.Has<PlayerTag>(died.EntityId)) return;
 
-        var e = world.Entities.Get(playerId.Value);
+        var e = world.Entities.Get(died.EntityId);
         if (e == null) return;
         var vitals = e.Get<Vitals>()!;
         var pos = e.Get<Position>()!;
@@ -37,11 +36,11 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
         var playerClass = catalog.Classes.Get(appearance.ClassId);
         if (playerClass is null) return;
 
-        world.Set(playerId.Value, new Vitals(Hp: vitals.MaxHp, Mp: vitals.MaxMp, MaxHp: vitals.MaxHp, MaxMp: vitals.MaxMp));
+        world.Set(died.EntityId, new Vitals(Hp: vitals.MaxHp, Mp: vitals.MaxMp, MaxHp: vitals.MaxHp, MaxMp: vitals.MaxMp));
 
         var oldMapId = pos.MapId;
 
-        world.Update<Position>(playerId.Value, p => p with
+        world.Update<Position>(died.EntityId, p => p with
         {
             Direction = (Direction)playerClass.SpawnDirection,
             MapId = playerClass.SpawnMapId,
@@ -50,9 +49,9 @@ public sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
         });
 
         if (oldMapId != playerClass.SpawnMapId)
-            world.Set(playerId.Value, new MapLoadingTag());
+            world.Set(died.EntityId, new MapLoadingTag());
 
-        tick.Events.Emit(new PlayerWarpedEvent(tick.TickNumber, playerId.Value, oldMapId, playerClass.SpawnMapId, true));
+        tick.Events.Emit(new PlayerWarpedEvent(tick.TickNumber, died.EntityId, oldMapId, playerClass.SpawnMapId, true));
     }
 
     private void HandleNpcDeath(World world, Tick tick, NpcDiedEvent died)

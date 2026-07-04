@@ -31,22 +31,18 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
             {
                 case PlayerStartedMovingEvent e:
                     {
-                        var playerId = world.FindPlayer(e.PlayerId);
-                        if (playerId != null) Leave(world, playerId.Value);
+                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, e.PlayerId);
                         break;
                     }
                 case PlayerWarpedEvent e:
                     {
-                        var playerId = world.FindPlayer(e.PlayerId);
-                        if (playerId != null) Leave(world, playerId.Value);
+                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, e.PlayerId);
                         break;
                     }
                 case NpcAttackedEvent e:
                     {
-                        var attackerId = world.FindPlayer(e.AttackerId);
-                        var npcId = world.FindNpcInstance(e.NpcInstanceId);
-                        if (attackerId == null || npcId == null) break;
-                        var npcE = world.Entities.Get(npcId.Value);
+                        if (!world.Has<PlayerTag>(e.AttackerId) || !world.Has<NpcTag>(e.NpcInstanceId)) break;
+                        var npcE = world.Entities.Get(e.NpcInstanceId);
                         if (npcE == null) break;
                         var npcState = npcE.Get<NpcState>()!;
                         var npcData = catalog.Npcs.Get(npcState.NpcDefId);
@@ -54,7 +50,7 @@ public sealed class ShopSystem(DefinitionCatalog catalog) : ISimulationSystem
                         if (npcData.Behaviour == Behaviour.ShopKeeper)
                         {
                             var shop = catalog.Shops.Get(npcData.ShopId);
-                            if (shop != null) Open(world, attackerId.Value, shop);
+                            if (shop != null) Open(world, e.AttackerId, shop);
                         }
                         break;
                     }

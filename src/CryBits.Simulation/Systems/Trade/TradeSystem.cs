@@ -33,20 +33,17 @@ public sealed class TradeSystem : ISimulationSystem
             {
                 case PlayerStartedMovingEvent e:
                     {
-                        var playerId = world.FindPlayer(e.PlayerId);
-                        if (playerId != null) Leave(world, tick, playerId.Value);
+                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, tick, e.PlayerId);
                         break;
                     }
                 case PlayerWarpedEvent e:
                     {
-                        var playerId = world.FindPlayer(e.PlayerId);
-                        if (playerId != null) Leave(world, tick, playerId.Value);
+                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, tick, e.PlayerId);
                         break;
                     }
                 case PlayerDisconnectedEvent e:
                     {
-                        var playerId = world.FindPlayer(e.PlayerId);
-                        if (playerId != null) Leave(world, tick, playerId.Value);
+                        if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, tick, e.PlayerId);
                         break;
                     }
             }

@@ -135,7 +135,7 @@ internal sealed class SnapshotApplier(
         var item = DefinitionCatalog.Instance.Items.Get(groundItem.ItemDefId);
         if (item == null) return;
 
-        var localEntity = GroundItemSpawner.Spawn(world, serverId, item, position.X, position.Y);
+        var localEntity = GroundItemSpawner.Spawn(world, serverId, item, position);
         context.RegisterNetworkEntity(serverId, localEntity);
     }
 

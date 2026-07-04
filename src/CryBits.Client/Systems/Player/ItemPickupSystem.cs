@@ -5,6 +5,7 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
+using CryBits.Simulation.Spatial;
 using SFML.Window;
 using static CryBits.Definitions.Globals;
 
@@ -32,19 +33,10 @@ internal sealed class ItemPickupSystem(
         var myTile = context.World.Get<MovementComponent>(entity.Value);
         if (myTile == null) return;
 
-        var hasItem = false;
-        foreach (var state in context.World.All)
-        {
-            var transform = state.Get<TransformComponent>();
-            if (transform == null) continue;
-            if (!state.Has<GroundItem>()) continue;
+        var playerPos = context.World.Get<Position>(entity.Value);
+        if (playerPos == null) return;
 
-            if (transform.X / Grid == myTile.TileX && transform.Y / Grid == myTile.TileY)
-            {
-                hasItem = true;
-                break;
-            }
-        }
+        var hasItem = ChunkGrid.FindAt<GroundItem>(context.World, playerPos.MapId, myTile.TileX, myTile.TileY).HasValue;
 
         if (!hasItem) return;
 

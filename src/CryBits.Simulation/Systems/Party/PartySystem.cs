@@ -26,8 +26,7 @@ public sealed class PartySystem : ISimulationSystem
         foreach (var ev in tick.Events.Events)
         {
             if (ev is not PlayerDisconnectedEvent e) continue;
-            var playerId = world.FindPlayer(e.PlayerId);
-            if (playerId != null) Leave(world, playerId.Value);
+            if (world.Has<PlayerTag>(e.PlayerId)) Leave(world, e.PlayerId);
         }
     }
 

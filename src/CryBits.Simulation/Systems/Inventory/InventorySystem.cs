@@ -89,15 +89,14 @@ public sealed class InventorySystem(DefinitionCatalog catalog) : ISimulationSyst
                     }
                 case ItemEquippedEvent equip when equip.OldItemId.HasValue:
                     {
-                        var playerId = world.FindPlayer(equip.PlayerId);
-                        if (playerId == null) continue;
-                        var e = world.Entities.Get(playerId.Value);
+                        if (!world.Has<PlayerTag>(equip.PlayerId)) continue;
+                        var e = world.Entities.Get(equip.PlayerId);
                         if (e == null) continue;
                         var inv = e.Get<InventoryState>()!;
                         var pos = e.Get<Position>()!;
                         var oldItem = catalog.Items.Get(equip.OldItemId.Value);
                         if (oldItem == null) continue;
-                        if (!GiveItem(world, playerId.Value, oldItem, 1))
+                        if (!GiveItem(world, equip.PlayerId, oldItem, 1))
                         {
                             tick.Events.Emit(new LootDroppedEvent(tick.TickNumber, pos.MapId, pos.X, pos.Y, equip.OldItemId.Value, 1, tick.TickNumber + GroundItemDespawnTicks));
                         }
