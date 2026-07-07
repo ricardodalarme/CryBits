@@ -1,7 +1,6 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.Events;
 using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 

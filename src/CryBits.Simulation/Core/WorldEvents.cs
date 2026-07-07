@@ -1,7 +1,14 @@
-using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
 using CryBits.Simulation.State;
 
-namespace CryBits.Simulation.Events;
+namespace CryBits.Simulation.Core;
+
+enum ComponentAction
+{
+    Added,
+    Changed,
+    Removed
+}
 
 public sealed class WorldEvents
 {
