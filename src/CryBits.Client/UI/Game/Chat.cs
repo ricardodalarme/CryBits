@@ -58,11 +58,11 @@ internal class Chat
         if (panel.Visible)
         {
             VisibilityTimer = Environment.TickCount64 + SleepTimer;
-            _uiContext.UISystem!.FocusedEntity = input;
+            _uiContext.UISystem.FocusedEntity = input;
             return;
         }
 
-        _uiContext.UISystem!.FocusedEntity = null;
+        _uiContext.UISystem.FocusedEntity = null;
 
         var message = input.Value;
 

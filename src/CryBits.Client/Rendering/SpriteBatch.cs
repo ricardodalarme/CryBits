@@ -13,7 +13,7 @@ namespace CryBits.Client.Rendering;
 /// Central sprite batch and drawing utility. Owns the <see cref="RenderWindow"/> and exposes
 /// a thin API for drawing sprites and text.
 /// </summary>
-internal sealed class SpriteBatch
+public sealed class SpriteBatch
 {
     /// <summary>Invoked when the user closes the window (e.g. Alt+F4 or close button).</summary>
     public event Action? WindowCloseRequested;

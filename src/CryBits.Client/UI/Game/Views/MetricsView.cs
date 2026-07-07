@@ -21,7 +21,7 @@ internal class MetricsView(UiContext uiContext) : ViewBase
     {
         if (Options.Instance.ShowMetrics)
         {
-            FpsLabel.Text = "FPS: " + CryBits.Client.ClientShell.Fps;
+            FpsLabel.Text = "FPS: " + Client.Game.Fps;
             LatencyLabel.Text = "Latency: " + Connection.Latency;
         }
         FpsLabel.Visible = Options.Instance.ShowMetrics;

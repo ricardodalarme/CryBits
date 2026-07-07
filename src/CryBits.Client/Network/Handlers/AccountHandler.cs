@@ -5,12 +5,12 @@ using CryBits.Protocol.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class AccountHandler(ClientShell shell, MenuScreen menuScreen)
+internal class AccountHandler(Game client, MenuScreen menuScreen)
 {
     [PacketHandler]
     internal void Join(JoinPacket packet)
     {
-        shell.StartSession(packet.PlayerId);
+        client.StartSession(packet.PlayerId);
     }
 
     [PacketHandler]
@@ -39,6 +39,6 @@ internal class AccountHandler(ClientShell shell, MenuScreen menuScreen)
     [PacketHandler]
     internal void JoinGame(JoinGamePacket _)
     {
-        shell.OpenSessionScreen();
+        client.OpenSessionScreen();
     }
 }

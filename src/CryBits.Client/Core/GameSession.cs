@@ -22,7 +22,6 @@ using CryBits.Client.UI;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Client.UI.Game.Views;
-using CryBits.Client.UI.Menu;
 using CryBits.Definitions.Catalog;
 using CryBits.Persistence.Repositories;
 
@@ -55,7 +54,6 @@ internal sealed class GameSession : IDisposable
         AudioManager audioManager,
         DefinitionCatalog catalog,
         Connection connection,
-        MenuScreen menuScreen,
         long localPlayerId)
     {
         Context = new GameContext(catalog, localPlayerId);
@@ -82,7 +80,7 @@ internal sealed class GameSession : IDisposable
 
         Screen = new GameScreen(
             this, uiContext, spriteBatch, itemIconRenderer, equipmentSlotRenderer,
-            portraitRenderer, inputManager, audioManager, tooltipView, menuScreen, _chat, _gameInput,
+            portraitRenderer, inputManager, audioManager, tooltipView, _chat, _gameInput,
             statsViewModel, characterViewModel, inventoryViewModel, hotbarViewModel, tradeViewModel, partyViewModel, shopViewModel
         );
 

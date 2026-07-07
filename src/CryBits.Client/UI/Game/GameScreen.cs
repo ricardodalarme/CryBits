@@ -6,7 +6,6 @@ using CryBits.Client.Rendering;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.UI.Game.ViewModels;
-using CryBits.Client.UI.Menu;
 using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game;
@@ -38,7 +37,7 @@ internal class GameScreen
     internal GameScreen(GameSession session, UiContext uiContext, SpriteBatch spriteBatch,
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
         InputManager inputManager, AudioManager audioManager, TooltipView tooltip,
-        MenuScreen menuScreen, Chat chat, GameInput gameInput,
+        Chat chat, GameInput gameInput,
         StatsViewModel statsViewModel, CharacterViewModel characterViewModel, InventoryViewModel inventoryViewModel,
         HotbarViewModel hotbarViewModel, TradeViewModel tradeViewModel, PartyViewModel partyViewModel, ShopViewModel shopViewModel)
     {
@@ -64,12 +63,10 @@ internal class GameScreen
         StatsView = new(uiContext, statsViewModel);
         _chat = chat;
         _gameInput = gameInput;
-        _menu = menuScreen;
     }
 
     private readonly Chat _chat;
     private readonly GameInput _gameInput;
-    private readonly MenuScreen _menu;
 
     public short? HotbarChange;
     public short? InventoryChange;
@@ -113,7 +110,6 @@ internal class GameScreen
 
     public void Open()
     {
-        _menu.Unbind();
         UiContext.LoadScreen("Game");
         Bind();
         ResetPanels();

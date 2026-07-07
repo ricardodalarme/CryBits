@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="CryBits.Server" />
-    <InternalsVisibleTo Include="CryBits.Client" />
+    <InternalsVisibleTo Include="CryBits.Client.Launcher" />
   </ItemGroup>
 
   <ItemGroup>

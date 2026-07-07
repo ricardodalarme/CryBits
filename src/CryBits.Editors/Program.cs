@@ -85,7 +85,7 @@ internal static class Program
     {
         var waitTimer = Environment.TickCount64;
 
-        Connection.Instance!.Disconnect();
+        Connection.Instance.Disconnect();
 
         while (Connection.Instance.IsConnected && Environment.TickCount64 <= waitTimer + 1000)
             Thread.Sleep(10);

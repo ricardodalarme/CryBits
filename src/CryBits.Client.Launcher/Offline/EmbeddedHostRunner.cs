@@ -17,12 +17,11 @@ using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
+using CryBits.Host.Scheduling;
 using static CryBits.Definitions.Globals;
 
-namespace CryBits.Client.Offline;
-
-using CryBits.Host.Scheduling;
-using Microsoft.Extensions.Logging;
+namespace CryBits.Client.Launcher.Offline;
 
 internal sealed class SilentLogger<T> : ILogger<T>
 {
@@ -114,7 +113,7 @@ public sealed class EmbeddedHostRunner : IDisposable
         // Start server tick loop
         _cts = new CancellationTokenSource();
         var ct = _cts.Token;
-        ThreadPool.QueueUserWorkItem(_ => _host!.StartTickLoop(ct));
+        ThreadPool.QueueUserWorkItem(_ => _host.StartTickLoop(ct));
 
         // Wire transport events to session management and packet dispatch
         pair.Server.OnConnected += id => _host.Sessions.Add(new Session(id));

@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Title>Client</Title>
-    <Product>CryBits.Client</Product>
+    <OutputType>Exe</OutputType>
+    <Title>Client Launcher</Title>
+    <Product>CryBits.Client.Launcher</Product>
     <AssemblyVersion>0.8.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup>
-    <RootNamespace>CryBits.Client</RootNamespace>
-    <AssemblyName>CryBits.Client</AssemblyName>
+    <RootNamespace>CryBits.Client.Launcher</RootNamespace>
+    <AssemblyName>CryBits.Client.Launcher</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,11 +26,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../CryBits.Client/CryBits.Client.csproj" />
     <ProjectReference Include="../CryBits.Definitions/CryBits.Definitions.csproj" />
     <ProjectReference Include="../CryBits.Protocol/CryBits.Protocol.csproj" />
     <ProjectReference Include="../CryBits.Transport/CryBits.Transport.csproj" />
     <ProjectReference Include="../CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
     <ProjectReference Include="../CryBits.Persistence/CryBits.Persistence.csproj" />
+    <ProjectReference Include="../CryBits.Host/CryBits.Host.csproj" />
     <ProjectReference Include="../CryBits.Simulation/CryBits.Simulation.csproj" />
   </ItemGroup>
 </Project>
