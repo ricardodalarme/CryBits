@@ -15,14 +15,25 @@ public sealed class World
     public long TickCount { get; set; }
     public EntityRegistry Entities { get; } = new();
     public WorldEvents Events { get; } = new();
+    public DirtyTracking? Dirty { get; }
 
     public World(DefinitionCatalog catalog, bool enableDirtyTracking = true)
     {
         Catalog = catalog;
         if (enableDirtyTracking) Dirty = new DirtyTracking();
+
+        SetupSpatialGrid();
     }
 
-    public DirtyTracking? Dirty { get; }
+    private void SetupSpatialGrid()
+    {
+        Events.On<Position>()
+            .OnAdded(e => SpatialGrid.Add(e.Entity, e.Component.X, e.Component.Y));
+        Events.On<Position>()
+            .OnChanged(e => SpatialGrid.Move(e.Entity, e.Previous.X, e.Previous.Y, e.Component.X, e.Component.Y));
+        Events.On<Position>()
+            .OnRemoved(e => SpatialGrid.Remove(e.Entity));
+    }
 
     public EntityId? FindPlayer(string name)
     {
@@ -89,15 +100,6 @@ public sealed class World
     {
         var state = Entities.Get(id);
         if (state == null) return;
-
-        if (component is Position newPos)
-        {
-            var oldPos = state.Get<Position>();
-            if (oldPos != null)
-                SpatialGrid.Move(id, oldPos.X, oldPos.Y, newPos.X, newPos.Y);
-            else
-                SpatialGrid.Add(id, newPos.X, newPos.Y);
-        }
 
         var type = component.GetType();
         var oldValue = state.Get(type);
