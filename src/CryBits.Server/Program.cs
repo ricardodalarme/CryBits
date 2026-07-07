@@ -4,6 +4,7 @@ using CryBits.Host.Core;
 using CryBits.Host.Hosting;
 using CryBits.Host.Ingress;
 using CryBits.Host.Network;
+using CryBits.Host.Network.Handlers;
 using CryBits.Host.Network.Senders;
 using CryBits.Host.Replication;
 using CryBits.Host.Services;
@@ -92,7 +93,7 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<World>();
     services.AddSingleton(sp => sp.GetRequiredService<World>().Entities);
     services.AddSingleton<SessionManager>();
-    services.AddSingleton(_ => HostPipelineBuilder.Build());
+    services.AddSingleton(sp => HostPipelineBuilder.Build(sp.GetRequiredService<DeltaReplicator>()));
     services.AddSingleton<PackageSender>();
     services.AddSingleton<WorldHost>();
     services.AddSingleton(sp => sp.GetRequiredService<WorldHost>().IntentFunnel);
@@ -111,10 +112,11 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<AuthService>();
     services.AddSingleton<CharacterService>();
     services.AddSingleton<ContentService>();
-    services.AddSingleton<KeyframeEncoder>();
+    services.AddSingleton<DeltaEncoder>();
     services.AddSingleton<EventFanout>();
     services.AddSingleton<InterestManager>();
-    services.AddSingleton<KeyframeReplicator>();
+    services.AddSingleton<DeltaReplicator>();
+    services.AddSingleton<AckHandler>();
     services.AddSingleton<IntentIngress>();
 
     services.AddSingleton<CommandDispatcher>();
@@ -122,6 +124,7 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<object>(sp => sp.GetRequiredService<AuthService>());
     services.AddSingleton<object>(sp => sp.GetRequiredService<CharacterService>());
     services.AddSingleton<object>(sp => sp.GetRequiredService<ContentService>());
+    services.AddSingleton<object>(sp => sp.GetRequiredService<AckHandler>());
     services.AddSingleton<object>(sp => sp.GetRequiredService<IntentIngress>());
 
     services.AddHostedService<Server>();

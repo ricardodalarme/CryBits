@@ -4,6 +4,7 @@ using CryBits.Host;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
 using CryBits.Host.Network.Senders;
+using CryBits.Host.Network.Handlers;
 using CryBits.Host.Replication;
 using CryBits.Host.Services;
 using CryBits.Persistence;
@@ -64,7 +65,19 @@ public sealed class EmbeddedHostRunner : IDisposable
         var simulation = new World(catalog);
         var sessions = new SessionManager();
         var packageSender = new PackageSender(pair.Server, sessions, simulation.Entities);
-        var pipeline = HostPipelineBuilder.Build();
+
+        var contentSender = new ContentSender(packageSender, catalog);
+        var chatSender = new ChatSender(packageSender, simulation.Entities);
+
+        var deltaEncoder = new DeltaEncoder(simulation);
+        var interestManager = new InterestManager(simulation);
+
+        var eventFanout = new EventFanout(sessions, chatSender, contentSender, pair.Server);
+
+        // Build pipeline (includes DeltaReplicator as the final system)
+        var pipeline = HostPipelineBuilder.Build(new DeltaReplicator(
+            simulation, sessions, deltaEncoder, eventFanout, pair.Server, interestManager));
+
         _host = new WorldHost(pair.Server, simulation, pipeline, sessions, packageSender, new SilentLogger<TickDriver>());
         pair.Server.Start(0, Config.GameName, 1);
 
@@ -77,17 +90,11 @@ public sealed class EmbeddedHostRunner : IDisposable
         var ss = _host.Sessions;
 
         var authSender = new AuthSender(ps, pair.Server);
-        var contentSender = new ContentSender(ps, catalog);
         var accountSenderHost = new AccountSender(ps);
-        var chatSender = new ChatSender(ps, es);
 
         hostDispatcher.Register(new AuthService(
             authSender, contentSender,
             accountSenderHost, accountRepo, charRepo, _host, new SilentLogger<AuthService>()));
-
-        var keyframeEncoder = new KeyframeEncoder(simulation);
-        var eventFanout = new EventFanout(ss, chatSender, contentSender, pair.Server);
-        var interestManager = new InterestManager(simulation);
 
         var partyService = new Host.Services.Party.PartyService(_host.IntentFunnel, ps, chatSender, ss, simulation);
 
@@ -95,15 +102,14 @@ public sealed class EmbeddedHostRunner : IDisposable
             new SilentLogger<CharacterService>(),
             charRepo, authSender, contentSender,
             accountSenderHost, chatSender, catalog, _host,
-            keyframeEncoder, interestManager, pair.Server,
+            deltaEncoder, interestManager, pair.Server,
             partyService));
+
+        hostDispatcher.Register(new AckHandler());
 
         var tradeService = new Host.Services.Trade.TradeService(_host.IntentFunnel, ps, ss, simulation);
         var intentIngress = new Host.Ingress.IntentIngress(_host.IntentFunnel, tradeService, partyService, new SilentLogger<Host.Ingress.IntentIngress>());
         hostDispatcher.Register(intentIngress);
-
-        _host.Pipeline.AddSystem(new KeyframeReplicator(
-            simulation, ss, keyframeEncoder, eventFanout, pair.Server, interestManager));
 
         // Start server tick loop
         _cts = new CancellationTokenSource();

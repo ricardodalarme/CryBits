@@ -23,13 +23,13 @@ public sealed class PathFollowSystem : ISimulationSystem
 
             if (pathFollow.IsComplete)
             {
-                entity.Remove<PathFollow>();
+                world.Remove<PathFollow>(entity.Id);
                 continue;
             }
 
             var dir = pathFollow.Steps[pathFollow.NextIndex];
             tick.Intents.Enqueue(new MoveIntent(entity.Id, dir, CommonMovement.Walking));
-            entity.Set(pathFollow with { NextIndex = pathFollow.NextIndex + 1 });
+            world.Set(entity.Id, pathFollow with { NextIndex = pathFollow.NextIndex + 1 });
         }
     }
 }

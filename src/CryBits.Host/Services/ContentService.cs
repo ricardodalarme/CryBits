@@ -137,7 +137,7 @@ internal sealed class ContentService(
 
             if (packet.SendMap) contentSender.Map(session, mapInstance.Id);
 
-            host.Entities.Get(entityId)?.Remove<MapLoadingTag>();
+            host.Simulation.Remove<MapLoadingTag>(entityId);
         }
     }
 

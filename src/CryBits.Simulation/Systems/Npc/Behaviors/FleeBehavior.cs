@@ -30,7 +30,7 @@ public sealed class FleeBehavior : INpcBehavior
         var path = Pathfinder.FindPath(world, pos.MapId, pos.X, pos.Y, fleeX, fleeY, maxRange: 12);
         if (path != null)
         {
-            entity.Set(new PathFollow(path));
+            world.Set(entity.Id, new PathFollow(path));
             return null;
         }
 

@@ -21,4 +21,5 @@ namespace CryBits.Protocol.Packets.Client;
 [MemoryPackUnion(15, typeof(RequestNpcsPacket))]
 [MemoryPackUnion(16, typeof(RequestItemsPacket))]
 [MemoryPackUnion(17, typeof(RequestShopsPacket))]
+[MemoryPackUnion(18, typeof(AckPacket))]
 public partial interface IClientPacket : IPacket;

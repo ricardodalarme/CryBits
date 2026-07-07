@@ -1,3 +1,4 @@
+using CryBits.Host.Replication;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Systems.Chat;
 using CryBits.Simulation.Systems.Combat;
@@ -13,7 +14,7 @@ namespace CryBits.Host;
 
 internal static class HostPipelineBuilder
 {
-    public static TickPipeline Build()
+    public static TickPipeline Build(DeltaReplicator deltaReplicator)
     {
         var pipeline = new TickPipeline();
         pipeline.AddSystem(new VitalsRegenSystem());
@@ -31,6 +32,7 @@ internal static class HostPipelineBuilder
         pipeline.AddSystem(new ShopSystem());
         pipeline.AddSystem(new ChatSystem());
         pipeline.AddSystem(new NpcRespawnSystem());
+        pipeline.AddSystem(deltaReplicator);
         return pipeline;
     }
 }

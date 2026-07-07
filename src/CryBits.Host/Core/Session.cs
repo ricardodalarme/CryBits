@@ -1,3 +1,4 @@
+using CryBits.Host.Replication;
 using CryBits.Simulation.State;
 
 namespace CryBits.Host.Core;
@@ -27,4 +28,7 @@ public sealed class Session(Guid id)
     /// <see langword="true"/> when the session has an active character in the world.
     /// </summary>
     public bool IsPlaying => Character is not null;
+
+    /// <summary>Replication state for delta encoding, or <see langword="null"/> before joining.</summary>
+    internal ObserverState? ReplicationState { get; set; }
 }

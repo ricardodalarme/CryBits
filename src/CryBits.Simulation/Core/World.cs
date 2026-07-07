@@ -101,8 +101,8 @@ public sealed class World
 
         var type = component.GetType();
         var oldValue = state.Get(type);
-        state.Set(type, component);
-        Dirty?.Mark(id, type);
+        state.Set(type, component, TickCount);
+        Dirty?.Mark(id);
 
         if (oldValue == null)
             Events.Raise(this, id, type, null, component, ComponentAction.Added);
@@ -115,9 +115,25 @@ public sealed class World
         var state = Entities.Get(id);
         if (state == null) return;
         var oldValue = state.Get<T>();
-        state.Remove<T>();
+        state.Remove<T>(TickCount);
         if (oldValue != null)
+        {
+            Dirty?.Mark(id);
             Events.Raise(this, id, typeof(T), oldValue, null, ComponentAction.Removed);
+        }
+    }
+
+    public void Remove(EntityId id, Type type)
+    {
+        var state = Entities.Get(id);
+        if (state == null) return;
+        var oldValue = state.Get(type);
+        state.Remove(type, TickCount);
+        if (oldValue != null)
+        {
+            Dirty?.Mark(id);
+            Events.Raise(this, id, type, oldValue, null, ComponentAction.Removed);
+        }
     }
 
     public T? AddOrGet<T>(EntityId id) where T : class, new()
@@ -128,8 +144,8 @@ public sealed class World
         if (c == null)
         {
             c = new T();
-            state.Set(c);
-            Dirty?.Mark<T>(id);
+            state.Set(c, TickCount);
+            Dirty?.Mark(id);
         }
         return c;
     }

@@ -33,7 +33,7 @@ internal sealed class CharacterService(
     ChatSender chatSender,
     DefinitionCatalog catalog,
     WorldHost host,
-    KeyframeEncoder keyframeEncoder,
+    DeltaEncoder deltaEncoder,
     InterestManager interestManager,
     ITransport transport,
     PartyService partyService)
@@ -159,6 +159,7 @@ internal sealed class CharacterService(
 
         logger.ZLogInformation($"Player {playerName} left world");
 
+        session.ReplicationState = null;
         interestManager.RemoveObserver(entityId);
 
         var tickNum = host.CurrentTick?.TickNumber ?? 0;
@@ -255,12 +256,17 @@ internal sealed class CharacterService(
             }
         }
 
+        session.ReplicationState = new ObserverState();
+
         var allOnMap = GetAllEntitiesOnMap(host.Entities, pos.MapId);
-        var keyframe = keyframeEncoder.Encode(pos.MapId, allOnMap);
+        var keyframe = deltaEncoder.EncodeKeyframe(pos.MapId, allOnMap);
         var bytes = MemoryPackSerializer.Serialize<Protocol.Packets.Server.IServerPacket>(keyframe);
         transport.Send(session.Id, bytes, DeliveryChannel.ReliableOrdered);
 
-        host.Entities.Get(entityId)?.Remove<MapLoadingTag>();
+        foreach (var e in keyframe.Entities)
+            session.ReplicationState.KnownEntities.Add(e.EntityId);
+
+        host.Simulation.Remove<MapLoadingTag>(entityId);
         accountSender.JoinGame(session);
         chatSender.Message(entityId, Config.WelcomeMessage, Color.Blue);
     }

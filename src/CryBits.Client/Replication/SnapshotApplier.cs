@@ -3,13 +3,14 @@ using CryBits.Client.Core;
 using CryBits.Client.Spawners;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Protocol.Packets;
+using CryBits.Protocol.Packets.Server;
 using CryBits.Protocol.Serialization;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.State;
 using MemoryPack;
 using EntityKind = CryBits.Protocol.Packets.Server.EntityKind;
-using ProtocolEntity = CryBits.Protocol.Packets.Server.KeyframeEntity;
 
 namespace CryBits.Client.Replication;
 
@@ -18,7 +19,11 @@ internal sealed class SnapshotApplier(
     GameContext context,
     DefinitionCatalog catalog)
 {
-    public void Apply(Protocol.Packets.Server.KeyframePacket packet)
+    private long _lastAppliedTick;
+
+    public long LastAppliedTick => _lastAppliedTick;
+
+    public void Apply(KeyframePacket packet)
     {
         var receivedNetworkIds = new HashSet<long>();
 
@@ -31,47 +36,96 @@ internal sealed class SnapshotApplier(
 
             if (localId == null)
             {
-                SpawnEntity(entity, serverId);
+                SpawnEntity(serverId, entity.Kind, entity.Components);
+                localId = context.GetNetworkEntity(serverId);
+            }
+
+            if (localId != null)
+                ApplyComponents(localId.Value, entity.Components);
+        }
+
+        _lastAppliedTick = Math.Max(_lastAppliedTick, packet.TickNumber);
+        context.LastAppliedServerTick = _lastAppliedTick;
+        PruneStaleEntities(packet.MapId, receivedNetworkIds);
+    }
+
+    public void Apply(DeltaPacket packet)
+    {
+        if (packet.BaselineTick > _lastAppliedTick)
+        {
+            context.RequestKeyframe();
+            return;
+        }
+
+        _lastAppliedTick = Math.Max(_lastAppliedTick, packet.TickNumber);
+        context.LastAppliedServerTick = _lastAppliedTick;
+
+        foreach (var delta in packet.Entities)
+        {
+            var serverId = delta.EntityId;
+
+            var localId = context.GetNetworkEntity(serverId);
+            if (localId == null && delta.Action == DeltaAction.Added)
+            {
+                SpawnEntity(serverId, delta.Kind, delta.Components);
                 localId = context.GetNetworkEntity(serverId);
             }
 
             if (localId != null)
             {
-                var state = world.Entities.Get(localId.Value);
-                if (state != null)
+                ApplyComponents(localId.Value, delta.Components);
+                foreach (var removedTag in delta.RemovedTags)
                 {
-                    foreach (var comp in entity.Components)
-                    {
-                        var type = ComponentTypeRegistry.Type(comp.Tag);
-                        if (type == null) continue;
-                        var obj = MemoryPackSerializer.Deserialize(type, comp.Data);
-                        if (obj != null) world.Set(localId.Value, obj);
-                    }
+                    var removedType = ComponentTypeRegistry.Type(removedTag);
+                    if (removedType != null)
+                        world.Remove(localId.Value, removedType);
                 }
             }
         }
 
-        PruneStaleEntities(packet.MapId, receivedNetworkIds);
-    }
-
-    private void SpawnEntity(ProtocolEntity entity, long serverId)
-    {
-        switch (entity.Kind)
+        foreach (var removedId in packet.RemovedEntities)
         {
-            case EntityKind.Player: SpawnPlayer(entity, serverId); break;
-            case EntityKind.Npc: SpawnNpc(entity, serverId); break;
-            case EntityKind.GroundItem: SpawnGroundItem(entity, serverId); break;
+            var localId = context.GetNetworkEntity(removedId);
+            if (localId != null)
+            {
+                context.UnregisterNetworkEntity(removedId);
+                world.Destroy(localId.Value);
+            }
         }
     }
 
-    private void SpawnPlayer(ProtocolEntity entity, long serverId)
+    private void ApplyComponents(EntityId localId, List<ComponentData> components)
     {
-        var appearance = DeserializeComp<PlayerAppearance>(entity);
-        var position = DeserializeComp<Position>(entity);
-        var vitals = DeserializeComp<Vitals>(entity);
-        var stat = DeserializeComp<LevelComponent>(entity);
-        var attrs = DeserializeComp<AttributesComponent>(entity);
-        var equip = DeserializeComp<EquipmentState>(entity);
+        var state = world.Entities.Get(localId);
+        if (state == null) return;
+
+        foreach (var comp in components)
+        {
+            var type = ComponentTypeRegistry.Type(comp.Tag);
+            if (type == null) continue;
+            var obj = MemoryPackSerializer.Deserialize(type, comp.Data);
+            if (obj != null) world.Set(localId, obj);
+        }
+    }
+
+    private void SpawnEntity(long serverId, EntityKind kind, List<ComponentData> components)
+    {
+        switch (kind)
+        {
+            case EntityKind.Player: SpawnPlayer(serverId, components); break;
+            case EntityKind.Npc: SpawnNpc(serverId, components); break;
+            case EntityKind.GroundItem: SpawnGroundItem(serverId, components); break;
+        }
+    }
+
+    private void SpawnPlayer(long serverId, List<ComponentData> components)
+    {
+        var appearance = DeserializeComp<PlayerAppearance>(components);
+        var position = DeserializeComp<Position>(components);
+        var vitals = DeserializeComp<Vitals>(components);
+        var stat = DeserializeComp<LevelComponent>(components);
+        var attrs = DeserializeComp<AttributesComponent>(components);
+        var equip = DeserializeComp<EquipmentState>(components);
 
         if (appearance == null || position == null) return;
 
@@ -105,8 +159,8 @@ internal sealed class SnapshotApplier(
 
         if (isLocal)
         {
-            var inv = DeserializeComp<InventoryState>(entity);
-            var hotbar = DeserializeComp<HotbarState>(entity);
+            var inv = DeserializeComp<InventoryState>(components);
+            var hotbar = DeserializeComp<HotbarState>(components);
             if (stat != null) world.Set(localEntity, stat);
             if (inv != null) world.Set(localEntity, inv);
             if (equip != null) world.Set(localEntity, equip);
@@ -115,11 +169,11 @@ internal sealed class SnapshotApplier(
         }
     }
 
-    private void SpawnNpc(ProtocolEntity entity, long serverId)
+    private void SpawnNpc(long serverId, List<ComponentData> components)
     {
-        var npcState = DeserializeComp<NpcState>(entity);
-        var position = DeserializeComp<Position>(entity);
-        var vitals = DeserializeComp<Vitals>(entity);
+        var npcState = DeserializeComp<NpcState>(components);
+        var position = DeserializeComp<Position>(components);
+        var vitals = DeserializeComp<Vitals>(components);
         if (npcState == null || position == null) return;
 
         var npcDef = catalog.Npcs.Get(npcState.NpcDefId);
@@ -130,10 +184,10 @@ internal sealed class SnapshotApplier(
         context.RegisterNetworkEntity(serverId, localEntity);
     }
 
-    private void SpawnGroundItem(ProtocolEntity entity, long serverId)
+    private void SpawnGroundItem(long serverId, List<ComponentData> components)
     {
-        var groundItem = DeserializeComp<GroundItem>(entity);
-        var position = DeserializeComp<Position>(entity);
+        var groundItem = DeserializeComp<GroundItem>(components);
+        var position = DeserializeComp<Position>(components);
         if (groundItem == null || position == null) return;
 
         var item = catalog.Items.Get(groundItem.ItemDefId);
@@ -164,11 +218,11 @@ internal sealed class SnapshotApplier(
         }
     }
 
-    private static T? DeserializeComp<T>(ProtocolEntity entity) where T : class
+    private static T? DeserializeComp<T>(List<ComponentData> components) where T : class
     {
         var tag = ComponentTypeRegistry.Tag(typeof(T));
         if (tag == null) return null;
-        var comp = entity.Components.FirstOrDefault(c => c.Tag == tag.Value);
+        var comp = components.FirstOrDefault(c => c.Tag == tag.Value);
         if (comp == null) return null;
         return MemoryPackSerializer.Deserialize<T>(comp.Data);
     }

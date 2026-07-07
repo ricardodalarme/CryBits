@@ -16,6 +16,7 @@ using CryBits.Client.Systems.Combat;
 using CryBits.Client.Systems.Core;
 using CryBits.Client.Systems.Map;
 using CryBits.Client.Systems.Movement;
+using CryBits.Client.Systems.Network;
 using CryBits.Client.Systems.Player;
 using CryBits.Client.UI;
 using CryBits.Client.UI.Game;
@@ -37,7 +38,8 @@ internal sealed class GameSession : IDisposable
 
     public IntentSender IntentSender { get; }
     private readonly MapHandler _mapHandler;
-    private readonly KeyframeHandler _keyframeHandler;
+    private readonly ReplicationHandler _replicationHandler;
+    private readonly AckSender _ackSender;
     private readonly ChatHandler _chatHandler;
     private readonly PartyHandler _partyHandler;
     private readonly TradeHandler _tradeHandler;
@@ -99,6 +101,12 @@ internal sealed class GameSession : IDisposable
         var tilemapRenderer = new TilemapRenderer(spriteBatch, Context, CameraManager);
         RenderPipeline = new RenderPipeline(spriteBatch, CameraManager, tilemapRenderer, uiContext, groundRenderers, fringeRenderers);
 
+        var mapRepo = new MapRepository();
+        var contentSender = new ContentSender(connection);
+
+        var applier = new Replication.SnapshotApplier(Context.World, Context, catalog);
+        _ackSender = new AckSender(connection, Context);
+
         Scheduler = new SystemScheduler();
         Scheduler
             .AddSimulation(new FadeSystem(Context.World))
@@ -110,23 +118,20 @@ internal sealed class GameSession : IDisposable
             .AddSimulation(new ItemPickupSystem(Context, inputManager, IntentSender))
             .AddSimulation(new MovementSystem(Context.World))
             .AddSimulation(new CameraSystem(Context, CameraManager))
+            .AddSimulation(new AckSystem(_ackSender))
             .AddSimulation(new CharacterAnimationSystem(Context.World))
             .AddSimulation(new AttackHitSystem(Context))
             .AddSimulation(new AttackSystem(Context, inputManager, IntentSender, uiContext))
             .AddSimulation(new DamageDecaySystem(Context.World));
-
-        var mapRepo = new MapRepository();
-        var contentSender = new ContentSender(connection);
-
         _mapHandler = new MapHandler(Context, contentSender, audioManager, mapRepo);
-        _keyframeHandler = new KeyframeHandler(new Replication.SnapshotApplier(Context.World, Context, catalog));
+        _replicationHandler = new ReplicationHandler(applier);
         _chatHandler = new ChatHandler(_chat);
         _partyHandler = new PartyHandler(IntentSender, Screen, partyViewModel);
         _tradeHandler = new TradeHandler(IntentSender, Screen, tradeViewModel);
         _shopHandler = new ShopHandler(catalog, Screen.ShopView);
 
         PacketDispatcher.Register(_mapHandler);
-        PacketDispatcher.Register(_keyframeHandler);
+        PacketDispatcher.Register(_replicationHandler);
         PacketDispatcher.Register(_chatHandler);
         PacketDispatcher.Register(_partyHandler);
         PacketDispatcher.Register(_tradeHandler);
@@ -141,7 +146,7 @@ internal sealed class GameSession : IDisposable
     public void Dispose()
     {
         PacketDispatcher.Unregister(_mapHandler);
-        PacketDispatcher.Unregister(_keyframeHandler);
+        PacketDispatcher.Unregister(_replicationHandler);
         PacketDispatcher.Unregister(_chatHandler);
         PacketDispatcher.Unregister(_partyHandler);
         PacketDispatcher.Unregister(_tradeHandler);

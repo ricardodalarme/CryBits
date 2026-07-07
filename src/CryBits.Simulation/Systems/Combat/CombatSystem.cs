@@ -21,7 +21,7 @@ public sealed class CombatSystem : ISimulationSystem
     public void Execute(World world, Tick tick)
     {
         foreach (var state in world.All)
-            state.Remove<AttackHit>();
+            world.Remove<AttackHit>(state.Id);
 
         foreach (var intent in tick.Intents.All)
         {

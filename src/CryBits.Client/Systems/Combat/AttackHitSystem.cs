@@ -41,8 +41,7 @@ internal sealed class AttackHitSystem(GameContext context) : IClientSystem
                 }
             }
 
-            var state = context.World.Entities.Get(id);
-            state?.Remove<AttackHit>();
+            context.World.Remove<AttackHit>(id);
         }
     }
 }

@@ -36,7 +36,7 @@ public sealed class NpcBrainSystem : ISimulationSystem
             {
                 if (npcState.TargetId.HasValue && world.IsAlive(npcState.TargetId.Value))
                     continue;
-                e.Remove<PathFollow>();
+                world.Remove<PathFollow>(e.Id);
             }
 
             UpdateTarget(world, e.Id, tick);

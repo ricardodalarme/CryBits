@@ -1,7 +1,6 @@
 using CryBits.Host;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
-using CryBits.Host.Replication;
 using CryBits.Host.Services;
 using CryBits.Persistence;
 using CryBits.Simulation;
@@ -19,7 +18,6 @@ internal sealed class Server(
     DataLoader dataLoader,
     PacketDispatcher dispatcher,
     WorldInitializer worldInitializer,
-    KeyframeReplicator keyframeReplicator,
     CharacterService characterService,
     DataConnection dataConnection,
     IEnumerable<object> packetHandlers,
@@ -55,8 +53,6 @@ internal sealed class Server(
         var config = Definitions.Globals.Config;
         transport.Start(config.Port, config.GameName, config.MaxPlayers);
         logger.ZLogInformation($"Network started on port {config.Port}");
-
-        host.Pipeline.AddSystem(keyframeReplicator);
 
         foreach (var handler in packetHandlers)
             dispatcher.Register(handler);

@@ -22,4 +22,12 @@ internal sealed class GameContext(DefinitionCatalog catalog, long localPlayerId)
     public void UnregisterNetworkEntity(long id) => _entityById.Remove(id);
 
     public EntityId? GetNetworkEntity(long id) => _entityById.TryGetValue(id, out var e) ? e : null;
+
+    public long LastAppliedServerTick { get; set; }
+
+    public void RequestKeyframe()
+    {
+        // Reset baseline so versioning re-sends all components with versions > 0.
+        LastAppliedServerTick = 0;
+    }
 }

@@ -36,7 +36,7 @@ public sealed class AggressiveBehavior : INpcBehavior
         var path = Pathfinder.FindPath(world, pos.MapId, pos.X, pos.Y, targetPos.X, targetPos.Y);
         if (path != null)
         {
-            entity.Set(new PathFollow(path));
+            world.Set(entity.Id, new PathFollow(path));
             return null;
         }
 
