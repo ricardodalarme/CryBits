@@ -18,6 +18,7 @@ internal static class HostPipelineBuilder
         var pipeline = new TickPipeline();
         pipeline.AddSystem(new VitalsRegenSystem());
         pipeline.AddSystem(new NpcBrainSystem());
+        pipeline.AddSystem(new PathFollowSystem());
         pipeline.AddSystem(new MovementSystem());
         pipeline.AddSystem(new CombatSystem());
         pipeline.AddSystem(new AggroSystem());

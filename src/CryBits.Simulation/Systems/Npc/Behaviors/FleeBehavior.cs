@@ -2,6 +2,7 @@ using CryBits.Definitions.Common;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
+using CryBits.Simulation.Spatial;
 using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Systems.Npc.Behaviors;
@@ -20,12 +21,19 @@ public sealed class FleeBehavior : INpcBehavior
         var targetPos = targetE.Get<Position>();
         if (targetPos == null) return null;
 
-        Direction dir;
-        if (Math.Abs(pos.X - targetPos.X) >= Math.Abs(pos.Y - targetPos.Y))
-            dir = pos.X > targetPos.X ? Direction.Right : Direction.Left;
-        else
-            dir = pos.Y > targetPos.Y ? Direction.Down : Direction.Up;
+        if (entity.Has<PathFollow>())
+            return null;
 
-        return new MoveIntent(entity.Id, dir, Definitions.Common.Movement.Walking);
+        var fleeX = pos.X + (pos.X - targetPos.X) * 4;
+        var fleeY = pos.Y + (pos.Y - targetPos.Y) * 4;
+
+        var path = Pathfinder.FindPath(world, pos.MapId, pos.X, pos.Y, fleeX, fleeY, maxRange: 12);
+        if (path != null)
+        {
+            entity.Set(new PathFollow(path));
+            return null;
+        }
+
+        return null;
     }
 }

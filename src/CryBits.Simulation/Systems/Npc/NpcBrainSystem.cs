@@ -31,12 +31,15 @@ public sealed class NpcBrainSystem : ISimulationSystem
             var npcState = e.Get<NpcState>();
             if (npcState == null) continue;
 
-            UpdateTarget(world, e.Id, tick);
-            if (npcState.TargetId.HasValue)
+            var pathFollow = e.Get<PathFollow>();
+            if (pathFollow != null && !pathFollow.IsComplete)
             {
-                var targetE = world.Entities.Get(npcState.TargetId.Value);
-                FaceTarget(world, e, targetE?.Get<Position>());
+                if (npcState.TargetId.HasValue && world.IsAlive(npcState.TargetId.Value))
+                    continue;
+                e.Remove<PathFollow>();
             }
+
+            UpdateTarget(world, e.Id, tick);
 
             var npcData = world.Catalog.Npcs.Get(npcState.NpcDefId);
             if (npcData == null) continue;
@@ -58,21 +61,6 @@ public sealed class NpcBrainSystem : ISimulationSystem
             return _flee;
 
         return _aggressive;
-    }
-
-    private static void FaceTarget(World world, EntityState entity, Position? targetPos)
-    {
-        var pos = entity.Get<Position>()!;
-        if (targetPos == null) return;
-
-        Direction dir;
-        if (Math.Abs(pos.X - targetPos.X) >= Math.Abs(pos.Y - targetPos.Y))
-            dir = pos.X > targetPos.X ? Direction.Left : Direction.Right;
-        else
-            dir = pos.Y > targetPos.Y ? Direction.Up : Direction.Down;
-
-        if (pos.Direction != dir)
-            world.Update<Position>(entity.Id, p => p with { Direction = dir });
     }
 
     private void UpdateTarget(World world, EntityId npcId, Tick tick)
