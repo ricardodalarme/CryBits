@@ -13,30 +13,30 @@ internal sealed class CharacterAnimationSystem(World world) : IClientSystem
 
     public void Update(float dt)
     {
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var anim = state.Get<AnimationState>();
-            var movement = state.Get<MovementComponent>();
+            var anim = world.Get<AnimationState>(entityId);
+            var movement = world.Get<MovementComponent>(entityId);
             if (anim == null || movement == null) continue;
 
             var sheet = SpriteSheet.Default;
 
-            var attack = state.Get<AttackComponent>();
+            var attack = world.Get<AttackComponent>(entityId);
             if (attack is { AttackCountdown: > 0f })
             {
                 var cd = MathF.Max(0f, attack.AttackCountdown - dt);
                 if (cd != attack.AttackCountdown)
-                    world.Set(state.Id, new AttackComponent(cd));
+                    world.Set(entityId, new AttackComponent(cd));
             }
 
-            var dir = state.Get<Position>()?.Direction ?? movement.Direction;
+            var dir = world.Get<Position>(entityId)?.Direction ?? movement.Direction;
             var frameY = sheet.RowForDirection(dir);
             var showAttack = attack is { AttackCountdown: > AttackFrameTime };
 
             var frameTime = WalkFrameTime * (WalkSpeedPixelsPerSecond / movement.SpeedPixelsPerSecond);
             var (current, frameX, timer) = Determine(anim, dt, movement.IsMoving, showAttack, sheet.Columns, frameTime);
 
-            world.Set(state.Id, new AnimationState(frameX, frameY, timer, current));
+            world.Set(entityId, new AnimationState(frameX, frameY, timer, current));
         }
     }
 

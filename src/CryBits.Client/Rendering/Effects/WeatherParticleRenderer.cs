@@ -19,10 +19,10 @@ internal sealed class WeatherParticleRenderer(World world, SpriteBatch spriteBat
     {
         _batch.Clear();
 
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var particle = state.Get<WeatherParticleComponent>();
-            var transform = state.Get<TransformComponent>();
+            var particle = world.Get<WeatherParticleComponent>(entityId);
+            var transform = world.Get<TransformComponent>(entityId);
             if (particle == null || transform == null) continue;
 
             var srcX = particle.Type == WeatherType.Snow ? 32f : 0f;
@@ -32,9 +32,9 @@ internal sealed class WeatherParticleRenderer(World world, SpriteBatch spriteBat
         if (_batch.VertexCount > 0)
             spriteBatch.RenderWindow.Draw(_batch, new RenderStates(Textures.Weather));
 
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var lightning = state.Get<LightningComponent>();
+            var lightning = world.Get<LightningComponent>(entityId);
             if (lightning == null) continue;
 
             if (lightning.Intensity > 0)

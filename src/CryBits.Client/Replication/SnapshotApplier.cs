@@ -8,7 +8,6 @@ using CryBits.Protocol.Packets.Server;
 using CryBits.Protocol.Serialization;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using CryBits.Simulation.State;
 using MemoryPack;
 using EntityKind = CryBits.Protocol.Packets.Server.EntityKind;
 
@@ -96,8 +95,7 @@ internal sealed class SnapshotApplier(
 
     private void ApplyComponents(EntityId localId, List<ComponentData> components)
     {
-        var state = world.Entities.Get(localId);
-        if (state == null) return;
+        if (!world.IsAlive(localId)) return;
 
         foreach (var comp in components)
         {
@@ -200,14 +198,14 @@ internal sealed class SnapshotApplier(
     private void PruneStaleEntities(Guid mapId, HashSet<long> receivedNetworkIds)
     {
         var toDestroy = new List<EntityId>();
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var pos = state.Get<Position>();
-            var nid = state.Get<NetworkId>();
+            var pos = world.Get<Position>(entityId);
+            var nid = world.Get<NetworkId>(entityId);
             if (pos != null && pos.MapId == mapId && nid != null
                 && !receivedNetworkIds.Contains(nid.Value))
             {
-                toDestroy.Add(state.Id);
+                toDestroy.Add(entityId);
             }
         }
         foreach (var id in toDestroy)

@@ -7,7 +7,6 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using CryBits.Simulation.State;
 using SFML.Graphics;
 using MovementState = CryBits.Definitions.Common.Movement;
 

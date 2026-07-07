@@ -10,8 +10,8 @@ internal static class WeatherSpawner
 {
     public static void Reset(World world, WeatherType weatherType, AudioManager audioManager)
     {
-        world.DestroyWhere(s => s.Has<WeatherParticleComponent>());
-        world.DestroyWhere(s => s.Has<LightningComponent>());
+        world.DestroyWhere(id => world.Has<WeatherParticleComponent>(id));
+        world.DestroyWhere(id => world.Has<LightningComponent>(id));
 
         audioManager.StopAllSounds();
 

@@ -1,6 +1,5 @@
 using CryBits.Client.Components;
 using CryBits.Simulation.Core;
-using CryBits.Simulation.State;
 
 namespace CryBits.Client.Systems.Combat;
 
@@ -12,16 +11,16 @@ internal sealed class DamageDecaySystem(World world) : IClientSystem
     {
         _pendingRemove.Clear();
 
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var damage = state.Get<HurtComponent>();
+            var damage = world.Get<HurtComponent>(entityId);
             if (damage == null) continue;
 
             var newCountdown = damage.HurtCountdown - dt;
             if (newCountdown <= 0f)
-                _pendingRemove.Add(state.Id);
+                _pendingRemove.Add(entityId);
             else
-                world.Set(state.Id, new HurtComponent(newCountdown));
+                world.Set(entityId, new HurtComponent(newCountdown));
         }
 
         foreach (var id in _pendingRemove)

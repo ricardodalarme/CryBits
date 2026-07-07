@@ -3,7 +3,7 @@ using CryBits.Host.Core;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using CryBits.Simulation.State;
+using CryBits.Simulation.Systems;
 using CryBits.Transport;
 using CryBits.Transport.Abstractions;
 using MemoryPack;

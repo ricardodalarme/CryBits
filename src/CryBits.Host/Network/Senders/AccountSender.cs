@@ -1,6 +1,6 @@
 using CryBits.Host.Core;
 using CryBits.Protocol.Packets.Server;
-using CryBits.Simulation.State;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Host.Network.Senders;
 

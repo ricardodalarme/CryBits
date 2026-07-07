@@ -1,5 +1,4 @@
 using CryBits.Simulation.Events;
-using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Core;
 

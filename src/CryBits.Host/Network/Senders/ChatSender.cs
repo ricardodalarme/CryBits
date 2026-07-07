@@ -1,7 +1,7 @@
 using CryBits.Host.Core;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.State;
+using CryBits.Simulation.Core;
 using System.Drawing;
 
 namespace CryBits.Host.Network.Senders;
@@ -20,15 +20,15 @@ public sealed class ChatSender(PackageSender packageSender, EntityRegistry entit
 
     public void MessageMap(EntityId entityId, string text)
     {
-        var appearance = entities.Get(entityId)!.Get<PlayerAppearance>()!;
-        var pos = entities.Get(entityId)!.Get<Position>()!;
+        var appearance = entities.Get<PlayerAppearance>(entityId)!;
+        var pos = entities.Get<Position>(entityId)!;
         var message = "[Map] " + appearance.Name + ": " + text;
         packageSender.ToMap(pos.MapId, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
     }
 
     public void MessageGlobal(EntityId entityId, string text)
     {
-        var appearance = entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        var appearance = entities.Get<PlayerAppearance>(entityId)!;
         var message = "[Global] " + appearance.Name + ": " + text;
         packageSender.ToAll(new MessagePacket { Text = message, ColorArgb = Color.Yellow.ToArgb() });
     }
@@ -43,7 +43,7 @@ public sealed class ChatSender(PackageSender packageSender, EntityRegistry entit
             return;
         }
 
-        var appearance = entities.Get(entityId)!.Get<PlayerAppearance>()!;
+        var appearance = entities.Get<PlayerAppearance>(entityId)!;
         Message(entityId, "[To] " + addresseeName + ": " + text, Color.Pink);
         Message(addressee.Value, "[From] " + appearance.Name + ": " + text, Color.Pink);
     }

@@ -1,4 +1,4 @@
-namespace CryBits.Simulation.State;
+namespace CryBits.Simulation.Core;
 
 public sealed class DirtyTracking
 {

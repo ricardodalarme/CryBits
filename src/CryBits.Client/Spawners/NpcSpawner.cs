@@ -5,7 +5,6 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Npcs;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using CryBits.Simulation.State;
 using SFML.Graphics;
 using Direction = CryBits.Definitions.Common.Direction;
 using MovementState = CryBits.Definitions.Common.Movement;

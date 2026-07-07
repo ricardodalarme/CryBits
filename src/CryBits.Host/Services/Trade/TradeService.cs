@@ -5,7 +5,6 @@ using CryBits.Host.Network;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.State;
 using CryBits.Simulation.Components;
 using CryBits.Host.Ingress;
 using static CryBits.Definitions.Globals;
@@ -34,7 +33,7 @@ public sealed class TradeService(
 
         _pendingInvitations[inviteeId.Value] = inviterId;
 
-        var inviterName = world.Entities.Get(inviterId)?.Get<PlayerAppearance>()?.Name ?? string.Empty;
+        var inviterName = world.Entities.Get<PlayerAppearance>(inviterId)?.Name ?? string.Empty;
         sender.ToPlayer(inviteeId.Value, new TradeInvitationPacket { PlayerInvitation = inviterName });
     }
 
@@ -74,7 +73,7 @@ public sealed class TradeService(
     {
         if (!_activeTrades.TryGetValue(entityId, out var session)) return;
 
-        var inv = world.Entities.Get(entityId)?.Get<InventoryState>();
+        var inv = world.Entities.Get<InventoryState>(entityId);
         if (inv == null) return;
 
         amount = Math.Min(amount, inv.Slots[inventorySlot].Amount);
@@ -125,8 +124,8 @@ public sealed class TradeService(
 
     private void CommitTrade(TradeSession session)
     {
-        var invA = world.Entities.Get(session.EntityA)?.Get<InventoryState>();
-        var invB = world.Entities.Get(session.EntityB)?.Get<InventoryState>();
+        var invA = world.Entities.Get<InventoryState>(session.EntityA);
+        var invB = world.Entities.Get<InventoryState>(session.EntityB);
         if (invA == null || invB == null) return;
 
         // Construct commit intent items list

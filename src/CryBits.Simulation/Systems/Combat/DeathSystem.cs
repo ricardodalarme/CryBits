@@ -27,11 +27,10 @@ public sealed class DeathSystem : ISimulationSystem
     {
         if (!world.Has<PlayerTag>(died.EntityId)) return;
 
-        var e = world.Entities.Get(died.EntityId);
-        if (e == null) return;
-        var vitals = e.Get<Vitals>()!;
-        var pos = e.Get<Position>()!;
-        var appearance = e.Get<PlayerAppearance>()!;
+        if (!world.IsAlive(died.EntityId)) return;
+        var vitals = world.Get<Vitals>(died.EntityId)!;
+        var pos = world.Get<Position>(died.EntityId)!;
+        var appearance = world.Get<PlayerAppearance>(died.EntityId)!;
         var playerClass = world.Catalog.Classes.Get(appearance.ClassId);
         if (playerClass is null) return;
 
@@ -49,10 +48,9 @@ public sealed class DeathSystem : ISimulationSystem
 
     private void HandleNpcDeath(World world, Tick tick, NpcDiedEvent died)
     {
-        var e = world.Entities.Get(died.EntityId);
-        if (e == null) return;
-
-        var pos = e.Get<Position>()!;
+        if (!world.IsAlive(died.EntityId)) return;
+ 
+        var pos = world.Get<Position>(died.EntityId)!;
 
         var npcData = world.Catalog.Npcs.Get(died.NpcDefId);
         if (npcData == null) return;

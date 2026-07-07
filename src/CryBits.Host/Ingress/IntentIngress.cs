@@ -4,7 +4,7 @@ using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
 using CryBits.Protocol.Serialization;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.State;
+using CryBits.Simulation.Core;
 using MemoryPack;
 using Microsoft.Extensions.Logging;
 using ZLogger;

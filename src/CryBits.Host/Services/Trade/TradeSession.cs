@@ -1,6 +1,6 @@
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
-using CryBits.Simulation.State;
+using CryBits.Simulation.Core;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Host.Services.Trade;

@@ -4,7 +4,6 @@ using CryBits.Host.Network.Senders;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.State;
 using CryBits.Host.Ingress;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
@@ -56,7 +55,7 @@ public sealed class PartyService(
 
         _pendingInvitations[inviteeId.Value] = inviterId;
 
-        var inviterName = world.Entities.Get(inviterId)?.Get<Simulation.Components.PlayerAppearance>()?.Name ?? string.Empty;
+        var inviterName = world.Entities.Get<Simulation.Components.PlayerAppearance>(inviterId)?.Name ?? string.Empty;
         sender.ToPlayer(inviteeId.Value, new PartyInvitationPacket { PlayerInvitation = inviterName });
     }
 
@@ -85,8 +84,8 @@ public sealed class PartyService(
         SyncPartyToSimulation(inviterParty);
         BroadcastPartyUpdate(inviterParty);
 
-        var inviteeName = world.Entities.Get(inviteeId)?.Get<Simulation.Components.PlayerAppearance>()?.Name ?? string.Empty;
-        var inviterName = world.Entities.Get(inviterId)?.Get<Simulation.Components.PlayerAppearance>()?.Name ?? string.Empty;
+        var inviteeName = world.Entities.Get<Simulation.Components.PlayerAppearance>(inviteeId)?.Name ?? string.Empty;
+        var inviterName = world.Entities.Get<Simulation.Components.PlayerAppearance>(inviterId)?.Name ?? string.Empty;
 
         chatSender.Message(inviteeId, "You joined " + inviterName + "'s party.", Color.White);
         chatSender.Message(inviterId, inviteeName + " joined the party.", Color.White);
@@ -96,7 +95,7 @@ public sealed class PartyService(
     {
         if (_pendingInvitations.Remove(inviteeId, out var inviterId))
         {
-            var inviteeName = world.Entities.Get(inviteeId)?.Get<Simulation.Components.PlayerAppearance>()?.Name ?? string.Empty;
+            var inviteeName = world.Entities.Get<Simulation.Components.PlayerAppearance>(inviteeId)?.Name ?? string.Empty;
             chatSender.Message(inviterId, inviteeName + " declined the party invitation.", Color.White);
         }
     }

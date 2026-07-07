@@ -7,12 +7,12 @@ internal sealed class FogSystem(World world) : IClientSystem
 {
     public void Update(float deltaTime)
     {
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var fog = state.Get<FogComponent>();
+            var fog = world.Get<FogComponent>(entityId);
             if (fog == null) continue;
 
-            world.Set(state.Id, fog with
+            world.Set(entityId, fog with
             {
                 OffsetX = fog.OffsetX + fog.SpeedX * deltaTime,
                 OffsetY = fog.OffsetY + fog.SpeedY * deltaTime

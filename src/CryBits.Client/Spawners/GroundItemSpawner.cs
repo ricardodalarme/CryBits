@@ -3,7 +3,6 @@ using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Items;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using CryBits.Simulation.State;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Spawners;

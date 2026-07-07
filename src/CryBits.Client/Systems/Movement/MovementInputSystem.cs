@@ -5,7 +5,7 @@ using CryBits.Client.Network.Senders;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.Spatial;
-using CryBits.Simulation.State;
+using CryBits.Simulation.Core;
 using SFML.Window;
 using static CryBits.Definitions.Globals;
 using Direction = CryBits.Definitions.Common.Direction;

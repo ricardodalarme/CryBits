@@ -18,9 +18,9 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
         var type = GetEffectiveWeather(map);
 
         var activeCount = 0;
-        foreach (var _ in context.World.All)
+        foreach (var entityId in context.World.All)
         {
-            if (context.World.Get<WeatherParticleComponent>(_.Id) != null)
+            if (context.World.Get<WeatherParticleComponent>(entityId) != null)
                 activeCount++;
         }
 
@@ -77,7 +77,7 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
                 return;
         }
 
-        var id = context.World.Spawn();
+        var id = context.World.Create();
         context.World.Set(id, new TransformComponent(x, y));
         context.World.Set(id, new WeatherParticleComponent(speed, start, back, type));
     }

@@ -8,7 +8,6 @@ using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.Spatial;
-using CryBits.Simulation.State;
 using static CryBits.Simulation.SimulationConstants;
 
 namespace CryBits.Simulation.Systems.Inventory;
@@ -26,24 +25,21 @@ public sealed class InventorySystem : ISimulationSystem
                     break;
                 case DropItemIntent drop:
                     {
-                        var state = world.Entities.Get(drop.SourceEntityId);
-                        var inv = state?.Get<InventoryState>();
+                        var inv = world.Get<InventoryState>(drop.SourceEntityId);
                         if (inv != null && drop.SlotIndex >= 0 && drop.SlotIndex < inv.Slots.Length)
                             DropItem(world, tick, drop.SourceEntityId, drop.SlotIndex, drop.Amount);
                         break;
                     }
                 case InventoryUseIntent use:
                     {
-                        var state = world.Entities.Get(use.SourceEntityId);
-                        var inv = state?.Get<InventoryState>();
+                        var inv = world.Get<InventoryState>(use.SourceEntityId);
                         if (inv != null && use.SlotIndex >= 0 && use.SlotIndex < inv.Slots.Length)
                             UseItem(world, tick, use.SourceEntityId, use.SlotIndex, inv.Slots[use.SlotIndex]);
                         break;
                     }
                 case InventorySwapIntent swap:
                     {
-                        var state = world.Entities.Get(swap.SourceEntityId);
-                        var inv = state?.Get<InventoryState>();
+                        var inv = world.Get<InventoryState>(swap.SourceEntityId);
                         if (inv == null || inv.Slots[swap.SlotOld].ItemId == Guid.Empty) break;
                         if (swap.SlotOld == swap.SlotNew) break;
                         var newSlots = (ItemSlot[])inv.Slots.Clone();
@@ -54,12 +50,10 @@ public sealed class InventorySystem : ISimulationSystem
                     }
                 case TradeCommitIntent commit:
                     {
-                        var source = world.Entities.Get(commit.SourceEntityId);
-                        var partner = world.Entities.Get(commit.PartnerId);
-                        if (source == null || partner == null) break;
+                        if (!world.IsAlive(commit.SourceEntityId) || !world.IsAlive(commit.PartnerId)) break;
 
-                        var sourceInv = source.Get<InventoryState>();
-                        var partnerInv = partner.Get<InventoryState>();
+                        var sourceInv = world.Get<InventoryState>(commit.SourceEntityId);
+                        var partnerInv = world.Get<InventoryState>(commit.PartnerId);
                         if (sourceInv == null || partnerInv == null) break;
 
                         // Authoritative Inventory Transfer (sim level)
@@ -98,16 +92,14 @@ public sealed class InventorySystem : ISimulationSystem
             {
                 case ItemUsedEvent use when use.DirectUse:
                     {
-                        var playerE = world.Entities.Get(use.PlayerId);
-                        var playerInv = playerE?.Get<InventoryState>();
+                        var playerInv = world.Get<InventoryState>(use.PlayerId);
                         if (playerInv != null && use.SlotIndex >= 0 && use.SlotIndex < playerInv.Slots.Length)
                             UseItem(world, tick, use.PlayerId, use.SlotIndex, playerInv.Slots[use.SlotIndex]);
                         break;
                     }
                 case ItemTakenEvent take:
                     {
-                        var playerE = world.Entities.Get(take.EntityId);
-                        var playerInv = playerE?.Get<InventoryState>();
+                        var playerInv = world.Get<InventoryState>(take.EntityId);
                         if (playerInv != null && take.SlotIndex >= 0 && take.SlotIndex < playerInv.Slots.Length)
                             TakeItem(world, take.EntityId, take.SlotIndex, take.Amount);
                         break;
@@ -122,9 +114,8 @@ public sealed class InventorySystem : ISimulationSystem
                 case ItemEquippedEvent equip when equip.OldItemId.HasValue:
                     {
                         if (!world.Has<PlayerTag>(equip.PlayerId)) continue;
-                        var e = world.Entities.Get(equip.PlayerId);
-                        if (e == null) continue;
-                        var pos = e.Get<Position>()!;
+                        var pos = world.Get<Position>(equip.PlayerId);
+                        if (pos == null) continue;
                         var oldItem = world.Catalog.Items.Get(equip.OldItemId.Value);
                         if (oldItem == null) continue;
                         if (!GiveItem(world, equip.PlayerId, oldItem, 1))
@@ -141,9 +132,8 @@ public sealed class InventorySystem : ISimulationSystem
     {
         if (item == null) return false;
 
-        var e = world.Entities.Get(entityId);
-        if (e == null) return false;
-        var inv = e.Get<InventoryState>()!;
+        var inv = world.Get<InventoryState>(entityId);
+        if (inv == null) return false;
 
         int? stackSlot = null;
         int? emptySlot = null;
@@ -172,10 +162,9 @@ public sealed class InventorySystem : ISimulationSystem
 
     private void TakeItem(World world, EntityId entityId, int slotIndex, short amount)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var hotbar = e.Get<HotbarState>();
-        var inv = e.Get<InventoryState>()!;
+        if (!world.IsAlive(entityId)) return;
+        var hotbar = world.Get<HotbarState>(entityId);
+        var inv = world.Get<InventoryState>(entityId)!;
 
         if (amount <= 0) amount = 1;
 
@@ -206,10 +195,9 @@ public sealed class InventorySystem : ISimulationSystem
 
     private void DropItem(World world, Tick tick, EntityId entityId, int slotIndex, short amount)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var inv = e.Get<InventoryState>()!;
-        var pos = e.Get<Position>()!;
+        if (!world.IsAlive(entityId)) return;
+        var inv = world.Get<InventoryState>(entityId)!;
+        var pos = world.Get<Position>(entityId)!;
 
         if (inv.Slots[slotIndex].ItemId == Guid.Empty) return;
         var item = world.Catalog.Items.Get(inv.Slots[slotIndex].ItemId);
@@ -223,11 +211,10 @@ public sealed class InventorySystem : ISimulationSystem
 
     private void UseItem(World world, Tick tick, EntityId entityId, int slotIndex, ItemSlot slot)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var level = e.Get<LevelComponent>()!;
-        var vitals = e.Get<Vitals>()!;
-        var appearance = e.Get<PlayerAppearance>()!;
+        if (!world.IsAlive(entityId)) return;
+        var level = world.Get<LevelComponent>(entityId)!;
+        var vitals = world.Get<Vitals>(entityId)!;
+        var appearance = world.Get<PlayerAppearance>(entityId)!;
 
         var item = world.Catalog.Items.Get(slot.ItemId);
         if (item == null) return;
@@ -279,16 +266,14 @@ public sealed class InventorySystem : ISimulationSystem
 
     private void CollectItem(World world, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var pos = e.Get<Position>()!;
+        var pos = world.Get<Position>(entityId);
+        if (pos == null) return;
 
         var groundEntityId = ChunkGrid.FindAt<GroundItem>(world, pos.MapId, pos.X, pos.Y);
         if (groundEntityId == null) return;
 
-        var groundEntity = world.Entities.Get(groundEntityId.Value);
-        if (groundEntity == null) return;
-        var comp = groundEntity.Get<GroundItem>()!;
+        if (!world.IsAlive(groundEntityId.Value)) return;
+        var comp = world.Get<GroundItem>(groundEntityId.Value)!;
         var item = world.Catalog.Items.Get(comp.ItemDefId);
         if (item == null) return;
 

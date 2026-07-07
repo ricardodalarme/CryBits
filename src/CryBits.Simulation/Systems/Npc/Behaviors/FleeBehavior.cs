@@ -1,27 +1,25 @@
-using CryBits.Definitions.Common;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.Spatial;
-using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Systems.Npc.Behaviors;
 
 public sealed class FleeBehavior : INpcBehavior
 {
-    public Intent? GetNextAction(World world, EntityState entity, Definitions.Npcs.Npc npcData, Tick tick)
+    public Intent? GetNextAction(World world, EntityId entity, Definitions.Npcs.Npc npcData, Tick tick)
     {
-        var npcState = entity.Get<NpcState>()!;
+        var npcState = world.Get<NpcState>(entity)!;
         if (!npcState.TargetId.HasValue) return null;
 
-        var targetE = world.Entities.Get(npcState.TargetId.Value);
-        if (targetE == null) return null;
+        var targetE = npcState.TargetId.Value;
+        if (!world.IsAlive(targetE)) return null;
 
-        var pos = entity.Get<Position>()!;
-        var targetPos = targetE.Get<Position>();
+        var pos = world.Get<Position>(entity)!;
+        var targetPos = world.Get<Position>(targetE);
         if (targetPos == null) return null;
 
-        if (entity.Has<PathFollow>())
+        if (world.Has<PathFollow>(entity))
             return null;
 
         var fleeX = pos.X + (pos.X - targetPos.X) * 4;
@@ -30,7 +28,7 @@ public sealed class FleeBehavior : INpcBehavior
         var path = Pathfinder.FindPath(world, pos.MapId, pos.X, pos.Y, fleeX, fleeY, maxRange: 12);
         if (path != null)
         {
-            world.Set(entity.Id, new PathFollow(path));
+            world.Set(entity, new PathFollow(path));
             return null;
         }
 

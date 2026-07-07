@@ -31,8 +31,8 @@ internal sealed class AttackSystem(
 
         if (!inputManager.IsKeyPressed(Keyboard.Key.LControl)) return;
 
-        var state = context.World.Get<AttackComponent>(entity.Value);
-        if (state == null || state.AttackCountdown > 0f) return;
+        var entityId = context.World.Get<AttackComponent>(entity.Value);
+        if (entityId == null || entityId.AttackCountdown > 0f) return;
         if (uiContext.TryGet<Panel>("Trade", out var tradePanel) && tradePanel.Visible) return;
         if (uiContext.TryGet<Panel>("Shop", out var shopPanel) && shopPanel.Visible) return;
 

@@ -4,7 +4,6 @@ using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Spatial;
-using CryBits.Simulation.State;
 using static CryBits.Definitions.Globals;
 using MapDef = CryBits.Definitions.Maps.Map;
 
@@ -52,29 +51,29 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
 
         _pendingDestroy.Clear();
 
-        foreach (var state in context.World.All)
+        foreach (var entityId in context.World.All)
         {
-            var particle = state.Get<WeatherParticleComponent>();
-            var transform = state.Get<TransformComponent>();
+            var particle = context.World.Get<WeatherParticleComponent>(entityId);
+            var transform = context.World.Get<TransformComponent>(entityId);
             if (particle == null || transform == null) continue;
 
             switch (type)
             {
                 case WeatherType.Rain or WeatherType.Thunder:
-                    context.World.Set(state.Id, new TransformComponent(
+                    context.World.Set(entityId, new TransformComponent(
                         transform.X + particle.Speed,
                         transform.Y + particle.Speed
                     ));
                     break;
 
                 case WeatherType.Snow:
-                    MoveSnow(context.World, state.Id, particle, transform, snowMove);
+                    MoveSnow(context.World, entityId, particle, transform, snowMove);
                     break;
             }
 
-            var newTransform = context.World.Get<TransformComponent>(state.Id) ?? transform;
+            var newTransform = context.World.Get<TransformComponent>(entityId) ?? transform;
             if (newTransform.X > ScreenWidth || newTransform.Y > ScreenHeight)
-                _pendingDestroy.Add(state.Id);
+                _pendingDestroy.Add(entityId);
         }
 
         foreach (var id in _pendingDestroy)

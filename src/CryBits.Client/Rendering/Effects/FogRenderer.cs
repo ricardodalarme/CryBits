@@ -11,10 +11,10 @@ internal sealed class FogRenderer(World world, SpriteBatch spriteBatch) : IRende
     {
         var screenDest = new Rectangle(0, 0, ScreenWidth, ScreenHeight);
 
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var sprite = state.Get<SpriteComponent>();
-            var fog = state.Get<FogComponent>();
+            var sprite = world.Get<SpriteComponent>(entityId);
+            var fog = world.Get<FogComponent>(entityId);
             if (sprite == null || fog == null) continue;
 
             var source = new Rectangle(

@@ -39,10 +39,10 @@ internal sealed class TradeViewModel(World world, IntentSender intentSender, Def
 
     public void RemoveOfferItem(short slot)
     {
-        var localPlayerId = _world.Entities.All.FirstOrDefault(s => s.Has<LocalPlayerTag>())?.Id;
+        var localPlayerId = _world.Entities.All.FirstOrDefault(s => _world.Has<LocalPlayerTag>(s));
 
-        if (localPlayerId == null || slot >= OwnOffer.Length) return;
-        var inv = _world.Get<InventoryState>(localPlayerId.Value);
+        if (slot >= OwnOffer.Length) return;
+        var inv = _world.Get<InventoryState>(localPlayerId);
         if (inv == null) return;
 
         var offer = OwnOffer[slot];

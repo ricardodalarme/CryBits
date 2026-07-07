@@ -2,7 +2,7 @@ using CryBits.Host.Core;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.State;
+using CryBits.Simulation.Core;
 using CryBits.Transport;
 using CryBits.Transport.Abstractions;
 
@@ -37,8 +37,7 @@ public sealed class PackageSender(ITransport transport, SessionManager sessions,
         foreach (var t in sessions.Where(t => t.IsPlaying && t.Character.HasValue))
         {
             var characterId = t.Character!.Value;
-            var entity = entities.Get(characterId);
-            var pos = entity?.Get<Position>();
+            var pos = entities.Get<Position>(characterId);
             if (pos?.MapId == mapId)
                 transport.Send(t.Id, bytes, delivery);
         }

@@ -1,7 +1,7 @@
 using CryBits.Client.Components;
 using CryBits.Client.Core;
 using CryBits.Client.Rendering.Camera;
-using CryBits.Simulation.State;
+using CryBits.Simulation.Core;
 using SFML.System;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
@@ -14,19 +14,16 @@ internal sealed class CameraSystem(GameContext context, CameraManager cameraMana
     public void Update(float dt)
     {
         var target = (EntityId?)null;
-        foreach (var state in context.World.All)
+        foreach (var entityId in context.World.All)
         {
-            if (state.Has<CameraTargetTag>() && state.Has<TransformComponent>())
+            if (context.World.Has<CameraTargetTag>(entityId) && context.World.Has<TransformComponent>(entityId))
             {
-                target = state.Id;
+                target = entityId;
                 break;
             }
         }
 
-        if (target is null)
-        {
-            target = context.LocalPlayerEntity;
-        }
+        target ??= context.LocalPlayerEntity;
 
         if (target is null || !context.World.IsAlive(target.Value)) return;
 

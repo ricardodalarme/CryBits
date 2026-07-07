@@ -2,7 +2,6 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Spawners;
-using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Systems.Inventory;
 
@@ -19,13 +18,13 @@ public sealed class GroundItemSystem : ISimulationSystem
         }
 
         var toDestroy = new List<EntityId>();
-        foreach (var state in world.Entities.All)
+        foreach (var entityId in world.Entities.All)
         {
-            var groundItem = state.Get<GroundItem>();
+            var groundItem = world.Get<GroundItem>(entityId);
             if (groundItem == null || groundItem.DespawnTick < 0) continue;
 
             if (tick.TickNumber >= groundItem.DespawnTick)
-                toDestroy.Add(state.Id);
+                toDestroy.Add(entityId);
         }
 
         foreach (var id in toDestroy)

@@ -1,10 +1,8 @@
-using CryBits.Host.Core;
 using CryBits.Protocol.Packets;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Protocol.Serialization;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using CryBits.Simulation.State;
 using MemoryPack;
 
 namespace CryBits.Host.Replication;
@@ -28,8 +26,7 @@ internal sealed class DeltaEncoder(World world)
 
         foreach (var entityId in visibleEntities)
         {
-            var state = world.Entities.Get(entityId);
-            if (state == null) continue;
+            if (!world.IsAlive(entityId)) continue;
 
             var serverId = entityId.Value;
             visibleIds.Add(serverId);
@@ -38,16 +35,16 @@ internal sealed class DeltaEncoder(World world)
             var delta = new EntityDelta
             {
                 EntityId = serverId,
-                Kind = DetermineKind(state),
+                Kind = DetermineKind(world, entityId),
                 Action = isAdded ? DeltaAction.Added : DeltaAction.Changed
             };
 
-            foreach (var (type, obj) in state.GetAllComponents())
+            foreach (var (type, obj) in world.Entities.GetAllComponents(entityId))
             {
                 var tag = ComponentTypeRegistry.Tag(type);
                 if (tag == null) continue;
 
-                if (!isAdded && state.GetVersion(type) <= observer.LastAckedTick)
+                if (!isAdded && world.Entities.GetVersion(entityId, type) <= observer.LastAckedTick)
                     continue;
 
                 var data = MemoryPackSerializer.Serialize(type, obj);
@@ -56,7 +53,7 @@ internal sealed class DeltaEncoder(World world)
 
             if (!isAdded)
             {
-                foreach (var (type, removalVersion) in state.GetRemovals())
+                foreach (var (type, removalVersion) in world.Entities.GetRemovals(entityId))
                 {
                     if (removalVersion <= observer.LastAckedTick) continue;
                     var tag = ComponentTypeRegistry.Tag(type);
@@ -91,17 +88,16 @@ internal sealed class DeltaEncoder(World world)
 
         foreach (var entityId in entityIds)
         {
-            var state = world.Entities.Get(entityId);
-            if (state == null) continue;
+            if (!world.IsAlive(entityId)) continue;
 
-            var kind = DetermineKind(state);
+            var kind = DetermineKind(world, entityId);
             var snapshot = new KeyframeEntity
             {
                 EntityId = entityId.Value,
                 Kind = kind
             };
 
-            foreach (var (type, obj) in state.GetAllComponents())
+            foreach (var (type, obj) in world.Entities.GetAllComponents(entityId))
             {
                 var tag = ComponentTypeRegistry.Tag(type);
                 if (tag == null) continue;
@@ -116,9 +112,9 @@ internal sealed class DeltaEncoder(World world)
         return packet;
     }
 
-    private static EntityKind DetermineKind(EntityState state) =>
-        state.Has<PlayerTag>() ? EntityKind.Player
-        : state.Has<NpcTag>() ? EntityKind.Npc
-        : state.Has<GroundItemTag>() ? EntityKind.GroundItem
+    private static EntityKind DetermineKind(World world, EntityId entityId) =>
+        world.Has<PlayerTag>(entityId) ? EntityKind.Player
+        : world.Has<NpcTag>(entityId) ? EntityKind.Npc
+        : world.Has<GroundItemTag>(entityId) ? EntityKind.GroundItem
         : EntityKind.Player;
 }

@@ -1,4 +1,4 @@
-using CryBits.Simulation.State;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Host.Services.Party;
 

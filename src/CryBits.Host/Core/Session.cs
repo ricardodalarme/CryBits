@@ -1,5 +1,5 @@
 using CryBits.Host.Replication;
-using CryBits.Simulation.State;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Host.Core;
 

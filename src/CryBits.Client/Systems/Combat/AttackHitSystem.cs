@@ -2,7 +2,7 @@ using CryBits.Client.Components;
 using CryBits.Client.Core;
 using CryBits.Client.Spawners;
 using CryBits.Simulation.Components;
-using CryBits.Simulation.State;
+using CryBits.Simulation.Core;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Combat;
@@ -12,11 +12,11 @@ internal sealed class AttackHitSystem(GameContext context) : IClientSystem
     public void Update(float dt)
     {
         var hits = new List<(EntityId, AttackHit)>();
-        foreach (var state in context.World.All)
+        foreach (var entityId in context.World.All)
         {
-            var hit = state.Get<AttackHit>();
+            var hit = context.World.Get<AttackHit>(entityId);
             if (hit != null)
-                hits.Add((state.Id, hit));
+                hits.Add((entityId, hit));
         }
 
         foreach (var (id, hit) in hits)

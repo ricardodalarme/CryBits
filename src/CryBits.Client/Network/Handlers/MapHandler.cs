@@ -20,9 +20,9 @@ internal class MapHandler(GameContext context, ContentSender contentSender, Audi
 
         var myEntity = context.LocalPlayerEntity;
         if (myEntity.HasValue)
-            context.World.DestroyWhere(s => s.Has<PlayerTag>() && s.Id != myEntity.Value);
+            context.World.DestroyWhere(id => context.World.Has<PlayerTag>(id) && id != myEntity.Value);
         else
-            context.World.DestroyWhere(s => s.Has<PlayerTag>());
+            context.World.DestroyWhere(id => context.World.Has<PlayerTag>(id));
 
         var map = mapRepository.LoadMap(id);
         if (map is not null)

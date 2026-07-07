@@ -3,7 +3,6 @@ using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Characters;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using CryBits.Simulation.State;
 using System.Drawing;
 using Color = SFML.Graphics.Color;
 using TextAlign = CryBits.Definitions.Common.TextAlign;
@@ -18,15 +17,15 @@ internal sealed class EntitySpriteRenderer(World world, SpriteBatch spriteBatch)
     {
         _drawList.Clear();
 
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var transform = state.Get<TransformComponent>();
+            var transform = world.Get<TransformComponent>(entityId);
             if (transform == null) continue;
-            if (!state.Has<SpriteComponent>()) continue;
-            if (!state.Has<AnimationState>()) continue;
-            if (!state.Has<PlayerAppearance>()) continue;
+            if (!world.Has<SpriteComponent>(entityId)) continue;
+            if (!world.Has<AnimationState>(entityId)) continue;
+            if (!world.Has<PlayerAppearance>(entityId)) continue;
 
-            _drawList.Add((transform.Y, state.Id));
+            _drawList.Add((transform.Y, entityId));
         }
 
         _drawList.Sort(static (a, b) => a.Y.CompareTo(b.Y));

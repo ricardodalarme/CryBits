@@ -7,7 +7,6 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.State;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.UI.Game.ViewModels;

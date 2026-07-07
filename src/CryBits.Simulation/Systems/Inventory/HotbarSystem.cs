@@ -4,7 +4,6 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Systems.Inventory;
 
@@ -38,9 +37,8 @@ public sealed class HotbarSystem : ISimulationSystem
 
     private void Add(World world, EntityId entityId, short hotbarSlot, SlotType type, short slot)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var hotbar = e.Get<HotbarState>()!;
+        if (!world.IsAlive(entityId)) return;
+        var hotbar = world.Get<HotbarState>(entityId)!;
 
         if (hotbarSlot >= hotbar.Slots.Length) return;
 
@@ -51,9 +49,8 @@ public sealed class HotbarSystem : ISimulationSystem
 
     private void Change(World world, EntityId entityId, short slotOld, short slotNew)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var hotbar = e.Get<HotbarState>()!;
+        if (!world.IsAlive(entityId)) return;
+        var hotbar = world.Get<HotbarState>(entityId)!;
 
         var newSlots = (HotbarSlot[])hotbar.Slots.Clone();
         (newSlots[slotOld], newSlots[slotNew]) = (newSlots[slotNew], newSlots[slotOld]);
@@ -62,9 +59,8 @@ public sealed class HotbarSystem : ISimulationSystem
 
     private void Use(World world, Tick tick, EntityId entityId, short hotbarSlot)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var hotbar = e.Get<HotbarState>()!;
+        if (!world.IsAlive(entityId)) return;
+        var hotbar = world.Get<HotbarState>(entityId)!;
 
         switch (hotbar.Slots[hotbarSlot].Type)
         {
@@ -77,9 +73,8 @@ public sealed class HotbarSystem : ISimulationSystem
 
     private void SyncInventorySwap(World world, EntityId entityId, short slotOld, short slotNew)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var hotbar = e.Get<HotbarState>()!;
+        if (!world.IsAlive(entityId)) return;
+        var hotbar = world.Get<HotbarState>(entityId)!;
 
         int? foundSlot = null;
         for (var i = 0; i < hotbar.Slots.Length; i++)

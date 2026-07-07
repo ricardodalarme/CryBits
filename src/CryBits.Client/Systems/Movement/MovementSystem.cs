@@ -11,15 +11,15 @@ internal sealed class MovementSystem(World world) : IClientSystem
 {
     public void Update(float dt)
     {
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var movement = state.Get<MovementComponent>();
-            var transform = state.Get<TransformComponent>();
+            var movement = world.Get<MovementComponent>(entityId);
+            var transform = world.Get<TransformComponent>(entityId);
             if (movement == null || transform == null) continue;
 
-            if (!state.Has<LocalPlayerTag>())
+            if (!world.Has<LocalPlayerTag>(entityId))
             {
-                var pos = state.Get<Position>();
+                var pos = world.Get<Position>(entityId);
                 if (pos != null && (movement.TileX != pos.X || movement.TileY != pos.Y))
                 {
                     var offsetX = pos.Direction switch
@@ -38,16 +38,16 @@ internal sealed class MovementSystem(World world) : IClientSystem
                         pos.X, pos.Y, offsetX, offsetY,
                         movement.SpeedPixelsPerSecond, MovementState.Walking, pos.Direction
                     );
-                    world.Set(state.Id, movement);
+                    world.Set(entityId, movement);
                 }
             }
 
             var newMovement = Step(movement, dt);
 
             if (newMovement != movement)
-                world.Set(state.Id, newMovement);
+                world.Set(entityId, newMovement);
 
-            world.Set(state.Id, new TransformComponent(
+            world.Set(entityId, new TransformComponent(
                 (int)(newMovement.TileX * Grid + newMovement.OffsetX),
                 (int)(newMovement.TileY * Grid + newMovement.OffsetY)
             ));

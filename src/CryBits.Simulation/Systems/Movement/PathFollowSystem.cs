@@ -1,4 +1,3 @@
-using CryBits.Definitions.Common;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
@@ -18,18 +17,18 @@ public sealed class PathFollowSystem : ISimulationSystem
 
         foreach (var entity in world.Entities.All)
         {
-            var pathFollow = entity.Get<PathFollow>();
+            var pathFollow = world.Get<PathFollow>(entity);
             if (pathFollow == null) continue;
 
             if (pathFollow.IsComplete)
             {
-                world.Remove<PathFollow>(entity.Id);
+                world.Remove<PathFollow>(entity);
                 continue;
             }
 
             var dir = pathFollow.Steps[pathFollow.NextIndex];
-            tick.Intents.Enqueue(new MoveIntent(entity.Id, dir, CommonMovement.Walking));
-            world.Set(entity.Id, pathFollow with { NextIndex = pathFollow.NextIndex + 1 });
+            tick.Intents.Enqueue(new MoveIntent(entity, dir, CommonMovement.Walking));
+            world.Set(entity, pathFollow with { NextIndex = pathFollow.NextIndex + 1 });
         }
     }
 }

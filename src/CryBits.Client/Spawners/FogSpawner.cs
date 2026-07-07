@@ -10,7 +10,7 @@ internal static class FogSpawner
 {
     public static void Spawn(World world, FogConfig? fog)
     {
-        world.DestroyWhere(s => s.Has<FogComponent>());
+        world.DestroyWhere(id => world.Has<FogComponent>(id));
 
         if (fog == null || fog.Texture == 0) return;
         var color = new Color(255, 255, 255, fog.Alpha);

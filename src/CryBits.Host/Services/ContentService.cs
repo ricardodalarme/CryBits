@@ -58,7 +58,7 @@ internal sealed class ContentService(
                 }
                 else if (t.Character.HasValue)
                 {
-                    var otherPos = host.Entities.Get(t.Character.Value)?.Get<Position>();
+                    var otherPos = host.Entities.Get<Position>(t.Character.Value);
                     if (otherPos?.MapId == tempMap.Id)
                         contentSender.Map(t, tempMap.Id);
                 }
@@ -131,8 +131,7 @@ internal sealed class ContentService(
         else
         {
             var entityId = session.Character!.Value;
-            var state = host.Entities.Get(entityId)!;
-            var pos = state.Get<Position>()!;
+            var pos = host.Entities.Get<Position>(entityId)!;
             var mapInstance = host.Maps[pos.MapId];
 
             if (packet.SendMap) contentSender.Map(session, mapInstance.Id);

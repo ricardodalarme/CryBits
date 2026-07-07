@@ -1,7 +1,6 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Core;
-using CryBits.Simulation.State;
 
 namespace CryBits.Client.Core;
 

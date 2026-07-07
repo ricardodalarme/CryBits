@@ -34,9 +34,9 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
         var weather = GetEffectiveWeather(map);
         if (weather == WeatherType.None) return;
 
-        foreach (var state in context.World.All)
+        foreach (var entityId in context.World.All)
         {
-            var lightning = state.Get<LightningComponent>();
+            var lightning = context.World.Get<LightningComponent>(entityId);
             if (lightning == null) continue;
 
             if (lightning.Intensity > 0)
@@ -48,7 +48,7 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
                     newAccumulator -= LightningDecayInterval;
                     newIntensity = newIntensity > 10 ? (byte)(newIntensity - 10) : (byte)0;
                 }
-                context.World.Set(state.Id, new LightningComponent(newIntensity, newAccumulator));
+                context.World.Set(entityId, new LightningComponent(newIntensity, newAccumulator));
             }
         }
 
@@ -65,12 +65,12 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
 
         if (thunder < 3)
         {
-            foreach (var state in context.World.All)
+            foreach (var entityId in context.World.All)
             {
-                var lightning = state.Get<LightningComponent>();
+                var lightning = context.World.Get<LightningComponent>(entityId);
                 if (lightning == null) continue;
 
-                context.World.Set(state.Id, new LightningComponent(190, 0f));
+                context.World.Set(entityId, new LightningComponent(190, 0f));
             }
         }
     }

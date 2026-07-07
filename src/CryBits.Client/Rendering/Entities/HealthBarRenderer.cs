@@ -10,12 +10,12 @@ internal sealed class HealthBarRenderer(World world, SpriteBatch spriteBatch) : 
 {
     public void Render()
     {
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var transform = state.Get<TransformComponent>();
-            var vitals = state.Get<Vitals>();
-            var anim = state.Get<AnimationState>();
-            var sprite = state.Get<SpriteComponent>();
+            var transform = world.Get<TransformComponent>(entityId);
+            var vitals = world.Get<Vitals>(entityId);
+            var anim = world.Get<AnimationState>(entityId);
+            var sprite = world.Get<SpriteComponent>(entityId);
             if (transform == null || vitals == null || anim == null || sprite == null) continue;
 
             var hp = vitals.Hp;

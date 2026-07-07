@@ -10,10 +10,10 @@ using CryBits.Persistence.Repositories;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Spatial;
 using CryBits.Simulation.Spawners;
-using CryBits.Simulation.State;
 using CryBits.Transport;
 using CryBits.Transport.Abstractions;
 using MemoryPack;
@@ -149,11 +149,10 @@ internal sealed class CharacterService(
         var session = host.Sessions.Get(entityId);
         if (session?.Account == null) return;
 
-        var entity = host.Entities.Get(entityId);
-        var playerName = entity?.Get<PlayerAppearance>()?.Name ?? "unknown";
-        if (entity != null)
+        var playerName = host.Simulation.Get<PlayerAppearance>(entityId)?.Name ?? "unknown";
+        if (host.Simulation.IsAlive(entityId))
         {
-            WriteCharacterSave(session, entity);
+            WriteCharacterSave(session, entityId);
             logger.ZLogDebug($"Player {playerName} saved to database");
         }
 
@@ -171,16 +170,16 @@ internal sealed class CharacterService(
         session.Character = null;
     }
 
-    private void WriteCharacterSave(Session session, EntityState entity)
+    private void WriteCharacterSave(Session session, EntityId entity)
     {
-        var pos = entity.Get<Position>();
-        var appearance = entity.Get<PlayerAppearance>();
-        var level = entity.Get<LevelComponent>();
-        var attrs = entity.Get<AttributesComponent>();
-        var vitals = entity.Get<Vitals>();
-        var inv = entity.Get<InventoryState>();
-        var equip = entity.Get<EquipmentState>();
-        var hotbar = entity.Get<HotbarState>();
+        var pos = host.Simulation.Get<Position>(entity);
+        var appearance = host.Simulation.Get<PlayerAppearance>(entity);
+        var level = host.Simulation.Get<LevelComponent>(entity);
+        var attrs = host.Simulation.Get<AttributesComponent>(entity);
+        var vitals = host.Simulation.Get<Vitals>(entity);
+        var inv = host.Simulation.Get<InventoryState>(entity);
+        var equip = host.Simulation.Get<EquipmentState>(entity);
+        var hotbar = host.Simulation.Get<HotbarState>(entity);
 
         if (pos == null || appearance == null || level == null || attrs == null || vitals == null ||
             inv == null || equip == null || hotbar == null) return;
@@ -230,8 +229,8 @@ internal sealed class CharacterService(
     {
         logger.ZLogInformation($"Player {data.Name} joined world on map {data.MapId}");
         var entityId = PlayerSpawner.Spawn(host.Simulation, data);
-        var state = host.Entities.Get(entityId)!;
-        var pos = state.Get<Position>()!;
+        if (!host.Simulation.IsAlive(entityId)) return;
+        var pos = host.Simulation.Get<Position>(entityId)!;
         if (!host.Maps.TryGetValue(pos.MapId, out var mapDef)) return;
 
         host.Sessions.Register(entityId, session);
@@ -274,11 +273,11 @@ internal sealed class CharacterService(
     private static List<EntityId> GetAllEntitiesOnMap(EntityRegistry entities, Guid mapId)
     {
         var result = new List<EntityId>();
-        foreach (var state in entities.All)
+        foreach (var entityId in entities.All)
         {
-            var pos = state.Get<Position>();
+            var pos = entities.Get<Position>(entityId);
             if (pos != null && pos.MapId == mapId)
-                result.Add(state.Id);
+                result.Add(entityId);
         }
         return result;
     }

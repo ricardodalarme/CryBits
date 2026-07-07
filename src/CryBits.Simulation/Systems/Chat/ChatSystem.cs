@@ -18,10 +18,9 @@ public sealed class ChatSystem : ISimulationSystem
             if (chat.Text.Any(c => c < 32 || c > 126))
                 continue;
 
-            var entity = world.Entities.Get(chat.SourceEntityId);
-            if (entity == null) continue;
+            if (!world.IsAlive(chat.SourceEntityId)) continue;
 
-            var appearance = entity.Get<PlayerAppearance>();
+            var appearance = world.Get<PlayerAppearance>(chat.SourceEntityId);
             if (appearance == null) continue;
 
             var formatted = appearance.Name + ": " + chat.Text;
@@ -29,23 +28,23 @@ public sealed class ChatSystem : ISimulationSystem
             switch (chat.Type)
             {
                 case Message.Global:
-                    foreach (var state in world.Entities.All)
+                    foreach (var entityId in world.Entities.All)
                     {
-                        if (!state.Has<PlayerTag>()) continue;
-                        tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, state.Id, formatted, ChatColors.White));
+                        if (!world.Has<PlayerTag>(entityId)) continue;
+                        tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, formatted, ChatColors.White));
                     }
                     break;
 
                 case Message.Map:
-                    var sourcePos = entity.Get<Position>();
+                    var sourcePos = world.Get<Position>(chat.SourceEntityId);
                     if (sourcePos == null) break;
 
-                    foreach (var state in world.Entities.All)
+                    foreach (var entityId in world.Entities.All)
                     {
-                        if (!state.Has<PlayerTag>()) continue;
-                        var pos = state.Get<Position>();
+                        if (!world.Has<PlayerTag>(entityId)) continue;
+                        var pos = world.Get<Position>(entityId);
                         if (pos == null || pos.MapId != sourcePos.MapId) continue;
-                        tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, state.Id, formatted, ChatColors.White));
+                        tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, formatted, ChatColors.White));
                     }
                     break;
 

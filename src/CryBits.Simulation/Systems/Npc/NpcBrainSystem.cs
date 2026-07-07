@@ -1,4 +1,3 @@
-using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Utils;
@@ -6,7 +5,6 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Spatial;
-using CryBits.Simulation.State;
 using CryBits.Simulation.Systems.Npc.Behaviors;
 using static CryBits.Simulation.SimulationConstants;
 
@@ -27,36 +25,36 @@ public sealed class NpcBrainSystem : ISimulationSystem
 
         foreach (var e in world.Entities.All)
         {
-            if (!e.Has<NpcTag>()) continue;
-            var npcState = e.Get<NpcState>();
+            if (!world.Has<NpcTag>(e)) continue;
+            var npcState = world.Get<NpcState>(e);
             if (npcState == null) continue;
 
-            var pathFollow = e.Get<PathFollow>();
+            var pathFollow = world.Get<PathFollow>(e);
             if (pathFollow != null && !pathFollow.IsComplete)
             {
                 if (npcState.TargetId.HasValue && world.IsAlive(npcState.TargetId.Value))
                     continue;
-                world.Remove<PathFollow>(e.Id);
+                world.Remove<PathFollow>(e);
             }
 
-            UpdateTarget(world, e.Id, tick);
+            UpdateTarget(world, e, tick);
 
             var npcData = world.Catalog.Npcs.Get(npcState.NpcDefId);
             if (npcData == null) continue;
 
-            var behavior = PickBehavior(e, npcData, npcState);
+            var behavior = PickBehavior(world, e, npcData, npcState);
             var intent = behavior.GetNextAction(world, e, npcData, tick);
             if (intent != null)
                 tick.Intents.Enqueue(intent);
         }
     }
 
-    private INpcBehavior PickBehavior(EntityState entity, Definitions.Npcs.Npc npcData, NpcState npcState)
+    private INpcBehavior PickBehavior(World world, EntityId entity, Definitions.Npcs.Npc npcData, NpcState npcState)
     {
         if (!npcState.TargetId.HasValue)
             return npcData.Movement == MovementStyle.MoveRandomly ? _wander : _idle;
 
-        var vitals = entity.Get<Vitals>()!;
+        var vitals = world.Get<Vitals>(entity)!;
         if (vitals.Hp * 100 <= vitals.MaxHp * npcData.FleeHealth)
             return _flee;
 
@@ -65,10 +63,9 @@ public sealed class NpcBrainSystem : ISimulationSystem
 
     private void UpdateTarget(World world, EntityId npcId, Tick tick)
     {
-        var e = world.Entities.Get(npcId);
-        if (e == null) return;
-        var npcState = e.Get<NpcState>()!;
-        var pos = e.Get<Position>()!;
+        if (!world.IsAlive(npcId)) return;
+        var npcState = world.Get<NpcState>(npcId)!;
+        var pos = world.Get<Position>(npcId)!;
         var npcData = world.Catalog.Npcs.Get(npcState.NpcDefId);
         if (npcData is null) return;
 
@@ -77,19 +74,19 @@ public sealed class NpcBrainSystem : ISimulationSystem
 
         if (npcState.TargetId.HasValue)
         {
-            var targetE = world.Entities.Get(npcState.TargetId.Value);
-            if (targetE != null)
+            var targetId = npcState.TargetId.Value;
+            if (world.IsAlive(targetId))
             {
-                if (targetE.Has<PlayerTag>())
+                if (world.Has<PlayerTag>(targetId))
                 {
-                    var targetPos = targetE.Get<Position>()!;
+                    var targetPos = world.Get<Position>(targetId)!;
                     if (targetPos.MapId != pos.MapId)
                         world.Update<NpcState>(npcId, s => s with { TargetId = null });
                 }
-                else if (targetE.Has<NpcTag>())
+                else if (world.Has<NpcTag>(targetId))
                 {
-                    var targetNpcState = targetE.Get<NpcState>();
-                    var targetPos = targetE.Get<Position>()!;
+                    var targetNpcState = world.Get<NpcState>(targetId);
+                    var targetPos = world.Get<Position>(targetId)!;
                     if (targetNpcState == null || targetPos.MapId != pos.MapId)
                         world.Update<NpcState>(npcId, s => s with { TargetId = null });
                 }
@@ -100,9 +97,9 @@ public sealed class NpcBrainSystem : ISimulationSystem
 
         if (npcState.TargetId.HasValue)
         {
-            var targetE = world.Entities.Get(npcState.TargetId.Value);
-            if (targetE == null) return;
-            var targetPos = targetE.Get<Position>()!;
+            var targetId = npcState.TargetId.Value;
+            if (!world.IsAlive(targetId)) return;
+            var targetPos = world.Get<Position>(targetId)!;
             var distance = Math.Sqrt(Math.Pow(pos.X - targetPos.X, 2) + Math.Pow(pos.Y - targetPos.Y, 2));
             if (npcData.Sight < distance)
                 world.Update<NpcState>(npcId, s => s with { TargetId = null });
@@ -111,10 +108,9 @@ public sealed class NpcBrainSystem : ISimulationSystem
 
     private void ScanForTarget(World world, EntityId npcId, Tick tick)
     {
-        var e = world.Entities.Get(npcId);
-        if (e == null) return;
-        var npcState = e.Get<NpcState>()!;
-        var pos = e.Get<Position>()!;
+        if (!world.IsAlive(npcId)) return;
+        var npcState = world.Get<NpcState>(npcId)!;
+        var pos = world.Get<Position>(npcId)!;
         var npcData = world.Catalog.Npcs.Get(npcState.NpcDefId);
         if (npcData is null) return;
 

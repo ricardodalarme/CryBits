@@ -9,12 +9,12 @@ internal sealed class GroundSpriteRenderer(World world, SpriteBatch spriteBatch)
 {
     public void Render()
     {
-        foreach (var state in world.All)
+        foreach (var entityId in world.All)
         {
-            var transform = state.Get<TransformComponent>();
-            var sprite = state.Get<SpriteComponent>();
+            var transform = world.Get<TransformComponent>(entityId);
+            var sprite = world.Get<SpriteComponent>(entityId);
             if (transform == null || sprite == null) continue;
-            if (state.Has<AnimationState>()) continue;
+            if (world.Has<AnimationState>(entityId)) continue;
 
             var source = sprite.SourceRect.HasValue ? sprite.SourceRect.Value : new Rectangle(Point.Empty, sprite.Texture.ToSize());
             var dest = source with { X = transform.X, Y = transform.Y };

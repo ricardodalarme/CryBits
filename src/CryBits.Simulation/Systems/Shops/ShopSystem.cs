@@ -6,7 +6,6 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.State;
 
 namespace CryBits.Simulation.Systems.Shops;
 
@@ -41,9 +40,8 @@ public sealed class ShopSystem : ISimulationSystem
                 case NpcAttackedEvent e:
                     {
                         if (!world.Has<PlayerTag>(e.AttackerId) || !world.Has<NpcTag>(e.NpcInstanceId)) break;
-                        var npcE = world.Entities.Get(e.NpcInstanceId);
-                        if (npcE == null) break;
-                        var npcState = npcE.Get<NpcState>()!;
+                        if (!world.IsAlive(e.NpcInstanceId)) break;
+                        var npcState = world.Get<NpcState>(e.NpcInstanceId)!;
                         var npcData = world.Catalog.Npcs.Get(npcState.NpcDefId);
                         if (npcData is null) break;
                         if (npcData.Behaviour == Behaviour.ShopKeeper)
@@ -69,11 +67,10 @@ public sealed class ShopSystem : ISimulationSystem
 
     private void Buy(World world, Tick tick, EntityId entityId, short shopSoldIndex)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var shopState = e.Get<ShopState>();
+        if (!world.IsAlive(entityId)) return;
+        var shopState = world.Get<ShopState>(entityId);
         if (shopState?.ShopId == null) return;
-        var inv = e.Get<InventoryState>()!;
+        var inv = world.Get<InventoryState>(entityId)!;
         var shop = world.Catalog.Shops.Get(shopState.ShopId.Value);
         if (shop is null) return;
         var shopSold = shop.Sold[shopSoldIndex];
@@ -111,11 +108,10 @@ public sealed class ShopSystem : ISimulationSystem
 
     private void Sell(World world, Tick tick, EntityId entityId, byte inventorySlotIndex, short amount)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var shopState = e.Get<ShopState>();
+        if (!world.IsAlive(entityId)) return;
+        var shopState = world.Get<ShopState>(entityId);
         if (shopState?.ShopId == null) return;
-        var inv = e.Get<InventoryState>()!;
+        var inv = world.Get<InventoryState>(entityId)!;
 
         var shop = world.Catalog.Shops.Get(shopState.ShopId.Value);
         if (shop is null) return;

@@ -76,8 +76,8 @@ internal sealed class Server(
         {
             if (!t.IsPlaying) continue;
             var entityId = t.Character!.Value;
-            var entity = host.Entities.Get(entityId);
-            if (entity == null) continue;
+            var hasEntity = host.Entities.All.Contains(entityId);
+            if (!hasEntity) continue;
             characterService.Leave(entityId);
         }
 

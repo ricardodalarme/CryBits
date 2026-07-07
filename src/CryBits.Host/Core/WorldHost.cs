@@ -5,7 +5,6 @@ using CryBits.Host.Scheduling;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.State;
 using CryBits.Transport.Abstractions;
 using Microsoft.Extensions.Logging;
 

@@ -4,9 +4,7 @@ using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Formulas;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.State;
 using static CryBits.Definitions.Globals;
-using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Simulation.Systems.Progression;
 
@@ -71,10 +69,9 @@ public sealed class LevelingSystem : ISimulationSystem
 
     private void AddPoint(World world, EntityId entityId, byte attributeNum)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var level = e.Get<LevelComponent>()!;
-        var attrs = e.Get<AttributesComponent>()!;
+        if (!world.IsAlive(entityId)) return;
+        var level = world.Get<LevelComponent>(entityId)!;
+        var attrs = world.Get<AttributesComponent>(entityId)!;
 
         if (level.Points <= 0) return;
 
@@ -86,9 +83,8 @@ public sealed class LevelingSystem : ISimulationSystem
 
     private void GiveExperience(World world, EntityId entityId, int value)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var xpShare = e.Get<XpShareComponent>();
+        if (!world.IsAlive(entityId)) return;
+        var xpShare = world.Get<XpShareComponent>(entityId);
 
         if (xpShare?.Recipients.Count > 0 && value > 0)
             PartySplitXp(world, entityId, value);
@@ -104,9 +100,8 @@ public sealed class LevelingSystem : ISimulationSystem
 
     private void CheckLevelUp(World world, EntityId entityId)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var level = e.Get<LevelComponent>()!;
+        if (!world.IsAlive(entityId)) return;
+        var level = world.Get<LevelComponent>(entityId)!;
 
         var expNeeded = LevelingFormulas.ExperienceNeeded(level.Level);
 
@@ -130,10 +125,9 @@ public sealed class LevelingSystem : ISimulationSystem
 
     private void PartySplitXp(World world, EntityId entityId, int value)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var level = e.Get<LevelComponent>()!;
-        var xpShare = e.Get<XpShareComponent>();
+        if (!world.IsAlive(entityId)) return;
+        var level = world.Get<LevelComponent>(entityId)!;
+        var xpShare = world.Get<XpShareComponent>(entityId);
         if (xpShare == null) return;
 
         var diff = new double[xpShare.Recipients.Count];
@@ -141,9 +135,9 @@ public sealed class LevelingSystem : ISimulationSystem
 
         for (byte i = 0; i < xpShare.Recipients.Count; i++)
         {
-            var memberE = world.Entities.Get(xpShare.Recipients[i]);
-            if (memberE == null) continue;
-            var memberLevel = memberE.Get<LevelComponent>()!;
+            var memberId = xpShare.Recipients[i];
+            if (!world.IsAlive(memberId)) continue;
+            var memberLevel = world.Get<LevelComponent>(memberId)!;
             var difference = Math.Abs(level.Level - memberLevel.Level);
             diff[i] = LevelingFormulas.PartyXpWeight(difference);
             diffSum += diff[i];

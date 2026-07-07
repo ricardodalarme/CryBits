@@ -4,7 +4,6 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Events;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.State;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Simulation.Systems.Inventory;
@@ -33,10 +32,9 @@ public sealed class EquipmentSystem : ISimulationSystem
 
     private void Equip(World world, Tick tick, EntityId entityId, Item item)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var equip = e.Get<EquipmentState>()!;
-        var attrs = e.Get<AttributesComponent>()!;
+        if (!world.IsAlive(entityId)) return;
+        var equip = world.Get<EquipmentState>(entityId)!;
+        var attrs = world.Get<AttributesComponent>(entityId)!;
 
         var oldItemId = equip.Slots[item.EquipType];
         var oldItem = oldItemId != Guid.Empty ? world.Catalog.Items.Get(oldItemId) : null;
@@ -59,10 +57,9 @@ public sealed class EquipmentSystem : ISimulationSystem
 
     private void Unequip(World world, Tick tick, EntityId entityId, byte equipSlot)
     {
-        var e = world.Entities.Get(entityId);
-        if (e == null) return;
-        var equip = e.Get<EquipmentState>()!;
-        var attrs = e.Get<AttributesComponent>()!;
+        if (!world.IsAlive(entityId)) return;
+        var equip = world.Get<EquipmentState>(entityId)!;
+        var attrs = world.Get<AttributesComponent>(entityId)!;
 
         var oldItemId = equip.Slots[equipSlot];
         if (oldItemId == Guid.Empty) return;
