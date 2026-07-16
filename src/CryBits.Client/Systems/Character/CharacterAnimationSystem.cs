@@ -1,5 +1,5 @@
 using CryBits.Client.Components;
-using CryBits.Definitions.Characters;
+using CryBits.Client.Rendering.Entities;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using static CryBits.Definitions.Globals;

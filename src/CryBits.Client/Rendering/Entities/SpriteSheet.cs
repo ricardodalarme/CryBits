@@ -1,6 +1,6 @@
 using CryBits.Definitions.Common;
 
-namespace CryBits.Definitions.Characters;
+namespace CryBits.Client.Rendering.Entities;
 
 public sealed record SpriteSheet(int Columns, int Rows, byte RowDown, byte RowLeft, byte RowRight, byte RowUp)
 {

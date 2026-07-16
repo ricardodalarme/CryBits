@@ -1,6 +1,5 @@
 using CryBits.Client.Components;
 using CryBits.Client.Framework.Assets;
-using CryBits.Definitions.Characters;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using System.Drawing;

@@ -1,5 +1,5 @@
 using CryBits.Client.Framework.Assets;
-using CryBits.Definitions.Characters;
+using CryBits.Client.Rendering.Entities;
 using CryBits.Definitions.Common;
 using System.Drawing;
 using Color = SFML.Graphics.Color;
