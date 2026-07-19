@@ -197,7 +197,8 @@ internal sealed class SnapshotApplier(
 
     private void PruneStaleEntities(Guid mapId, HashSet<long> receivedNetworkIds)
     {
-        var toDestroy = new List<EntityId>();
+        var commandBuffer = new CommandBuffer(world);
+
         foreach (var entityId in world.All)
         {
             var pos = world.Get<Position>(entityId);
@@ -205,15 +206,12 @@ internal sealed class SnapshotApplier(
             if (pos != null && pos.MapId == mapId && nid != null
                 && !receivedNetworkIds.Contains(nid.Value))
             {
-                toDestroy.Add(entityId);
+                context.UnregisterNetworkEntity(nid.Value);
+                commandBuffer.Destroy(entityId);
             }
         }
-        foreach (var id in toDestroy)
-        {
-            var nid = world.Get<NetworkId>(id);
-            if (nid != null) context.UnregisterNetworkEntity(nid.Value);
-            world.Destroy(id);
-        }
+
+        commandBuffer.Flush();
     }
 
     private static T? DeserializeComp<T>(List<ComponentData> components) where T : class

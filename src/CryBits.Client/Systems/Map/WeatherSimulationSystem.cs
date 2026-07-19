@@ -11,8 +11,6 @@ namespace CryBits.Client.Systems.Map;
 
 internal sealed class WeatherSimulationSystem(GameContext context) : IClientSystem
 {
-    private readonly List<EntityId> _pendingDestroy = [];
-
     private const float SnowDriftInterval = 0.035f;
 
     private float _snowMoveAccumulator;
@@ -49,7 +47,7 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
         var snowMove = _snowMoveAccumulator >= SnowDriftInterval;
         if (snowMove) _snowMoveAccumulator -= SnowDriftInterval;
 
-        _pendingDestroy.Clear();
+        var commands = new CommandBuffer(context.World);
 
         foreach (var entityId in context.World.All)
         {
@@ -73,11 +71,10 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
 
             var newTransform = context.World.Get<TransformComponent>(entityId) ?? transform;
             if (newTransform.X > ScreenWidth || newTransform.Y > ScreenHeight)
-                _pendingDestroy.Add(entityId);
+                commands.Destroy(entityId);
         }
 
-        foreach (var id in _pendingDestroy)
-            context.World.Destroy(id);
+        commands.Flush();
     }
 
     private static void MoveSnow(World world, EntityId entityId, WeatherParticleComponent p, TransformComponent t, bool xAxis)

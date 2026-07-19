@@ -5,11 +5,9 @@ namespace CryBits.Client.Systems.Core;
 
 internal sealed class FadeSystem(World world) : IClientSystem
 {
-    private readonly List<EntityId> _pendingDestroy = [];
-
     public void Update(float deltaTime)
     {
-        _pendingDestroy.Clear();
+        var commands = new CommandBuffer(world);
 
         foreach (var entityId in world.All)
         {
@@ -32,10 +30,9 @@ internal sealed class FadeSystem(World world) : IClientSystem
             world.Set(entityId, fade with { Timer = fade.IntervalSeconds });
 
             if (newAlpha == 0)
-                _pendingDestroy.Add(entityId);
+                commands.Destroy(entityId);
         }
 
-        foreach (var id in _pendingDestroy)
-            world.Destroy(id);
+        commands.Flush();
     }
 }

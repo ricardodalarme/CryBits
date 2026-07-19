@@ -15,6 +15,8 @@ public sealed class PathFollowSystem : ISimulationSystem
         if (tick.TickNumber - _lastTick < TicksPerSecond / 2) return;
         _lastTick = tick.TickNumber;
 
+        var commands = new CommandBuffer(world);
+
         foreach (var entity in world.Entities.All)
         {
             var pathFollow = world.Get<PathFollow>(entity);
@@ -22,13 +24,15 @@ public sealed class PathFollowSystem : ISimulationSystem
 
             if (pathFollow.IsComplete)
             {
-                world.Remove<PathFollow>(entity);
+                commands.Remove<PathFollow>(entity);
                 continue;
             }
 
             var dir = pathFollow.Steps[pathFollow.NextIndex];
             tick.Intents.Enqueue(new MoveIntent(entity, dir, CommonMovement.Walking));
-            world.Set(entity, pathFollow with { NextIndex = pathFollow.NextIndex + 1 });
+            commands.Set(entity, pathFollow with { NextIndex = pathFollow.NextIndex + 1 });
         }
+
+        commands.Flush();
     }
 }

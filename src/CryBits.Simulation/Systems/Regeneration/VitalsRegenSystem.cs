@@ -16,6 +16,8 @@ public sealed class VitalsRegenSystem : ISimulationSystem
         if (tick.TickNumber - _lastRegenTick < RegenIntervalTicks) return;
         _lastRegenTick = tick.TickNumber;
 
+        var commands = new CommandBuffer(world);
+
         foreach (var entity in world.Entities.All)
         {
             if (!world.Has<Vitals>(entity)) continue;
@@ -42,7 +44,9 @@ public sealed class VitalsRegenSystem : ISimulationSystem
             }
 
             if (newHp != vitals.Hp || newMp != vitals.Mp)
-                world.Set(entity, new Vitals(Hp: newHp, Mp: newMp, MaxHp: vitals.MaxHp, MaxMp: vitals.MaxMp));
+                commands.Set(entity, new Vitals(Hp: newHp, Mp: newMp, MaxHp: vitals.MaxHp, MaxMp: vitals.MaxMp));
         }
+
+        commands.Flush();
     }
 }

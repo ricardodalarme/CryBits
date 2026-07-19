@@ -9,6 +9,8 @@ public sealed class GroundItemSystem : ISimulationSystem
 {
     public void Execute(World world, Tick tick)
     {
+        var commands = new CommandBuffer(world);
+
         foreach (var ev in tick.Events.Events)
         {
             if (ev is LootDroppedEvent loot)
@@ -17,17 +19,15 @@ public sealed class GroundItemSystem : ISimulationSystem
                     loot.ItemId, loot.Amount, loot.DespawnTick);
         }
 
-        var toDestroy = new List<EntityId>();
         foreach (var entityId in world.Entities.All)
         {
             var groundItem = world.Get<GroundItem>(entityId);
             if (groundItem == null || groundItem.DespawnTick < 0) continue;
 
             if (tick.TickNumber >= groundItem.DespawnTick)
-                toDestroy.Add(entityId);
+                commands.Destroy(entityId);
         }
 
-        foreach (var id in toDestroy)
-            world.Destroy(id);
+        commands.Flush();
     }
 }
