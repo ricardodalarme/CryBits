@@ -3,6 +3,7 @@ using CryBits.Client.Core;
 using CryBits.Client.Input;
 using CryBits.Client.Network.Senders;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.Spatial;
 using SFML.Window;
@@ -18,7 +19,7 @@ internal sealed class ItemPickupSystem(
     private const float ThrottleSecs = 0.250f;
     private float _cooldown;
 
-    public void Update(float dt)
+    public void Update(World world, float dt)
     {
         if (_cooldown > 0f)
             _cooldown -= dt;
@@ -26,20 +27,20 @@ internal sealed class ItemPickupSystem(
         if (!inputManager.WasKeyReleased(Keyboard.Key.Space)) return;
 
         var entity = context.LocalPlayerEntity;
-        if (entity is null || !context.World.IsAlive(entity.Value)) return;
+        if (entity is null || !world.IsAlive(entity.Value)) return;
         if (_cooldown > 0f) return;
 
-        var myTile = context.World.Get<MovementComponent>(entity.Value);
+        var myTile = world.Get<MovementComponent>(entity.Value);
         if (myTile == null) return;
 
-        var playerPos = context.World.Get<Position>(entity.Value);
+        var playerPos = world.Get<Position>(entity.Value);
         if (playerPos == null) return;
 
-        var hasItem = ChunkGrid.FindAt<GroundItem>(context.World, playerPos.MapId, myTile.TileX, myTile.TileY).HasValue;
+        var hasItem = ChunkGrid.FindAt<GroundItem>(world, playerPos.MapId, myTile.TileX, myTile.TileY).HasValue;
 
         if (!hasItem) return;
 
-        var inventory = context.World.Get<InventoryState>(entity.Value);
+        var inventory = world.Get<InventoryState>(entity.Value);
         if (inventory == null) return;
 
         for (byte i = 0; i < MaxInventory; i++)

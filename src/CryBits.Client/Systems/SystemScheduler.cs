@@ -1,3 +1,5 @@
+using CryBits.Simulation.Core;
+
 namespace CryBits.Client.Systems;
 
 internal sealed class SystemScheduler
@@ -10,11 +12,11 @@ internal sealed class SystemScheduler
         return this;
     }
 
-    public void Update(float dt)
+    public void Update(World world, float dt)
     {
         foreach (var s in _systems)
         {
-            s.Update(dt);
+            s.Update(world, dt);
         }
     }
 }

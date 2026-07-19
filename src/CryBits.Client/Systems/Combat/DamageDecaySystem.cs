@@ -3,9 +3,9 @@ using CryBits.Simulation.Core;
 
 namespace CryBits.Client.Systems.Combat;
 
-internal sealed class DamageDecaySystem(World world) : IClientSystem
+internal sealed class DamageDecaySystem : IClientSystem
 {
-    public void Update(float dt)
+    public void Update(World world, float dt)
     {
         var commands = new CommandBuffer(world);
 

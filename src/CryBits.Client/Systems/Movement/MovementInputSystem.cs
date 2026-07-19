@@ -19,30 +19,30 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
 
     private float _inputThrottle;
 
-    public void Update(float t)
+    public void Update(World world, float t)
     {
         var entity = context.LocalPlayerEntity;
-        if (entity == null || !context.World.IsAlive(entity.Value)) return;
+        if (entity == null || !world.IsAlive(entity.Value)) return;
 
         _inputThrottle += t;
         if (_inputThrottle < ThrottleInterval) return;
         _inputThrottle -= ThrottleInterval;
 
-        CheckMovement(entity.Value);
+        CheckMovement(world, entity.Value);
     }
 
-    private void CheckMovement(EntityId entity)
+    private void CheckMovement(World world, EntityId entity)
     {
-        var movement = context.World.Get<MovementComponent>(entity);
+        var movement = world.Get<MovementComponent>(entity);
         if (movement == null || movement.MovementState != MovementState.Stopped) return;
 
-        if (inputManager.IsScancodePressed(Keyboard.Scancode.Up)) Move(entity, Direction.Up, movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Down)) Move(entity, Direction.Down, movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Left)) Move(entity, Direction.Left, movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Right)) Move(entity, Direction.Right, movement);
+        if (inputManager.IsScancodePressed(Keyboard.Scancode.Up)) Move(world, entity, Direction.Up, movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Down)) Move(world, entity, Direction.Down, movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Left)) Move(world, entity, Direction.Left, movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Right)) Move(world, entity, Direction.Right, movement);
     }
 
-    private void Move(EntityId entity, Direction direction, MovementComponent movement)
+    private void Move(World world, EntityId entity, Direction direction, MovementComponent movement)
     {
         var desired = inputManager.IsKeyPressed(Keyboard.Key.LShift)
             ? MovementState.Moving
@@ -66,12 +66,12 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
         var map = context.CurrentMap;
         if (map != null && ChunkGrid.IsTileBlocked(map, nextX, nextY))
         {
-            context.World.Set(entity, movement with { Direction = direction });
+            world.Set(entity, movement with { Direction = direction });
             return;
         }
-        if (HasSolidEntityAt(nextX, nextY))
+        if (HasSolidEntityAt(world, nextX, nextY))
         {
-            context.World.Set(entity, movement with { Direction = direction });
+            world.Set(entity, movement with { Direction = direction });
             return;
         }
 
@@ -86,14 +86,14 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
             _ => (0f, 0f, movement.TileX, movement.TileY)
         };
 
-        context.World.Set(entity, new MovementComponent(tileX, tileY, offsetX, offsetY, speed, desired, direction));
+        world.Set(entity, new MovementComponent(tileX, tileY, offsetX, offsetY, speed, desired, direction));
     }
 
-    private bool HasSolidEntityAt(int tileX, int tileY)
+    private bool HasSolidEntityAt(World world, int tileX, int tileY)
     {
-        var playerPos = context.World.Get<Position>(context.LocalPlayerEntity!.Value);
+        var playerPos = world.Get<Position>(context.LocalPlayerEntity!.Value);
         if (playerPos == null) return false;
 
-        return ChunkGrid.FindAt<CollidableTag>(context.World, playerPos.MapId, tileX, tileY).HasValue;
+        return ChunkGrid.FindAt<CollidableTag>(world, playerPos.MapId, tileX, tileY).HasValue;
     }
 }

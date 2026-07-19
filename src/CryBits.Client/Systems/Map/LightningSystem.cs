@@ -4,6 +4,7 @@ using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Audio;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Spatial;
 using MapDef = CryBits.Definitions.Maps.Map;
 
@@ -15,11 +16,11 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
 
     private const float LightningDecayInterval = 0.025f;
 
-    private WeatherType GetEffectiveWeather(MapDef map)
+    private WeatherType GetEffectiveWeather(World world, MapDef map)
     {
         var playerId = context.LocalPlayerEntity;
         if (playerId == null) return map.DefaultWeather;
-        var pos = context.World.Get<Position>(playerId.Value);
+        var pos = world.Get<Position>(playerId.Value);
         if (pos == null) return map.DefaultWeather;
         var chunkCoord = ChunkGrid.FromPosition(pos.X, pos.Y);
         if (map.Chunks.TryGetValue(chunkCoord, out var chunk) && chunk.WeatherOverride.HasValue)
@@ -27,16 +28,16 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
         return map.DefaultWeather;
     }
 
-    public void Update(float dt)
+    public void Update(World world, float dt)
     {
         var map = context.CurrentMap;
         if (map == null) return;
-        var weather = GetEffectiveWeather(map);
+        var weather = GetEffectiveWeather(world, map);
         if (weather == WeatherType.None) return;
 
-        foreach (var entityId in context.World.All)
+        foreach (var entityId in world.All)
         {
-            var lightning = context.World.Get<LightningComponent>(entityId);
+            var lightning = world.Get<LightningComponent>(entityId);
             if (lightning == null) continue;
 
             if (lightning.Intensity > 0)
@@ -48,15 +49,15 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
                     newAccumulator -= LightningDecayInterval;
                     newIntensity = newIntensity > 10 ? (byte)(newIntensity - 10) : (byte)0;
                 }
-                context.World.Set(entityId, new LightningComponent(newIntensity, newAccumulator));
+                world.Set(entityId, new LightningComponent(newIntensity, newAccumulator));
             }
         }
 
         if (weather == WeatherType.Thunder)
-            TryThunder();
+            TryThunder(world);
     }
 
-    private void TryThunder()
+    private void TryThunder(World world)
     {
         if (Random.Shared.Next(0, 1000) != 0) return;
 
@@ -65,12 +66,12 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
 
         if (thunder < 3)
         {
-            foreach (var entityId in context.World.All)
+            foreach (var entityId in world.All)
             {
-                var lightning = context.World.Get<LightningComponent>(entityId);
+                var lightning = world.Get<LightningComponent>(entityId);
                 if (lightning == null) continue;
 
-                context.World.Set(entityId, new LightningComponent(190, 0f));
+                world.Set(entityId, new LightningComponent(190, 0f));
             }
         }
     }

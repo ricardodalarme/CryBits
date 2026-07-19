@@ -17,11 +17,11 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
 
     private WeatherType _lastWeatherType = WeatherType.None;
 
-    private WeatherType GetEffectiveWeather(MapDef map)
+    private WeatherType GetEffectiveWeather(World world, MapDef map)
     {
         var playerId = context.LocalPlayerEntity;
         if (playerId == null) return map.DefaultWeather;
-        var pos = context.World.Get<Position>(playerId.Value);
+        var pos = world.Get<Position>(playerId.Value);
         if (pos == null) return map.DefaultWeather;
         var chunkCoord = ChunkGrid.FromPosition(pos.X, pos.Y);
         if (map.Chunks.TryGetValue(chunkCoord, out var chunk) && chunk.WeatherOverride.HasValue)
@@ -29,12 +29,12 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
         return map.DefaultWeather;
     }
 
-    public void Update(float dt)
+    public void Update(World world, float dt)
     {
         var map = context.CurrentMap;
         if (map == null) return;
 
-        var type = GetEffectiveWeather(map);
+        var type = GetEffectiveWeather(world, map);
         if (type == WeatherType.None) return;
 
         if (type != _lastWeatherType)
@@ -49,27 +49,27 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
 
         var commands = new CommandBuffer(context.World);
 
-        foreach (var entityId in context.World.All)
+        foreach (var entityId in world.All)
         {
-            var particle = context.World.Get<WeatherParticleComponent>(entityId);
-            var transform = context.World.Get<TransformComponent>(entityId);
+            var particle = world.Get<WeatherParticleComponent>(entityId);
+            var transform = world.Get<TransformComponent>(entityId);
             if (particle == null || transform == null) continue;
 
             switch (type)
             {
                 case WeatherType.Rain or WeatherType.Thunder:
-                    context.World.Set(entityId, new TransformComponent(
+                    world.Set(entityId, new TransformComponent(
                         transform.X + particle.Speed,
                         transform.Y + particle.Speed
                     ));
                     break;
 
                 case WeatherType.Snow:
-                    MoveSnow(context.World, entityId, particle, transform, snowMove);
+                    MoveSnow(world, entityId, particle, transform, snowMove);
                     break;
             }
 
-            var newTransform = context.World.Get<TransformComponent>(entityId) ?? transform;
+            var newTransform = world.Get<TransformComponent>(entityId) ?? transform;
             if (newTransform.X > ScreenWidth || newTransform.Y > ScreenHeight)
                 commands.Destroy(entityId);
         }

@@ -11,12 +11,12 @@ namespace CryBits.Client.Systems.Core;
 internal sealed class CameraSystem(GameContext context, CameraManager cameraManager)
     : IClientSystem
 {
-    public void Update(float dt)
+    public void Update(World world, float dt)
     {
         var target = (EntityId?)null;
-        foreach (var entityId in context.World.All)
+        foreach (var entityId in world.All)
         {
-            if (context.World.Has<CameraTargetTag>(entityId) && context.World.Has<TransformComponent>(entityId))
+            if (world.Has<CameraTargetTag>(entityId) && world.Has<TransformComponent>(entityId))
             {
                 target = entityId;
                 break;
@@ -25,9 +25,9 @@ internal sealed class CameraSystem(GameContext context, CameraManager cameraMana
 
         target ??= context.LocalPlayerEntity;
 
-        if (target is null || !context.World.IsAlive(target.Value)) return;
+        if (target is null || !world.IsAlive(target.Value)) return;
 
-        var transform = context.World.Get<TransformComponent>(target.Value);
+        var transform = world.Get<TransformComponent>(target.Value);
         if (transform == null) return;
 
         const float halfW = ScreenWidth / 2f;

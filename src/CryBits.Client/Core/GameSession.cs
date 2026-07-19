@@ -107,20 +107,20 @@ internal sealed class GameSession : IDisposable
 
         Scheduler = new SystemScheduler();
         Scheduler
-            .AddSimulation(new FadeSystem(Context.World))
-            .AddSimulation(new FogSystem(Context.World))
+            .AddSimulation(new FadeSystem())
+            .AddSimulation(new FogSystem())
             .AddSimulation(new WeatherSimulationSystem(Context))
             .AddSimulation(new WeatherSpawnSystem(Context))
             .AddSimulation(new LightningSystem(Context, audioManager))
             .AddSimulation(new MovementInputSystem(Context, inputManager, IntentSender))
             .AddSimulation(new ItemPickupSystem(Context, inputManager, IntentSender))
-            .AddSimulation(new MovementSystem(Context.World))
+            .AddSimulation(new MovementSystem())
             .AddSimulation(new CameraSystem(Context, CameraManager))
             .AddSimulation(new AckSystem(_ackSender))
-            .AddSimulation(new CharacterAnimationSystem(Context.World))
+            .AddSimulation(new CharacterAnimationSystem())
             .AddSimulation(new AttackHitSystem(Context))
             .AddSimulation(new AttackSystem(Context, inputManager, IntentSender, uiContext))
-            .AddSimulation(new DamageDecaySystem(Context.World));
+            .AddSimulation(new DamageDecaySystem());
         _mapHandler = new MapHandler(Context, contentSender, audioManager, mapRepo);
         _replicationHandler = new ReplicationHandler(applier);
         _chatHandler = new ChatHandler(_chat);

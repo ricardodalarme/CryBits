@@ -1,5 +1,6 @@
 using CryBits.Client.Components;
 using CryBits.Client.Core;
+using CryBits.Simulation.Core;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Spatial;
@@ -10,17 +11,17 @@ namespace CryBits.Client.Systems.Map;
 
 internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
 {
-    public void Update(float dt)
+    public void Update(World world, float dt)
     {
         var map = context.CurrentMap;
         if (map == null) return;
 
-        var type = GetEffectiveWeather(map);
+        var type = GetEffectiveWeather(world, map);
 
         var activeCount = 0;
-        foreach (var entityId in context.World.All)
+        foreach (var entityId in world.All)
         {
-            if (context.World.Get<WeatherParticleComponent>(entityId) != null)
+            if (world.Get<WeatherParticleComponent>(entityId) != null)
                 activeCount++;
         }
 
@@ -28,14 +29,14 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
         if (activeCount >= maxParticles) return;
         if (Random.Shared.Next(0, 100) != 0) return;
 
-        SpawnParticle(type);
+        SpawnParticle(world, type);
     }
 
-    private WeatherType GetEffectiveWeather(MapDef map)
+    private WeatherType GetEffectiveWeather(World world, MapDef map)
     {
         var playerId = context.LocalPlayerEntity;
         if (playerId == null) return map.DefaultWeather;
-        var pos = context.World.Get<Position>(playerId.Value);
+        var pos = world.Get<Position>(playerId.Value);
         if (pos == null) return map.DefaultWeather;
         var chunkCoord = ChunkGrid.FromPosition(pos.X, pos.Y);
         if (map.Chunks.TryGetValue(chunkCoord, out var chunk) && chunk.WeatherOverride.HasValue)
@@ -43,7 +44,7 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
         return map.DefaultWeather;
     }
 
-    private void SpawnParticle(WeatherType type)
+    private void SpawnParticle(World world, WeatherType type)
     {
         int x, y, speed;
         var start = 0;
@@ -77,8 +78,8 @@ internal sealed class WeatherSpawnSystem(GameContext context) : IClientSystem
                 return;
         }
 
-        var id = context.World.Create();
-        context.World.Set(id, new TransformComponent(x, y));
-        context.World.Set(id, new WeatherParticleComponent(speed, start, back, type));
+        var id = world.Create();
+        world.Set(id, new TransformComponent(x, y));
+        world.Set(id, new WeatherParticleComponent(speed, start, back, type));
     }
 }

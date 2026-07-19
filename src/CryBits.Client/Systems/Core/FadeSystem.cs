@@ -3,9 +3,9 @@ using CryBits.Simulation.Core;
 
 namespace CryBits.Client.Systems.Core;
 
-internal sealed class FadeSystem(World world) : IClientSystem
+internal sealed class FadeSystem : IClientSystem
 {
-    public void Update(float deltaTime)
+    public void Update(World world, float deltaTime)
     {
         var commands = new CommandBuffer(world);
 

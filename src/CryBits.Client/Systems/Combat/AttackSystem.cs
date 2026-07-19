@@ -3,6 +3,7 @@ using CryBits.Client.Core;
 using CryBits.Client.Input;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using Iguina.Entities;
 using SFML.Window;
@@ -20,10 +21,10 @@ internal sealed class AttackSystem(
     private const float ThrottleInterval = 0.030f;
     private float _inputThrottle;
 
-    public void Update(float t)
+    public void Update(World world, float t)
     {
         var entity = context.LocalPlayerEntity;
-        if (entity is null || !context.World.IsAlive(entity.Value)) return;
+        if (entity is null || !world.IsAlive(entity.Value)) return;
 
         _inputThrottle += t;
         if (_inputThrottle < ThrottleInterval) return;
@@ -31,12 +32,12 @@ internal sealed class AttackSystem(
 
         if (!inputManager.IsKeyPressed(Keyboard.Key.LControl)) return;
 
-        var entityId = context.World.Get<AttackComponent>(entity.Value);
-        if (entityId == null || entityId.AttackCountdown > 0f) return;
+        var attack = world.Get<AttackComponent>(entity.Value);
+        if (attack == null || attack.AttackCountdown > 0f) return;
         if (uiContext.TryGet<Panel>("Trade", out var tradePanel) && tradePanel.Visible) return;
         if (uiContext.TryGet<Panel>("Shop", out var shopPanel) && shopPanel.Visible) return;
 
-        context.World.Set(entity.Value, new AttackComponent(AttackSpeed / 1000f));
+        world.Set(entity.Value, new AttackComponent(AttackSpeed / 1000f));
         intentSender.Send(new AttackIntent(default, null));
     }
 }

@@ -3,9 +3,9 @@ using CryBits.Simulation.Core;
 
 namespace CryBits.Client.Systems.Map;
 
-internal sealed class FogSystem(World world) : IClientSystem
+internal sealed class FogSystem : IClientSystem
 {
-    public void Update(float deltaTime)
+    public void Update(World world, float deltaTime)
     {
         foreach (var entityId in world.All)
         {

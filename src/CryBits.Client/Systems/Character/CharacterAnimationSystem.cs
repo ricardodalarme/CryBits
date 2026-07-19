@@ -6,12 +6,12 @@ using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Character;
 
-internal sealed class CharacterAnimationSystem(World world) : IClientSystem
+internal sealed class CharacterAnimationSystem : IClientSystem
 {
     private const float WalkFrameTime = 0.15f;
     private const float AttackFrameTime = 0.375f;
 
-    public void Update(float dt)
+    public void Update(World world, float dt)
     {
         foreach (var entityId in world.All)
         {

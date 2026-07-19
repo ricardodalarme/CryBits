@@ -7,9 +7,9 @@ using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Systems.Movement;
 
-internal sealed class MovementSystem(World world) : IClientSystem
+internal sealed class MovementSystem : IClientSystem
 {
-    public void Update(float dt)
+    public void Update(World world, float dt)
     {
         foreach (var entityId in world.All)
         {

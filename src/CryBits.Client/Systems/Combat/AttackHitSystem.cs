@@ -9,39 +9,39 @@ namespace CryBits.Client.Systems.Combat;
 
 internal sealed class AttackHitSystem(GameContext context) : IClientSystem
 {
-    public void Update(float dt)
+    public void Update(World world, float dt)
     {
         var hits = new List<(EntityId, AttackHit)>();
-        foreach (var entityId in context.World.All)
+        foreach (var entityId in world.All)
         {
-            var hit = context.World.Get<AttackHit>(entityId);
+            var hit = world.Get<AttackHit>(entityId);
             if (hit != null)
                 hits.Add((entityId, hit));
         }
 
         foreach (var (id, hit) in hits)
         {
-            context.World.Set(id, new AttackComponent(AttackSpeed / 1000f));
+            world.Set(id, new AttackComponent(AttackSpeed / 1000f));
 
             if (hit.VictimId != null)
             {
                 var victimLocalId = context.GetNetworkEntity(hit.VictimId.Value);
                 if (victimLocalId != null)
                 {
-                    var vicMov = context.World.Get<MovementComponent>(victimLocalId.Value);
+                    var vicMov = world.Get<MovementComponent>(victimLocalId.Value);
                     if (vicMov != null)
                     {
-                        BloodSplatSpawner.Spawn(context.World, vicMov.TileX, vicMov.TileY);
-                        context.World.Set(victimLocalId.Value, new HurtComponent());
+                        BloodSplatSpawner.Spawn(world, vicMov.TileX, vicMov.TileY);
+                        world.Set(victimLocalId.Value, new HurtComponent());
                     }
                 }
                 else
                 {
-                    BloodSplatSpawner.Spawn(context.World, hit.VictimTileX, hit.VictimTileY);
+                    BloodSplatSpawner.Spawn(world, hit.VictimTileX, hit.VictimTileY);
                 }
             }
 
-            context.World.Remove<AttackHit>(id);
+            world.Remove<AttackHit>(id);
         }
     }
 }
