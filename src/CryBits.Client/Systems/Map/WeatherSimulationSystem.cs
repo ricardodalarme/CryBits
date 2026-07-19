@@ -47,7 +47,7 @@ internal sealed class WeatherSimulationSystem(GameContext context) : IClientSyst
         var snowMove = _snowMoveAccumulator >= SnowDriftInterval;
         if (snowMove) _snowMoveAccumulator -= SnowDriftInterval;
 
-        var commands = new CommandBuffer(context.World);
+        var commands = new CommandBuffer(world);
 
         foreach (var entityId in world.All)
         {

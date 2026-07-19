@@ -1,13 +1,10 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Core;
 
 namespace CryBits.Client.Core;
 
-internal sealed class GameContext(DefinitionCatalog catalog, long localPlayerId)
+internal sealed class GameContext(long localPlayerId)
 {
-    public World World { get; } = new(catalog, enableDirtyTracking: false);
-
     public Map? CurrentMap { get; set; }
 
     public long LocalPlayerId { get; } = localPlayerId;

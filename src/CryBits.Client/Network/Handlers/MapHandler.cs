@@ -7,11 +7,12 @@ using CryBits.Persistence.Repositories;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using MemoryPack;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class MapHandler(GameContext context, ContentSender contentSender, AudioManager audioManager, MapRepository mapRepository)
+internal class MapHandler(World world, GameContext context, ContentSender contentSender, AudioManager audioManager, MapRepository mapRepository)
 {
     [PacketHandler]
     internal void MapRevision(MapRevisionPacket packet)
@@ -20,9 +21,9 @@ internal class MapHandler(GameContext context, ContentSender contentSender, Audi
 
         var myEntity = context.LocalPlayerEntity;
         if (myEntity.HasValue)
-            context.World.DestroyWhere(id => context.World.Has<PlayerTag>(id) && id != myEntity.Value);
+            world.DestroyWhere(id => world.Has<PlayerTag>(id) && id != myEntity.Value);
         else
-            context.World.DestroyWhere(id => context.World.Has<PlayerTag>(id));
+            world.DestroyWhere(id => world.Has<PlayerTag>(id));
 
         var map = mapRepository.LoadMap(id);
         if (map is not null)
@@ -52,8 +53,8 @@ internal class MapHandler(GameContext context, ContentSender contentSender, Audi
 
         mapRepository.SaveMap(map);
 
-        WeatherSpawner.Reset(context.World, context.CurrentMap.DefaultWeather, audioManager);
-        FogSpawner.Spawn(context.World, context.CurrentMap.DefaultFog);
+        WeatherSpawner.Reset(world, context.CurrentMap.DefaultWeather, audioManager);
+        FogSpawner.Spawn(world, context.CurrentMap.DefaultFog);
 
         if (string.IsNullOrEmpty(context.CurrentMap.Music))
             audioManager.StopMusic();

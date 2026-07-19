@@ -24,12 +24,14 @@ using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Definitions.Catalog;
 using CryBits.Persistence.Repositories;
+using CryBits.Simulation.Core;
 
 namespace CryBits.Client.Core;
 
 internal sealed class GameSession : IDisposable
 {
     public GameContext Context { get; }
+    public World World { get; }
     public GameScreen Screen { get; }
     public SystemScheduler Scheduler { get; }
     public RenderPipeline RenderPipeline { get; }
@@ -56,19 +58,18 @@ internal sealed class GameSession : IDisposable
         Connection connection,
         long localPlayerId)
     {
-        Context = new GameContext(catalog, localPlayerId);
+        Context = new GameContext(localPlayerId);
+        World = new(catalog, enableDirtyTracking: false);
 
         IntentSender = new IntentSender(connection);
 
-        var world = Context.World;
-
-        var tradeViewModel = new TradeViewModel(world, IntentSender, catalog);
-        var partyViewModel = new PartyViewModel(world, Context.GetNetworkEntity);
-        var inventoryViewModel = new InventoryViewModel(world, IntentSender, catalog);
-        var hotbarViewModel = new HotbarViewModel(world, IntentSender, catalog);
+        var tradeViewModel = new TradeViewModel(World, IntentSender, catalog);
+        var partyViewModel = new PartyViewModel(World, Context.GetNetworkEntity);
+        var inventoryViewModel = new InventoryViewModel(World, IntentSender, catalog);
+        var hotbarViewModel = new HotbarViewModel(World, IntentSender, catalog);
         var shopViewModel = new ShopViewModel(IntentSender, catalog);
-        var characterViewModel = new CharacterViewModel(world, IntentSender, catalog);
-        var statsViewModel = new StatsViewModel(world);
+        var characterViewModel = new CharacterViewModel(World, IntentSender, catalog);
+        var statsViewModel = new StatsViewModel(World);
 
         _chat = new Chat(IntentSender, uiContext);
         _gameInput = new GameInput(IntentSender, _chat, inputManager, uiContext);
@@ -87,14 +88,14 @@ internal sealed class GameSession : IDisposable
         CameraManager = new CameraManager(spriteBatch.RenderWindow);
         var groundRenderers = new List<IRenderer>
         {
-            new GroundSpriteRenderer(Context.World, spriteBatch),
-            new EntitySpriteRenderer(Context.World, spriteBatch)
+            new GroundSpriteRenderer(World, spriteBatch),
+            new EntitySpriteRenderer(World, spriteBatch)
         };
         var fringeRenderers = new List<IRenderer>
         {
-            new HealthBarRenderer(Context.World, spriteBatch),
-            new WeatherParticleRenderer(Context.World, spriteBatch),
-            new FogRenderer(Context.World, spriteBatch)
+            new HealthBarRenderer(World, spriteBatch),
+            new WeatherParticleRenderer(World, spriteBatch),
+            new FogRenderer(World, spriteBatch)
         };
         var tilemapRenderer = new TilemapRenderer(spriteBatch, Context, CameraManager);
         RenderPipeline = new RenderPipeline(spriteBatch, CameraManager, tilemapRenderer, uiContext, groundRenderers, fringeRenderers);
@@ -102,7 +103,7 @@ internal sealed class GameSession : IDisposable
         var mapRepo = new MapRepository();
         var contentSender = new ContentSender(connection);
 
-        var applier = new Replication.SnapshotApplier(Context.World, Context, catalog);
+        var applier = new Replication.SnapshotApplier(World, Context, catalog);
         _ackSender = new AckSender(connection, Context);
 
         Scheduler = new SystemScheduler();
@@ -121,7 +122,7 @@ internal sealed class GameSession : IDisposable
             .AddSimulation(new AttackHitSystem(Context))
             .AddSimulation(new AttackSystem(Context, inputManager, IntentSender, uiContext))
             .AddSimulation(new DamageDecaySystem());
-        _mapHandler = new MapHandler(Context, contentSender, audioManager, mapRepo);
+        _mapHandler = new MapHandler(World, Context, contentSender, audioManager, mapRepo);
         _replicationHandler = new ReplicationHandler(applier);
         _chatHandler = new ChatHandler(_chat);
         _partyHandler = new PartyHandler(IntentSender, Screen, partyViewModel);
@@ -151,6 +152,6 @@ internal sealed class GameSession : IDisposable
         PacketDispatcher.Unregister(_shopHandler);
 
         Screen.Unbind();
-        Context.World.Clear();
+        World.Clear();
     }
 }

@@ -54,7 +54,7 @@ public sealed class Game : IDisposable
     {
         _inputManager.BeginFrame();
         _uiContext.Update(deltaTime);
-        _activeSession?.Scheduler.Update(_activeSession.Context.World, deltaTime);
+        _activeSession?.Scheduler.Update(_activeSession.World, deltaTime);
     }
 
     public void Render(RenderWindow window)
