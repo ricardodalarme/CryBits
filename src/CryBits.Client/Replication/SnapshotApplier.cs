@@ -1,5 +1,4 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
 using CryBits.Client.Spawners;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
@@ -15,13 +14,9 @@ namespace CryBits.Client.Replication;
 
 internal sealed class SnapshotApplier(
     World world,
-    GameContext context,
+    ReplicationState replication,
     DefinitionCatalog catalog)
 {
-    private long _lastAppliedTick;
-
-    public long LastAppliedTick => _lastAppliedTick;
-
     public void Apply(KeyframePacket packet)
     {
         var receivedNetworkIds = new HashSet<long>();
@@ -31,43 +26,41 @@ internal sealed class SnapshotApplier(
             var serverId = entity.EntityId;
             receivedNetworkIds.Add(serverId);
 
-            var localId = context.GetNetworkEntity(serverId);
+            var localId = replication.GetNetworkEntity(serverId);
 
             if (localId == null)
             {
                 SpawnEntity(serverId, entity.Kind, entity.Components);
-                localId = context.GetNetworkEntity(serverId);
+                localId = replication.GetNetworkEntity(serverId);
             }
 
             if (localId != null)
                 ApplyComponents(localId.Value, entity.Components);
         }
 
-        _lastAppliedTick = Math.Max(_lastAppliedTick, packet.TickNumber);
-        context.LastAppliedServerTick = _lastAppliedTick;
+        replication.LastAppliedServerTick = Math.Max(replication.LastAppliedServerTick, packet.TickNumber);
         PruneStaleEntities(packet.MapId, receivedNetworkIds);
     }
 
     public void Apply(DeltaPacket packet)
     {
-        if (packet.BaselineTick > _lastAppliedTick)
+        if (packet.BaselineTick > replication.LastAppliedServerTick)
         {
-            context.RequestKeyframe();
+            replication.RequestKeyframe();
             return;
         }
 
-        _lastAppliedTick = Math.Max(_lastAppliedTick, packet.TickNumber);
-        context.LastAppliedServerTick = _lastAppliedTick;
+        replication.LastAppliedServerTick = Math.Max(replication.LastAppliedServerTick, packet.TickNumber);
 
         foreach (var delta in packet.Entities)
         {
             var serverId = delta.EntityId;
 
-            var localId = context.GetNetworkEntity(serverId);
+            var localId = replication.GetNetworkEntity(serverId);
             if (localId == null && delta.Action == DeltaAction.Added)
             {
                 SpawnEntity(serverId, delta.Kind, delta.Components);
-                localId = context.GetNetworkEntity(serverId);
+                localId = replication.GetNetworkEntity(serverId);
             }
 
             if (localId != null)
@@ -84,10 +77,10 @@ internal sealed class SnapshotApplier(
 
         foreach (var removedId in packet.RemovedEntities)
         {
-            var localId = context.GetNetworkEntity(removedId);
+            var localId = replication.GetNetworkEntity(removedId);
             if (localId != null)
             {
-                context.UnregisterNetworkEntity(removedId);
+                replication.UnregisterNetworkEntity(removedId);
                 world.Destroy(localId.Value);
             }
         }
@@ -127,7 +120,7 @@ internal sealed class SnapshotApplier(
 
         if (appearance == null || position == null) return;
 
-        var isLocal = serverId == context.LocalPlayerId;
+        var isLocal = serverId == replication.LocalPlayerId;
 
         var vitalArray = vitals != null
             ? new short[] { vitals.Hp, vitals.Mp }
@@ -153,7 +146,7 @@ internal sealed class SnapshotApplier(
                 vitalArray, maxVitalArray, position.X, position.Y,
                 position.Direction);
 
-        context.RegisterNetworkEntity(serverId, localEntity);
+        replication.RegisterNetworkEntity(serverId, localEntity);
 
         if (isLocal)
         {
@@ -179,7 +172,7 @@ internal sealed class SnapshotApplier(
 
         var localEntity = NpcSpawner.Spawn(world, serverId, npcDef,
             position.X, position.Y, position.Direction, vitals ?? new Vitals(0, 0, 0, 0));
-        context.RegisterNetworkEntity(serverId, localEntity);
+        replication.RegisterNetworkEntity(serverId, localEntity);
     }
 
     private void SpawnGroundItem(long serverId, List<ComponentData> components)
@@ -192,7 +185,7 @@ internal sealed class SnapshotApplier(
         if (item == null) return;
 
         var localEntity = GroundItemSpawner.Spawn(world, serverId, item, position);
-        context.RegisterNetworkEntity(serverId, localEntity);
+        replication.RegisterNetworkEntity(serverId, localEntity);
     }
 
     private void PruneStaleEntities(Guid mapId, HashSet<long> receivedNetworkIds)
@@ -206,7 +199,7 @@ internal sealed class SnapshotApplier(
             if (pos != null && pos.MapId == mapId && nid != null
                 && !receivedNetworkIds.Contains(nid.Value))
             {
-                context.UnregisterNetworkEntity(nid.Value);
+                replication.UnregisterNetworkEntity(nid.Value);
                 commandBuffer.Destroy(entityId);
             }
         }

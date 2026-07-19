@@ -1,29 +1,8 @@
 using CryBits.Definitions.Maps;
-using CryBits.Simulation.Core;
 
 namespace CryBits.Client.Core;
 
-internal sealed class GameContext(long localPlayerId)
+internal sealed class GameContext
 {
     public Map? CurrentMap { get; set; }
-
-    public long LocalPlayerId { get; } = localPlayerId;
-
-    public EntityId? LocalPlayerEntity => GetNetworkEntity(LocalPlayerId);
-
-    private readonly Dictionary<long, EntityId> _entityById = [];
-
-    public void RegisterNetworkEntity(long id, EntityId entity) => _entityById[id] = entity;
-
-    public void UnregisterNetworkEntity(long id) => _entityById.Remove(id);
-
-    public EntityId? GetNetworkEntity(long id) => _entityById.TryGetValue(id, out var e) ? e : null;
-
-    public long LastAppliedServerTick { get; set; }
-
-    public void RequestKeyframe()
-    {
-        // Reset baseline so versioning re-sends all components with versions > 0.
-        LastAppliedServerTick = 0;
-    }
 }

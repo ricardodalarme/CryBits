@@ -1,7 +1,7 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
 using CryBits.Client.Input;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Replication;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
@@ -12,7 +12,7 @@ using static CryBits.Definitions.Globals;
 namespace CryBits.Client.Systems.Player;
 
 internal sealed class ItemPickupSystem(
-    GameContext context,
+    ReplicationState replication,
     InputManager inputManager,
     IntentSender intentSender) : IClientSystem
 {
@@ -26,7 +26,7 @@ internal sealed class ItemPickupSystem(
 
         if (!inputManager.WasKeyReleased(Keyboard.Key.Space)) return;
 
-        var entity = context.LocalPlayerEntity;
+        var entity = replication.LocalPlayerEntity;
         if (entity is null || !world.IsAlive(entity.Value)) return;
         if (_cooldown > 0f) return;
 

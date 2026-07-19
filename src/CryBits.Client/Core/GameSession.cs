@@ -10,6 +10,7 @@ using CryBits.Client.Rendering.Entities;
 using CryBits.Client.Rendering.Items;
 using CryBits.Client.Rendering.Map;
 using CryBits.Client.Rendering.UI;
+using CryBits.Client.Replication;
 using CryBits.Client.Systems;
 using CryBits.Client.Systems.Character;
 using CryBits.Client.Systems.Combat;
@@ -58,13 +59,14 @@ internal sealed class GameSession : IDisposable
         Connection connection,
         long localPlayerId)
     {
-        Context = new GameContext(localPlayerId);
+        var replication = new ReplicationState(localPlayerId);
+        Context = new GameContext();
         World = new(catalog, enableDirtyTracking: false);
 
         IntentSender = new IntentSender(connection);
 
         var tradeViewModel = new TradeViewModel(World, IntentSender, catalog);
-        var partyViewModel = new PartyViewModel(World, Context.GetNetworkEntity);
+        var partyViewModel = new PartyViewModel(World, replication.GetNetworkEntity);
         var inventoryViewModel = new InventoryViewModel(World, IntentSender, catalog);
         var hotbarViewModel = new HotbarViewModel(World, IntentSender, catalog);
         var shopViewModel = new ShopViewModel(IntentSender, catalog);
@@ -103,26 +105,26 @@ internal sealed class GameSession : IDisposable
         var mapRepo = new MapRepository();
         var contentSender = new ContentSender(connection);
 
-        var applier = new Replication.SnapshotApplier(World, Context, catalog);
-        _ackSender = new AckSender(connection, Context);
+        var applier = new SnapshotApplier(World, replication, catalog);
+        _ackSender = new AckSender(connection, replication);
 
         Scheduler = new SystemScheduler();
         Scheduler
             .AddSimulation(new FadeSystem())
             .AddSimulation(new FogSystem())
-            .AddSimulation(new WeatherSimulationSystem(Context))
-            .AddSimulation(new WeatherSpawnSystem(Context))
-            .AddSimulation(new LightningSystem(Context, audioManager))
-            .AddSimulation(new MovementInputSystem(Context, inputManager, IntentSender))
-            .AddSimulation(new ItemPickupSystem(Context, inputManager, IntentSender))
+            .AddSimulation(new WeatherSimulationSystem(replication, Context))
+            .AddSimulation(new WeatherSpawnSystem(replication, Context))
+            .AddSimulation(new LightningSystem(replication, Context, audioManager))
+            .AddSimulation(new MovementInputSystem(replication, Context, inputManager, IntentSender))
+            .AddSimulation(new ItemPickupSystem(replication, inputManager, IntentSender))
             .AddSimulation(new MovementSystem())
-            .AddSimulation(new CameraSystem(Context, CameraManager))
+            .AddSimulation(new CameraSystem(replication, CameraManager))
             .AddSimulation(new AckSystem(_ackSender))
             .AddSimulation(new CharacterAnimationSystem())
-            .AddSimulation(new AttackHitSystem(Context))
-            .AddSimulation(new AttackSystem(Context, inputManager, IntentSender, uiContext))
+            .AddSimulation(new AttackHitSystem(replication))
+            .AddSimulation(new AttackSystem(replication, inputManager, IntentSender, uiContext))
             .AddSimulation(new DamageDecaySystem());
-        _mapHandler = new MapHandler(World, Context, contentSender, audioManager, mapRepo);
+        _mapHandler = new MapHandler(World, replication, Context, contentSender, audioManager, mapRepo);
         _replicationHandler = new ReplicationHandler(applier);
         _chatHandler = new ChatHandler(_chat);
         _partyHandler = new PartyHandler(IntentSender, Screen, partyViewModel);

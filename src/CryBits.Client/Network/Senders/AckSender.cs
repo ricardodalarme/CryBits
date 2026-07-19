@@ -1,17 +1,17 @@
-using CryBits.Client.Core;
 using CryBits.Client.Framework.Network;
+using CryBits.Client.Replication;
 using CryBits.Protocol.Packets.Client;
 using CryBits.Transport;
 
 namespace CryBits.Client.Network.Senders;
 
-internal sealed class AckSender(Connection connection, GameContext context)
+internal sealed class AckSender(Connection connection, ReplicationState replication)
 {
     public void SendAck()
     {
         var packet = new AckPacket
         {
-            LastReceivedTick = context.LastAppliedServerTick
+            LastReceivedTick = replication.LastAppliedServerTick
         };
         connection.SendPacket(packet, DeliveryChannel.ReliableOrdered);
     }

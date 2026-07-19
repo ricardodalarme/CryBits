@@ -1,5 +1,5 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
+using CryBits.Client.Replication;
 using CryBits.Client.Spawners;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
@@ -7,7 +7,7 @@ using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Combat;
 
-internal sealed class AttackHitSystem(GameContext context) : IClientSystem
+internal sealed class AttackHitSystem(ReplicationState replication) : IClientSystem
 {
     public void Update(World world, float dt)
     {
@@ -25,7 +25,7 @@ internal sealed class AttackHitSystem(GameContext context) : IClientSystem
 
             if (hit.VictimId != null)
             {
-                var victimLocalId = context.GetNetworkEntity(hit.VictimId.Value);
+                var victimLocalId = replication.GetNetworkEntity(hit.VictimId.Value);
                 if (victimLocalId != null)
                 {
                     var vicMov = world.Get<MovementComponent>(victimLocalId.Value);

@@ -1,7 +1,7 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
 using CryBits.Client.Input;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Replication;
 using CryBits.Client.UI;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
@@ -12,7 +12,7 @@ using static CryBits.Definitions.Globals;
 namespace CryBits.Client.Systems.Combat;
 
 internal sealed class AttackSystem(
-    GameContext context,
+    ReplicationState replication,
     InputManager inputManager,
     IntentSender intentSender,
     UiContext uiContext
@@ -23,7 +23,7 @@ internal sealed class AttackSystem(
 
     public void Update(World world, float t)
     {
-        var entity = context.LocalPlayerEntity;
+        var entity = replication.LocalPlayerEntity;
         if (entity is null || !world.IsAlive(entity.Value)) return;
 
         _inputThrottle += t;

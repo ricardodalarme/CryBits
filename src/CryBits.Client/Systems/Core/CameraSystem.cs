@@ -1,6 +1,6 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
 using CryBits.Client.Rendering.Camera;
+using CryBits.Client.Replication;
 using CryBits.Simulation.Core;
 using SFML.System;
 using System.Drawing;
@@ -8,7 +8,7 @@ using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Core;
 
-internal sealed class CameraSystem(GameContext context, CameraManager cameraManager)
+internal sealed class CameraSystem(ReplicationState replication, CameraManager cameraManager)
     : IClientSystem
 {
     public void Update(World world, float dt)
@@ -23,7 +23,7 @@ internal sealed class CameraSystem(GameContext context, CameraManager cameraMana
             }
         }
 
-        target ??= context.LocalPlayerEntity;
+        target ??= replication.LocalPlayerEntity;
 
         if (target is null || !world.IsAlive(target.Value)) return;
 

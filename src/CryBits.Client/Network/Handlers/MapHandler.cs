@@ -1,6 +1,7 @@
 using CryBits.Client.Core;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Replication;
 using CryBits.Client.Spawners;
 using CryBits.Definitions.Maps;
 using CryBits.Persistence.Repositories;
@@ -12,14 +13,14 @@ using MemoryPack;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class MapHandler(World world, GameContext context, ContentSender contentSender, AudioManager audioManager, MapRepository mapRepository)
+internal class MapHandler(World world, ReplicationState replication, GameContext context, ContentSender contentSender, AudioManager audioManager, MapRepository mapRepository)
 {
     [PacketHandler]
     internal void MapRevision(MapRevisionPacket packet)
     {
         var id = packet.MapId;
 
-        var myEntity = context.LocalPlayerEntity;
+        var myEntity = replication.LocalPlayerEntity;
         if (myEntity.HasValue)
             world.DestroyWhere(id => world.Has<PlayerTag>(id) && id != myEntity.Value);
         else

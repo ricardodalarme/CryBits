@@ -2,6 +2,7 @@ using CryBits.Client.Components;
 using CryBits.Client.Core;
 using CryBits.Client.Input;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Replication;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.Spatial;
@@ -13,7 +14,7 @@ using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Systems.Movement;
 
-internal sealed class MovementInputSystem(GameContext context, InputManager inputManager, IntentSender intentSender) : IClientSystem
+internal sealed class MovementInputSystem(ReplicationState replication, GameContext context, InputManager inputManager, IntentSender intentSender) : IClientSystem
 {
     private const float ThrottleInterval = 0.030f;
 
@@ -21,7 +22,7 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
 
     public void Update(World world, float t)
     {
-        var entity = context.LocalPlayerEntity;
+        var entity = replication.LocalPlayerEntity;
         if (entity == null || !world.IsAlive(entity.Value)) return;
 
         _inputThrottle += t;
@@ -91,7 +92,7 @@ internal sealed class MovementInputSystem(GameContext context, InputManager inpu
 
     private bool HasSolidEntityAt(World world, int tileX, int tileY)
     {
-        var playerPos = world.Get<Position>(context.LocalPlayerEntity!.Value);
+        var playerPos = world.Get<Position>(replication.LocalPlayerEntity!.Value);
         if (playerPos == null) return false;
 
         return ChunkGrid.FindAt<CollidableTag>(world, playerPos.MapId, tileX, tileY).HasValue;

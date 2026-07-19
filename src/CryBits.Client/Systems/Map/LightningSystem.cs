@@ -2,6 +2,7 @@ using CryBits.Client.Components;
 using CryBits.Client.Core;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Audio;
+using CryBits.Client.Replication;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
@@ -10,7 +11,7 @@ using MapDef = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Client.Systems.Map;
 
-internal sealed class LightningSystem(GameContext context, AudioManager audioManager) : IClientSystem
+internal sealed class LightningSystem(ReplicationState replication, GameContext context, AudioManager audioManager) : IClientSystem
 {
     private static readonly string[] _thunderSounds = [Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4];
 
@@ -18,7 +19,7 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
 
     private WeatherType GetEffectiveWeather(World world, MapDef map)
     {
-        var playerId = context.LocalPlayerEntity;
+        var playerId = replication.LocalPlayerEntity;
         if (playerId == null) return map.DefaultWeather;
         var pos = world.Get<Position>(playerId.Value);
         if (pos == null) return map.DefaultWeather;
