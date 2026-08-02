@@ -1,13 +1,16 @@
-<Application
+﻿<Application
     x:Class="CryBits.Editors.AvaloniaUI.App"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:semi="https://irihi.tech/semi"
-    xmlns:dockTheme="using:Dock.Avalonia.Themes.Fluent">
+    xmlns:dg="clr-namespace:Nox.Avalonia.DataGrid;assembly=Nox.Avalonia.DataGrid"
+    xmlns:dock="clr-namespace:Nox.Avalonia.Dock;assembly=Nox.Avalonia.Dock"
+    xmlns:nox="clr-namespace:Nox.Avalonia;assembly=Nox.Avalonia"
+    xmlns:pg="clr-namespace:Nox.Avalonia.PropertyGrid;assembly=Nox.Avalonia.PropertyGrid"
+    RequestedThemeVariant="Dark">
     <Application.Styles>
-        <semi:SemiTheme Locale="en-US" />
-        <semi:ColorPickerSemiTheme />
-        <StyleInclude Source="avares://Semi.Avalonia.DataGrid/Index.axaml" />
-        <dockTheme:DockFluentTheme />
+        <nox:NoxTheme />
+        <dock:DockNoxTheme />
+        <dg:NoxDataGridTheme />
+        <pg:NoxPropertyGridTheme />
     </Application.Styles>
 </Application>

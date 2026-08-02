@@ -7,62 +7,49 @@
     x:DataType="models:LayerVm">
     <TabControl x:Name="mainTabs">
         <TabItem Header="Layers">
-            <ScrollViewer>
-                <StackPanel Margin="4" Spacing="4">
-
+            <Grid RowDefinitions="*,Auto">
+                <Grid Grid.Row="0" RowDefinitions="*,Auto">
                     <!--  Layers group  -->
-                    <Border x:Name="grpLayersBorder" Padding="4">
-                        <Grid RowDefinitions="Auto,Auto">
-                            <DataGrid
-                                x:Name="lstLayers"
-                                Grid.Row="0"
-                                Height="128"
-                                CanUserReorderColumns="False"
-                                CanUserResizeColumns="False"
-                                CanUserSortColumns="False"
-                                GridLinesVisibility="Horizontal"
-                                IsReadOnly="False"
-                                SelectionMode="Single">
-                                <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn
-                                        Width="22"
-                                        Binding="{Binding Visible}"
-                                        Header="" />
-                                    <DataGridTextColumn
-                                        Width="24"
-                                        Binding="{Binding Index}"
-                                        Header="Nº"
-                                        IsReadOnly="True" />
-                                    <DataGridTextColumn
-                                        Width="*"
-                                        Binding="{Binding Name}"
-                                        Header="Name"
-                                        IsReadOnly="True" />
-                                    <DataGridTextColumn
-                                        Width="50"
-                                        Binding="{Binding TypeName}"
-                                        Header="Type"
-                                        IsReadOnly="True" />
-                                </DataGrid.Columns>
-                            </DataGrid>
-                            <StackPanel
-                                Grid.Row="1"
-                                Margin="0,3,0,0"
-                                Orientation="Horizontal"
-                                Spacing="3">
-                                <Button x:Name="butLayers_Add" Content="Add" />
-                                <Button x:Name="butLayers_Remove" Content="Remove" />
-                                <Button x:Name="butLayers_Edit" Content="Edit" />
-                                <Separator Width="4" />
-                                <Button x:Name="butLayers_Up" Content="↑" />
-                                <Button x:Name="butLayers_Down" Content="↓" />
-                            </StackPanel>
-                        </Grid>
+                    <Border
+                        x:Name="grpLayersBorder"
+                        Grid.Row="0"
+                        Padding="4">
+                        <DataGrid
+                            x:Name="lstLayers"
+                            CanUserReorderColumns="False"
+                            CanUserResizeColumns="False"
+                            CanUserSortColumns="False"
+                            GridLinesVisibility="Horizontal"
+                            IsReadOnly="False"
+                            SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn
+                                    Width="22"
+                                    Binding="{Binding Visible}"
+                                    Header="" />
+                                <DataGridTextColumn
+                                    Width="24"
+                                    Binding="{Binding Index}"
+                                    Header="Nº"
+                                    IsReadOnly="True" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Name}"
+                                    Header="Name"
+                                    IsReadOnly="True" />
+                                <DataGridTextColumn
+                                    Width="50"
+                                    Binding="{Binding TypeName}"
+                                    Header="Type"
+                                    IsReadOnly="True" />
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Border>
 
                     <!--  Layer add/edit panel (hidden by default)  -->
                     <Border
                         x:Name="pnlLayerEdit"
+                        Grid.Row="1"
                         Padding="8"
                         IsVisible="False">
                         <StackPanel Spacing="4">
@@ -91,9 +78,21 @@
                             </Grid>
                         </StackPanel>
                     </Border>
+                </Grid>
 
+                <!--  Buttons pinned at the bottom  -->
+                <StackPanel
+                    Grid.Row="1"
+                    Margin="0,4,0,0"
+                    Orientation="Horizontal"
+                    Spacing="3">
+                    <Button x:Name="butLayers_Add" Content="Add" />
+                    <Button x:Name="butLayers_Remove" Content="Remove" />
+                    <Button x:Name="butLayers_Edit" Content="Edit" />
+                    <Button x:Name="butLayers_Up" Content="↑" />
+                    <Button x:Name="butLayers_Down" Content="↓" />
                 </StackPanel>
-            </ScrollViewer>
+            </Grid>
         </TabItem>
 
         <TabItem Header="Chunks">

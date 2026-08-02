@@ -3,9 +3,5 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:apc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid">
-    <apc:PropertyGrid
-        x:Name="prgMapProperties"
-        IsHeaderVisible="False"
-        IsTitleVisible="False"
-        NameWidth="110" />
+    <apc:PropertyGrid x:Name="prgMapProperties" NameWidth="110" />
 </UserControl>

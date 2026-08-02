@@ -23,23 +23,23 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" />
-    <PackageReference Include="CommunityToolkit.Mvvm" />
-    <PackageReference Include="Semi.Avalonia.ColorPicker" />
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Dock.Avalonia" />
+    <PackageReference Include="Dock.Model.Avalonia" />
     <PackageReference Include="Iguina" />
     <PackageReference Include="Iguina.Drivers.Sfml" />
     <PackageReference Include="LiteNetLib" />
     <PackageReference Include="MessageBox.Avalonia" />
-    <PackageReference Include="Semi.Avalonia" />
-    <PackageReference Include="Semi.Avalonia.DataGrid" />
+    <PackageReference Include="Nox.Avalonia" />
+    <PackageReference Include="Nox.Avalonia.DataGrid" />
+    <PackageReference Include="Nox.Avalonia.Dock" />
+    <PackageReference Include="Nox.Avalonia.PropertyGrid" />
+    <PackageReference Include="PanAndZoom" />
     <PackageReference Include="SFML.Audio" />
     <PackageReference Include="SFML.Graphics" />
     <PackageReference Include="bodong.Avalonia.PropertyGrid" />
-    <PackageReference Include="Dock.Avalonia" />
-    <PackageReference Include="Dock.Model.Avalonia" />
-    <PackageReference Include="Dock.Avalonia.Themes.Fluent" />
-    <PackageReference Include="PanAndZoom" />
   </ItemGroup>
 
   <ItemGroup>
