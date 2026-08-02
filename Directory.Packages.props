@@ -39,18 +39,18 @@
   </ItemGroup>
 
   <ItemGroup Label="Editor">
-    <PackageVersion Include="Avalonia" Version="12.0.5" />
-    <PackageVersion Include="Avalonia.Desktop" Version="12.0.5" />
-    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.0.5" />
+    <PackageVersion Include="Avalonia" Version="12.1.1" />
+    <PackageVersion Include="Avalonia.Desktop" Version="12.1.1" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.1" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageVersion Include="Dock.Avalonia" Version="12.0.0.2" />
     <PackageVersion Include="Dock.Avalonia.Themes.Fluent" Version="12.0.0.2" />
     <PackageVersion Include="Dock.Model.Avalonia" Version="12.0.0.2" />
     <PackageVersion Include="MessageBox.Avalonia" Version="12.0.0" />
     <PackageVersion Include="PanAndZoom" Version="12.0.0.1" />
-    <PackageVersion Include="Semi.Avalonia" Version="12.0.3" />
-    <PackageVersion Include="Semi.Avalonia.ColorPicker" Version="12.0.3" />
-    <PackageVersion Include="Semi.Avalonia.DataGrid" Version="12.0.0" />
+    <PackageVersion Include="Semi.Avalonia" Version="12.1.0" />
+    <PackageVersion Include="Semi.Avalonia.ColorPicker" Version="12.1.0" />
+    <PackageVersion Include="Semi.Avalonia.DataGrid" Version="12.1.0" />
     <PackageVersion Include="bodong.Avalonia.PropertyGrid" Version="12.0.4.1" />
   </ItemGroup>
 
