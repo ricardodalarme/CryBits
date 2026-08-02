@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Host infrastructure">
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
   </ItemGroup>
 
   <ItemGroup Label="Logging">
