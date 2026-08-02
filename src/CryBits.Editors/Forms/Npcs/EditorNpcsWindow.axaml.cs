@@ -174,7 +174,8 @@ internal partial class EditorNpcsWindow : Window
     private void butDrop_Ok_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null || cmbDrop_Item.SelectedItem is not Item item) return;
-        _selected.Drop.Add(new NpcDrop(item.Id, (short)(numDrop_Amount.Value ?? 1), (byte)(numDrop_Chance.Value ?? 100)));
+        _selected.Drop.Add(
+            new NpcDrop(item.Id, (short)(numDrop_Amount.Value ?? 1), (byte)(numDrop_Chance.Value ?? 100)));
         pnlDrop_Add.IsVisible = false;
         RefreshDropList();
     }

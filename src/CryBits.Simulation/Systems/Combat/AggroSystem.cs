@@ -10,7 +10,7 @@ public sealed class AggroSystem : ISimulationSystem
     {
         foreach (var ev in tick.Events.Events)
         {
-            if (ev is not CombatAttackEvent attack || !attack.Hit) continue;
+            if (ev is not CombatAttackEvent { Hit: true } attack) continue;
             if (!attack.VictimId.HasValue) continue;
 
             var victimId = attack.VictimId.Value;

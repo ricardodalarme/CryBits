@@ -13,9 +13,10 @@ public sealed class LevelingSystem : ISimulationSystem
     public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
-        {
             if (intent is AddPointIntent add)
+            {
                 AddPoint(world, add.SourceEntityId, add.AttributeNum);
+            }
             else if (intent is XpShareIntent share)
             {
                 if (share.Recipients == null || share.Recipients.Count == 0)
@@ -23,30 +24,23 @@ public sealed class LevelingSystem : ISimulationSystem
                 else
                     world.Set(share.SourceEntityId, new XpShareComponent(share.Recipients));
             }
-        }
 
         foreach (var ev in tick.Events.Events)
         {
             if (ev is XpAwardedEvent xpEvent)
-            {
                 if (world.Has<PlayerTag>(xpEvent.EntityId))
                     GiveExperience(world, xpEvent.EntityId, xpEvent.Amount);
-            }
 
             if (ev is PlayerDiedEvent playerDied)
             {
                 if (playerDied.SourceId.HasValue)
-                {
                     if (world.Has<PlayerTag>(playerDied.SourceId.Value))
-                    {
                         if (world.Has<PlayerTag>(playerDied.EntityId))
                         {
                             var victimLevel = world.Get<LevelComponent>(playerDied.EntityId);
                             if (victimLevel != null && victimLevel.Experience / 10 > 0)
                                 GiveExperience(world, playerDied.SourceId.Value, victimLevel.Experience / 10);
                         }
-                    }
-                }
 
                 if (world.Has<PlayerTag>(playerDied.EntityId))
                 {

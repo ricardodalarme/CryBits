@@ -43,7 +43,7 @@ public sealed class NpcBrainSystem : ISimulationSystem
             if (npcData == null) continue;
 
             var behavior = PickBehavior(world, e, npcData, npcState);
-            var intent = behavior.GetNextAction(world, e, npcData, tick);
+            var intent = behavior.GetNextAction(world, e, npcData);
             if (intent != null)
                 tick.Intents.Enqueue(intent);
         }
@@ -92,7 +92,9 @@ public sealed class NpcBrainSystem : ISimulationSystem
                 }
             }
             else
+            {
                 world.Update<NpcState>(npcId, s => s with { TargetId = null });
+            }
         }
 
         if (npcState.TargetId.HasValue)
@@ -115,7 +117,7 @@ public sealed class NpcBrainSystem : ISimulationSystem
         if (npcData is null) return;
 
         var npcChunk = ChunkGrid.FromPosition(pos.X, pos.Y);
-        var nearby = world.SpatialGrid.GetNeighborhood(npcChunk, 2);
+        var nearby = world.SpatialGrid.GetNeighborhood(npcChunk);
 
         foreach (var id in world.SpatialGrid.GetEntities(nearby))
         {
@@ -125,7 +127,7 @@ public sealed class NpcBrainSystem : ISimulationSystem
 
             var dx = pos.X - targetPos.X;
             var dy = pos.Y - targetPos.Y;
-            var distSq = dx * dx + dy * dy;
+            var distSq = (dx * dx) + (dy * dy);
 
             if (distSq > npcData.Sight * npcData.Sight) continue;
 
@@ -133,7 +135,8 @@ public sealed class NpcBrainSystem : ISimulationSystem
             {
                 world.Update<NpcState>(npcId, s => s with { TargetId = id });
                 if (!string.IsNullOrEmpty(npcData.SayMsg))
-                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, id, npcData.Name + ": " + npcData.SayMsg, ChatColors.White));
+                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, id, npcData.Name + ": " + npcData.SayMsg,
+                        ChatColors.White));
                 return;
             }
 

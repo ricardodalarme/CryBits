@@ -9,9 +9,6 @@ internal sealed class AckHandler
     [PacketHandler]
     internal void Handle(Session session, AckPacket packet)
     {
-        if (session.ReplicationState != null && packet.LastReceivedTick > session.ReplicationState.LastAckedTick)
-        {
-            session.ReplicationState.LastAckedTick = packet.LastReceivedTick;
-        }
+        if (session.ReplicationState != null && packet.LastReceivedTick > session.ReplicationState.LastAckedTick) session.ReplicationState.LastAckedTick = packet.LastReceivedTick;
     }
 }

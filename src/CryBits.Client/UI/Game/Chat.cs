@@ -92,6 +92,7 @@ internal class Chat
                     AddText("Use: '!' + Addressee + ' Message'", Color.White);
                     return;
                 }
+
                 var addressee = message.Substring(1, parts[0].Length - 1);
                 var content = message.Substring(parts[0].Length + 1);
                 intentSender.Send(new ChatMessageIntent(default, content, Message.Private, addressee));

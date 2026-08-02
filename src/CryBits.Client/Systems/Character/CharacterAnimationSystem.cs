@@ -66,10 +66,22 @@ internal sealed class CharacterAnimationSystem : IClientSystem
         while (timer >= frameTime)
         {
             timer -= frameTime;
-            if (frameX == 0) { frameX = 1; lastExtreme = 0; }
-            else if (frameX == columns - 1) { frameX = 1; lastExtreme = columns - 1; }
-            else frameX = lastExtreme == 0 ? columns - 1 : 0;
+            if (frameX == 0)
+            {
+                frameX = 1;
+                lastExtreme = 0;
+            }
+            else if (frameX == columns - 1)
+            {
+                frameX = 1;
+                lastExtreme = columns - 1;
+            }
+            else
+            {
+                frameX = lastExtreme == 0 ? columns - 1 : 0;
+            }
         }
+
         return (CharacterAnimation.Walk, frameX, timer);
     }
 }

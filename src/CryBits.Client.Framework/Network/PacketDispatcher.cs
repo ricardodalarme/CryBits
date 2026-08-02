@@ -27,17 +27,16 @@ public static class PacketDispatcher
         foreach (var method in methods)
         {
             var packetParam = method.GetParameters()
-                .FirstOrDefault(p => typeof(IServerPacket).IsAssignableFrom(p.ParameterType))
-                ?? throw new InvalidOperationException(
-                    $"[PacketHandler] on '{method.DeclaringType?.Name}.{method.Name}' " +
-                    $"requires a parameter implementing IServerPacket.");
+                                  .FirstOrDefault(p => typeof(IServerPacket).IsAssignableFrom(p.ParameterType))
+                              ?? throw new InvalidOperationException(
+                                  $"[PacketHandler] on '{method.DeclaringType?.Name}.{method.Name}' " +
+                                  $"requires a parameter implementing IServerPacket.");
 
             var packetType = packetParam.ParameterType;
 
             if (_handlers.ContainsKey(packetType))
-            {
-                Console.WriteLine($"[PacketDispatcher] Warning: Overwriting duplicate [PacketHandler] for '{packetType.Name}' with handler on '{method.DeclaringType?.Name}.{method.Name}'.");
-            }
+                Console.WriteLine(
+                    $"[PacketDispatcher] Warning: Overwriting duplicate [PacketHandler] for '{packetType.Name}' with handler on '{method.DeclaringType?.Name}.{method.Name}'.");
 
             _handlers[packetType] = BuildInstanceHandler(method, handler);
         }
@@ -56,10 +55,7 @@ public static class PacketDispatcher
         {
             var packetParam = method.GetParameters()
                 .FirstOrDefault(p => typeof(IServerPacket).IsAssignableFrom(p.ParameterType));
-            if (packetParam != null)
-            {
-                _handlers.Remove(packetParam.ParameterType);
-            }
+            if (packetParam != null) _handlers.Remove(packetParam.ParameterType);
         }
     }
 
@@ -68,7 +64,6 @@ public static class PacketDispatcher
         var packet = PacketSerializer.Deserialize<IServerPacket>(data);
 
         if (_handlers.TryGetValue(packet.GetType(), out var handler))
-        {
             try
             {
                 handler(packet);
@@ -77,7 +72,6 @@ public static class PacketDispatcher
             {
                 Console.WriteLine($"[PacketDispatcher] Handler for '{packet.GetType().Name}' threw: {ex}");
             }
-        }
     }
 
     private static Action<IServerPacket> BuildInstanceHandler(MethodInfo method, object instance)

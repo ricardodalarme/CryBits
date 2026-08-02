@@ -114,7 +114,9 @@ public sealed class SliderElement : Element
     public bool FlippedDirection { get; set; }
 }
 
-public sealed class PictureElement : Element { }
+public sealed class PictureElement : Element
+{
+}
 
 public sealed class SlotGridElement : Element
 {
@@ -131,4 +133,6 @@ public class ListBoxElement : Element
     public bool AllowDeselect { get; set; } = true;
 }
 
-public sealed class DropDownElement : ListBoxElement { }
+public sealed class DropDownElement : ListBoxElement
+{
+}

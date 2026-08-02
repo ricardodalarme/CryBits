@@ -17,16 +17,10 @@ internal class AccountSender(Connection connection, DefinitionCatalog catalog)
         });
 
     public void CharacterUse(int characterIndex) =>
-        connection.SendPacket(new CharacterUsePacket
-        {
-            CharacterIndex = characterIndex
-        });
+        connection.SendPacket(new CharacterUsePacket { CharacterIndex = characterIndex });
 
     public void CharacterCreate() => connection.SendPacket(new CharacterCreatePacket());
 
     public void CharacterDelete(int characterIndex) =>
-        connection.SendPacket(new CharacterDeletePacket
-        {
-            CharacterIndex = characterIndex
-        });
+        connection.SendPacket(new CharacterDeletePacket { CharacterIndex = characterIndex });
 }

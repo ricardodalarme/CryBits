@@ -38,7 +38,9 @@ internal sealed class CharacterViewModel : IDisposable
     public short Agility { get; private set; }
     public short Vitality { get; private set; }
     public byte TextureNum { get; private set; }
-    public CharacterEquipmentItemViewModel[] Equipment { get; private set; } = new CharacterEquipmentItemViewModel[(byte)CryBits.Definitions.Items.Equipment.Count];
+
+    public CharacterEquipmentItemViewModel[] Equipment { get; } =
+        new CharacterEquipmentItemViewModel[(byte)CryBits.Definitions.Items.Equipment.Count];
 
     public CharacterViewModel(World world, IntentSender intentSender, DefinitionCatalog catalog)
     {
@@ -88,8 +90,7 @@ internal sealed class CharacterViewModel : IDisposable
         for (var i = 0; i < evt.Component.Slots.Length; i++)
         {
             var itemId = evt.Component.Slots[i];
-            if (Equipment[i] == null)
-                Equipment[i] = new CharacterEquipmentItemViewModel { Index = (short)i };
+            Equipment[i] ??= new CharacterEquipmentItemViewModel { Index = (short)i };
             Equipment[i].ItemId = itemId;
             Equipment[i].Definition = itemId != Guid.Empty ? _catalog.Items.Get(itemId) : null;
         }

@@ -48,20 +48,18 @@ public static class NpcSpawner
         var allChunks = mapData.Chunks.Values.Where(c => c.Tiles != null).ToList();
         if (allChunks.Count == 0) return (0, 0);
 
-        var chunkSize = ChunkGrid.ChunkSize;
+        const int chunkSize = ChunkGrid.ChunkSize;
         var candidates = new List<(int x, int y)>();
 
         foreach (var chunk in allChunks)
-        {
             for (var tx = 0; tx < chunkSize; tx++)
                 for (var ty = 0; ty < chunkSize; ty++)
                     if (!chunk.Tiles![tx, ty].IsBlocked)
                     {
-                        var wx = chunk.X * chunkSize + tx;
-                        var wy = chunk.Y * chunkSize + ty;
+                        var wx = (chunk.X * chunkSize) + tx;
+                        var wy = (chunk.Y * chunkSize) + ty;
                         candidates.Add((wx, wy));
                     }
-        }
 
         if (candidates.Count == 0) return (0, 0);
         return candidates[Random.Shared.Next(candidates.Count)];

@@ -79,7 +79,10 @@ internal class InventoryView(
                 gameScreen.ShopSellView.Show((short)slot);
                 gameScreen.ShopSellView.AmountInput.Value = string.Empty;
             }
-            else viewModel.Sell((short)slot, 1);
+            else
+            {
+                viewModel.Sell((short)slot, 1);
+            }
         }
         else if (!uiContext.Registry["Trade"].Visible)
         {
@@ -88,7 +91,10 @@ internal class InventoryView(
                 gameScreen.DropItemView.Show((short)slot);
                 gameScreen.DropItemView.AmountInput.Value = string.Empty;
             }
-            else viewModel.Drop((short)slot, 1);
+            else
+            {
+                viewModel.Drop((short)slot, 1);
+            }
         }
     }
 

@@ -78,15 +78,16 @@ internal sealed class WeatherSimulationSystem(ReplicationState replication) : IC
         commands.Flush();
     }
 
-    private static void MoveSnow(World world, EntityId entityId, WeatherParticleComponent p, TransformComponent t, bool xAxis)
+    private static void MoveSnow(World world, EntityId entityId, WeatherParticleComponent p, TransformComponent t,
+        bool xAxis)
     {
         var difference = Random.Shared.Next(0, SnowMovement / 3);
         var x1 = p.Start + SnowMovement + difference;
         var x2 = p.Start - SnowMovement - difference;
 
-        var newBack = x1 <= t.X ? true : x2 >= t.X ? false : p.Back;
+        var newBack = x1 <= t.X || (x2 < t.X && p.Back);
         var newY = t.Y + p.Speed;
-        var newX = xAxis ? (newBack ? t.X - 1 : t.X + 1) : t.X;
+        var newX = xAxis ? newBack ? t.X - 1 : t.X + 1 : t.X;
 
         world.Set(entityId, p with { Back = newBack });
         world.Set(entityId, new TransformComponent(newX, newY));

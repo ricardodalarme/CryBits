@@ -17,7 +17,6 @@ public sealed class InventorySystem : ISimulationSystem
     public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
-        {
             switch (intent)
             {
                 case CollectItemIntent collect:
@@ -43,9 +42,11 @@ public sealed class InventorySystem : ISimulationSystem
                         if (inv == null || inv.Slots[swap.SlotOld].ItemId == Guid.Empty) break;
                         if (swap.SlotOld == swap.SlotNew) break;
                         var newSlots = (ItemSlot[])inv.Slots.Clone();
-                        (newSlots[swap.SlotOld], newSlots[swap.SlotNew]) = (newSlots[swap.SlotNew], newSlots[swap.SlotOld]);
+                        (newSlots[swap.SlotOld], newSlots[swap.SlotNew]) =
+                            (newSlots[swap.SlotNew], newSlots[swap.SlotOld]);
                         world.Set(swap.SourceEntityId, new InventoryState(newSlots));
-                        tick.Events.Emit(new InventorySwappedEvent(tick.TickNumber, swap.SourceEntityId, swap.SlotOld, swap.SlotNew));
+                        tick.Events.Emit(new InventorySwappedEvent(tick.TickNumber, swap.SourceEntityId, swap.SlotOld,
+                            swap.SlotNew));
                         break;
                     }
                 case TradeCommitIntent commit:
@@ -82,15 +83,12 @@ public sealed class InventorySystem : ISimulationSystem
                         break;
                     }
             }
-        }
 
         var events = tick.Events.Events;
-        for (var i = 0; i < events.Count; i++)
-        {
-            var ev = events[i];
+        foreach (var ev in events)
             switch (ev)
             {
-                case ItemUsedEvent use when use.DirectUse:
+                case ItemUsedEvent { DirectUse: true } use:
                     {
                         var playerInv = world.Get<InventoryState>(use.PlayerId);
                         if (playerInv != null && use.SlotIndex >= 0 && use.SlotIndex < playerInv.Slots.Length)
@@ -119,13 +117,12 @@ public sealed class InventorySystem : ISimulationSystem
                         var oldItem = world.Catalog.Items.Get(equip.OldItemId.Value);
                         if (oldItem == null) continue;
                         if (!GiveItem(world, equip.PlayerId, oldItem, 1))
-                        {
-                            tick.Events.Emit(new LootDroppedEvent(tick.TickNumber, pos.MapId, pos.X, pos.Y, equip.OldItemId.Value, 1, tick.TickNumber + GroundItemDespawnTicks));
-                        }
+                            tick.Events.Emit(new LootDroppedEvent(tick.TickNumber, pos.MapId, pos.X, pos.Y,
+                                equip.OldItemId.Value, 1, tick.TickNumber + GroundItemDespawnTicks));
+
                         break;
                     }
             }
-        }
     }
 
     private bool GiveItem(World world, EntityId entityId, Item item, short amount)
@@ -150,11 +147,12 @@ public sealed class InventorySystem : ISimulationSystem
 
         var newSlots = (ItemSlot[])inv.Slots.Clone();
         if (stackSlot != null && item.Stackable)
-            newSlots[stackSlot.Value] = newSlots[stackSlot.Value] with { Amount = (short)(newSlots[stackSlot.Value].Amount + amount) };
+            newSlots[stackSlot.Value] = newSlots[stackSlot.Value] with
+            {
+                Amount = (short)(newSlots[stackSlot.Value].Amount + amount)
+            };
         else
-        {
             newSlots[emptySlot.Value] = new ItemSlot(item.Id, item.Stackable ? amount : (byte)1);
-        }
 
         world.Set(entityId, new InventoryState(newSlots));
         return true;
@@ -177,18 +175,18 @@ public sealed class InventorySystem : ISimulationSystem
             {
                 var newHotbarSlots = (HotbarSlot[])hotbar.Slots.Clone();
                 for (var h = 0; h < newHotbarSlots.Length; h++)
-                {
                     if (newHotbarSlots[h].Type == SlotType.Item && newHotbarSlots[h].Slot == slotIndex)
                     {
                         newHotbarSlots[h] = new HotbarSlot(Type: SlotType.None, Slot: 0);
                         world.Set(entityId, new HotbarState(newHotbarSlots));
                         break;
                     }
-                }
             }
         }
         else
+        {
             newSlots[slotIndex] = newSlots[slotIndex] with { Amount = (short)(newSlots[slotIndex].Amount - amount) };
+        }
 
         world.Set(entityId, new InventoryState(newSlots));
     }
@@ -205,7 +203,8 @@ public sealed class InventorySystem : ISimulationSystem
 
         if (amount > inv.Slots[slotIndex].Amount) amount = inv.Slots[slotIndex].Amount;
 
-        tick.Events.Emit(new LootDroppedEvent(tick.TickNumber, pos.MapId, pos.X, pos.Y, inv.Slots[slotIndex].ItemId, amount, tick.TickNumber + GroundItemDespawnTicks));
+        tick.Events.Emit(new LootDroppedEvent(tick.TickNumber, pos.MapId, pos.X, pos.Y, inv.Slots[slotIndex].ItemId,
+            amount, tick.TickNumber + GroundItemDespawnTicks));
         TakeItem(world, entityId, slotIndex, amount);
     }
 
@@ -221,13 +220,15 @@ public sealed class InventorySystem : ISimulationSystem
 
         if (level.Level < item.ReqLevel)
         {
-            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You do not have the level required to use this item.", ChatColors.White));
+            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId,
+                "You do not have the level required to use this item.", ChatColors.White));
             return;
         }
 
         if (item.ReqClassId.HasValue && appearance.ClassId != item.ReqClassId.Value)
         {
-            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You can not use this item.", ChatColors.White));
+            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, "You can not use this item.",
+                ChatColors.White));
             return;
         }
 
@@ -252,7 +253,8 @@ public sealed class InventorySystem : ISimulationSystem
                 current += item.PotionVital[i];
                 if (current < 0) current = 0;
                 if (current > max) current = max;
-                if (i == 0) newHp = (short)current; else newMp = (short)current;
+                if (i == 0) newHp = current;
+                else newMp = current;
             }
 
             world.Set(entityId, new Vitals(Hp: newHp, Mp: newMp, MaxHp: vitals.MaxHp, MaxMp: vitals.MaxMp));
@@ -280,5 +282,4 @@ public sealed class InventorySystem : ISimulationSystem
         if (GiveItem(world, entityId, item, comp.Amount))
             world.Destroy(groundEntityId.Value);
     }
-
 }

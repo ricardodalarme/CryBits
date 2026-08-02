@@ -29,7 +29,7 @@ internal partial class EditorTilesWindow : Window
     private const int CanvasW = 298;
     private const int CanvasH = 443;
 
-    private TileEditorViewModel? _viewModel;
+    private readonly TileEditorViewModel? _viewModel;
     private WriteableBitmap? _bitmap;
     private readonly DispatcherTimer? _timer;
 
@@ -39,7 +39,7 @@ internal partial class EditorTilesWindow : Window
 
         _viewModel = new TileEditorViewModel();
         DataContext = _viewModel;
-        _viewModel.RequestClose += () => Close();
+        _viewModel.RequestClose += Close;
 
         scrlTileX.Value = 0;
         scrlTileY.Value = 0;
@@ -64,7 +64,8 @@ internal partial class EditorTilesWindow : Window
     {
         if (TileRenderer.Instance.WinTile == null || _viewModel == null) return;
 
-        TileRenderer.Instance.Tile(_viewModel.TileIndex, _viewModel.ScrollX, _viewModel.ScrollY, _viewModel.IsAttributeMode);
+        TileRenderer.Instance.Tile(_viewModel.TileIndex, _viewModel.ScrollX, _viewModel.ScrollY,
+            _viewModel.IsAttributeMode);
         SfmlRenderBlit.Blit(TileRenderer.Instance.WinTile, ref _bitmap, imgCanvas);
     }
 
@@ -77,8 +78,9 @@ internal partial class EditorTilesWindow : Window
         var ex = (int)pt.X;
         var ey = (int)pt.Y;
 
-        var position = new Point((ex + _viewModel.ScrollX * G.Grid) / G.Grid, (ey + _viewModel.ScrollY * G.Grid) / G.Grid);
-        var tileDif = new Point(ex - ex / G.Grid * G.Grid, ey - ey / G.Grid * G.Grid);
+        var position = new Point((ex + (_viewModel.ScrollX * G.Grid)) / G.Grid,
+            (ey + (_viewModel.ScrollY * G.Grid)) / G.Grid);
+        var tileDif = new Point(ex - (ex / G.Grid * G.Grid), ey - (ey / G.Grid * G.Grid));
 
         var tileRef = Tile.List[_viewModel.TileIndex];
         if (position.X > tileRef.Data.GetUpperBound(0)) return;
@@ -101,7 +103,8 @@ internal partial class EditorTilesWindow : Window
                 if (tileDif.X >= bp.X && tileDif.X <= bp.X + 8)
                     if (tileDif.Y >= bp.Y && tileDif.Y <= bp.Y + 8)
                         if (tileRef.Data[position.X, position.Y].Attribute != (byte)TileAttribute.Block)
-                            tileRef.Data[position.X, position.Y].Block[i] = !tileRef.Data[position.X, position.Y].Block[i];
+                            tileRef.Data[position.X, position.Y].Block[i] =
+                                !tileRef.Data[position.X, position.Y].Block[i];
             }
         }
     }

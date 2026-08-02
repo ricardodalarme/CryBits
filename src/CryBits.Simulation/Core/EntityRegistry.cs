@@ -19,9 +19,7 @@ public sealed class EntityRegistry
     public void Destroy(EntityId id)
     {
         if (_aliveEntities.Remove(id))
-        {
             foreach (var type in _components.Keys)
-            {
                 if (_components[type].Remove(id))
                 {
                     _componentVersions[type].Remove(id);
@@ -30,10 +28,9 @@ public sealed class EntityRegistry
                         rDict = [];
                         _removalVersions[type] = rDict;
                     }
+
                     rDict[id] = 0; // Destroy doesn't really have a tick, we can just use 0 or current tick. Let's just track it loosely.
                 }
-            }
-        }
     }
 
     public void Clear()
@@ -56,6 +53,7 @@ public sealed class EntityRegistry
             cDict = [];
             _components[type] = cDict;
         }
+
         cDict[id] = component;
 
         if (!_componentVersions.TryGetValue(type, out var vDict))
@@ -63,12 +61,10 @@ public sealed class EntityRegistry
             vDict = [];
             _componentVersions[type] = vDict;
         }
+
         vDict[id] = currentTick;
 
-        if (_removalVersions.TryGetValue(type, out var rDict))
-        {
-            rDict.Remove(id);
-        }
+        if (_removalVersions.TryGetValue(type, out var rDict)) rDict.Remove(id);
     }
 
     public void Set<T>(EntityId id, T component, long currentTick) where T : class
@@ -110,6 +106,7 @@ public sealed class EntityRegistry
                 rDict = [];
                 _removalVersions[type] = rDict;
             }
+
             rDict[id] = currentTick;
         }
     }
@@ -136,18 +133,14 @@ public sealed class EntityRegistry
     public IEnumerable<(Type Type, object Value)> GetAllComponents(EntityId id)
     {
         foreach (var kvp in _components)
-        {
             if (kvp.Value.TryGetValue(id, out var comp))
                 yield return (kvp.Key, comp);
-        }
     }
 
     public IEnumerable<(Type Type, long RemovalVersion)> GetRemovals(EntityId id)
     {
         foreach (var kvp in _removalVersions)
-        {
             if (kvp.Value.TryGetValue(id, out var version))
                 yield return (kvp.Key, version);
-        }
     }
 }

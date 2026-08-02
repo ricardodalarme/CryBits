@@ -19,97 +19,161 @@ internal sealed partial class ItemEditorViewModel(Item model, DefinitionCatalog 
     public string Name
     {
         get => Model.Name;
-        set { Model.Name = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Name = value;
+            OnPropertyChanged();
+        }
     }
 
     public string Description
     {
         get => Model.Description;
-        set { Model.Description = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Description = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Texture
     {
         get => Model.Texture;
-        set { Model.Texture = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Texture = value;
+            OnPropertyChanged();
+        }
     }
 
     public bool Stackable
     {
         get => Model.Stackable;
-        set { Model.Stackable = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Stackable = value;
+            OnPropertyChanged();
+        }
     }
 
     public int RarityIndex
     {
         get => (int)Model.Rarity;
-        set { Model.Rarity = (Rarity)value; OnPropertyChanged(); }
+        set
+        {
+            Model.Rarity = (Rarity)value;
+            OnPropertyChanged();
+        }
     }
 
     public int BindIndex
     {
         get => (int)Model.Bind;
-        set { Model.Bind = (BindOn)value; OnPropertyChanged(); }
+        set
+        {
+            Model.Bind = (BindOn)value;
+            OnPropertyChanged();
+        }
     }
 
     public short ReqLevel
     {
         get => Model.ReqLevel;
-        set { Model.ReqLevel = value; OnPropertyChanged(); }
+        set
+        {
+            Model.ReqLevel = value;
+            OnPropertyChanged();
+        }
     }
 
     public short PotionHp
     {
         get => Model.PotionVital[(byte)Vital.Hp];
-        set { Model.PotionVital[(byte)Vital.Hp] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.PotionVital[(byte)Vital.Hp] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short PotionMp
     {
         get => Model.PotionVital[(byte)Vital.Mp];
-        set { Model.PotionVital[(byte)Vital.Mp] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.PotionVital[(byte)Vital.Mp] = value;
+            OnPropertyChanged();
+        }
     }
 
     public int PotionExperience
     {
         get => Model.PotionExperience;
-        set { Model.PotionExperience = value; OnPropertyChanged(); }
+        set
+        {
+            Model.PotionExperience = value;
+            OnPropertyChanged();
+        }
     }
 
     public short EquipStrength
     {
         get => Model.EquipAttribute[(byte)Attribute.Strength];
-        set { Model.EquipAttribute[(byte)Attribute.Strength] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.EquipAttribute[(byte)Attribute.Strength] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short EquipResistance
     {
         get => Model.EquipAttribute[(byte)Attribute.Resistance];
-        set { Model.EquipAttribute[(byte)Attribute.Resistance] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.EquipAttribute[(byte)Attribute.Resistance] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short EquipIntelligence
     {
         get => Model.EquipAttribute[(byte)Attribute.Intelligence];
-        set { Model.EquipAttribute[(byte)Attribute.Intelligence] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.EquipAttribute[(byte)Attribute.Intelligence] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short EquipAgility
     {
         get => Model.EquipAttribute[(byte)Attribute.Agility];
-        set { Model.EquipAttribute[(byte)Attribute.Agility] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.EquipAttribute[(byte)Attribute.Agility] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short EquipVitality
     {
         get => Model.EquipAttribute[(byte)Attribute.Vitality];
-        set { Model.EquipAttribute[(byte)Attribute.Vitality] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.EquipAttribute[(byte)Attribute.Vitality] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short WeaponDamage
     {
         get => Model.WeaponDamage;
-        set { Model.WeaponDamage = value; OnPropertyChanged(); }
+        set
+        {
+            Model.WeaponDamage = value;
+            OnPropertyChanged();
+        }
     }
 
     [RelayCommand]

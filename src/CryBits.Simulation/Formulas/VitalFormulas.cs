@@ -18,8 +18,8 @@ public static class VitalFormulas
     {
         return vital switch
         {
-            Vital.Hp => (short)(baseVital + (vitality * level * 9) / 8 + 1),
-            Vital.Mp => (short)(baseVital + (intelligence * level * 5) / 8 + 1),
+            Vital.Hp => (short)(baseVital + (vitality * level * 9 / 8) + 1),
+            Vital.Mp => (short)(baseVital + (intelligence * level * 5 / 8) + 1),
             _ => 1
         };
     }
@@ -28,8 +28,8 @@ public static class VitalFormulas
     {
         return vital switch
         {
-            Vital.Hp => (short)(maxVital / 20 + (vitality * 3) / 10),
-            Vital.Mp => (short)(maxVital / 20 + intelligence / 10),
+            Vital.Hp => (short)((maxVital / 20) + (vitality * 3 / 10)),
+            Vital.Mp => (short)((maxVital / 20) + (intelligence / 10)),
             _ => 1
         };
     }

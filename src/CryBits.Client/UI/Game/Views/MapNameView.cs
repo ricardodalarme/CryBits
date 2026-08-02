@@ -21,7 +21,11 @@ internal class MapNameView(UiContext uiContext, World world) : ViewBase
     private void OnPostDraw()
     {
         var map = world.CurrentMap;
-        if (map == null) { MapNameLabel.Visible = false; return; }
+        if (map == null)
+        {
+            MapNameLabel.Visible = false;
+            return;
+        }
 
         MapNameLabel.Visible = true;
         MapNameLabel.Text = map.Name;

@@ -14,11 +14,11 @@
         <Border Grid.Row="0" BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
                 CornerRadius="4" Padding="8" Margin="0,0,0,6">
             <StackPanel Spacing="4">
-                <TextBlock x:Name="lblTile" Text="{Binding TileLabel}" FontWeight="Bold"/>
+                <TextBlock x:Name="lblTile" Text="{Binding TileLabel}" FontWeight="Bold" />
                 <ScrollBar Orientation="Horizontal" Minimum="1"
                            Maximum="{Binding MaxTileIndex}"
                            Value="{Binding TileIndex}"
-                           SmallChange="1" LargeChange="1"/>
+                           SmallChange="1" LargeChange="1" />
             </StackPanel>
         </Border>
 
@@ -34,18 +34,18 @@
                            Stretch="None"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top"
-                           PointerPressed="imgCanvas_PointerPressed"/>
+                           PointerPressed="imgCanvas_PointerPressed" />
                 </Border>
                 <!-- X scroll -->
                 <ScrollBar Grid.Row="1" x:Name="scrlTileX" Orientation="Horizontal"
                            Minimum="0" Maximum="0" Value="0" SmallChange="1" LargeChange="1"
-                           Margin="0,2,0,0"/>
+                           Margin="0,2,0,0" />
             </Grid>
 
             <!-- Y scroll -->
             <ScrollBar Grid.Column="1" x:Name="scrlTileY" Orientation="Vertical"
                        Minimum="0" Maximum="0" Value="0" SmallChange="1" LargeChange="1"
-                       Margin="2,0,2,0"/>
+                       Margin="2,0,2,0" />
 
             <!-- Right panel: Set mode + Attributes -->
             <StackPanel Grid.Column="2" Spacing="6">
@@ -54,13 +54,13 @@
                 <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
                         CornerRadius="4" Padding="8">
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Set" FontWeight="Bold" Margin="0,0,0,2"/>
+                        <TextBlock Text="Set" FontWeight="Bold" Margin="0,0,0,2" />
                         <RadioButton Content="Attributes"
                                      IsChecked="{Binding IsAttributeMode}"
-                                     GroupName="SetMode"/>
+                                     GroupName="SetMode" />
                         <RadioButton Content="Dir. Block"
                                      IsChecked="{Binding !IsAttributeMode}"
-                                     GroupName="SetMode"/>
+                                     GroupName="SetMode" />
                     </StackPanel>
                 </Border>
 
@@ -69,10 +69,10 @@
                         BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
                         CornerRadius="4" Padding="8">
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Attributes" FontWeight="Bold" Margin="0,0,0,2"/>
+                        <TextBlock Text="Attributes" FontWeight="Bold" Margin="0,0,0,2" />
                         <RadioButton Content="Block"
                                      IsChecked="True"
-                                     GroupName="AttrMode"/>
+                                     GroupName="AttrMode" />
                     </StackPanel>
                 </Border>
 
@@ -80,16 +80,16 @@
         </Grid>
 
         <!-- ── Row 2: spacer ── -->
-        <Border Grid.Row="2" Height="6"/>
+        <Border Grid.Row="2" Height="6" />
 
         <!-- ── Row 3: Save / Clear / Cancel ── -->
         <Grid Grid.Row="3" ColumnDefinitions="*,*,*">
-            <Button Grid.Column="0" Content="Save"   Command="{Binding SaveCommand}"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,4,0"/>
-            <Button Grid.Column="1" Content="Clear"  Command="{Binding ClearCommand}"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,4,0"/>
+            <Button Grid.Column="0" Content="Save" Command="{Binding SaveCommand}"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,4,0" />
+            <Button Grid.Column="1" Content="Clear" Command="{Binding ClearCommand}"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,4,0" />
             <Button Grid.Column="2" Content="Cancel" Command="{Binding CancelCommand}"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,0,0"/>
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,0,0" />
         </Grid>
 
     </Grid>

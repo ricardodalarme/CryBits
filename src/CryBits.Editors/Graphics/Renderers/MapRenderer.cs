@@ -20,7 +20,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
     public void EditorMapsTile()
     {
         var win = EditorMapsWindow.Instance;
-        if (WinMapTile == null || win == null || !win.ModeNormal) return;
+        if (WinMapTile == null || win is not { ModeNormal: true }) return;
 
         WinMapTile.Clear(Color.Black);
         var texture = Textures.Tiles[win.TileSheetIndex + 1];
@@ -72,60 +72,55 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
         var win = EditorMapsWindow.Instance!;
         var scrollX = win.MapScrollX;
         var scrollY = win.MapScrollY;
-        var viewW = win.MapCanvasWidth / Grid + ChunkSize;
-        var viewH = win.MapCanvasHeight / Grid + ChunkSize;
+        var viewW = (win.MapCanvasWidth / Grid) + ChunkSize;
+        var viewH = (win.MapCanvasHeight / Grid) + ChunkSize;
 
-        var startCx = scrollX / ChunkSize - 1;
-        var startCy = scrollY / ChunkSize - 1;
-        var endCx = (scrollX + viewW) / ChunkSize + 1;
-        var endCy = (scrollY + viewH) / ChunkSize + 1;
+        var startCx = (scrollX / ChunkSize) - 1;
+        var startCy = (scrollY / ChunkSize) - 1;
+        var endCx = ((scrollX + viewW) / ChunkSize) + 1;
+        var endCy = ((scrollY + viewH) / ChunkSize) + 1;
 
         for (var cx = startCx; cx <= endCx; cx++)
-        {
             for (var cy = startCy; cy <= endCy; cy++)
             {
                 if (!map.Chunks.TryGetValue(new ChunkCoord((short)cx, (short)cy), out var chunk)) continue;
                 if (chunk.Tiles == null) continue;
 
                 for (var tx = 0; tx < ChunkSize; tx++)
-                {
                     for (var ty = 0; ty < ChunkSize; ty++)
                     {
                         var data = chunk.Tiles[tx, ty];
-                        if (data == null || data.Texture <= 0) continue;
+                        if (data is not { Texture: > 0 }) continue;
                         if (!win.IsLayerVisible(data.Layer)) continue;
 
-                        var worldX = cx * ChunkSize + tx;
-                        var worldY = cy * ChunkSize + ty;
+                        var worldX = (cx * ChunkSize) + tx;
+                        var worldY = (cy * ChunkSize) + ty;
                         var screenX = (worldX - scrollX) * Grid;
                         var screenY = (worldY - scrollY) * Grid;
 
-                        var source = new Rectangle(new Point(data.SourceX * Grid, data.SourceY * Grid), new Size(Grid, Grid));
+                        var source = new Rectangle(new Point(data.SourceX * Grid, data.SourceY * Grid),
+                            new Size(Grid, Grid));
                         renderer.Draw(WinMap!, Textures.Tiles[data.Texture], source,
                             new Rectangle(new Point(screenX, screenY), new Size(Grid, Grid)));
                     }
-                }
             }
-        }
 
         // Draw "no chunk" indicator for missing chunks in visible area
         for (var cx = startCx; cx <= endCx; cx++)
-        {
             for (var cy = startCy; cy <= endCy; cy++)
             {
                 if (map.Chunks.ContainsKey(new ChunkCoord((short)cx, (short)cy))) continue;
-                var screenX = (cx * ChunkSize - scrollX) * Grid;
-                var screenY = (cy * ChunkSize - scrollY) * Grid;
+                var screenX = ((cx * ChunkSize) - scrollX) * Grid;
+                var screenY = ((cy * ChunkSize) - scrollY) * Grid;
                 for (var tx = 0; tx < 2; tx++)
                     for (var ty = 0; ty < 2; ty++)
                     {
-                        var x = screenX + tx * Grid * 16;
-                        var y = screenY + ty * Grid * 16;
+                        var x = screenX + (tx * Grid * 16);
+                        var y = screenY + (ty * Grid * 16);
                         renderer.DrawRectangle(WinMap!, x, y, Grid * 16, Grid * 16,
                             (tx + ty) % 2 == 0 ? new Color(40, 40, 40, 120) : new Color(60, 60, 60, 120));
                     }
             }
-        }
 
         // Attributes overlay
         if (win.ModeAttributes)
@@ -135,28 +130,26 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
     private void EditorMapsMapAttributes(Map map, int scrollX, int scrollY, int viewW, int viewH)
     {
         var win = EditorMapsWindow.Instance!;
-        var startCx = scrollX / ChunkSize - 1;
-        var startCy = scrollY / ChunkSize - 1;
-        var endCx = (scrollX + viewW) / ChunkSize + 1;
-        var endCy = (scrollY + viewH) / ChunkSize + 1;
+        var startCx = (scrollX / ChunkSize) - 1;
+        var startCy = (scrollY / ChunkSize) - 1;
+        var endCx = ((scrollX + viewW) / ChunkSize) + 1;
+        var endCy = ((scrollY + viewH) / ChunkSize) + 1;
 
         for (var cx = startCx; cx <= endCx; cx++)
-        {
             for (var cy = startCy; cy <= endCy; cy++)
             {
                 if (!map.Chunks.TryGetValue(new ChunkCoord((short)cx, (short)cy), out var chunk)) continue;
                 if (chunk.Tiles == null) continue;
 
                 for (var tx = 0; tx < ChunkSize; tx++)
-                {
                     for (var ty = 0; ty < ChunkSize; ty++)
                     {
                         var data = chunk.Tiles[tx, ty];
                         if (data == null) continue;
                         if (!win.IsLayerVisible(data.Layer)) continue;
 
-                        var worldX = cx * ChunkSize + tx;
-                        var worldY = cy * ChunkSize + ty;
+                        var worldX = (cx * ChunkSize) + tx;
+                        var worldY = (cy * ChunkSize) + ty;
                         var screenX = (worldX - scrollX) * Grid;
                         var screenY = (worldY - scrollY) * Grid;
 
@@ -166,13 +159,21 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
                         switch (data.Attribute)
                         {
                             case BlockedTile:
-                                color = new Color(255, 0, 0, 100); letter = "B"; break;
+                                color = new Color(255, 0, 0, 100);
+                                letter = "B";
+                                break;
                             case WarpTile:
-                                color = new Color(0, 0, 255, 100); letter = "T"; break;
+                                color = new Color(0, 0, 255, 100);
+                                letter = "T";
+                                break;
                             case ItemTile:
-                                color = new Color(0, 255, 0, 100); letter = "I"; break;
+                                color = new Color(0, 255, 0, 100);
+                                letter = "I";
+                                break;
                             case SpawnTile:
-                                color = new Color(255, 165, 0, 100); letter = "Z"; break;
+                                color = new Color(255, 165, 0, 100);
+                                letter = "Z";
+                                break;
                         }
 
                         if (color.HasValue)
@@ -184,25 +185,23 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
                                 renderer.DrawText(WinMap!, letter, screenX, screenY, Color.White);
                         }
                     }
-                }
             }
-        }
     }
 
     private void RenderFog(Map map)
     {
         var win = EditorMapsWindow.Instance!;
-        if (map.DefaultFog == null || map.DefaultFog.Texture <= 0 || !win.ShowVisualizationSafe) return;
+        if (map.DefaultFog is not { Texture: > 0 } || !win.ShowVisualizationSafe) return;
 
         var textureSize = Textures.Fogs[map.DefaultFog.Texture].ToSize();
-        var tilesW = (win.MapCanvasWidth / Grid) / ChunkSize + 2;
-        var tilesH = (win.MapCanvasHeight / Grid) / ChunkSize + 2;
+        var tilesW = (win.MapCanvasWidth / Grid / ChunkSize) + 2;
+        var tilesH = (win.MapCanvasHeight / Grid / ChunkSize) + 2;
 
         for (var x = -1; x <= tilesW; x++)
             for (var y = -1; y <= tilesH; y++)
             {
-                var position = new Point(x * textureSize.Width + mapInstance.FogX,
-                    y * textureSize.Height + mapInstance.FogY);
+                var position = new Point((x * textureSize.Width) + mapInstance.FogX,
+                    (y * textureSize.Height) + mapInstance.FogY);
                 renderer.Draw(WinMap!, Textures.Fogs[map.DefaultFog.Texture],
                     new Rectangle(position, textureSize),
                     new Color(255, 255, 255, map.DefaultFog.Alpha));
@@ -217,10 +216,10 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
         byte srcX = 0;
         if (map.DefaultWeather == WeatherType.Snow) srcX = 32;
 
-        for (var i = 0; i < mapInstance.Weather.Length; i++)
-            if (mapInstance.Weather[i].Visible)
+        foreach (var t in mapInstance.Weather)
+            if (t.Visible)
                 renderer.Draw(WinMap!, Textures.Weather, new Rectangle(srcX, 0, 32, 32),
-                    new Rectangle(mapInstance.Weather[i].X, mapInstance.Weather[i].Y, 32, 32),
+                    new Rectangle(t.X, t.Y, 32, 32),
                     new Color(255, 255, 255, 150));
     }
 
@@ -237,18 +236,18 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
         {
             var scrollX = win.MapScrollX;
             var scrollY = win.MapScrollY;
-            var startCx = scrollX / ChunkSize - 1;
-            var startCy = scrollY / ChunkSize - 1;
-            var endCx = (scrollX + win.MapCanvasWidth / Grid) / ChunkSize + 1;
-            var endCy = (scrollY + win.MapCanvasHeight / Grid) / ChunkSize + 1;
+            var startCx = (scrollX / ChunkSize) - 1;
+            var startCy = (scrollY / ChunkSize) - 1;
+            var endCx = ((scrollX + (win.MapCanvasWidth / Grid)) / ChunkSize) + 1;
+            var endCy = ((scrollY + (win.MapCanvasHeight / Grid)) / ChunkSize) + 1;
 
             for (var cx = startCx; cx <= endCx; cx++)
                 for (var cy = startCy; cy <= endCy; cy++)
                     for (var tx = 0; tx < ChunkSize; tx++)
                         for (var ty = 0; ty < ChunkSize; ty++)
                         {
-                            var worldX = cx * ChunkSize + tx;
-                            var worldY = cy * ChunkSize + ty;
+                            var worldX = (cx * ChunkSize) + tx;
+                            var worldY = (cy * ChunkSize) + ty;
                             var gx = (worldX - scrollX) * Grid;
                             var gy = (worldY - scrollY) * Grid;
                             renderer.DrawRectangle(WinMap!, gx, gy, Grid, Grid,

@@ -24,6 +24,7 @@ public sealed class IntentFunnel
                 buffer.Enqueue(intent);
             _pending.Clear();
         }
+
         return buffer;
     }
 }

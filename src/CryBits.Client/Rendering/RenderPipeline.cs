@@ -35,17 +35,11 @@ internal sealed class RenderPipeline(
         tilemapRenderer.DrawPanorama();
         tilemapRenderer.DrawLayer(Layer.Ground);
 
-        foreach (var renderer in groundRenderers)
-        {
-            renderer.Render();
-        }
+        foreach (var renderer in groundRenderers) renderer.Render();
 
         tilemapRenderer.DrawLayer(Layer.Fringe);
 
-        foreach (var renderer in fringeRenderers)
-        {
-            renderer.Render();
-        }
+        foreach (var renderer in fringeRenderers) renderer.Render();
     }
 
     private void DrawUI()

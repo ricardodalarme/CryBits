@@ -104,14 +104,16 @@ internal sealed class AuthService(
         if (user.Length < Config.MinNameLength || user.Length > Config.MaxNameLength)
         {
             authSender.Alert(session,
-                "The username must contain between " + Config.MinNameLength + " and " + Config.MaxNameLength + " characters.");
+                "The username must contain between " + Config.MinNameLength + " and " + Config.MaxNameLength +
+                " characters.");
             return;
         }
 
         if (password.Length < Config.MinPasswordLength || password.Length > Config.MaxPasswordLength)
         {
             authSender.Alert(session,
-                "The password must contain between " + Config.MinPasswordLength + " and " + Config.MaxPasswordLength + " characters.");
+                "The password must contain between " + Config.MinPasswordLength + " and " + Config.MaxPasswordLength +
+                " characters.");
             return;
         }
 
@@ -121,11 +123,7 @@ internal sealed class AuthService(
             return;
         }
 
-        session.Account = new Account
-        {
-            Username = user,
-            PasswordHash = BcryptNet.HashPassword(password)
-        };
+        session.Account = new Account { Username = user, PasswordHash = BcryptNet.HashPassword(password) };
 
         accountRepository.Save(new AccountModel
         {

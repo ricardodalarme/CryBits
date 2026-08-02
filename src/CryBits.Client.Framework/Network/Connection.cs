@@ -22,8 +22,8 @@ public class Connection(IClientTransport transport)
     public void Start(Action onDisconnected)
     {
         transport.OnConnected += () => { };
-        transport.OnDisconnected += () => onDisconnected();
-        transport.OnDataReceived += bytes => PacketDispatcher.Dispatch(bytes);
+        transport.OnDisconnected += onDisconnected;
+        transport.OnDataReceived += PacketDispatcher.Dispatch;
     }
 
     public void Disconnect() => transport.Disconnect();
@@ -31,8 +31,9 @@ public class Connection(IClientTransport transport)
     public void Poll() => transport.Poll();
 
     public bool IsConnected => transport.IsConnected;
-    
-    public void SendPacket<T>(T packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered) where T : IClientPacket
+
+    public void SendPacket<T>(T packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
+        where T : IClientPacket
     {
         transport.Send(PacketSerializer.Serialize<IClientPacket>(packet), delivery);
     }

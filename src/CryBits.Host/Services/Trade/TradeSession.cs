@@ -5,7 +5,6 @@ using static CryBits.Definitions.Globals;
 
 namespace CryBits.Host.Services.Trade;
 
-
 internal sealed class TradeSession(EntityId entityA, EntityId entityB)
 {
     public EntityId EntityA { get; } = entityA;

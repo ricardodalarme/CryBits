@@ -25,13 +25,11 @@ internal class AccountHandler(Game client, MenuScreen menuScreen)
         var chars = new SelectCharacterView.TempCharacter[packet.Characters.Length];
 
         for (byte i = 0; i < chars.Length; i++)
-        {
             chars[i] = new SelectCharacterView.TempCharacter
             {
                 Name = packet.Characters[i].Name,
                 TextureNum = packet.Characters[i].TextureNum
             };
-        }
 
         menuScreen.ShowSelectCharacter(chars);
     }

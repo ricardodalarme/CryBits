@@ -31,8 +31,10 @@ internal static class Program
         OptionsRepository.Read();
 
         // ── Create all infrastructure ──
-        var audio = new AudioManager(); AudioManager.Instance = audio;
-        var catalog = new DefinitionCatalog(); Catalog = catalog;
+        var audio = new AudioManager();
+        AudioManager.Instance = audio;
+        var catalog = new DefinitionCatalog();
+        Catalog = catalog;
         var clientTransport = new UdpClientTransport();
         clientTransport.Connect("localhost", Config.Port, Config.GameName);
         var connection = new Connection(clientTransport);
@@ -50,10 +52,13 @@ internal static class Program
         {
             App.WaitUntilReady();
 
-            var loop = new Loop(MapInstance.Instance); EditorLoop = loop; Loop.Instance = loop;
+            var loop = new Loop(MapInstance.Instance);
+            EditorLoop = loop;
+            Loop.Instance = loop;
             LoginWindow.Open();
             loop.Init();
-        }) { IsBackground = true };
+        })
+        { IsBackground = true };
         loopThread.Start();
 
         BuildAvaloniaApp()
@@ -72,10 +77,8 @@ internal static class Program
         {
             if (Application.Current?.ApplicationLifetime is
                 Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
-            {
                 foreach (var win in desktop.Windows.ToArray())
                     win.Close();
-            }
 
             LoginWindow.Open();
         });

@@ -89,8 +89,10 @@ internal sealed class CharacterService(
         {
             var item = catalog.Items.Get(@class.Item[i].ItemId);
             if (item == null) continue;
-            if (item.Type == ItemType.Equipment && data.Equipment[(byte)item.EquipType] == Guid.Empty)
-                data.Equipment[(byte)item.EquipType] = item.Id;
+            if (item.Type == ItemType.Equipment && data.Equipment[item.EquipType] == Guid.Empty)
+            {
+                data.Equipment[item.EquipType] = item.Id;
+            }
             else if (slotIndex < MaxInventory)
             {
                 data.InventoryIds[slotIndex] = item.Id;
@@ -245,7 +247,7 @@ internal sealed class CharacterService(
         // Send initial AOI chunk payloads
         var world = host.Simulation;
         var center = ChunkGrid.FromPosition(pos.X, pos.Y);
-        foreach (var chunkCoord in world.SpatialGrid.GetNeighborhood(center, 2))
+        foreach (var chunkCoord in world.SpatialGrid.GetNeighborhood(center))
         {
             var payload = ChunkPayloadBuilder.Build(world, pos.MapId, chunkCoord.X, chunkCoord.Y);
             if (payload != null)
@@ -279,6 +281,7 @@ internal sealed class CharacterService(
             if (pos != null && pos.MapId == mapId)
                 result.Add(entityId);
         }
+
         return result;
     }
 }

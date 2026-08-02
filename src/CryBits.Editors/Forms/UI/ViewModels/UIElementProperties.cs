@@ -127,8 +127,7 @@ internal abstract class UIElementProperties : ReactiveObject
         }
     }
 
-    [Category("Layout")]
-    public ISelectableList Anchor => _anchorOptions;
+    [Category("Layout")] public ISelectableList Anchor => _anchorOptions;
 
     [Category("State")]
     public bool Visible

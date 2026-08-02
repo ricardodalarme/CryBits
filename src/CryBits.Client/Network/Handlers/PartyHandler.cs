@@ -20,10 +20,8 @@ internal class PartyHandler(IntentSender intentSender, GameScreen gameScreen, Pa
         }
 
         var list = new List<PartyMemberViewModel>(packet.MemberIds.Length);
-        for (byte i = 0; i < packet.MemberIds.Length; i++)
-        {
-            list.Add(new PartyMemberViewModel { Id = packet.MemberIds[i] });
-        }
+        for (byte i = 0; i < packet.MemberIds.Length; i++) list.Add(new PartyMemberViewModel { Id = packet.MemberIds[i] });
+
         viewModel.Members = list;
     }
 

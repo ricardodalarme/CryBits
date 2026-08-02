@@ -51,10 +51,15 @@ internal sealed partial class EditorUILayoutWindow : Window
         BuildAddFlyout();
     }
 
-    protected override void OnClosed(EventArgs e) { _timer?.Stop(); _preview.Dispose(); base.OnClosed(e); }
+    protected override void OnClosed(EventArgs e)
+    {
+        _timer?.Stop();
+        _preview.Dispose();
+        base.OnClosed(e);
+    }
 
     private static string? ResolveThemeDir() =>
-        Directory.Exists(Directories.UITheme.FullName) ? Directories.UITheme.FullName : null;
+        Directory.Exists(Directories.UiTheme.FullName) ? Directories.UiTheme.FullName : null;
 
     private void OnRenderTick(object? s, EventArgs e)
     {
@@ -105,7 +110,8 @@ internal sealed partial class EditorUILayoutWindow : Window
 
         if (_viewModel.SelectedNode is { Entity: not null, ConfigElement: not null })
         {
-            var vm = ElementViewModelFactory.Create(_viewModel.SelectedNode.ConfigElement, _viewModel.SelectedNode.Entity);
+            var vm = ElementViewModelFactory.Create(_viewModel.SelectedNode.ConfigElement,
+                _viewModel.SelectedNode.Entity);
             propertyGrid.DataContext = vm;
         }
         else
@@ -116,13 +122,12 @@ internal sealed partial class EditorUILayoutWindow : Window
 
     private void BuildAddFlyout()
     {
-        var types = new[] {
-            ("Panel", "Panel"), ("Button", "Button"), ("Checkbox", "Checkbox"),
-            ("RadioButton", "Radio Button"), ("TextInput", "Text Input"),
-            ("NumericInput", "Numeric Input"), ("Label", "Label"), ("Title", "Title"),
-            ("Paragraph", "Paragraph"), ("ProgressBar", "Progress Bar"),
-            ("Slider", "Slider"),             ("Picture", "Picture"), ("SlotGrid", "Slot Grid"),
-            ("ListBox", "List Box"), ("DropDown", "Drop Down")
+        var types = new[]
+        {
+            ("Panel", "Panel"), ("Button", "Button"), ("Checkbox", "Checkbox"), ("RadioButton", "Radio Button"),
+            ("TextInput", "Text Input"), ("NumericInput", "Numeric Input"), ("Label", "Label"), ("Title", "Title"),
+            ("Paragraph", "Paragraph"), ("ProgressBar", "Progress Bar"), ("Slider", "Slider"),
+            ("Picture", "Picture"), ("SlotGrid", "Slot Grid"), ("ListBox", "List Box"), ("DropDown", "Drop Down")
         };
 
         var flyout = new MenuFlyout();
@@ -132,6 +137,7 @@ internal sealed partial class EditorUILayoutWindow : Window
             item.Click += (_, _) => AddElement(key);
             flyout.Items.Add(item);
         }
+
         FlyoutBase.SetAttachedFlyout(butAdd, flyout);
     }
 
@@ -144,8 +150,10 @@ internal sealed partial class EditorUILayoutWindow : Window
 
         var el = ElementViewModelFactory.CreateDefault(discriminator);
         el.Name = $"New{discriminator}";
-        el.X = 0; el.Y = 0;
-        el.Width = 100; el.Height = 24;
+        el.X = 0;
+        el.Y = 0;
+        el.Width = 100;
+        el.Height = 24;
         _viewModel.AddElement(el);
     }
 

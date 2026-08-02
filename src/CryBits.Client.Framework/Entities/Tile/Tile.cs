@@ -30,7 +30,7 @@ public partial class Tile
 
     public Tile(Size textureSize)
     {
-        var size = new Size(textureSize.Width / Grid - 1, textureSize.Height / Grid - 1);
+        var size = new Size((textureSize.Width / Grid) - 1, (textureSize.Height / Grid) - 1);
 
         // Resize fields
         Width = (byte)size.Width;
@@ -39,9 +39,6 @@ public partial class Tile
 
         for (byte x = 0; x <= size.Width; x++)
             for (byte y = 0; y <= size.Height; y++)
-                Data[x, y] = new TileData
-                {
-                    Block = new bool[(byte)Direction.Count]
-                };
+                Data[x, y] = new TileData { Block = new bool[(byte)Direction.Count] };
     }
 }

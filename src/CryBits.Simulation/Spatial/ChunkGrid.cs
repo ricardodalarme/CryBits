@@ -84,8 +84,8 @@ public sealed class ChunkGrid
             return true;
         if (mc.Tiles == null)
             return true;
-        var localX = x - chunk.X * ChunkSize;
-        var localY = y - chunk.Y * ChunkSize;
+        var localX = x - (chunk.X * ChunkSize);
+        var localY = y - (chunk.Y * ChunkSize);
         if (localX < 0 || localX >= ChunkSize || localY < 0 || localY >= ChunkSize)
             return true;
         return mc.Tiles[localX, localY].IsBlocked;
@@ -107,6 +107,7 @@ public sealed class ChunkGrid
             if (pos != null && pos.X == x && pos.Y == y && pos.MapId == mapId && world.Get<T>(id) != null)
                 return id;
         }
+
         return null;
     }
 }

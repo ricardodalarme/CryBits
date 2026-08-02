@@ -96,14 +96,14 @@ internal partial class TileSheetPane : UserControl
         var size = tex.ToSize();
 
         TileMousePosition = new SystemPoint(
-            x * Globals.Grid - (int)scrlTileX.Value,
-            y * Globals.Grid - (int)scrlTileY.Value);
+            (x * Globals.Grid) - (int)scrlTileX.Value,
+            (y * Globals.Grid) - (int)scrlTileY.Value);
 
         if (!e.GetCurrentPoint(imgTile).Properties.IsLeftButtonPressed) return;
         if (chkAuto.IsChecked == true) return;
 
-        x = Math.Clamp(x, 0, size.Width / Globals.Grid - 1);
-        y = Math.Clamp(y, 0, size.Height / Globals.Grid - 1);
+        x = Math.Clamp(x, 0, (size.Width / Globals.Grid) - 1);
+        y = Math.Clamp(y, 0, (size.Height / Globals.Grid) - 1);
         TileSelectionRect = new SystemRect(
             TileSelectionRect.Location,
             new SystemSize(x - TileSelectionRect.X + 1, y - TileSelectionRect.Y + 1));

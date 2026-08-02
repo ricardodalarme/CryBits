@@ -8,7 +8,12 @@ using System.Drawing;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class CreateCharacterView(UiContext uiContext, AccountSender accountSender, PortraitRenderer characterRenderer, DefinitionCatalog catalog, MenuScreen menuScreen) : ViewBase
+internal class CreateCharacterView(
+    UiContext uiContext,
+    AccountSender accountSender,
+    PortraitRenderer characterRenderer,
+    DefinitionCatalog catalog,
+    MenuScreen menuScreen) : ViewBase
 {
     private Panel CreateCharacterPanel => uiContext.Get<Panel>("CreateCharacter");
     private TextInput NameTextBox => uiContext.Get<TextInput>("CreateName");
@@ -109,13 +114,15 @@ internal class CreateCharacterView(UiContext uiContext, AccountSender accountSen
 
     private void OnChangeClassRightPressed(Entity _)
     {
-        if (_currentClass == catalog.Classes.Count - 1) _currentClass = 0; else _currentClass++;
+        if (_currentClass == catalog.Classes.Count - 1) _currentClass = 0;
+        else _currentClass++;
         UpdateClassLabels();
     }
 
     private void OnChangeClassLeftPressed(Entity _)
     {
-        if (_currentClass == 0) _currentClass = (byte)(catalog.Classes.Count - 1); else _currentClass--;
+        if (_currentClass == 0) _currentClass = (byte)(catalog.Classes.Count - 1);
+        else _currentClass--;
         UpdateClassLabels();
     }
 
@@ -123,14 +130,16 @@ internal class CreateCharacterView(UiContext uiContext, AccountSender accountSen
     {
         var @class = catalog.Classes.ElementAt(_currentClass).Value;
         var texList = GenderMaleRadio.Checked ? @class.TextureMale : @class.TextureFemale;
-        if (_currentTexture == texList.Count - 1) _currentTexture = 0; else _currentTexture++;
+        if (_currentTexture == texList.Count - 1) _currentTexture = 0;
+        else _currentTexture++;
     }
 
     private void OnChangeTextureLeftPressed(Entity _)
     {
         var @class = catalog.Classes.ElementAt(_currentClass).Value;
         var texList = GenderMaleRadio.Checked ? @class.TextureMale : @class.TextureFemale;
-        if (_currentTexture == 0) _currentTexture = (byte)(texList.Count - 1); else _currentTexture--;
+        if (_currentTexture == 0) _currentTexture = (byte)(texList.Count - 1);
+        else _currentTexture--;
     }
 
     private void OnGenderChanged(Entity _)

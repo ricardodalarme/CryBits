@@ -13,7 +13,8 @@ namespace CryBits.Client.Spawners;
 
 internal static class NpcSpawner
 {
-    public static EntityId Spawn(World world, long npcId, Npc data, int x, int y, Direction direction, Vitals currentVitals)
+    public static EntityId Spawn(World world, long npcId, Npc data, int x, int y, Direction direction,
+        Vitals currentVitals)
     {
         var texture = Textures.Characters[data.Texture];
 
@@ -32,7 +33,8 @@ internal static class NpcSpawner
             .With(new TransformComponent(x * Globals.Grid, y * Globals.Grid))
             .With(new SpriteComponent(texture, null, Color.White))
             .With(new AnimationState(0, 0, 0f, CharacterAnimation.Idle))
-            .With(new MovementComponent(x, y, 0f, 0f, Globals.WalkSpeedPixelsPerSecond, MovementState.Stopped, direction))
+            .With(new MovementComponent(x, y, 0f, 0f, Globals.WalkSpeedPixelsPerSecond, MovementState.Stopped,
+                direction))
             .With(new AttackComponent())
             .With(new NpcTag())
             .With(currentVitals)

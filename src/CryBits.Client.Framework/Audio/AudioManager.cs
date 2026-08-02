@@ -59,11 +59,7 @@ public class AudioManager
         if (!File.Exists(directory)) return;
 
         // Load audio file into SFML Music.
-        CurrentMusicDevice = new Music(directory)
-        {
-            Volume = 20,
-            IsLooping = loop
-        };
+        CurrentMusicDevice = new Music(directory) { Volume = 20, IsLooping = loop };
 
         // Start playback.
         CurrentMusicDevice.Play();

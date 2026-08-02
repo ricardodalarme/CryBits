@@ -10,7 +10,9 @@ internal sealed class EquipmentSlotRenderer(SpriteBatch spriteBatch, DefinitionC
     public void DrawSlot(int slot, Guid itemId, Point pos)
     {
         if (itemId == Guid.Empty)
+        {
             spriteBatch.Draw(Textures.Equipments, pos.X, pos.Y, slot * 32, 0, 32, 32);
+        }
         else
         {
             var item = catalog.Items.Get(itemId);

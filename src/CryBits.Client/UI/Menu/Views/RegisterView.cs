@@ -4,7 +4,8 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class RegisterView(UiContext uiContext, AuthSender authSender, Connection connection, MenuScreen menuScreen) : ViewBase
+internal class RegisterView(UiContext uiContext, AuthSender authSender, Connection connection, MenuScreen menuScreen)
+    : ViewBase
 {
     private Panel RegisterPanel => uiContext.Get<Panel>("Register");
     private TextInput UsernameTextBox => uiContext.Get<TextInput>("RegisterUsername");

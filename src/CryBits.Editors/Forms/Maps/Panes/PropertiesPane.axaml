@@ -3,5 +3,5 @@
              xmlns:apc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
              x:Class="CryBits.Editors.Forms.Maps.Panes.PropertiesPane">
     <apc:PropertyGrid x:Name="prgMapProperties" NameWidth="110"
-                              IsHeaderVisible="False" IsTitleVisible="False" />
+                      IsHeaderVisible="False" IsTitleVisible="False" />
 </UserControl>

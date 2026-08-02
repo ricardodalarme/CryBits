@@ -66,6 +66,7 @@ internal partial class EditorMapsWindow : Window
     public SystemRect TileSource => mapCanvasPane.TileSource;
     public int MapScrollX => mapCanvasPane.ViewportTileX;
     public int MapScrollY => mapCanvasPane.ViewportTileY;
+
     public int MapCanvasWidth
     {
         get
@@ -74,6 +75,7 @@ internal partial class EditorMapsWindow : Window
             return w > 0 ? w : 800;
         }
     }
+
     public int MapCanvasHeight
     {
         get
@@ -90,8 +92,8 @@ internal partial class EditorMapsWindow : Window
     public int TileScrollY => tileSheetPane.TileScrollY;
     public SystemPoint TileMouse => tileSheetPane.TileMousePosition;
 
-    public int TileCanvasWidth => Math.Max(1, (int)tileSheetPane.TileViewport.Bounds.Width);
-    public int TileCanvasHeight => Math.Max(1, (int)tileSheetPane.TileViewport.Bounds.Height);
+    private int TileCanvasWidth => Math.Max(1, (int)tileSheetPane.TileViewport.Bounds.Width);
+    private int TileCanvasHeight => Math.Max(1, (int)tileSheetPane.TileViewport.Bounds.Height);
 
     public Map? SelectedMap { get; private set; }
 
@@ -100,16 +102,16 @@ internal partial class EditorMapsWindow : Window
     private DefinitionsTileData[,]? _clipboardData;
 
     // Pane instances
-    private TileSheetPane tileSheetPane = null!;
-    private LayersPane layersPane = null!;
-    private AttributesPane attributesPane = null!;
-    private NpcPane npcPane = null!;
-    private ZonesPane zonesPane = null!;
-    private MapCanvasPane mapCanvasPane = null!;
-    private MapExplorerPane explorerPane = null!;
-    private PropertiesPane propertiesPane = null!;
-    private Grid _leftPanelRoot = null!;
-    private Grid _normalView = null!;
+    private readonly TileSheetPane tileSheetPane;
+    private readonly LayersPane layersPane;
+    private readonly AttributesPane attributesPane;
+    private readonly NpcPane npcPane;
+    private readonly ZonesPane zonesPane;
+    private readonly MapCanvasPane mapCanvasPane;
+    private readonly MapExplorerPane explorerPane;
+    private readonly PropertiesPane propertiesPane;
+    private readonly Grid _leftPanelRoot;
+    private readonly Grid _normalView;
 
     private readonly DispatcherTimer? _timer;
 
@@ -183,11 +185,11 @@ internal partial class EditorMapsWindow : Window
     private void AssignContentToDockModels()
     {
         if (DockControl?.Layout is not Dock.Model.Avalonia.Controls.RootDock root) return;
+
         void Walk(IList<Dock.Model.Core.IDockable>? dockables)
         {
             if (dockables == null) return;
             foreach (var d in dockables)
-            {
                 switch (d)
                 {
                     case Dock.Model.Avalonia.Controls.ToolDock td when td.VisibleDockables?.Count > 0:
@@ -202,8 +204,8 @@ internal partial class EditorMapsWindow : Window
                         Walk(pd.VisibleDockables);
                         break;
                 }
-            }
         }
+
         Walk(root.VisibleDockables);
     }
 
@@ -212,7 +214,9 @@ internal partial class EditorMapsWindow : Window
         switch (dockable.Id)
         {
             case "LeftPanel" when dockable is Dock.Model.Avalonia.Controls.Tool t: t.Content = _leftPanelRoot; break;
-            case "MapCanvas" when dockable is Dock.Model.Avalonia.Controls.Document doc: doc.Content = mapCanvasPane; break;
+            case "MapCanvas"
+                when dockable is Dock.Model.Avalonia.Controls.Document doc:
+                doc.Content = mapCanvasPane; break;
             case "MapExplorer" when dockable is Dock.Model.Avalonia.Controls.Tool t: t.Content = explorerPane; break;
             case "Properties" when dockable is Dock.Model.Avalonia.Controls.Tool t: t.Content = propertiesPane; break;
         }
@@ -270,7 +274,8 @@ internal partial class EditorMapsWindow : Window
         layersPane.ChunksPane.LstChunks.SelectionChanged += (_, _) =>
         {
             if (layersPane.ChunksPane.LstChunks.SelectedItem is ChunkCoord coord)
-                mapCanvasPane.ZoomBorder.CenterOn(new Avalonia.Point(coord.X * MapMath.ChunkSize * Globals.Grid, coord.Y * MapMath.ChunkSize * Globals.Grid));
+                mapCanvasPane.ZoomBorder.CenterOn(new Avalonia.Point(coord.X * MapMath.ChunkSize * Globals.Grid,
+                    coord.Y * MapMath.ChunkSize * Globals.Grid));
         };
 
         // Wire explorer pane events
@@ -283,7 +288,8 @@ internal partial class EditorMapsWindow : Window
         AssignContentToDockModels();
 
         MapRenderer.Instance.WinMap = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
-        MapRenderer.Instance.WinMapTile = new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
+        MapRenderer.Instance.WinMapTile =
+            new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
 
         _timer!.Start();
         explorerPane.RefreshList();
@@ -325,6 +331,7 @@ internal partial class EditorMapsWindow : Window
             MapRenderer.Instance.EditorMapsMap();
             SfmlRenderBlit.Blit(MapRenderer.Instance.WinMap, ref _mapBitmap, mapCanvasPane.ImgMap);
         }
+
         if (ModeNormal)
         {
             var tw = (uint)TileCanvasWidth;
@@ -336,9 +343,11 @@ internal partial class EditorMapsWindow : Window
                 tileMap = new RenderTexture(new Vector2u(tw, th));
                 MapRenderer.Instance.WinMapTile = tileMap;
             }
+
             MapRenderer.Instance.EditorMapsTile();
             SfmlRenderBlit.Blit(tileMap, ref _tileBitmap, tileSheetPane.ImgTile);
         }
+
         UpdateStatusBar();
     }
 
@@ -391,7 +400,8 @@ internal partial class EditorMapsWindow : Window
     public bool IsLayerVisible(Layer layer)
     {
         foreach (var lvm in layersPane.Layers)
-            if (lvm.Layer == layer) return lvm.Visible;
+            if (lvm.Layer == layer)
+                return lvm.Visible;
         return true;
     }
 }

@@ -7,7 +7,8 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class OptionsView(UiContext uiContext, AudioManager audioManager, Connection connection, MenuScreen menuScreen) : ViewBase
+internal class OptionsView(UiContext uiContext, AudioManager audioManager, Connection connection, MenuScreen menuScreen)
+    : ViewBase
 {
     private Panel OptionsPanel => uiContext.Get<Panel>("Options");
     private Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");

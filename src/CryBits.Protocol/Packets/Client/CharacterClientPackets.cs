@@ -18,7 +18,8 @@ public partial class CharacterUsePacket : IClientPacket
     public int CharacterIndex;
 }
 
-[MemoryPackable] public partial class CharacterCreatePacket : IClientPacket;
+[MemoryPackable]
+public partial class CharacterCreatePacket : IClientPacket;
 
 [MemoryPackable]
 public partial class CharacterDeletePacket : IClientPacket

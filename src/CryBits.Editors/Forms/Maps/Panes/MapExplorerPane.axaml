@@ -6,7 +6,7 @@
                  PlaceholderText="Filter maps…"
                  Margin="4,4,4,2" />
         <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="4" Margin="4,0,4,2">
-            <Button x:Name="butNew"    Content="New" />
+            <Button x:Name="butNew" Content="New" />
             <Button x:Name="butRemove" Content="Remove" />
         </StackPanel>
         <ListBox x:Name="lstMaps" Grid.Row="2"

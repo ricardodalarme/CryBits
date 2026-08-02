@@ -21,16 +21,23 @@ namespace CryBits.Server.Commands;
 [Verb("seed",
     HelpText =
         "Seeds the server with starter items, NPCs, shops and a map. Skips if data already exists (use -f to overwrite).")]
-internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer worldInitializer, ILogger<SeedCommand> logger) : IConsoleCommand
+internal sealed class SeedCommand(
+    DefinitionCatalog catalog,
+    WorldInitializer worldInitializer,
+    ILogger<SeedCommand> logger) : IConsoleCommand
 {
-    public SeedCommand() : this(ServerContext.Catalog!, new WorldInitializer(ServerContext.Host!), ServerContext.LoggerFactory!.CreateLogger<SeedCommand>()) { }
+    public SeedCommand() : this(ServerContext.Catalog!, new WorldInitializer(ServerContext.Host!),
+        ServerContext.LoggerFactory!.CreateLogger<SeedCommand>())
+    {
+    }
 
     [Option('f', "force", HelpText = "Overwrite existing data even if it is already present.")]
     public bool Force { get; set; }
 
     public void Execute()
     {
-        if (!Force && (catalog.Items.Count > 0 || catalog.Npcs.Count > 0 || catalog.Shops.Count > 0 || catalog.Maps.Count > 0 ||
+        if (!Force && (catalog.Items.Count > 0 || catalog.Npcs.Count > 0 || catalog.Shops.Count > 0 ||
+                       catalog.Maps.Count > 0 ||
                        catalog.Classes.Count > 0))
         {
             logger.ZLogInformation($"Seed skipped: data already exists (use --force to overwrite)");
@@ -73,10 +80,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             Type = ItemType.Equipment,
             EquipType = (byte)Equipment.Armor,
             Rarity = Rarity.Common,
-            EquipAttribute =
-            {
-                [(byte)Attribute.Resistance] = 10
-            }
+            EquipAttribute = { [(byte)Attribute.Resistance] = 10 }
         };
 
         var helmet = new Item
@@ -87,10 +91,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             Type = ItemType.Equipment,
             EquipType = (byte)Equipment.Helmet,
             Rarity = Rarity.Common,
-            EquipAttribute =
-            {
-                [(byte)Attribute.Resistance] = 5
-            }
+            EquipAttribute = { [(byte)Attribute.Resistance] = 5 }
         };
 
         var shield = new Item
@@ -101,10 +102,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             Type = ItemType.Equipment,
             EquipType = (byte)Equipment.Shield,
             Rarity = Rarity.Common,
-            EquipAttribute =
-            {
-                [(byte)Attribute.Resistance] = 8
-            }
+            EquipAttribute = { [(byte)Attribute.Resistance] = 8 }
         };
 
         var amulet = new Item
@@ -115,10 +113,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             Type = ItemType.Equipment,
             EquipType = (byte)Equipment.Amulet,
             Rarity = Rarity.Uncommon,
-            EquipAttribute =
-            {
-                [(byte)Attribute.Intelligence] = 8
-            }
+            EquipAttribute = { [(byte)Attribute.Intelligence] = 8 }
         };
 
         var healthPotion = new Item
@@ -128,10 +123,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             Texture = 7,
             Stackable = true,
             Rarity = Rarity.Common,
-            PotionVital =
-            {
-                [(byte)Vital.Hp] = 50
-            }
+            PotionVital = { [(byte)Vital.Hp] = 50 }
         };
 
         var manaPotion = new Item
@@ -141,10 +133,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             Texture = 1,
             Stackable = true,
             Rarity = Rarity.Common,
-            PotionVital =
-            {
-                [(byte)Vital.Mp] = 30
-            }
+            PotionVital = { [(byte)Vital.Mp] = 30 }
         };
 
         foreach (var item in new[] { gold, sword, armor, helmet, shield, amulet, healthPotion, manaPotion })
@@ -173,10 +162,7 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             SpawnTime = 10,
             Sight = 5,
             ShopId = generalStore.Id,
-            Vital =
-            {
-                [(byte)Vital.Hp] = 100
-            }
+            Vital = { [(byte)Vital.Hp] = 100 }
         };
 
         var goblin = new NpcDef
@@ -189,14 +175,8 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             SpawnTime = 15,
             Sight = 8,
             Experience = 25,
-            Vital =
-            {
-                [(byte)Vital.Hp] = 60
-            },
-            Attribute =
-            {
-                [(byte)Attribute.Strength] = 5
-            }
+            Vital = { [(byte)Vital.Hp] = 60 },
+            Attribute = { [(byte)Attribute.Strength] = 5 }
         };
         goblin.Drop.Add(new NpcDropDef(gold.Id, 5, 80));
         goblin.Drop.Add(new NpcDropDef(healthPotion.Id, 1, 25));
@@ -211,14 +191,8 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             SpawnTime = 20,
             Sight = 6,
             Experience = 15,
-            Vital =
-            {
-                [(byte)Vital.Hp] = 40
-            },
-            Attribute =
-            {
-                [(byte)Attribute.Agility] = 8
-            }
+            Vital = { [(byte)Vital.Hp] = 40 },
+            Attribute = { [(byte)Attribute.Agility] = 8 }
         };
         snake.Drop.Add(new NpcDropDef(gold.Id, 2, 60));
 
@@ -243,7 +217,8 @@ internal sealed class SeedCommand(DefinitionCatalog catalog, WorldInitializer wo
             var tiles = new TileData[32, 32];
             for (var x = 0; x < 32; x++)
                 for (var y = 0; y < 32; y++)
-                    tiles[x, y] = new TileData(Texture: 4, SourceX: col, SourceY: 0, IsAutoTile: false, Attribute: new NoAttribute());
+                    tiles[x, y] = new TileData(Texture: 4, SourceX: col, SourceY: 0, IsAutoTile: false,
+                        Attribute: new NoAttribute());
             map.Chunks[new ChunkCoord(cx, cy)] = new MapChunk(cx, cy, 1, tiles);
         }
 

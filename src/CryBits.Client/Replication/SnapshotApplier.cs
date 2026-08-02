@@ -123,10 +123,10 @@ internal sealed class SnapshotApplier(
         var isLocal = serverId == replication.LocalPlayerId;
 
         var vitalArray = vitals != null
-            ? new short[] { vitals.Hp, vitals.Mp }
+            ? new[] { vitals.Hp, vitals.Mp }
             : [0, 0];
         var maxVitalArray = vitals != null
-            ? new short[] { vitals.MaxHp, vitals.MaxMp }
+            ? new[] { vitals.MaxHp, vitals.MaxMp }
             : [0, 0];
         var equipItems = equip != null
             ? Array.ConvertAll(equip.Slots, id => catalog.Items.Get(id))

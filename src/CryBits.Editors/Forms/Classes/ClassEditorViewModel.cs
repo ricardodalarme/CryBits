@@ -18,73 +18,121 @@ internal sealed partial class ClassEditorViewModel(Class model, DefinitionCatalo
     public string Name
     {
         get => Model.Name;
-        set { Model.Name = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Name = value;
+            OnPropertyChanged();
+        }
     }
 
     public string Description
     {
         get => Model.Description;
-        set { Model.Description = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Description = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Hp
     {
         get => Model.Vital[(byte)Vital.Hp];
-        set { Model.Vital[(byte)Vital.Hp] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Vital[(byte)Vital.Hp] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Mp
     {
         get => Model.Vital[(byte)Vital.Mp];
-        set { Model.Vital[(byte)Vital.Mp] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Vital[(byte)Vital.Mp] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Strength
     {
         get => Model.Attribute[(byte)Attribute.Strength];
-        set { Model.Attribute[(byte)Attribute.Strength] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Attribute[(byte)Attribute.Strength] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Resistance
     {
         get => Model.Attribute[(byte)Attribute.Resistance];
-        set { Model.Attribute[(byte)Attribute.Resistance] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Attribute[(byte)Attribute.Resistance] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Intelligence
     {
         get => Model.Attribute[(byte)Attribute.Intelligence];
-        set { Model.Attribute[(byte)Attribute.Intelligence] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Attribute[(byte)Attribute.Intelligence] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Agility
     {
         get => Model.Attribute[(byte)Attribute.Agility];
-        set { Model.Attribute[(byte)Attribute.Agility] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Attribute[(byte)Attribute.Agility] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Vitality
     {
         get => Model.Attribute[(byte)Attribute.Vitality];
-        set { Model.Attribute[(byte)Attribute.Vitality] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Attribute[(byte)Attribute.Vitality] = value;
+            OnPropertyChanged();
+        }
     }
 
     public int SpawnX
     {
         get => Model.SpawnX;
-        set { Model.SpawnX = value; OnPropertyChanged(); }
+        set
+        {
+            Model.SpawnX = value;
+            OnPropertyChanged();
+        }
     }
 
     public int SpawnY
     {
         get => Model.SpawnY;
-        set { Model.SpawnY = value; OnPropertyChanged(); }
+        set
+        {
+            Model.SpawnY = value;
+            OnPropertyChanged();
+        }
     }
 
     public int SpawnDirectionIndex
     {
         get => Model.SpawnDirection;
-        set { Model.SpawnDirection = (byte)value; OnPropertyChanged(); }
+        set
+        {
+            Model.SpawnDirection = (byte)value;
+            OnPropertyChanged();
+        }
     }
 
     [RelayCommand]

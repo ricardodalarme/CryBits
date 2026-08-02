@@ -5,4 +5,5 @@ using MemoryPack;
 namespace CryBits.Simulation.Intents;
 
 [MemoryPackable]
-public sealed partial record MoveIntent(EntityId SourceEntityId, Direction Direction, Movement Movement) : Intent(SourceEntityId);
+public sealed partial record MoveIntent(EntityId SourceEntityId, Direction Direction, Movement Movement)
+    : Intent(SourceEntityId);

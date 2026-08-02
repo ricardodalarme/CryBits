@@ -13,8 +13,7 @@ public sealed class CharacterRepository(DataConnection db)
     {
         var record = db.GetTable<CharacterModel>()
             .FirstOrDefault(c => c.Account == account && c.Name == name);
-        return record == null ? null :
-            JsonSerializer.Deserialize<Character>(record.Data, JsonConfig.Options);
+        return record == null ? null : JsonSerializer.Deserialize<Character>(record.Data, JsonConfig.Options);
     }
 
     public List<CharacterModel> GetSlots(string account) =>

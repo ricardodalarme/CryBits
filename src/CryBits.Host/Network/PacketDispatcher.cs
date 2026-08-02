@@ -24,10 +24,10 @@ internal sealed class PacketDispatcher(ILogger<PacketDispatcher> logger)
         foreach (var method in methods)
         {
             var packetParam = method.GetParameters()
-                .FirstOrDefault(p => typeof(IClientPacket).IsAssignableFrom(p.ParameterType))
-                ?? throw new InvalidOperationException(
-                    $"[PacketHandler] on '{method.DeclaringType?.Name}.{method.Name}' " +
-                    $"requires a parameter implementing IClientPacket.");
+                                  .FirstOrDefault(p => typeof(IClientPacket).IsAssignableFrom(p.ParameterType))
+                              ?? throw new InvalidOperationException(
+                                  $"[PacketHandler] on '{method.DeclaringType?.Name}.{method.Name}' " +
+                                  $"requires a parameter implementing IClientPacket.");
 
             var packetType = packetParam.ParameterType;
 
@@ -46,13 +46,9 @@ internal sealed class PacketDispatcher(ILogger<PacketDispatcher> logger)
         var type = packet.GetType();
 
         if (_handlers.TryGetValue(type, out var handler))
-        {
             handler(session, packet);
-        }
         else
-        {
             logger.ZLogWarning($"Unknown packet tag {type.Name} from session {session.Id}");
-        }
     }
 
     private static Action<Session, IClientPacket> BuildInstanceHandler(MethodInfo method, object instance)

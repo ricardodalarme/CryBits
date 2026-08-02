@@ -9,6 +9,7 @@ namespace CryBits.Simulation.Systems.Spawning;
 public sealed class NpcRespawnSystem : ISimulationSystem
 {
     private readonly List<Entry> _pendingRespawns = [];
+
     private readonly record struct Entry(Guid MapId, int NpcIndex, long RespawnTick);
 
     public void Execute(World world, Tick tick)
@@ -22,7 +23,7 @@ public sealed class NpcRespawnSystem : ISimulationSystem
 
             _pendingRespawns.Add(new Entry(
                 died.MapId, died.NpcIndex,
-                tick.TickNumber + npcData.SpawnTime * TicksPerSecond));
+                tick.TickNumber + (npcData.SpawnTime * TicksPerSecond)));
         }
 
         for (var i = _pendingRespawns.Count - 1; i >= 0; i--)

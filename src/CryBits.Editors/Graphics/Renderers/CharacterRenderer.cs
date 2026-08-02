@@ -26,7 +26,8 @@ internal class PortraitRenderer(Renderer renderer)
 
         var texture = Textures.Characters[textureNum];
         var size = new Size(texture.ToSize().Width / 4, texture.ToSize().Height / 4);
-        renderer.Draw(target, texture, (int)(target.Size.X - size.Width) / 2, (int)(target.Size.Y - size.Height) / 2, 0, 0,
+        renderer.Draw(target, texture, (int)(target.Size.X - size.Width) / 2, (int)(target.Size.Y - size.Height) / 2, 0,
+            0,
             size.Width, size.Height);
     }
 }

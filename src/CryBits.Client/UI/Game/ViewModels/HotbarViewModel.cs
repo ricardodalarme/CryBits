@@ -28,7 +28,7 @@ internal sealed class HotbarViewModel : IDisposable
     private readonly IDisposable _hotbarSubscription;
     private readonly IDisposable _inventorySubscription;
 
-    public HotbarItemViewModel[] Slots { get; private set; } = new HotbarItemViewModel[MaxHotbar];
+    public HotbarItemViewModel[] Slots { get; } = new HotbarItemViewModel[MaxHotbar];
 
     public HotbarViewModel(World world, IntentSender intentSender, DefinitionCatalog catalog)
     {
@@ -63,8 +63,7 @@ internal sealed class HotbarViewModel : IDisposable
         for (var i = 0; i < hotbar.Slots.Length; i++)
         {
             var slot = hotbar.Slots[i];
-            if (Slots[i] == null)
-                Slots[i] = new HotbarItemViewModel { Index = (short)i };
+            Slots[i] ??= new HotbarItemViewModel { Index = (short)i };
 
             Slots[i].Type = slot.Type;
             Slots[i].Slot = slot.Slot;

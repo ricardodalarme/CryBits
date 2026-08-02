@@ -7,7 +7,7 @@ namespace CryBits.Simulation.Systems.Npc.Behaviors;
 
 public sealed class FleeBehavior : INpcBehavior
 {
-    public Intent? GetNextAction(World world, EntityId entity, Definitions.Npcs.Npc npcData, Tick tick)
+    public Intent? GetNextAction(World world, EntityId entity, Definitions.Npcs.Npc npcData)
     {
         var npcState = world.Get<NpcState>(entity)!;
         if (!npcState.TargetId.HasValue) return null;
@@ -22,15 +22,11 @@ public sealed class FleeBehavior : INpcBehavior
         if (world.Has<PathFollow>(entity))
             return null;
 
-        var fleeX = pos.X + (pos.X - targetPos.X) * 4;
-        var fleeY = pos.Y + (pos.Y - targetPos.Y) * 4;
+        var fleeX = pos.X + ((pos.X - targetPos.X) * 4);
+        var fleeY = pos.Y + ((pos.Y - targetPos.Y) * 4);
 
         var path = Pathfinder.FindPath(world, pos.MapId, pos.X, pos.Y, fleeX, fleeY, maxRange: 12);
-        if (path != null)
-        {
-            world.Set(entity, new PathFollow(path));
-            return null;
-        }
+        if (path != null) world.Set(entity, new PathFollow(path));
 
         return null;
     }

@@ -27,7 +27,8 @@ public static class PlayerSpawner
 
         var entityId = world.Entities.Create();
 
-        world.Set(entityId, new Position(MapId: data.MapId, X: data.X, Y: data.Y, Direction: (Direction)data.Direction));
+        world.Set(entityId,
+            new Position(MapId: data.MapId, X: data.X, Y: data.Y, Direction: (Direction)data.Direction));
 
         world.Set(entityId, new PlayerAppearance(
             Name: data.Name,
@@ -64,7 +65,7 @@ public static class PlayerSpawner
                 : new HotbarSlot(SlotType.None, 0);
         world.Set(entityId, new HotbarState(hotbarSlots));
 
-        world.Set(entityId, new AttackCooldown(0));
+        world.Set(entityId, new AttackCooldown());
         world.Set(entityId, new PlayerTag());
         world.Set(entityId, new CollidableTag());
 
@@ -83,7 +84,9 @@ public static class PlayerSpawner
             @class.Attribute[(byte)Definitions.Characters.Attribute.Vitality],
             @class.Attribute[(byte)Definitions.Characters.Attribute.Intelligence], 1);
 
-        world.Set(entityId, new Position(MapId: @class.SpawnMapId, X: @class.SpawnX, Y: @class.SpawnY, Direction: (Direction)@class.SpawnDirection));
+        world.Set(entityId,
+            new Position(MapId: @class.SpawnMapId, X: @class.SpawnX, Y: @class.SpawnY,
+                Direction: (Direction)@class.SpawnDirection));
 
         world.Set(entityId, new PlayerAppearance(
             Name: name,

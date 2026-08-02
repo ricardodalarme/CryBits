@@ -90,11 +90,17 @@ internal partial class MapCanvasPane : UserControl
                 _defMapSelection = new SystemRect(_mapMouse, new SystemSize(1, 1));
         }
         else if (Deps.ToolbarPane.ModeAttributes && left)
+        {
             Deps.AttributesPane.SetAttributeAt(MapSelection);
+        }
         else if (Deps.ToolbarPane.ModeAttributes && right)
+        {
             Deps.AttributesPane.ClearAttributeAt(MapSelection);
+        }
         else if (Deps.ToolbarPane.ModeNPCs && left)
+        {
             Deps.NpcPane.AddNpcAt((byte)_mapMouse.X, (byte)_mapMouse.Y);
+        }
     }
 
     private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -106,11 +112,9 @@ internal partial class MapCanvasPane : UserControl
 
         var sel = MapSelection;
         if (Deps!.ToolbarPane.ToolRectangle && (sel.Width > 1 || sel.Height > 1))
-        {
             for (var x = sel.X; x < sel.X + sel.Width; x++)
                 for (var y = sel.Y; y < sel.Y + sel.Height; y++)
                     PaintTile(x, y, MakeSetTile());
-        }
         ResetMapSelectionSize();
     }
 

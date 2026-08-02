@@ -23,12 +23,13 @@ internal static class SfmlRenderBlit
         if (bitmap?.PixelSize.Width != w || bitmap?.PixelSize.Height != h)
         {
             bitmap?.Dispose();
-            bitmap = new WriteableBitmap(new PixelSize(w, h), new Vector(96, 96), PixelFormat.Rgba8888, AlphaFormat.Unpremul);
+            bitmap = new WriteableBitmap(new PixelSize(w, h), new Vector(96, 96), PixelFormat.Rgba8888,
+                AlphaFormat.Unpremul);
         }
 
         using var fb = bitmap.Lock();
         for (var y = 0; y < h; y++)
-            Marshal.Copy(pixels, y * w * 4, fb.Address + y * fb.RowBytes, w * 4);
+            Marshal.Copy(pixels, y * w * 4, fb.Address + (y * fb.RowBytes), w * 4);
 
         target.Source = bitmap;
         target.InvalidateVisual();
@@ -59,7 +60,7 @@ internal static class SfmlRenderBlit
         for (var y = 0; y < frameH; y++)
         {
             var srcOffset = y * fullW * 4;
-            var dstPtr = fb.Address + y * fb.RowBytes;
+            var dstPtr = fb.Address + (y * fb.RowBytes);
             Marshal.Copy(img.Pixels, srcOffset, dstPtr, frameW * 4);
         }
 
@@ -83,7 +84,7 @@ internal static class SfmlRenderBlit
         for (var y = 0; y < frameH; y++)
         {
             var srcOffset = y * fullW * 4;
-            var dstPtr = fb.Address + y * fb.RowBytes;
+            var dstPtr = fb.Address + (y * fb.RowBytes);
             Marshal.Copy(pixels, srcOffset, dstPtr, frameW * 4);
         }
 

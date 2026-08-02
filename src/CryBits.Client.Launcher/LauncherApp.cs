@@ -4,15 +4,13 @@ using CryBits.Client.Framework.Network.Transport;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Launcher.Offline;
 using CryBits.Client.Rendering;
-using CryBits.Definitions.Catalog;
 using CryBits.Protocol.Serialization;
 using CryBits.Simulation;
-using CryBits.Transport.Transports;
 using System.Diagnostics;
 
 namespace CryBits.Client.Launcher;
 
-using static CryBits.Definitions.Globals;
+using static Definitions.Globals;
 
 public sealed class LauncherApp : IDisposable
 {
@@ -47,6 +45,7 @@ public sealed class LauncherApp : IDisposable
             transport.Connect("localhost", Config.Port, Config.GameName);
             _connection = new Connection(transport);
         }
+
         _game = new Game(_window, _connection);
         _connection.Start(onDisconnected: () => _game.EndSession());
     }
@@ -57,7 +56,6 @@ public sealed class LauncherApp : IDisposable
         long timer1000 = 0;
 
         while (_window.RenderWindow.IsOpen)
-        {
             try
             {
                 _connection.Poll();
@@ -84,7 +82,6 @@ public sealed class LauncherApp : IDisposable
             {
                 Console.WriteLine($"[Error] Main loop threw an exception: {ex}");
             }
-        }
     }
 
     public void Dispose()

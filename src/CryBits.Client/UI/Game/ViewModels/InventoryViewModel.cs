@@ -26,7 +26,7 @@ internal sealed class InventoryViewModel : IDisposable
 
     private readonly IDisposable _inventorySubscription;
 
-    public InventoryItemViewModel[] Slots { get; private set; } = new InventoryItemViewModel[MaxInventory];
+    public InventoryItemViewModel[] Slots { get; } = new InventoryItemViewModel[MaxInventory];
 
     public InventoryViewModel(World world, IntentSender intentSender, DefinitionCatalog catalog)
     {
@@ -43,8 +43,7 @@ internal sealed class InventoryViewModel : IDisposable
         for (var i = 0; i < evt.Component.Slots.Length; i++)
         {
             var slot = evt.Component.Slots[i];
-            if (Slots[i] == null)
-                Slots[i] = new InventoryItemViewModel { Index = (short)i };
+            Slots[i] ??= new InventoryItemViewModel { Index = (short)i };
 
             Slots[i].ItemId = slot.ItemId;
             Slots[i].Amount = slot.Amount;

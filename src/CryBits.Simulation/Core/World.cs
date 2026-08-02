@@ -42,15 +42,13 @@ public sealed partial class World
             if (appearance.Name.Equals(name))
                 return entity;
         }
+
         return null;
     }
 
     public void Destroy(EntityId id)
     {
-        foreach (var (type, value) in Entities.GetAllComponents(id))
-        {
-            Events.Raise(this, id, type, value, null, ComponentAction.Removed);
-        }
+        foreach (var (type, value) in Entities.GetAllComponents(id)) Events.Raise(this, id, type, value, null, ComponentAction.Removed);
 
         SpatialGrid.Remove(id);
         Entities.Destroy(id);

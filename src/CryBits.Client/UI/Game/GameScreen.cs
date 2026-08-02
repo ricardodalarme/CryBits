@@ -4,8 +4,8 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Input;
 using CryBits.Client.Rendering;
 using CryBits.Client.Rendering.UI;
-using CryBits.Client.UI.Game.Views;
 using CryBits.Client.UI.Game.ViewModels;
+using CryBits.Client.UI.Game.Views;
 using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game;
@@ -39,7 +39,8 @@ internal class GameScreen
         InputManager inputManager, AudioManager audioManager, TooltipView tooltip,
         Chat chat, GameInput gameInput,
         StatsViewModel statsViewModel, CharacterViewModel characterViewModel, InventoryViewModel inventoryViewModel,
-        HotbarViewModel hotbarViewModel, TradeViewModel tradeViewModel, PartyViewModel partyViewModel, ShopViewModel shopViewModel)
+        HotbarViewModel hotbarViewModel, TradeViewModel tradeViewModel, PartyViewModel partyViewModel,
+        ShopViewModel shopViewModel)
     {
         UiContext = uiContext;
         ShopView = new(uiContext, itemRenderer, tooltip, shopViewModel);
@@ -129,8 +130,13 @@ internal class GameScreen
 
     public void ResetPanels()
     {
-        foreach (var name in new[] { "CharacterPanel", "InventoryPanel", "OptionsPanel", "ChatPanel", "Drop", "PartyInvitation", "ShopSell" })
-            if (UiContext.TryGet<Panel>(name, out var p)) p.Visible = false;
+        foreach (var name in new[]
+                 {
+                     "CharacterPanel", "InventoryPanel", "OptionsPanel", "ChatPanel", "Drop", "PartyInvitation",
+                     "ShopSell"
+                 })
+            if (UiContext.TryGet<Panel>(name, out var p))
+                p.Visible = false;
 
         TradeView.Close();
         ShopView.Close();

@@ -39,12 +39,8 @@ internal class TradeHandler(IntentSender intentSender, GameScreen gameScreen, Tr
     internal void TradeOffer(TradeOfferPacket packet)
     {
         if (packet.Own)
-        {
             viewModel.UpdateOwnOffer(packet.Items);
-        }
         else
-        {
             viewModel.UpdateTheirOffer(packet.Items);
-        }
     }
 }

@@ -2,7 +2,7 @@ using CryBits.Simulation.Events;
 
 namespace CryBits.Simulation.Core;
 
-enum ComponentAction
+internal enum ComponentAction
 {
     Added,
     Changed,
@@ -36,22 +36,19 @@ public sealed class WorldEvents
     internal void Unregister(IComponentSubscription sub)
     {
         foreach (var list in _subs.Values)
-        {
             if (list.Remove(sub))
                 break;
-        }
     }
 
-    internal void Raise(World world, EntityId entity, Type type, object? oldValue, object? newValue, ComponentAction action)
+    internal void Raise(World world, EntityId entity, Type type, object? oldValue, object? newValue,
+        ComponentAction action)
     {
         if (!_subs.TryGetValue(type, out var list))
             return;
 
         foreach (var sub in list)
-        {
             if (sub.Matches(world, entity))
                 sub.Invoke(entity, oldValue, newValue, action);
-        }
     }
 }
 
@@ -61,7 +58,10 @@ internal interface IComponentSubscription
     void Invoke(EntityId entity, object? oldValue, object? newValue, ComponentAction action);
 }
 
-internal sealed class ComponentSubscription<T>(WorldEvents owner, EntityId? entityFilter, Type? tagFilter,
+internal sealed class ComponentSubscription<T>(
+    WorldEvents owner,
+    EntityId? entityFilter,
+    Type? tagFilter,
     Action<ComponentAdded<T>>? onAdded,
     Action<ComponentChanged<T>>? onChanged,
     Action<ComponentRemoved<T>>? onRemoved) : IComponentSubscription, IDisposable where T : class

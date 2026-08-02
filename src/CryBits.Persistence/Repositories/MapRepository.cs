@@ -50,10 +50,8 @@ public sealed class MapRepository
         // Delete maps on disk that are no longer in the collection
         if (!MapsDirectory.Exists) return;
         foreach (var subDir in MapsDirectory.GetDirectories())
-        {
             if (Guid.TryParse(subDir.Name, out var id) && !saved.Contains(id))
                 subDir.Delete(true);
-        }
     }
 
     public Map? LoadMap(Guid id)
@@ -70,7 +68,6 @@ public sealed class MapRepository
 
         var chunksDir = Path.Combine(mapDir.FullName, ChunksSubDir);
         if (Directory.Exists(chunksDir))
-        {
             foreach (var file in Directory.GetFiles(chunksDir, "*" + ChunkFormat))
             {
                 var name = Path.GetFileNameWithoutExtension(file);
@@ -83,7 +80,6 @@ public sealed class MapRepository
                 if (chunk != null)
                     map.Chunks[new ChunkCoord(cx, cy)] = chunk;
             }
-        }
 
         return map;
     }
@@ -92,15 +88,13 @@ public sealed class MapRepository
     {
         if (!MapsDirectory.Exists) yield break;
         foreach (var subDir in MapsDirectory.GetDirectories())
-        {
             if (Guid.TryParse(subDir.Name, out var id))
             {
                 var map = LoadMap(id);
                 if (map != null) yield return map;
             }
-        }
     }
-    
+
     private DirectoryInfo MapDir(Guid id) =>
         new(Path.Combine(MapsDirectory.FullName, id.ToString()));
 

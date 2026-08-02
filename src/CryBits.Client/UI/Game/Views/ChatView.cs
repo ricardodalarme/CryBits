@@ -42,7 +42,7 @@ internal class ChatView(UiContext uiContext, Chat chat) : ViewBase
         if (!_scrollbarCreated && MessagesPanel.Parent != null)
         {
             MessagesPanel.OverflowMode = OverflowMode.HideOverflow;
-            MessagesPanel.CreateVerticalScrollbar(true);
+            MessagesPanel.CreateVerticalScrollbar();
             _scrollbarCreated = true;
         }
 

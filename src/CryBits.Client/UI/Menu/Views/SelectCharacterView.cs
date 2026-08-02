@@ -7,7 +7,8 @@ using System.Drawing;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class SelectCharacterView(UiContext uiContext, AccountSender accountSender, PortraitRenderer characterRenderer) : ViewBase
+internal class SelectCharacterView(UiContext uiContext, AccountSender accountSender, PortraitRenderer characterRenderer)
+    : ViewBase
 {
     private Panel SelectCharacterPanel => uiContext.Get<Panel>("SelectCharacter");
     private Button UseButton => uiContext.Get<Button>("CharUse");
@@ -95,13 +96,15 @@ internal class SelectCharacterView(UiContext uiContext, AccountSender accountSen
 
     private void OnChangeRightPressed(Entity _)
     {
-        if (_currentCharacter == _characters.Length - 1) _currentCharacter = 0; else _currentCharacter++;
+        if (_currentCharacter == _characters.Length - 1) _currentCharacter = 0;
+        else _currentCharacter++;
         UpdateButtonVisibility();
     }
 
     private void OnChangeLeftPressed(Entity _)
     {
-        if (_currentCharacter == 0) _currentCharacter = _characters.Length; else _currentCharacter--;
+        if (_currentCharacter == 0) _currentCharacter = _characters.Length;
+        else _currentCharacter--;
         UpdateButtonVisibility();
     }
 

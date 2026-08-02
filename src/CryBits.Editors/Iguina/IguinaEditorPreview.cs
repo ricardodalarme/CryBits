@@ -19,7 +19,7 @@ internal sealed class IguinaEditorPreview : IDisposable
     public IguinaEditorPreview(int width, int height)
     {
         Target = new RenderTexture(new Vector2u((uint)width, (uint)height));
-        var themePath = Directories.UITheme.FullName;
+        var themePath = Directories.UiTheme.FullName;
         var fontPath = Path.Combine(AppContext.BaseDirectory, "Graphics", "Fonts", "Georgia.ttf");
         _renderer = new SfmlRenderer(Target, themePath, new Font(fontPath));
         var input = new StubInputProvider();

@@ -12,10 +12,10 @@ internal static class Utils
     {
         return (Direction)direction switch
         {
-            Direction.Up => new Point(Grid / 2 - 4, 0),
-            Direction.Down => new Point(Grid / 2 - 4, Grid - 9),
-            Direction.Left => new Point(0, Grid / 2 - 4),
-            Direction.Right => new Point(Grid - 9, Grid / 2 - 4),
+            Direction.Up => new Point((Grid / 2) - 4, 0),
+            Direction.Down => new Point((Grid / 2) - 4, Grid - 9),
+            Direction.Left => new Point(0, (Grid / 2) - 4),
+            Direction.Right => new Point(Grid - 9, (Grid / 2) - 4),
             _ => new Point(0)
         };
     }

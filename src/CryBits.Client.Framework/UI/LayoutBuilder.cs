@@ -43,13 +43,11 @@ public static class LayoutBuilder
 
     private static void ApplyAnchor(Entity entity, string anchorName)
     {
-        if (Enum.TryParse<Anchor>(anchorName, out var anchor))
-            entity.Anchor = anchor;
-        else
-            entity.Anchor = Anchor.TopLeft;
+        entity.Anchor = Enum.TryParse<Anchor>(anchorName, out var anchor) ? anchor : Anchor.TopLeft;
     }
 
-    private static Entity? BuildElement(UISystem ui, Element el, Panel parent, Dictionary<string, Entity>? registry = null)
+    private static Entity? BuildElement(UISystem ui, Element el, Panel parent,
+        Dictionary<string, Entity>? registry = null)
     {
         if (!Builders.TryGetValue(el.GetType(), out var factory))
             return null;
@@ -65,10 +63,8 @@ public static class LayoutBuilder
         parent.AddChild(entity);
 
         if (el.Children.Count > 0 && entity is Panel entityPanel)
-        {
             foreach (var child in el.Children)
                 BuildElement(ui, child, entityPanel, registry);
-        }
 
         return entity;
     }
@@ -77,14 +73,13 @@ public static class LayoutBuilder
     {
         var btn = new Button(ui);
         if (!string.IsNullOrEmpty(el.Texture))
-        {
             btn.OverrideStyles.Icon = new IconTexture
             {
                 TextureId = el.Texture,
                 SourceRect = new Rectangle { Width = el.Width, Height = el.Height },
                 TextureScale = 1
             };
-        }
+
         btn.Size.SetPixels(el.Width, el.Height);
         btn.Paragraph.Text = string.Empty;
         btn.ToggleCheckOnClick = el.ToggleCheckOnClick;
@@ -118,13 +113,28 @@ public static class LayoutBuilder
 
     private static Checkbox BuildCheckbox(UISystem ui, CheckboxElement el)
     {
-        var cb = new Checkbox(ui) { Paragraph = { Text = el.Text, OverrideStyles = new StyleSheetState { Padding = new Sides { Left = 18 } } }, Checked = el.Checked, ExclusiveSelection = el.ExclusiveSelection };
+        var cb = new Checkbox(ui)
+        {
+            Paragraph =
+            {
+                Text = el.Text, OverrideStyles = new StyleSheetState { Padding = new Sides { Left = 18 } }
+            },
+            Checked = el.Checked,
+            ExclusiveSelection = el.ExclusiveSelection
+        };
         return cb;
     }
 
     private static RadioButton BuildRadioButton(UISystem ui, RadioButtonElement el)
     {
-        var rb = new RadioButton(ui) { Paragraph = { Text = el.Text, OverrideStyles = new StyleSheetState { Padding = new Sides { Left = 18 } } }, Checked = el.Checked };
+        var rb = new RadioButton(ui)
+        {
+            Paragraph =
+            {
+                Text = el.Text, OverrideStyles = new StyleSheetState { Padding = new Sides { Left = 18 } }
+            },
+            Checked = el.Checked
+        };
         return rb;
     }
 
@@ -136,6 +146,7 @@ public static class LayoutBuilder
             label.Size.SetPixels(el.MaxWidth, 20);
             label.TextOverflowMode = TextOverflowMode.WrapWords;
         }
+
         return label;
     }
 
@@ -148,13 +159,12 @@ public static class LayoutBuilder
     {
         var panel = new Panel(ui);
         if (!string.IsNullOrEmpty(el.Texture))
-        {
             panel.OverrideStyles.FillTextureStretched = new StretchedTexture
             {
                 TextureId = el.Texture,
                 SourceRect = new Rectangle { Width = Math.Max(el.Width, 1), Height = Math.Max(el.Height, 1) }
             };
-        }
+
         panel.Size.SetPixels(el.Width, el.Height);
         return panel;
     }
@@ -172,7 +182,8 @@ public static class LayoutBuilder
     private static Slider BuildSlider(UISystem ui, SliderElement el)
     {
         var orientation = el.Orientation?.Equals("Vertical", StringComparison.OrdinalIgnoreCase) == true
-            ? Orientation.Vertical : Orientation.Horizontal;
+            ? Orientation.Vertical
+            : Orientation.Horizontal;
         var slider = new Slider(ui, orientation);
         slider.Size.SetPixels(el.Width, el.Height);
         slider.MinValue = el.MinValue;
@@ -193,14 +204,16 @@ public static class LayoutBuilder
 
     private static SlotGrid BuildSlotGrid(UISystem ui, SlotGridElement el)
     {
-        var grid = new SlotGrid(ui, el.Columns, el.Rows, el.SlotSize, el.Spacing) { OverrideStyles =
+        var grid = new SlotGrid(ui, el.Columns, el.Rows, el.SlotSize, el.Spacing)
         {
-            FillTextureStretched = new StretchedTexture
+            OverrideStyles =
             {
-                TextureId = DefaultSlotGridTexture,
-                SourceRect = new Rectangle { Width = 1, Height = 1 }
+                FillTextureStretched = new StretchedTexture
+                {
+                    TextureId = DefaultSlotGridTexture, SourceRect = new Rectangle { Width = 1, Height = 1 }
+                }
             }
-        } };
+        };
         return grid;
     }
 

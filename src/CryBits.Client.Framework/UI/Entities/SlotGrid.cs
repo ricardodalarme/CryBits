@@ -11,25 +11,41 @@ public class SlotGrid : Entity
     public int Columns
     {
         get => _columns;
-        set { _columns = value; RecalculateSize(); }
+        set
+        {
+            _columns = value;
+            RecalculateSize();
+        }
     }
 
     public int Rows
     {
         get => _rows;
-        set { _rows = value; RecalculateSize(); }
+        set
+        {
+            _rows = value;
+            RecalculateSize();
+        }
     }
 
     public int SlotSize
     {
         get => _slotSize;
-        set { _slotSize = value; RecalculateSize(); }
+        set
+        {
+            _slotSize = value;
+            RecalculateSize();
+        }
     }
 
     public int Spacing
     {
         get => _spacing;
-        set { _spacing = value; RecalculateSize(); }
+        set
+        {
+            _spacing = value;
+            RecalculateSize();
+        }
     }
 
     public int TotalSlots => Columns * Rows;
@@ -47,8 +63,8 @@ public class SlotGrid : Entity
     private void RecalculateSize()
     {
         Size.SetPixels(
-            _columns * _slotSize + _spacing * (_columns - 1),
-            _rows * _slotSize + _spacing * (_rows - 1));
+            (_columns * _slotSize) + (_spacing * (_columns - 1)),
+            (_rows * _slotSize) + (_spacing * (_rows - 1)));
     }
 
     public SlotGrid(UISystem system, int columns, int rows, int slotSize, int spacing)
@@ -70,7 +86,7 @@ public class SlotGrid : Entity
     private void OnLeftMousePressed(Entity _)
     {
         var slot = GetSlotIndex(UISystem.CurrentInputState.MousePosition.X,
-                                UISystem.CurrentInputState.MousePosition.Y);
+            UISystem.CurrentInputState.MousePosition.Y);
         if (slot == null) return;
 
         var now = Environment.TickCount64;
@@ -80,6 +96,7 @@ public class SlotGrid : Entity
             _lastClickTime = 0;
             return;
         }
+
         _lastClickTime = now;
 
         OnSlotLeftDown?.Invoke(slot.Value);
@@ -88,7 +105,7 @@ public class SlotGrid : Entity
     private void OnLeftMouseReleased(Entity _)
     {
         var slot = GetSlotIndex(UISystem.CurrentInputState.MousePosition.X,
-                                UISystem.CurrentInputState.MousePosition.Y);
+            UISystem.CurrentInputState.MousePosition.Y);
         if (slot != null)
             OnSlotLeftUp?.Invoke(slot.Value);
     }
@@ -96,7 +113,7 @@ public class SlotGrid : Entity
     private void OnRightMousePressed(Entity _)
     {
         var slot = GetSlotIndex(UISystem.CurrentInputState.MousePosition.X,
-                                UISystem.CurrentInputState.MousePosition.Y);
+            UISystem.CurrentInputState.MousePosition.Y);
         if (slot != null)
             OnSlotRightClick?.Invoke(slot.Value);
     }
@@ -104,7 +121,7 @@ public class SlotGrid : Entity
     private void OnAfterUpdate(Entity _)
     {
         var slot = GetSlotIndex(UISystem.CurrentInputState.MousePosition.X,
-                                UISystem.CurrentInputState.MousePosition.Y);
+            UISystem.CurrentInputState.MousePosition.Y);
 
         if (slot == HoveredSlot) return;
 
@@ -129,8 +146,8 @@ public class SlotGrid : Entity
         var bounds = LastBoundingRect;
         var col = slotIndex % Columns;
         var row = slotIndex / Columns;
-        var x = bounds.X + col * (SlotSize + Spacing);
-        var y = bounds.Y + row * (SlotSize + Spacing);
+        var x = bounds.X + (col * (SlotSize + Spacing));
+        var y = bounds.Y + (row * (SlotSize + Spacing));
         return new Rectangle { X = x, Y = y, Width = SlotSize, Height = SlotSize };
     }
 
@@ -147,11 +164,11 @@ public class SlotGrid : Entity
         if (col < 0 || col >= Columns || row < 0 || row >= Rows)
             return null;
 
-        var slotX = bounds.X + col * (SlotSize + Spacing);
-        var slotY = bounds.Y + row * (SlotSize + Spacing);
+        var slotX = bounds.X + (col * (SlotSize + Spacing));
+        var slotY = bounds.Y + (row * (SlotSize + Spacing));
         if (mouseX >= slotX + SlotSize || mouseY >= slotY + SlotSize)
             return null;
 
-        return row * Columns + col;
+        return (row * Columns) + col;
     }
 }

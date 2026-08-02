@@ -13,7 +13,12 @@ using MemoryPack;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class MapHandler(World world, ReplicationState replication, ContentSender contentSender, AudioManager audioManager, MapRepository mapRepository)
+internal class MapHandler(
+    World world,
+    ReplicationState replication,
+    ContentSender contentSender,
+    AudioManager audioManager,
+    MapRepository mapRepository)
 {
     [PacketHandler]
     internal void MapRevision(MapRevisionPacket packet)
@@ -22,9 +27,9 @@ internal class MapHandler(World world, ReplicationState replication, ContentSend
 
         var myEntity = replication.LocalPlayerEntity;
         if (myEntity.HasValue)
-            world.DestroyWhere(id => world.Has<PlayerTag>(id) && id != myEntity.Value);
+            world.DestroyWhere(entityId => world.Has<PlayerTag>(entityId) && entityId != myEntity.Value);
         else
-            world.DestroyWhere(id => world.Has<PlayerTag>(id));
+            world.DestroyWhere(world.Has<PlayerTag>);
 
         var map = mapRepository.LoadMap(id);
         if (map is not null)
@@ -83,7 +88,6 @@ internal class MapHandler(World world, ReplicationState replication, ContentSend
 
         var key = (packet.ChunkX, packet.ChunkY);
         if (map.Chunks.TryGetValue(key, out var existingChunk))
-        {
             map.Chunks[key] = existingChunk with
             {
                 Version = packet.Version,
@@ -92,11 +96,8 @@ internal class MapHandler(World world, ReplicationState replication, ContentSend
                 FogOverride = packet.FogOverride ?? existingChunk.FogOverride,
                 LightingOverride = packet.LightingOverride ?? existingChunk.LightingOverride
             };
-        }
         else
-        {
             map.Chunks[key] = new MapChunk(packet.ChunkX, packet.ChunkY, packet.Version, tiles,
                 packet.WeatherOverride, packet.FogOverride, packet.LightingOverride);
-        }
     }
 }

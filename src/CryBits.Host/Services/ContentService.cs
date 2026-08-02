@@ -49,9 +49,7 @@ internal sealed class ContentService(
         worldInitializer.Initialize();
 
         foreach (var tempMap in host.Maps.Values)
-        {
             foreach (var t in host.Sessions.Where(t => t != session))
-            {
                 if (t.InEditor)
                 {
                     contentSender.Map(t, tempMap.Id);
@@ -62,8 +60,6 @@ internal sealed class ContentService(
                     if (otherPos?.MapId == tempMap.Id)
                         contentSender.Map(t, tempMap.Id);
                 }
-            }
-        }
     }
 
     [PacketHandler]

@@ -18,85 +18,141 @@ internal sealed partial class NpcEditorViewModel(Npc model, DefinitionCatalog ca
     public string Name
     {
         get => Model.Name;
-        set { Model.Name = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Name = value;
+            OnPropertyChanged();
+        }
     }
 
     public string SayMsg
     {
         get => Model.SayMsg;
-        set { Model.SayMsg = value; OnPropertyChanged(); }
+        set
+        {
+            Model.SayMsg = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Texture
     {
         get => Model.Texture;
-        set { Model.Texture = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Texture = value;
+            OnPropertyChanged();
+        }
     }
 
     public byte Sight
     {
         get => Model.Sight;
-        set { Model.Sight = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Sight = value;
+            OnPropertyChanged();
+        }
     }
 
     public byte SpawnTime
     {
         get => Model.SpawnTime;
-        set { Model.SpawnTime = value; OnPropertyChanged(); }
+        set
+        {
+            Model.SpawnTime = value;
+            OnPropertyChanged();
+        }
     }
 
     public int Experience
     {
         get => Model.Experience;
-        set { Model.Experience = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Experience = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Hp
     {
         get => Model.Vital[(byte)Vital.Hp];
-        set { Model.Vital[(byte)Vital.Hp] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Vital[(byte)Vital.Hp] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Mp
     {
         get => Model.Vital[(byte)Vital.Mp];
-        set { Model.Vital[(byte)Vital.Mp] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Vital[(byte)Vital.Mp] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Strength
     {
         get => Model.Attribute[(byte)Attribute.Strength];
-        set { Model.Attribute[(byte)Attribute.Strength] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Attribute[(byte)Attribute.Strength] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Resistance
     {
         get => Model.Attribute[(byte)Attribute.Resistance];
-        set { Model.Attribute[(byte)Attribute.Resistance] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Attribute[(byte)Attribute.Resistance] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Intelligence
     {
         get => Model.Attribute[(byte)Attribute.Intelligence];
-        set { Model.Attribute[(byte)Attribute.Intelligence] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Attribute[(byte)Attribute.Intelligence] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Agility
     {
         get => Model.Attribute[(byte)Attribute.Agility];
-        set { Model.Attribute[(byte)Attribute.Agility] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Attribute[(byte)Attribute.Agility] = value;
+            OnPropertyChanged();
+        }
     }
 
     public short Vitality
     {
         get => Model.Attribute[(byte)Attribute.Vitality];
-        set { Model.Attribute[(byte)Attribute.Vitality] = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Attribute[(byte)Attribute.Vitality] = value;
+            OnPropertyChanged();
+        }
     }
 
     public byte FleeHealth
     {
         get => Model.FleeHealth;
-        set { Model.FleeHealth = value; OnPropertyChanged(); }
+        set
+        {
+            Model.FleeHealth = value;
+            OnPropertyChanged();
+        }
     }
 
     [RelayCommand]

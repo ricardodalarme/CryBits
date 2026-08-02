@@ -1,12 +1,12 @@
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Slots;
 using CryBits.Host.Core;
+using CryBits.Host.Ingress;
 using CryBits.Host.Network;
 using CryBits.Protocol.Packets.Server;
+using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
-using CryBits.Simulation.Components;
-using CryBits.Host.Ingress;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Host.Services.Trade;
@@ -51,10 +51,7 @@ public sealed class TradeService(
 
     public void HandleDecline(EntityId inviteeId)
     {
-        if (_pendingInvitations.Remove(inviteeId, out var inviterId))
-        {
-            sender.ToPlayer(inviterId, new TradeStatePacket { State = (byte)TradeStatus.Declined });
-        }
+        if (_pendingInvitations.Remove(inviteeId, out var inviterId)) sender.ToPlayer(inviterId, new TradeStatePacket { State = (byte)TradeStatus.Declined });
     }
 
     public void HandleLeave(EntityId entityId)
@@ -92,15 +89,19 @@ public sealed class TradeService(
             newOffer[slot] = new TradeSlot { SlotNum = inventorySlot, Amount = amount };
         }
         else
+        {
             newOffer[slot] = new TradeSlot();
+        }
 
-        if (isA) session.OfferA = newOffer; else session.OfferB = newOffer;
+        if (isA) session.OfferA = newOffer;
+        else session.OfferB = newOffer;
 
         session.StatusA = TradeStatus.Waiting;
         session.StatusB = TradeStatus.Waiting;
 
         // Send updates
-        var ownOfferItems = Array.ConvertAll(newOffer, s => new PacketsTradeOfferItem { ItemId = inv.Slots[s.SlotNum].ItemId, Amount = s.Amount });
+        var ownOfferItems = Array.ConvertAll(newOffer,
+            s => new PacketsTradeOfferItem { ItemId = inv.Slots[s.SlotNum].ItemId, Amount = s.Amount });
         sender.ToPlayer(entityId, new TradeOfferPacket { Own = true, Items = ownOfferItems });
         sender.ToPlayer(partner, new TradeOfferPacket { Own = false, Items = ownOfferItems });
     }
@@ -110,16 +111,14 @@ public sealed class TradeService(
         if (!_activeTrades.TryGetValue(entityId, out var session)) return;
 
         var isA = session.EntityA == entityId;
-        if (isA) session.StatusA = state; else session.StatusB = state;
+        if (isA) session.StatusA = state;
+        else session.StatusB = state;
 
         var partner = isA ? session.EntityB : session.EntityA;
 
         sender.ToPlayer(partner, new TradeStatePacket { State = (byte)state });
 
-        if (session.StatusA == TradeStatus.Confirmed && session.StatusB == TradeStatus.Confirmed)
-        {
-            CommitTrade(session);
-        }
+        if (session.StatusA == TradeStatus.Confirmed && session.StatusB == TradeStatus.Confirmed) CommitTrade(session);
     }
 
     private void CommitTrade(TradeSession session)

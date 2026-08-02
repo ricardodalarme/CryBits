@@ -20,17 +20,24 @@ internal sealed partial class EditorUILayoutViewModel : ObservableObject
     public UILayout? CurrentLayout
     {
         get => _currentLayout;
-        set { _currentLayout = value; OnPropertyChanged(); }
+        set
+        {
+            _currentLayout = value;
+            OnPropertyChanged();
+        }
     }
 
     public EntityNode? SelectedNode
     {
         get => _selectedNode;
-        set { _selectedNode = value; OnPropertyChanged(); }
+        set
+        {
+            _selectedNode = value;
+            OnPropertyChanged();
+        }
     }
 
-    [ObservableProperty]
-    private string? _selectedScreen;
+    [ObservableProperty] private string? _selectedScreen;
 
     public void Load(string themeDir)
     {

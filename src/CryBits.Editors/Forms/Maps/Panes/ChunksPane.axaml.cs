@@ -13,10 +13,14 @@ internal partial class ChunksPane : UserControl
     public ChunksPane()
     {
         InitializeComponent();
-        butChunkLeft.Click += (_, _) => AddChunkAt((short)(FloorDiv(ViewportTileX, ChunkSize) - 1), (short)(FloorDiv(ViewportTileY, ChunkSize)));
-        butChunkRight.Click += (_, _) => AddChunkAt((short)(FloorDiv(ViewportTileX, ChunkSize) + 1), (short)(FloorDiv(ViewportTileY, ChunkSize)));
-        butChunkUp.Click += (_, _) => AddChunkAt((short)(FloorDiv(ViewportTileX, ChunkSize)), (short)(FloorDiv(ViewportTileY, ChunkSize) - 1));
-        butChunkDown.Click += (_, _) => AddChunkAt((short)(FloorDiv(ViewportTileX, ChunkSize)), (short)(FloorDiv(ViewportTileY, ChunkSize) + 1));
+        butChunkLeft.Click += (_, _) => AddChunkAt((short)(FloorDiv(ViewportTileX, ChunkSize) - 1),
+            (short)FloorDiv(ViewportTileY, ChunkSize));
+        butChunkRight.Click += (_, _) => AddChunkAt((short)(FloorDiv(ViewportTileX, ChunkSize) + 1),
+            (short)FloorDiv(ViewportTileY, ChunkSize));
+        butChunkUp.Click += (_, _) => AddChunkAt((short)FloorDiv(ViewportTileX, ChunkSize),
+            (short)(FloorDiv(ViewportTileY, ChunkSize) - 1));
+        butChunkDown.Click += (_, _) => AddChunkAt((short)FloorDiv(ViewportTileX, ChunkSize),
+            (short)(FloorDiv(ViewportTileY, ChunkSize) + 1));
         butDeleteChunk.Click += OnDeleteChunk;
     }
 

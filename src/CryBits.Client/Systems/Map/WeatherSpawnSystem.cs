@@ -1,12 +1,12 @@
 using CryBits.Client.Components;
+using CryBits.Client.Core;
 using CryBits.Client.Replication;
-using CryBits.Simulation.Core;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Spatial;
 using static CryBits.Definitions.Globals;
 using MapDef = CryBits.Definitions.Maps.Map;
-using CryBits.Client.Core;
 
 namespace CryBits.Client.Systems.Map;
 
@@ -21,10 +21,8 @@ internal sealed class WeatherSpawnSystem(ReplicationState replication) : IClient
 
         var activeCount = 0;
         foreach (var entityId in world.All)
-        {
             if (world.Get<WeatherParticleComponent>(entityId) != null)
                 activeCount++;
-        }
 
         var maxParticles = type == WeatherType.Snow ? MaxSnowParticles : MaxRainParticles;
         if (activeCount >= maxParticles) return;
@@ -65,6 +63,7 @@ internal sealed class WeatherSpawnSystem(ReplicationState replication) : IClient
                     x = Random.Shared.Next(-32, ScreenWidth);
                     y = -32;
                 }
+
                 break;
 
             case WeatherType.Snow:

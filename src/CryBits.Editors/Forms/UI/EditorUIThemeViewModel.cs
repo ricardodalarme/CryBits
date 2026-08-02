@@ -7,17 +7,13 @@ namespace CryBits.Editors.Forms.UI;
 
 internal sealed partial class EditorUIThemeViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private string _fileName = "Select a file";
+    [ObservableProperty] private string _fileName = "Select a file";
 
-    [ObservableProperty]
-    private string _fileContent = string.Empty;
+    [ObservableProperty] private string _fileContent = string.Empty;
 
-    [ObservableProperty]
-    private string? _currentFilePath;
+    [ObservableProperty] private string? _currentFilePath;
 
-    [ObservableProperty]
-    private string? _selectedFileName;
+    [ObservableProperty] private string? _selectedFileName;
 
     private string? _themeDir;
     private string? _savedContent;
@@ -29,22 +25,18 @@ internal sealed partial class EditorUIThemeViewModel : ObservableObject
     public void LoadFileList()
     {
         FileList.Clear();
-        _themeDir = Directories.UITheme.FullName;
+        _themeDir = Directories.UiTheme.FullName;
         if (!Directory.Exists(_themeDir)) return;
 
         var stylesDir = Path.Combine(_themeDir, "Styles");
         if (Directory.Exists(stylesDir))
-        {
             foreach (var f in Directory.GetFiles(stylesDir, "*.json")
-                .OrderBy(f => Path.GetFileName(f)))
+                         .OrderBy(f => Path.GetFileName(f)))
                 FileList.Add(Path.GetFileName(f));
-        }
 
         foreach (var name in new[] { "SystemStyle.json", "Layout.json" })
-        {
             if (File.Exists(Path.Combine(_themeDir, name)))
                 FileList.Add(name);
-        }
     }
 
     public void SelectFile(string? fileName)

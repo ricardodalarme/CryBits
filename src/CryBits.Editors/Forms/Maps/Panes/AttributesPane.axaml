@@ -3,10 +3,10 @@
              x:Class="CryBits.Editors.Forms.Maps.Panes.AttributesPane">
     <StackPanel Spacing="6" Margin="4">
         <TextBlock Text="Attribute" FontWeight="Bold" />
-        <RadioButton x:Name="optA_Block"    Content="Block"              GroupName="Attr" IsChecked="True" />
-        <RadioButton x:Name="optA_Warp"     Content="Warp"               GroupName="Attr" />
-        <RadioButton x:Name="optA_Item"     Content="Item Spawn"         GroupName="Attr" />
-        <RadioButton x:Name="optA_DirBlock" Content="Directional Block"  GroupName="Attr" />
+        <RadioButton x:Name="optA_Block" Content="Block" GroupName="Attr" IsChecked="True" />
+        <RadioButton x:Name="optA_Warp" Content="Warp" GroupName="Attr" />
+        <RadioButton x:Name="optA_Item" Content="Item Spawn" GroupName="Attr" />
+        <RadioButton x:Name="optA_DirBlock" Content="Directional Block" GroupName="Attr" />
 
         <Border x:Name="grpA_Warp"
                 BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"

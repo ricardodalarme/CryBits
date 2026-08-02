@@ -51,7 +51,7 @@ internal class TileRenderer(Renderer renderer)
     private void TileAttributes(int textureNum, int scrollX, int scrollY, int x, int y)
     {
         var tile = new Point(scrollX + x, scrollY + y);
-        var point = new Point(x * Grid + Grid / 2 - 5, y * Grid + Grid / 2 - 6);
+        var point = new Point((x * Grid) + (Grid / 2) - 5, (y * Grid) + (Grid / 2) - 6);
         if (tile.X > Client.Framework.Entities.Tile.Tile.List[textureNum].Data.GetUpperBound(0)) return;
         if (tile.Y > Client.Framework.Entities.Tile.Tile.List[textureNum].Data.GetUpperBound(1)) return;
 
@@ -78,10 +78,11 @@ internal class TileRenderer(Renderer renderer)
 
         for (byte i = 0; i < (byte)Direction.Count; i++)
         {
-            var sourceY = Client.Framework.Entities.Tile.Tile.List[textureNum].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
-            renderer.Draw(WinTile!, Textures.Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y,
+            var sourceY = Client.Framework.Entities.Tile.Tile.List[textureNum].Data[tile.X, tile.Y].Block[i]
+                ? (byte)8
+                : (byte)0;
+            renderer.Draw(WinTile!, Textures.Directions, (x * Grid) + Block_Position(i).X, (y * Grid) + Block_Position(i).Y,
                 i * 8, sourceY, 6, 6);
         }
     }
-
 }

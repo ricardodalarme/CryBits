@@ -13,7 +13,8 @@ namespace CryBits.Client.Systems.Map;
 
 internal sealed class LightningSystem(ReplicationState replication, AudioManager audioManager) : IClientSystem
 {
-    private static readonly string[] _thunderSounds = [Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4];
+    private static readonly string[] _thunderSounds =
+        [Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4];
 
     private const float LightningDecayInterval = 0.025f;
 
@@ -50,6 +51,7 @@ internal sealed class LightningSystem(ReplicationState replication, AudioManager
                     newAccumulator -= LightningDecayInterval;
                     newIntensity = newIntensity > 10 ? (byte)(newIntensity - 10) : (byte)0;
                 }
+
                 world.Set(entityId, new LightningComponent(newIntensity, newAccumulator));
             }
         }
@@ -66,14 +68,12 @@ internal sealed class LightningSystem(ReplicationState replication, AudioManager
         audioManager.PlaySound(_thunderSounds[thunder]);
 
         if (thunder < 3)
-        {
             foreach (var entityId in world.All)
             {
                 var lightning = world.Get<LightningComponent>(entityId);
                 if (lightning == null) continue;
 
-                world.Set(entityId, new LightningComponent(190, 0f));
+                world.Set(entityId, new LightningComponent(190));
             }
-        }
     }
 }

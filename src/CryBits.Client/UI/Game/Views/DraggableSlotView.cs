@@ -27,18 +27,12 @@ internal class DraggableSlotView(
         if (gameScreen.HotbarChange is { } hotSlot)
         {
             var hbSlot = hotbarViewModel.Slots[hotSlot];
-            if (hbSlot is { Slot: > 0, Type: SlotType.Item } && hbSlot.Definition is { } item)
-            {
-                itemRenderer.DrawItem(item, 1, pos);
-            }
+            if (hbSlot is { Slot: > 0, Type: SlotType.Item } && hbSlot.Definition is { } item) itemRenderer.DrawItem(item, 1, pos);
         }
         else if (gameScreen.InventoryChange is { } invSlot)
         {
             var itemVM = inventoryViewModel.Slots[invSlot];
-            if (itemVM is { Definition: { } item })
-            {
-                itemRenderer.DrawItem(item, 1, pos);
-            }
+            if (itemVM is { Definition: { } item }) itemRenderer.DrawItem(item, 1, pos);
         }
     }
 }

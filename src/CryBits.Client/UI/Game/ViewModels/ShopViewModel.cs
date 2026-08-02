@@ -23,7 +23,9 @@ internal sealed class ShopViewModel(
     public Shop? OpenedShop { get; private set; }
     public List<ShopSoldItemViewModel> SoldItems { get; private set; } = [];
     public string Name => OpenedShop?.Name ?? string.Empty;
-    public string CurrencyName => OpenedShop != null ? catalog.Items.Get(OpenedShop.CurrencyId)?.Name ?? "Unknown" : string.Empty;
+
+    public string CurrencyName =>
+        OpenedShop != null ? catalog.Items.Get(OpenedShop.CurrencyId)?.Name ?? "Unknown" : string.Empty;
 
     public void Open(Shop shop)
     {

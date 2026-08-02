@@ -15,13 +15,11 @@ internal sealed class CameraSystem(ReplicationState replication, CameraManager c
     {
         var target = (EntityId?)null;
         foreach (var entityId in world.All)
-        {
             if (world.Has<CameraTargetTag>(entityId) && world.Has<TransformComponent>(entityId))
             {
                 target = entityId;
                 break;
             }
-        }
 
         target ??= replication.LocalPlayerEntity;
 
@@ -33,8 +31,8 @@ internal sealed class CameraSystem(ReplicationState replication, CameraManager c
         const float halfW = ScreenWidth / 2f;
         const float halfH = ScreenHeight / 2f;
 
-        var cx = transform.X + Grid / 2f;
-        var cy = transform.Y + Grid / 2f;
+        var cx = transform.X + (Grid / 2f);
+        var cy = transform.Y + (Grid / 2f);
 
         var left = (int)Math.Max(0, (cx - halfW) / Grid);
         var top = (int)Math.Max(0, (cy - halfH) / Grid);

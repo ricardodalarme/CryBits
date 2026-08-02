@@ -10,7 +10,8 @@ public sealed partial record InventoryState(ItemSlot[] Slots)
     {
         byte count = 0;
         foreach (var t in Slots)
-            if (t.ItemId == Guid.Empty) count++;
+            if (t.ItemId == Guid.Empty)
+                count++;
 
         return count;
     }

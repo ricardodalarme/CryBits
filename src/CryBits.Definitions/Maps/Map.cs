@@ -16,8 +16,7 @@ public partial record Map : Definition
     public FogConfig? DefaultFog { get; set; }
     public byte DefaultLighting { get; set; } = 100;
 
-    [JsonIgnore]
-    public Dictionary<ChunkCoord, MapChunk> Chunks { get; set; } = [];
+    [JsonIgnore] public Dictionary<ChunkCoord, MapChunk> Chunks { get; set; } = [];
 
     public IList<MapNpc> Npc { get; set; } = [];
 

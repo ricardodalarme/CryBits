@@ -111,7 +111,9 @@ internal class TradeView(
         var itemVM = inventory.ViewModel.Slots[invSlot.Value];
         if (itemVM == null) return;
         if (itemVM.Amount == 1)
+        {
             viewModel.OfferItem((short)slot, invSlot.Value, 1);
+        }
         else
         {
             _ownSlot = (short)slot;

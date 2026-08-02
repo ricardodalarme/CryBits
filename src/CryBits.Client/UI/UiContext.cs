@@ -41,7 +41,7 @@ internal sealed class UiContext : IDisposable
 
     public UiContext(uint width, uint height, RenderWindow window)
     {
-        var themePath = Directories.UITheme.FullName;
+        var themePath = Directories.UiTheme.FullName;
         if (!Directory.Exists(themePath))
             throw new DirectoryNotFoundException($"UI theme directory not found: {themePath}");
 
@@ -60,7 +60,7 @@ internal sealed class UiContext : IDisposable
     {
         if (UISystem == null) return;
 
-        var config = InterfaceRepository.Load(Path.Combine(Directories.UITheme.FullName, "Layout.json"));
+        var config = InterfaceRepository.Load(Path.Combine(Directories.UiTheme.FullName, "Layout.json"));
         var screenElement = config.Screens.FirstOrDefault(s => s.Name == screenName);
         if (screenElement == null) return;
 
@@ -89,7 +89,7 @@ internal sealed class UiContext : IDisposable
 
     public void Update(float deltaTime)
     {
-        UISystem?.Update(deltaTime);
+        UISystem.Update(deltaTime);
     }
 
     public void Draw()

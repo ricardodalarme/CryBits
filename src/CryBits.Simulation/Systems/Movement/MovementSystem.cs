@@ -13,13 +13,11 @@ public sealed class MovementSystem : ISimulationSystem
     public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
-        {
             if (intent is MoveIntent move)
             {
                 ChangeDirection(world, move.SourceEntityId, move.Direction);
                 Move(world, tick, move.SourceEntityId, move.Movement);
             }
-        }
     }
 
     private void ChangeDirection(World world, EntityId entityId, Direction direction)

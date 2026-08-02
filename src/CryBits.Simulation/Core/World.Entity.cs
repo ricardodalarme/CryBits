@@ -83,10 +83,9 @@ public sealed partial class World
     {
         var toDestroy = new List<EntityId>();
         foreach (var id in Entities.All)
-        {
             if (predicate(id))
                 toDestroy.Add(id);
-        }
+
         foreach (var id in toDestroy)
             Destroy(id);
     }

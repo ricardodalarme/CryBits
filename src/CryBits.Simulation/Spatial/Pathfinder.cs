@@ -5,7 +5,8 @@ namespace CryBits.Simulation.Spatial;
 
 public static class Pathfinder
 {
-    public static List<Direction>? FindPath(World world, Guid mapId, int startX, int startY, int goalX, int goalY, int maxRange = 20)
+    public static List<Direction>? FindPath(World world, Guid mapId, int startX, int startY, int goalX, int goalY,
+        int maxRange = 20)
     {
         if (startX == goalX && startY == goalY)
             return [];
@@ -23,7 +24,7 @@ public static class Pathfinder
 
         var maxSteps = maxRange * maxRange;
 
-        var tieBreak = 1.0 + 1.0 / (maxSteps + 1);
+        var tieBreak = 1.0 + (1.0 / (maxSteps + 1));
         open.Enqueue(start, Manhattan(startX, startY, goalX, goalY));
 
         while (open.TryDequeue(out var current, out _))
@@ -77,7 +78,8 @@ public static class Pathfinder
         yield return (x + 1, y);
     }
 
-    private static List<Direction> Reconstruct(Dictionary<(int, int), (int X, int Y)> cameFrom, int cx, int cy, int startX, int startY)
+    private static List<Direction> Reconstruct(Dictionary<(int, int), (int X, int Y)> cameFrom, int cx, int cy,
+        int startX, int startY)
     {
         var directions = new List<Direction>();
         var (curX, curY) = (cx, cy);

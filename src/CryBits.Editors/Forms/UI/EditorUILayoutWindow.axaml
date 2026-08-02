@@ -12,7 +12,7 @@
     <Grid Margin="8" RowDefinitions="Auto,*,Auto,Auto">
 
         <ComboBox Grid.Row="0" HorizontalAlignment="Stretch" Margin="0,0,0,4"
-                  ItemsSource="{Binding ScreenNames}" SelectedItem="{Binding SelectedScreen}"/>
+                  ItemsSource="{Binding ScreenNames}" SelectedItem="{Binding SelectedScreen}" />
 
         <Grid Grid.Row="1" ColumnDefinitions="280,8,*,8,330">
 
@@ -20,13 +20,13 @@
                     BorderBrush="{DynamicResource SemiBorderColor}"
                     CornerRadius="4" Padding="8">
                 <Grid RowDefinitions="Auto,Auto,*,Auto">
-                    <TextBlock Grid.Row="0" Text="Entities" FontWeight="Bold" Margin="0,0,0,6"/>
+                    <TextBlock Grid.Row="0" Text="Entities" FontWeight="Bold" Margin="0,0,0,6" />
 
                     <Grid Grid.Row="1" ColumnDefinitions="*,4,*" Margin="0,0,0,6">
                         <Button x:Name="butAdd" Grid.Column="0" Content="Add"
-                                HorizontalAlignment="Stretch" Click="butAdd_Click"/>
+                                HorizontalAlignment="Stretch" Click="butAdd_Click" />
                         <Button Grid.Column="2" Content="Remove" Command="{Binding RemoveCommand}"
-                                HorizontalAlignment="Stretch"/>
+                                HorizontalAlignment="Stretch" />
                     </Grid>
 
                     <TreeView x:Name="treEntities" Grid.Row="2"
@@ -34,16 +34,16 @@
                               Margin="0,0,0,6">
                         <TreeView.ItemTemplate>
                             <TreeDataTemplate ItemsSource="{Binding Children}" x:DataType="vm:EntityNode">
-                                <TextBlock Text="{Binding Header}"/>
+                                <TextBlock Text="{Binding Header}" />
                             </TreeDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
 
                     <Grid Grid.Row="3" ColumnDefinitions="*,4,*">
                         <Button Grid.Column="0" Content="Up" Command="{Binding MoveUpCommand}"
-                                HorizontalAlignment="Stretch"/>
+                                HorizontalAlignment="Stretch" />
                         <Button Grid.Column="2" Content="Down" Command="{Binding MoveDownCommand}"
-                                HorizontalAlignment="Stretch"/>
+                                HorizontalAlignment="Stretch" />
                     </Grid>
                 </Grid>
             </Border>
@@ -51,7 +51,7 @@
             <Grid Grid.Column="2" VerticalAlignment="Top" ClipToBounds="True">
                 <Border Background="Black" Width="800" Height="608" HorizontalAlignment="Left">
                     <Image x:Name="imgPreview" Stretch="None"
-                           HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                           HorizontalAlignment="Left" VerticalAlignment="Top" />
                 </Border>
             </Grid>
 
@@ -59,19 +59,19 @@
                     BorderBrush="{DynamicResource SemiBorderColor}"
                     CornerRadius="4" Padding="8">
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" Text="Properties" FontWeight="Bold" Margin="0,0,0,4"/>
+                    <TextBlock DockPanel.Dock="Top" Text="Properties" FontWeight="Bold" Margin="0,0,0,4" />
                     <apc:PropertyGrid x:Name="propertyGrid"
-                                      IsQuickFilterVisible="False"/>
+                                      IsQuickFilterVisible="False" />
                 </DockPanel>
             </Border>
         </Grid>
 
         <Grid Grid.Row="2" ColumnDefinitions="*,8,Auto">
             <Button Grid.Column="2" Content="Edit Theme" Command="{Binding EditThemeCommand}"
-                    HorizontalAlignment="Stretch" Margin="0,6,0,0"/>
+                    HorizontalAlignment="Stretch" Margin="0,6,0,0" />
         </Grid>
 
         <Button Grid.Row="3" Content="Save Layout" Command="{Binding SaveCommand}"
-                HorizontalAlignment="Stretch" Margin="0,6,0,0"/>
+                HorizontalAlignment="Stretch" Margin="0,6,0,0" />
     </Grid>
 </Window>

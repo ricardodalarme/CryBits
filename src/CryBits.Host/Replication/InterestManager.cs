@@ -17,7 +17,7 @@ public sealed class InterestManager(World world)
         if (pos == null) return new SubscriptionDiff();
 
         var center = ChunkGrid.FromPosition(pos.X, pos.Y);
-        var desired = _grid.GetNeighborhood(center, AoiRadius);
+        var desired = _grid.GetNeighborhood(center);
         var current = _subscriptions.GetValueOrDefault(observer) ?? [];
 
         var diff = new SubscriptionDiff

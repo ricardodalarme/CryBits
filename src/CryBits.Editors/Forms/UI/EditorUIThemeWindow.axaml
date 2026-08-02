@@ -13,9 +13,9 @@
                 BorderBrush="{DynamicResource SemiBorderColor}"
                 CornerRadius="4" Padding="8">
             <Grid RowDefinitions="Auto,Auto,*">
-                <TextBlock Text="Theme Files" FontWeight="Bold" Margin="0,0,0,6"/>
+                <TextBlock Text="Theme Files" FontWeight="Bold" Margin="0,0,0,6" />
                 <ListBox Grid.Row="2" ItemsSource="{Binding FileList}"
-                         SelectedItem="{Binding SelectedFileName}"/>
+                         SelectedItem="{Binding SelectedFileName}" />
             </Grid>
         </Border>
 
@@ -24,27 +24,27 @@
             <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
                     CornerRadius="4" Padding="8">
                 <Grid RowDefinitions="Auto,*">
-                    <TextBlock Text="{Binding FileName}" FontWeight="Bold" Margin="0,0,0,4"/>
+                    <TextBlock Text="{Binding FileName}" FontWeight="Bold" Margin="0,0,0,4" />
                     <TextBox Grid.Row="1"
                              Text="{Binding FileContent}"
                              AcceptsReturn="True" AcceptsTab="True"
                              TextWrapping="NoWrap"
                              FontFamily="Consolas, Courier New, monospace"
-                             FontSize="12"/>
+                             FontSize="12" />
                 </Grid>
             </Border>
 
             <Border Grid.Row="4" BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
                     CornerRadius="4" Padding="8">
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,*">
-                    <TextBlock Text="Preview" FontWeight="Bold" Margin="0,0,0,4"/>
+                    <TextBlock Text="Preview" FontWeight="Bold" Margin="0,0,0,4" />
                     <Border Grid.Column="0" Grid.Row="1" Background="Black" CornerRadius="4">
                         <Image x:Name="imgPreview" Stretch="None"
-                               HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                               HorizontalAlignment="Left" VerticalAlignment="Top" />
                     </Border>
                     <StackPanel Grid.Column="1" Grid.Row="1" Margin="8,0,0,0" Spacing="4">
-                        <Button Content="Refresh Preview" Command="{Binding RefreshPreviewCommand}"/>
-                        <Button Content="Revert File" Command="{Binding RevertFileCommand}"/>
+                        <Button Content="Refresh Preview" Command="{Binding RefreshPreviewCommand}" />
+                        <Button Content="Revert File" Command="{Binding RevertFileCommand}" />
                     </StackPanel>
                 </Grid>
             </Border>
@@ -52,6 +52,6 @@
 
         <Button Grid.Row="2" Grid.Column="2" Content="Save Changes"
                 Command="{Binding SaveCommand}"
-                HorizontalAlignment="Right" Margin="0,4,0,0"/>
+                HorizontalAlignment="Right" Margin="0,4,0,0" />
     </Grid>
 </Window>

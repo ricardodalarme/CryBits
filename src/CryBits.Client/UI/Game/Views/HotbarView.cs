@@ -43,7 +43,7 @@ internal class HotbarView(
     private void OnSlotLeftDown(int slot)
     {
         var hbSlot = viewModel.Slots[slot];
-        if (hbSlot == null || hbSlot.Slot <= 0) return;
+        if (hbSlot is not { Slot: > 0 }) return;
 
         _hotbarDragOrigin = (short)slot;
         gameScreen.HotbarChange = (short)slot;
@@ -98,10 +98,7 @@ internal class HotbarView(
         {
             var rect = Grid.GetSlotRect(i);
             var hbSlot = viewModel.Slots[i];
-            if (hbSlot is { Slot: > 0, Type: SlotType.Item } && hbSlot.Definition is { } item)
-            {
-                itemRenderer.DrawItem(item, 1, new Point(rect.X, rect.Y));
-            }
+            if (hbSlot is { Slot: > 0, Type: SlotType.Item } && hbSlot.Definition is { } item) itemRenderer.DrawItem(item, 1, new Point(rect.X, rect.Y));
         }
     }
 }

@@ -15,12 +15,7 @@ internal sealed class DeltaEncoder(World world)
         ObserverState observer,
         IEnumerable<EntityId> visibleEntities)
     {
-        var packet = new DeltaPacket
-        {
-            TickNumber = currentTick,
-            BaselineTick = observer.LastAckedTick,
-            MapId = mapId
-        };
+        var packet = new DeltaPacket { TickNumber = currentTick, BaselineTick = observer.LastAckedTick, MapId = mapId };
 
         var visibleIds = new HashSet<long>();
 
@@ -52,7 +47,6 @@ internal sealed class DeltaEncoder(World world)
             }
 
             if (!isAdded)
-            {
                 foreach (var (type, removalVersion) in world.Entities.GetRemovals(entityId))
                 {
                     if (removalVersion <= observer.LastAckedTick) continue;
@@ -60,42 +54,31 @@ internal sealed class DeltaEncoder(World world)
                     if (tag == null) continue;
                     delta.RemovedTags.Add(tag.Value);
                 }
-            }
 
             if (delta.Components.Count > 0 || delta.RemovedTags.Count > 0)
                 packet.Entities.Add(delta);
         }
 
         foreach (var knownId in observer.KnownEntities.ToList())
-        {
             if (!visibleIds.Contains(knownId))
             {
                 packet.RemovedEntities.Add(knownId);
                 observer.KnownEntities.Remove(knownId);
             }
-        }
 
         return packet.Entities.Count > 0 || packet.RemovedEntities.Count > 0 ? packet : null;
     }
 
     public KeyframePacket EncodeKeyframe(Guid mapId, IEnumerable<EntityId> entityIds, long? tickNumber = null)
     {
-        var packet = new KeyframePacket
-        {
-            TickNumber = tickNumber ?? world.TickCount,
-            MapId = mapId
-        };
+        var packet = new KeyframePacket { TickNumber = tickNumber ?? world.TickCount, MapId = mapId };
 
         foreach (var entityId in entityIds)
         {
             if (!world.IsAlive(entityId)) continue;
 
             var kind = DetermineKind(world, entityId);
-            var snapshot = new KeyframeEntity
-            {
-                EntityId = entityId.Value,
-                Kind = kind
-            };
+            var snapshot = new KeyframeEntity { EntityId = entityId.Value, Kind = kind };
 
             foreach (var (type, obj) in world.Entities.GetAllComponents(entityId))
             {

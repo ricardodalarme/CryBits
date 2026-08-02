@@ -65,7 +65,7 @@
                 BorderThickness="0,1,0,0" BorderBrush="{DynamicResource SemiBorderColor}"
                 Padding="6,3">
             <StackPanel Orientation="Horizontal" Spacing="12">
-                <TextBlock x:Name="lblFPS"      Text="FPS: —" />
+                <TextBlock x:Name="lblFPS" Text="FPS: —" />
                 <Separator Width="1" />
                 <TextBlock x:Name="lblPosition" Text="Position: {0;0}" />
             </StackPanel>

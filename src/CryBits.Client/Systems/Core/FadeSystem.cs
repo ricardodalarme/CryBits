@@ -23,10 +23,8 @@ internal sealed class FadeSystem : IClientSystem
             }
 
             var newAlpha = (byte)Math.Max(0, sprite.Tint.A - fade.AmountPerTick);
-            world.Set(entityId, sprite with
-            {
-                Tint = new SFML.Graphics.Color(sprite.Tint.R, sprite.Tint.G, sprite.Tint.B, newAlpha)
-            });
+            world.Set(entityId,
+                sprite with { Tint = new SFML.Graphics.Color(sprite.Tint.R, sprite.Tint.G, sprite.Tint.B, newAlpha) });
             world.Set(entityId, fade with { Timer = fade.IntervalSeconds });
 
             if (newAlpha == 0)

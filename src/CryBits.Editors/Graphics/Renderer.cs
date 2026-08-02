@@ -75,7 +75,7 @@ internal class Renderer
         var width = (int)tempText.GetLocalBounds().Width;
         var drawX = alignment switch
         {
-            TextAlign.Center => x - width / 2,
+            TextAlign.Center => x - (width / 2),
             TextAlign.Right => x - width,
             _ => x
         };

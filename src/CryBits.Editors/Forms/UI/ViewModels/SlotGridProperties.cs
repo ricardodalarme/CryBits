@@ -12,11 +12,9 @@ internal sealed class SlotGridProperties(Element config, Entity entity) : UIElem
 
     public override string GetTypeDiscriminator() => "SlotGrid";
 
-    [Browsable(false)]
-    public new int Width => _grid.Columns * _grid.SlotSize + _grid.Spacing * (_grid.Columns - 1);
+    [Browsable(false)] public new int Width => (_grid.Columns * _grid.SlotSize) + (_grid.Spacing * (_grid.Columns - 1));
 
-    [Browsable(false)]
-    public new int Height => _grid.Rows * _grid.SlotSize + _grid.Spacing * (_grid.Rows - 1);
+    [Browsable(false)] public new int Height => (_grid.Rows * _grid.SlotSize) + (_grid.Spacing * (_grid.Rows - 1));
 
     [Category("Slot Grid")]
     [Range(1, 99)]

@@ -7,7 +7,6 @@ public interface ITransport
     void Poll();
     void Send(Guid sessionId, byte[] data, DeliveryChannel delivery);
     void Disconnect(Guid sessionId);
-    bool IsRunning { get; }
 
     event Action<Guid>? OnConnected;
     event Action<Guid>? OnDisconnected;

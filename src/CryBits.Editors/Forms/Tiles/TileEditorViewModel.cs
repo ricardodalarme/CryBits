@@ -11,17 +11,13 @@ internal sealed partial class TileEditorViewModel : ObservableObject
 {
     public event Action? RequestClose;
 
-    [ObservableProperty]
-    private int _tileIndex = 1;
+    [ObservableProperty] private int _tileIndex = 1;
 
-    [ObservableProperty]
-    private int _scrollX;
+    [ObservableProperty] private int _scrollX;
 
-    [ObservableProperty]
-    private int _scrollY;
+    [ObservableProperty] private int _scrollY;
 
-    [ObservableProperty]
-    private bool _isAttributeMode = true;
+    [ObservableProperty] private bool _isAttributeMode = true;
 
     public string TileLabel => "Tile: " + TileIndex;
 
@@ -70,7 +66,7 @@ internal sealed partial class TileEditorViewModel : ObservableObject
         var tex = Textures.Tiles[TileIndex];
         const int canvasW = 298;
         const int canvasH = 443;
-        MaxScrollBoundsX = Math.Max(0, tex.ToSize().Width / G.Grid - canvasW / G.Grid);
-        MaxScrollBoundsY = Math.Max(0, tex.ToSize().Height / G.Grid - canvasH / G.Grid);
+        MaxScrollBoundsX = Math.Max(0, (tex.ToSize().Width / G.Grid) - (canvasW / G.Grid));
+        MaxScrollBoundsY = Math.Max(0, (tex.ToSize().Height / G.Grid) - (canvasH / G.Grid));
     }
 }

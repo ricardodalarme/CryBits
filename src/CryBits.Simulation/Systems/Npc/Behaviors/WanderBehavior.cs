@@ -6,7 +6,7 @@ namespace CryBits.Simulation.Systems.Npc.Behaviors;
 
 public sealed class WanderBehavior : INpcBehavior
 {
-    public Intent? GetNextAction(World world, EntityId entity, Definitions.Npcs.Npc npcData, Tick tick)
+    public Intent? GetNextAction(World world, EntityId entity, Definitions.Npcs.Npc npcData)
     {
         if (Random.Shared.Next(0, 3) != 0) return null;
 

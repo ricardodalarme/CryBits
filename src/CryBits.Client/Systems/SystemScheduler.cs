@@ -14,9 +14,6 @@ internal sealed class SystemScheduler
 
     public void Update(World world, float dt)
     {
-        foreach (var s in _systems)
-        {
-            s.Update(world, dt);
-        }
+        foreach (var s in _systems) s.Update(world, dt);
     }
 }

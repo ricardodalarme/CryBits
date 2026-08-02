@@ -9,33 +9,33 @@
         WindowStartupLocation="CenterScreen">
     <Grid Margin="8">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="244"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="244" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!-- LEFT COLUMN -->
         <Grid Grid.Column="0" Margin="0,0,8,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBox x:Name="txtFilter" Grid.Row="0" PlaceholderText="Filter..." Margin="0,0,0,4"
-                     TextChanged="txtFilter_TextChanged"/>
+                     TextChanged="txtFilter_TextChanged" />
 
             <ListBox x:Name="lstItems" Grid.Row="1" Margin="0,0,0,4"
-                     SelectionChanged="lstItems_SelectionChanged"/>
+                     SelectionChanged="lstItems_SelectionChanged" />
 
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Content="New" Margin="0,0,4,0"
-                        HorizontalAlignment="Stretch" Command="{Binding CreateNewCommand}"/>
+                        HorizontalAlignment="Stretch" Command="{Binding CreateNewCommand}" />
                 <Button Grid.Column="1" Content="Remove"
-                        HorizontalAlignment="Stretch" Command="{Binding RemoveCommand}"/>
+                        HorizontalAlignment="Stretch" Command="{Binding RemoveCommand}" />
             </Grid>
         </Grid>
 
@@ -45,94 +45,94 @@
             <!-- General -->
             <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}" CornerRadius="4" Padding="8">
                 <StackPanel Spacing="4">
-                    <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,4"/>
+                    <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,4" />
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center" Width="90"/>
-                        <TextBox Grid.Column="1" Text="{Binding Name}"/>
+                        <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center" Width="90" />
+                        <TextBox Grid.Column="1" Text="{Binding Name}" />
                     </Grid>
 
-                    <TextBlock Text="Description:"/>
+                    <TextBlock Text="Description:" />
                     <TextBox Height="75" AcceptsReturn="True"
-                             TextWrapping="Wrap" Text="{Binding Description}"/>
+                             TextWrapping="Wrap" Text="{Binding Description}" />
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Type:" VerticalAlignment="Center" Width="90"/>
+                        <TextBlock Grid.Column="0" Text="Type:" VerticalAlignment="Center" Width="90" />
                         <ComboBox x:Name="cmbType" Grid.Column="1" HorizontalAlignment="Stretch"
                                   SelectionChanged="cmbType_SelectionChanged">
-                            <ComboBoxItem Content="None"/>
-                            <ComboBoxItem Content="Equipment"/>
-                            <ComboBoxItem Content="Potion"/>
+                            <ComboBoxItem Content="None" />
+                            <ComboBoxItem Content="Equipment" />
+                            <ComboBoxItem Content="Potion" />
                         </ComboBox>
                     </Grid>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Texture:" VerticalAlignment="Center" Width="90"/>
+                        <TextBlock Grid.Column="0" Text="Texture:" VerticalAlignment="Center" Width="90" />
                         <NumericUpDown x:Name="numTexture" Grid.Column="1" Minimum="0" FormatString="0"
                                        Value="{Binding Texture}"
-                                       ValueChanged="numTexture_ValueChanged"/>
+                                       ValueChanged="numTexture_ValueChanged" />
                         <Image x:Name="imgTexturePreview" Grid.Column="2" Width="37" Height="37"
-                               Margin="6,0,0,0" Stretch="Uniform"/>
+                               Margin="6,0,0,0" Stretch="Uniform" />
                     </Grid>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Rarity:" VerticalAlignment="Center" Width="90"/>
+                        <TextBlock Grid.Column="0" Text="Rarity:" VerticalAlignment="Center" Width="90" />
                         <ComboBox x:Name="cmbRarity" Grid.Column="1" HorizontalAlignment="Stretch"
-                                  SelectedIndex="{Binding RarityIndex}"/>
+                                  SelectedIndex="{Binding RarityIndex}" />
                     </Grid>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Bind:" VerticalAlignment="Center" Width="90"/>
+                        <TextBlock Grid.Column="0" Text="Bind:" VerticalAlignment="Center" Width="90" />
                         <ComboBox x:Name="cmbBind" Grid.Column="1" HorizontalAlignment="Stretch"
-                                  SelectedIndex="{Binding BindIndex}"/>
+                                  SelectedIndex="{Binding BindIndex}" />
                     </Grid>
 
-                    <CheckBox IsChecked="{Binding Stackable}" Content="Stackable"/>
+                    <CheckBox IsChecked="{Binding Stackable}" Content="Stackable" />
                 </StackPanel>
             </Border>
 
             <!-- Requirements -->
             <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}" CornerRadius="4" Padding="8">
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Requirements" FontWeight="Bold" Margin="0,0,0,4"/>
+                    <TextBlock Text="Requirements" FontWeight="Bold" Margin="0,0,0,4" />
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Level:" VerticalAlignment="Center" Width="90"/>
-                        <NumericUpDown Grid.Column="1" Minimum="0" FormatString="0" Value="{Binding ReqLevel}"/>
+                        <TextBlock Grid.Column="0" Text="Level:" VerticalAlignment="Center" Width="90" />
+                        <NumericUpDown Grid.Column="1" Minimum="0" FormatString="0" Value="{Binding ReqLevel}" />
                     </Grid>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Class:" VerticalAlignment="Center" Width="90"/>
+                        <TextBlock Grid.Column="0" Text="Class:" VerticalAlignment="Center" Width="90" />
                         <ComboBox x:Name="cmbReq_Class" Grid.Column="1" HorizontalAlignment="Stretch"
-                                  SelectionChanged="cmbReq_Class_SelectionChanged"/>
+                                  SelectionChanged="cmbReq_Class_SelectionChanged" />
                     </Grid>
                 </StackPanel>
             </Border>
@@ -141,121 +141,129 @@
             <Panel>
                 <!-- Potion -->
                 <Border x:Name="pnlPotion" IsVisible="False"
-                        BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}" CornerRadius="4" Padding="8">
+                        BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}" CornerRadius="4"
+                        Padding="8">
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Potion" FontWeight="Bold" Margin="0,0,0,4"/>
+                        <TextBlock Text="Potion" FontWeight="Bold" Margin="0,0,0,4" />
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="HP:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding PotionHp}"/>
+                            <TextBlock Grid.Column="0" Text="HP:" VerticalAlignment="Center" Width="90" />
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding PotionHp}" />
                         </Grid>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="MP:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding PotionMp}"/>
+                            <TextBlock Grid.Column="0" Text="MP:" VerticalAlignment="Center" Width="90" />
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding PotionMp}" />
                         </Grid>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Experience:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding PotionExperience}"/>
+                            <TextBlock Grid.Column="0" Text="Experience:" VerticalAlignment="Center" Width="90" />
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0"
+                                           Value="{Binding PotionExperience}" />
                         </Grid>
 
                         <TextBlock Text="(Negative values are also valid)" FontStyle="Italic"
-                                   Foreground="{DynamicResource SemiSecondaryForeground}" FontSize="11"/>
+                                   Foreground="{DynamicResource SemiSecondaryForeground}" FontSize="11" />
                     </StackPanel>
                 </Border>
 
                 <!-- Equipment -->
                 <Border x:Name="pnlEquipment" IsVisible="False"
-                        BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}" CornerRadius="4" Padding="8">
+                        BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}" CornerRadius="4"
+                        Padding="8">
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Equipment" FontWeight="Bold" Margin="0,0,0,4"/>
+                        <TextBlock Text="Equipment" FontWeight="Bold" Margin="0,0,0,4" />
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Type:" VerticalAlignment="Center" Width="90"/>
+                            <TextBlock Grid.Column="0" Text="Type:" VerticalAlignment="Center" Width="90" />
                             <ComboBox x:Name="cmbEquipment_Type" Grid.Column="1" HorizontalAlignment="Stretch"
                                       SelectionChanged="cmbEquipment_Type_SelectionChanged">
-                                <ComboBoxItem Content="Weapon"/>
-                                <ComboBoxItem Content="Armor"/>
-                                <ComboBoxItem Content="Helmet"/>
-                                <ComboBoxItem Content="Shield"/>
-                                <ComboBoxItem Content="Amulet"/>
+                                <ComboBoxItem Content="Weapon" />
+                                <ComboBoxItem Content="Armor" />
+                                <ComboBoxItem Content="Helmet" />
+                                <ComboBoxItem Content="Shield" />
+                                <ComboBoxItem Content="Amulet" />
                             </ComboBox>
                         </Grid>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Strength:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding EquipStrength}"/>
+                            <TextBlock Grid.Column="0" Text="Strength:" VerticalAlignment="Center" Width="90" />
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0"
+                                           Value="{Binding EquipStrength}" />
                         </Grid>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Resistance:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding EquipResistance}"/>
+                            <TextBlock Grid.Column="0" Text="Resistance:" VerticalAlignment="Center" Width="90" />
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0"
+                                           Value="{Binding EquipResistance}" />
                         </Grid>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Intelligence:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding EquipIntelligence}"/>
+                            <TextBlock Grid.Column="0" Text="Intelligence:" VerticalAlignment="Center" Width="90" />
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0"
+                                           Value="{Binding EquipIntelligence}" />
                         </Grid>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Agility:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding EquipAgility}"/>
+                            <TextBlock Grid.Column="0" Text="Agility:" VerticalAlignment="Center" Width="90" />
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0"
+                                           Value="{Binding EquipAgility}" />
                         </Grid>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Vitality:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0" Value="{Binding EquipVitality}"/>
+                            <TextBlock Grid.Column="0" Text="Vitality:" VerticalAlignment="Center" Width="90" />
+                            <NumericUpDown Grid.Column="1" Minimum="-100" FormatString="0"
+                                           Value="{Binding EquipVitality}" />
                         </Grid>
 
                         <!-- Weapon damage (only visible when equipment type = Weapon) -->
                         <Grid x:Name="pnlWeaponDamage" IsVisible="False">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Weapon Damage:" VerticalAlignment="Center" Width="90"/>
-                            <NumericUpDown Grid.Column="1" Minimum="0" FormatString="0" Value="{Binding WeaponDamage}"/>
+                            <TextBlock Grid.Column="0" Text="Weapon Damage:" VerticalAlignment="Center" Width="90" />
+                            <NumericUpDown Grid.Column="1" Minimum="0" FormatString="0" Value="{Binding WeaponDamage}" />
                         </Grid>
 
                         <TextBlock Text="(Negative values are also valid)" FontStyle="Italic"
-                                   Foreground="{DynamicResource SemiSecondaryForeground}" FontSize="11"/>
+                                   Foreground="{DynamicResource SemiSecondaryForeground}" FontSize="11" />
                     </StackPanel>
                 </Border>
             </Panel>
@@ -263,15 +271,15 @@
             <!-- Save / Cancel -->
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Content="Save All" Margin="0,0,4,0"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                        Classes="accent" Command="{Binding SaveCommand}"/>
+                        Classes="accent" Command="{Binding SaveCommand}" />
                 <Button Grid.Column="1" Content="Cancel"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                        Command="{Binding CancelCommand}"/>
+                        Command="{Binding CancelCommand}" />
             </Grid>
 
         </StackPanel>

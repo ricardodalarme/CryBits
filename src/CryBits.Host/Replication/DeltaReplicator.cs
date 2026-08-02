@@ -78,6 +78,7 @@ internal sealed class DeltaReplicator(
             var pos = world.Get<Position>(entityId);
             if (pos != null) dirtyMaps.Add(pos.MapId);
         }
+
         return dirtyMaps;
     }
 
@@ -93,13 +94,7 @@ internal sealed class DeltaReplicator(
 
     private void SendChunkEviction(Session session, Guid mapId, ChunkCoord chunk)
     {
-        var evict = new ChunkRevisionPacket
-        {
-            MapId = mapId,
-            ChunkX = chunk.X,
-            ChunkY = chunk.Y,
-            Version = -1
-        };
+        var evict = new ChunkRevisionPacket { MapId = mapId, ChunkX = chunk.X, ChunkY = chunk.Y, Version = -1 };
         var evictBytes = MemoryPackSerializer.Serialize<IServerPacket>(evict);
         transport.Send(session.Id, evictBytes, DeliveryChannel.ReliableOrdered);
     }

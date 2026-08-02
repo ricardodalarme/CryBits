@@ -24,6 +24,7 @@ internal class MetricsView(UiContext uiContext) : ViewBase
             FpsLabel.Text = "FPS: " + Client.Game.Fps;
             LatencyLabel.Text = "Latency: " + Connection.Latency;
         }
+
         FpsLabel.Visible = Options.Instance.ShowMetrics;
         LatencyLabel.Visible = Options.Instance.ShowMetrics;
     }

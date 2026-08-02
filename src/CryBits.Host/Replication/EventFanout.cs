@@ -36,7 +36,6 @@ internal sealed class EventFanout(
     private void ReplicatePlayerWarp(PlayerWarpedEvent warp, World world)
     {
         foreach (var map in world.MapDefs.Values)
-        {
             if (map.Id == warp.NewMapId)
             {
                 var session = sessions.Get(warp.PlayerId);
@@ -50,7 +49,7 @@ internal sealed class EventFanout(
                 if (pos != null)
                 {
                     var center = ChunkGrid.FromPosition(pos.X, pos.Y);
-                    foreach (var chunkCoord in world.SpatialGrid.GetNeighborhood(center, 2))
+                    foreach (var chunkCoord in world.SpatialGrid.GetNeighborhood(center))
                     {
                         var payload = ChunkPayloadBuilder.Build(world, pos.MapId, chunkCoord.X, chunkCoord.Y);
                         if (payload != null)
@@ -63,6 +62,5 @@ internal sealed class EventFanout(
 
                 break;
             }
-        }
     }
 }

@@ -10,13 +10,15 @@ namespace CryBits.Host.Network;
 
 public sealed class PackageSender(ITransport transport, SessionManager sessions, EntityRegistry entities)
 {
-    public void ToPlayer(Session session, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
+    public void ToPlayer(Session session, IServerPacket packet,
+        DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
     {
         var bytes = PacketSerializer.Serialize(packet);
         transport.Send(session.Id, bytes, delivery);
     }
 
-    public void ToPlayer(EntityId entityId, IServerPacket packet, DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
+    public void ToPlayer(EntityId entityId, IServerPacket packet,
+        DeliveryChannel delivery = DeliveryChannel.ReliableOrdered)
     {
         var session = sessions.Get(entityId)!;
         ToPlayer(session, packet, delivery);

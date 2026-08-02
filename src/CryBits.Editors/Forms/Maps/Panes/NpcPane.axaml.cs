@@ -43,7 +43,14 @@ internal partial class NpcPane : UserControl
     private void AddNpc(bool fixedSpawn = false, int x = 0, int y = 0)
     {
         if (SelectedMap == null || cmbNPC.SelectedItem is not Npc npc) return;
-        SelectedMap.Npc.Add(new MapNpc { NpcId = npc.Id, Zone = (byte)(numNPC_Zone.Value ?? 0), Spawn = fixedSpawn, X = x, Y = y });
+        SelectedMap.Npc.Add(new MapNpc
+        {
+            NpcId = npc.Id,
+            Zone = (byte)(numNPC_Zone.Value ?? 0),
+            Spawn = fixedSpawn,
+            X = x,
+            Y = y
+        });
         RefreshList();
     }
 

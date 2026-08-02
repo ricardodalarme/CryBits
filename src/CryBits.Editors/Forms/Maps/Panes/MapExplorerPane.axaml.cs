@@ -78,7 +78,11 @@ internal partial class MapExplorerPane : UserControl
     {
         if (_selected == null) return;
         if (Catalog == null) return;
-        if (Catalog.Maps.Count == 1) { MessageBox.Show("It must have at least one map registered."); return; }
+        if (Catalog.Maps.Count == 1)
+        {
+            MessageBox.Show("It must have at least one map registered.");
+            return;
+        }
 
         Catalog.Maps.Remove(_selected.Id);
         _selected = null;

@@ -48,8 +48,8 @@ internal sealed class MovementSystem : IClientSystem
                 world.Set(entityId, newMovement);
 
             world.Set(entityId, new TransformComponent(
-                (int)(newMovement.TileX * Grid + newMovement.OffsetX),
-                (int)(newMovement.TileY * Grid + newMovement.OffsetY)
+                (int)((newMovement.TileX * Grid) + newMovement.OffsetX),
+                (int)((newMovement.TileY * Grid) + newMovement.OffsetY)
             ));
         }
     }

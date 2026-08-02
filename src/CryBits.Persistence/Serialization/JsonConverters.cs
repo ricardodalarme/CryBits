@@ -10,7 +10,6 @@ public class PointConverter : JsonConverter<Point>
     {
         int x = 0, y = 0;
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
-        {
             if (reader.TokenType is JsonTokenType.PropertyName)
             {
                 var prop = reader.GetString();
@@ -21,7 +20,7 @@ public class PointConverter : JsonConverter<Point>
                     case "y": y = reader.GetInt32(); break;
                 }
             }
-        }
+
         return new Point(x, y);
     }
 

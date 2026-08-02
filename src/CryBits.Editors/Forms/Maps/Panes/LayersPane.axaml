@@ -24,10 +24,13 @@
                                       Height="128"
                                       SelectionMode="Single">
                                 <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn Header=""     Binding="{Binding Visible}" Width="22" />
-                                    <DataGridTextColumn    Header="Nº"   Binding="{Binding Index}"   Width="24" IsReadOnly="True" />
-                                    <DataGridTextColumn    Header="Name" Binding="{Binding Name}"    Width="*"  IsReadOnly="True" />
-                                    <DataGridTextColumn    Header="Type" Binding="{Binding TypeName}" Width="50" IsReadOnly="True" />
+                                    <DataGridCheckBoxColumn Header="" Binding="{Binding Visible}" Width="22" />
+                                    <DataGridTextColumn Header="Nº" Binding="{Binding Index}" Width="24"
+                                                        IsReadOnly="True" />
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"
+                                                        IsReadOnly="True" />
+                                    <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" Width="50"
+                                                        IsReadOnly="True" />
                                 </DataGrid.Columns>
                             </DataGrid>
                             <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="3" Margin="0,3,0,0">

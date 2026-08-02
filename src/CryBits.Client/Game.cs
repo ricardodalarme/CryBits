@@ -23,7 +23,7 @@ public sealed class Game : IDisposable
     private readonly Connection _connection;
     private readonly AudioManager _audioManager = new();
     private readonly DefinitionCatalog _catalog = new();
-    private MenuScreen _menuScreen = null!;
+    private readonly MenuScreen _menuScreen = null!;
     private GameSession? _activeSession;
 
     public Game(SpriteBatch spriteBatch, Connection connection)
@@ -40,7 +40,8 @@ public sealed class Game : IDisposable
 
         RegisterIntentTypes();
 
-        _menuScreen = new MenuScreen(_audioManager, _uiContext, new AuthSender(connection), new AccountSender(connection, _catalog), new PortraitRenderer(spriteBatch), _catalog, connection);
+        _menuScreen = new MenuScreen(_audioManager, _uiContext, new AuthSender(connection),
+            new AccountSender(connection, _catalog), new PortraitRenderer(spriteBatch), _catalog, connection);
 
         PacketDispatcher.Register(new AuthHandler(_catalog, _uiContext, _menuScreen));
         PacketDispatcher.Register(new AccountHandler(this, _menuScreen));

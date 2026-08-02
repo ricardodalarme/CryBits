@@ -1,10 +1,10 @@
 using CryBits.Host.Core;
+using CryBits.Host.Ingress;
 using CryBits.Host.Network;
 using CryBits.Host.Network.Senders;
 using CryBits.Protocol.Packets.Server;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
-using CryBits.Host.Ingress;
 using System.Drawing;
 using static CryBits.Definitions.Globals;
 
@@ -95,7 +95,8 @@ public sealed class PartyService(
     {
         if (_pendingInvitations.Remove(inviteeId, out var inviterId))
         {
-            var inviteeName = world.Entities.Get<Simulation.Components.PlayerAppearance>(inviteeId)?.Name ?? string.Empty;
+            var inviteeName = world.Entities.Get<Simulation.Components.PlayerAppearance>(inviteeId)?.Name ??
+                              string.Empty;
             chatSender.Message(inviterId, inviteeName + " declined the party invitation.", Color.White);
         }
     }
@@ -120,14 +121,13 @@ public sealed class PartyService(
                 funnel.Submit(new XpShareIntent(remaining, []));
                 sender.ToPlayer(remaining, new PartyPacket { MemberIds = [] });
             }
+
             _activeParties.Remove(party);
         }
         else
         {
-            if (party.Leader == entityId)
-            {
-                party.Leader = party.Members[0];
-            }
+            if (party.Leader == entityId) party.Leader = party.Members[0];
+
             SyncPartyToSimulation(party);
             BroadcastPartyUpdate(party);
         }
@@ -158,9 +158,6 @@ public sealed class PartyService(
     {
         // Packets expect long array representing character server IDs
         var memberNetworkIds = party.Members.Select(m => sessions.Get(m)?.Character?.Value ?? 0L).ToArray();
-        foreach (var memberId in party.Members)
-        {
-            sender.ToPlayer(memberId, new PartyPacket { MemberIds = memberNetworkIds });
-        }
+        foreach (var memberId in party.Members) sender.ToPlayer(memberId, new PartyPacket { MemberIds = memberNetworkIds });
     }
 }

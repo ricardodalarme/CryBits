@@ -3,9 +3,10 @@ using CryBits.Definitions.Catalog;
 using CryBits.Host;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
-using CryBits.Host.Network.Senders;
 using CryBits.Host.Network.Handlers;
+using CryBits.Host.Network.Senders;
 using CryBits.Host.Replication;
+using CryBits.Host.Scheduling;
 using CryBits.Host.Services;
 using CryBits.Persistence;
 using CryBits.Persistence.Repositories;
@@ -18,7 +19,6 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using CryBits.Host.Scheduling;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Launcher.Offline;
@@ -27,7 +27,11 @@ internal sealed class SilentLogger<T> : ILogger<T>
 {
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
     public bool IsEnabled(LogLevel logLevel) => false;
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) { }
+
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+        Func<TState, Exception?, string> formatter)
+    {
+    }
 }
 
 public sealed class EmbeddedHostRunner : IDisposable
@@ -77,7 +81,8 @@ public sealed class EmbeddedHostRunner : IDisposable
         var pipeline = HostPipelineBuilder.Build(new DeltaReplicator(
             simulation, sessions, deltaEncoder, eventFanout, pair.Server, interestManager));
 
-        _host = new WorldHost(pair.Server, simulation, pipeline, sessions, packageSender, new SilentLogger<TickDriver>());
+        _host = new WorldHost(pair.Server, simulation, pipeline, sessions, packageSender,
+            new SilentLogger<TickDriver>());
         pair.Server.Start(0, Config.GameName, 1);
 
         new WorldInitializer(_host).Initialize();
@@ -85,7 +90,6 @@ public sealed class EmbeddedHostRunner : IDisposable
         // Create an instance-based dispatcher and wire all host services
         var hostDispatcher = new Host.Network.PacketDispatcher(new SilentLogger<Host.Network.PacketDispatcher>());
         var ps = _host.PackageSender;
-        var es = _host.Entities;
         var ss = _host.Sessions;
 
         var authSender = new AuthSender(ps, pair.Server);
@@ -107,7 +111,8 @@ public sealed class EmbeddedHostRunner : IDisposable
         hostDispatcher.Register(new AckHandler());
 
         var tradeService = new Host.Services.Trade.TradeService(_host.IntentFunnel, ps, ss, simulation);
-        var intentIngress = new Host.Ingress.IntentIngress(_host.IntentFunnel, tradeService, partyService, new SilentLogger<Host.Ingress.IntentIngress>());
+        var intentIngress = new Host.Ingress.IntentIngress(_host.IntentFunnel, tradeService, partyService,
+            new SilentLogger<Host.Ingress.IntentIngress>());
         hostDispatcher.Register(intentIngress);
 
         // Start server tick loop

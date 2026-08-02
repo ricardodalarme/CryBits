@@ -9,6 +9,7 @@ namespace CryBits.Server.Commands;
 internal sealed class DefineAccessCommand(ILogger<DefineAccessCommand> logger) : IConsoleCommand
 {
     public DefineAccessCommand() : this(ServerContext.LoggerFactory!.CreateLogger<DefineAccessCommand>()) { }
+
     [Value(0, Required = true, MetaName = "playerName", HelpText = "The online player's username.")]
     public string PlayerName { get; set; } = string.Empty;
 
@@ -18,7 +19,8 @@ internal sealed class DefineAccessCommand(ILogger<DefineAccessCommand> logger) :
 
     public void Execute()
     {
-        var session = ServerContext.Host?.Sessions.Find(x => x.Account?.Username.Equals(PlayerName, StringComparison.OrdinalIgnoreCase) == true);
+        var session = ServerContext.Host?.Sessions.Find(x =>
+            x.Account?.Username.Equals(PlayerName, StringComparison.OrdinalIgnoreCase) == true);
         if (session?.Account == null)
         {
             logger.ZLogWarning($"Access definition failed: player {PlayerName} not found");

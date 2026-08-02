@@ -40,7 +40,8 @@ public sealed class VitalsRegenSystem : ISimulationSystem
                 var regen = VitalFormulas.VitalRegeneration((Vital)v, max, vitality, intelligence);
                 current += regen;
                 if (current > max) current = max;
-                if (v == 0) newHp = (short)current; else newMp = (short)current;
+                if (v == 0) newHp = current;
+                else newMp = current;
             }
 
             if (newHp != vitals.Hp || newMp != vitals.Mp)

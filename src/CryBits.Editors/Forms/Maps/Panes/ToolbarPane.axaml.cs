@@ -124,9 +124,15 @@ internal partial class ToolbarPane : UserControl
 
     // ── Mode handlers ───────────────────────────────────────────────
 
-    private void OnModeNormal(object? sender, RoutedEventArgs e) { ModesExclusive(butMNormal); _deps?.ResetMapSelectionSize(); }
+    private void OnModeNormal(object? sender, RoutedEventArgs e)
+    {
+        ModesExclusive(butMNormal);
+        _deps?.ResetMapSelectionSize();
+    }
+
     private void OnModeAttributes(object? sender, RoutedEventArgs e) { ModesExclusive(butMAttributes); }
     private void OnModeZones(object? sender, RoutedEventArgs e) { ModesExclusive(butMZones); }
+
     private void OnModeNpcs(object? sender, RoutedEventArgs e)
     {
         ModesExclusive(butMNPCs);
@@ -152,29 +158,65 @@ internal partial class ToolbarPane : UserControl
 
     private void OnPencil(object? sender, RoutedEventArgs e)
     {
-        if (butPencil.IsChecked == true) { butRectangle.IsChecked = false; butArea.IsChecked = false; butDiscover.IsChecked = false; }
-        else butPencil.IsChecked = true;
+        if (butPencil.IsChecked == true)
+        {
+            butRectangle.IsChecked = false;
+            butArea.IsChecked = false;
+            butDiscover.IsChecked = false;
+        }
+        else
+        {
+            butPencil.IsChecked = true;
+        }
+
         _deps?.ResetMapSelectionSize();
     }
 
     private void OnRectangle(object? sender, RoutedEventArgs e)
     {
-        if (butRectangle.IsChecked == true) { butPencil.IsChecked = false; butArea.IsChecked = false; butDiscover.IsChecked = false; }
-        else butRectangle.IsChecked = true;
+        if (butRectangle.IsChecked == true)
+        {
+            butPencil.IsChecked = false;
+            butArea.IsChecked = false;
+            butDiscover.IsChecked = false;
+        }
+        else
+        {
+            butRectangle.IsChecked = true;
+        }
+
         _deps?.ResetMapSelectionSize();
     }
 
     private void OnArea(object? sender, RoutedEventArgs e)
     {
-        if (butArea.IsChecked == true) { butPencil.IsChecked = false; butRectangle.IsChecked = false; butDiscover.IsChecked = false; }
-        else butArea.IsChecked = true;
+        if (butArea.IsChecked == true)
+        {
+            butPencil.IsChecked = false;
+            butRectangle.IsChecked = false;
+            butDiscover.IsChecked = false;
+        }
+        else
+        {
+            butArea.IsChecked = true;
+        }
+
         _deps?.ResetMapSelectionSize();
     }
 
     private void OnDiscover(object? sender, RoutedEventArgs e)
     {
-        if (butDiscover.IsChecked == true) { butPencil.IsChecked = false; butRectangle.IsChecked = false; butArea.IsChecked = false; }
-        else butDiscover.IsChecked = true;
+        if (butDiscover.IsChecked == true)
+        {
+            butPencil.IsChecked = false;
+            butRectangle.IsChecked = false;
+            butArea.IsChecked = false;
+        }
+        else
+        {
+            butDiscover.IsChecked = true;
+        }
+
         _deps?.ResetMapSelectionSize();
     }
 
@@ -228,6 +270,7 @@ internal partial class ToolbarPane : UserControl
                 else
                     tiles[x, y] = new DefinitionsTileData(0, 0, 0, false, new NoAttribute());
             }
+
         _deps.SetClipboard(tiles);
     }
 

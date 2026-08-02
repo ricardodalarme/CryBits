@@ -4,9 +4,9 @@ using CryBits.Client.Input;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Replication;
 using CryBits.Simulation.Components;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.Spatial;
-using CryBits.Simulation.Core;
 using SFML.Window;
 using static CryBits.Definitions.Globals;
 using Direction = CryBits.Definitions.Common.Direction;
@@ -14,7 +14,10 @@ using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Systems.Movement;
 
-internal sealed class MovementInputSystem(ReplicationState replication, InputManager inputManager, IntentSender intentSender) : IClientSystem
+internal sealed class MovementInputSystem(
+    ReplicationState replication,
+    InputManager inputManager,
+    IntentSender intentSender) : IClientSystem
 {
     private const float ThrottleInterval = 0.030f;
 
@@ -35,12 +38,13 @@ internal sealed class MovementInputSystem(ReplicationState replication, InputMan
     private void CheckMovement(World world, EntityId entity)
     {
         var movement = world.Get<MovementComponent>(entity);
-        if (movement == null || movement.MovementState != MovementState.Stopped) return;
+        if (movement is not { MovementState: MovementState.Stopped }) return;
 
         if (inputManager.IsScancodePressed(Keyboard.Scancode.Up)) Move(world, entity, Direction.Up, movement);
         else if (inputManager.IsScancodePressed(Keyboard.Scancode.Down)) Move(world, entity, Direction.Down, movement);
         else if (inputManager.IsScancodePressed(Keyboard.Scancode.Left)) Move(world, entity, Direction.Left, movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Right)) Move(world, entity, Direction.Right, movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Right))
+            Move(world, entity, Direction.Right, movement);
     }
 
     private void Move(World world, EntityId entity, Direction direction, MovementComponent movement)
@@ -70,6 +74,7 @@ internal sealed class MovementInputSystem(ReplicationState replication, InputMan
             world.Set(entity, movement with { Direction = direction });
             return;
         }
+
         if (HasSolidEntityAt(world, nextX, nextY))
         {
             world.Set(entity, movement with { Direction = direction });

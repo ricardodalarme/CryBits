@@ -8,6 +8,7 @@ namespace CryBits.Server.Commands;
 internal sealed class CommandDispatcher(ILogger<CommandDispatcher> logger)
 {
     private readonly List<Type> _commandTypes = [];
+
     private readonly Parser _parser = new(settings =>
     {
         settings.AutoVersion = false;
@@ -96,12 +97,10 @@ internal sealed class CommandDispatcher(ILogger<CommandDispatcher> logger)
             .OrderBy(x => x.Value?.Index ?? int.MaxValue);
 
         foreach (var p in props)
-        {
             if (p.Value != null)
                 sb.Append(p.Value.Required ? $" <{p.Value.MetaName}>" : $" [{p.Value.MetaName}]");
             else if (p.Option != null)
                 sb.Append($" [--{p.Option.LongName} <{p.Option.MetaValue ?? p.Property.Name.ToLower()}>]");
-        }
 
         return sb.ToString();
     }

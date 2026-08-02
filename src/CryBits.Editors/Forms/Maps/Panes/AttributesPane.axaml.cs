@@ -44,11 +44,13 @@ internal partial class AttributesPane : UserControl
                 (int)(numA_Warp_X.Value ?? 0),
                 (int)(numA_Warp_Y.Value ?? 0));
         }
+
         if (optA_Item.IsChecked == true)
         {
             var item = cmbA_Item.SelectedItem as Item;
             return new ItemTile(item?.Id ?? Guid.Empty, (short)(numA_Item_Amount.Value ?? 1));
         }
+
         return new NoAttribute();
     }
 
@@ -97,11 +99,13 @@ internal partial class AttributesPane : UserControl
                 optA_Block.IsChecked = true;
                 return;
             }
+
             cmbA_Item.Items.Clear();
             foreach (var item in Catalog.Items.Values) cmbA_Item.Items.Add(item);
             if (cmbA_Item.Items.Count > 0) cmbA_Item.SelectedIndex = 0;
             numA_Item_Amount.Value = 1;
         }
+
         grpA_Item.IsVisible = optA_Item.IsChecked == true;
     }
 

@@ -5,5 +5,5 @@ namespace CryBits.Simulation.Systems.Npc;
 
 public interface INpcBehavior
 {
-    Intent? GetNextAction(World world, EntityId entity, Definitions.Npcs.Npc npcData, Tick tick);
+    Intent? GetNextAction(World world, EntityId entity, Definitions.Npcs.Npc npcData);
 }

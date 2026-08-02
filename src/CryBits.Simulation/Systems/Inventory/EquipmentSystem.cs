@@ -13,20 +13,18 @@ public sealed class EquipmentSystem : ISimulationSystem
     public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
-        {
             if (intent is EquipmentRemoveIntent remove)
                 Unequip(world, tick, remove.SourceEntityId, remove.Slot);
-        }
 
         var events = tick.Events.Events;
-        for (var i = 0; i < events.Count; i++)
+        foreach (var t in events)
         {
-            if (events[i] is not ItemUsedEvent use) continue;
+            if (t is not ItemUsedEvent use) continue;
             if (!world.Has<PlayerTag>(use.PlayerId)) continue;
             var item = world.Catalog.Items.Get(use.ItemId);
-            if (item == null || item.Type != ItemType.Equipment) continue;
+            if (item is not { Type: ItemType.Equipment }) continue;
             Equip(world, tick, use.PlayerId, item);
-            tick.Events.Emit(new ItemTakenEvent(tick.TickNumber, use.PlayerId, (byte)use.SlotIndex, (short)1));
+            tick.Events.Emit(new ItemTakenEvent(tick.TickNumber, use.PlayerId, (byte)use.SlotIndex, 1));
         }
     }
 

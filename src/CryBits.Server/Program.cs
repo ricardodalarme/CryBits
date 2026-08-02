@@ -79,7 +79,8 @@ builder.ConfigureServices((ctx, services) =>
         return conn;
     });
     services.AddSingleton(sp => new DataConnection(
-        new DataOptions().UseSQLite(sp.GetRequiredService<SqliteConnection>().ConnectionString, SQLiteProvider.Microsoft)));
+        new DataOptions().UseSQLite(sp.GetRequiredService<SqliteConnection>().ConnectionString,
+            SQLiteProvider.Microsoft)));
 
     // Repositories
     services.AddSingleton<AccountRepository>();

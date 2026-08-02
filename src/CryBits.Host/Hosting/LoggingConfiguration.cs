@@ -24,11 +24,9 @@ public static class LoggingConfiguration
         builder.AddZLoggerConsole(ConfigureOptions);
 
         if (enableRollingFile)
-        {
             builder.AddZLoggerRollingFile(
                 (dt, index) => $"logs/crybits-{dt:yyyy-MM-dd}_{index}.log",
                 RollingInterval.Day);
-        }
 
         return builder;
     }

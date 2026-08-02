@@ -33,6 +33,7 @@ public sealed class ChatSystem : ISimulationSystem
                         if (!world.Has<PlayerTag>(entityId)) continue;
                         tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, formatted, ChatColors.White));
                     }
+
                     break;
 
                 case Message.Map:
@@ -46,6 +47,7 @@ public sealed class ChatSystem : ISimulationSystem
                         if (pos == null || pos.MapId != sourcePos.MapId) continue;
                         tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, entityId, formatted, ChatColors.White));
                     }
+
                     break;
 
                 case Message.Private:
@@ -53,12 +55,15 @@ public sealed class ChatSystem : ISimulationSystem
                     var targetId = world.FindPlayer(chat.Addressee);
                     if (targetId == null) break;
 
-                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, chat.SourceEntityId, "To " + chat.Addressee + ": " + chat.Text, ChatColors.White));
-                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, targetId.Value, "From " + appearance.Name + ": " + chat.Text, ChatColors.White));
+                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, chat.SourceEntityId,
+                        "To " + chat.Addressee + ": " + chat.Text, ChatColors.White));
+                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, targetId.Value,
+                        "From " + appearance.Name + ": " + chat.Text, ChatColors.White));
                     break;
 
                 case Message.Local:
-                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, chat.SourceEntityId, formatted, ChatColors.White));
+                    tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, chat.SourceEntityId, formatted,
+                        ChatColors.White));
                     break;
             }
         }

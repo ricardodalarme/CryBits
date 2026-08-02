@@ -28,7 +28,7 @@ internal class MapInstance
     public void UpdateFog()
     {
         var win = EditorMapsWindow.Instance;
-        if (win == null || !win.IsOpen) return;
+        if (win is not { IsOpen: true }) return;
         if (win.SelectedMap == null) return;
         if (win.SelectedMap.DefaultFog?.Texture == 0) return;
         UpdateFogX();
@@ -98,17 +98,19 @@ internal class MapInstance
         if (!win.IsOpen || weatherType == WeatherType.None || !win.ShowVisualizationSafe)
         {
             if (AudioManager.Instance!.IsPlaying(Sounds.Rain))
-                AudioManager.Instance?.StopAllSounds();
+                AudioManager.Instance.StopAllSounds();
             return;
         }
 
         if (weatherType is WeatherType.Rain or WeatherType.Thunder)
         {
             if (!AudioManager.Instance!.IsPlaying(Sounds.Rain))
-                AudioManager.Instance?.PlaySound(Sounds.Rain, true);
+                AudioManager.Instance.PlaySound(Sounds.Rain, true);
         }
         else if (AudioManager.Instance!.IsPlaying(Sounds.Rain))
-            AudioManager.Instance?.StopAllSounds();
+        {
+            AudioManager.Instance.StopAllSounds();
+        }
 
         if (_snowTimer < Environment.TickCount64)
         {
@@ -116,7 +118,9 @@ internal class MapInstance
             _snowTimer = Environment.TickCount64 + 35;
         }
         else
+        {
             move = false;
+        }
 
         if (Lightning > 0)
             if (_thunderingTimer < Environment.TickCount64)
@@ -129,7 +133,6 @@ internal class MapInstance
             if (!Weather[i].Visible)
             {
                 if (Random.Shared.Next(0, 100) == 0)
-                {
                     if (!stop)
                     {
                         Weather[i].Visible = true;
@@ -141,7 +144,6 @@ internal class MapInstance
                             case WeatherType.Snow: Weather[i].SetSnow(); break;
                         }
                     }
-                }
 
                 stop = true;
             }
@@ -161,13 +163,7 @@ internal class MapInstance
         if (weatherType == WeatherType.Thunder)
             if (Random.Shared.Next(0, 1000) == 0)
             {
-                var thunderList = new[]
-                {
-                    Sounds.Thunder1,
-                    Sounds.Thunder2,
-                    Sounds.Thunder3,
-                    Sounds.Thunder4
-                };
+                var thunderList = new[] { Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4 };
                 var thunder = Random.Shared.Next(0, thunderList.Length);
                 AudioManager.Instance?.PlaySound(thunderList[thunder]);
 

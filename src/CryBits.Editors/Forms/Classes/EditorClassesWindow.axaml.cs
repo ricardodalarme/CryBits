@@ -29,7 +29,7 @@ internal partial class EditorClassesWindow : Window
         window.Show();
     }
 
-    public static short CurrentTextureIndex { get; private set; } = 1;
+    private static short CurrentTextureIndex { get; set; } = 1;
 
     private Class? _selected;
     private bool _addingToMale;
@@ -195,5 +195,4 @@ internal partial class EditorClassesWindow : Window
         if (_selected == null) return;
         if (cmbSpawn_Map.SelectedItem is Map map) _selected.SpawnMapId = map.Id;
     }
-
 }

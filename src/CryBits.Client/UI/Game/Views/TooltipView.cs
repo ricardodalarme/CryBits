@@ -32,7 +32,11 @@ internal class TooltipView(UiContext uiContext, ItemIconRenderer itemRenderer, D
     public void Show(Guid itemId, DrawingPoint position, string? contextLine = null)
     {
         var item = catalog.Items.Get(itemId);
-        if (item == null) { Hide(); return; }
+        if (item == null)
+        {
+            Hide();
+            return;
+        }
 
         _currentItem = item;
 

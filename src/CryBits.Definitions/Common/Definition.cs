@@ -19,7 +19,7 @@ public partial record Definition : IEquatable<Definition>
         Id = id;
     }
 
-    public override sealed string ToString() => Name;
+    public sealed override string ToString() => Name;
 
     public override int GetHashCode() => Id.GetHashCode();
 

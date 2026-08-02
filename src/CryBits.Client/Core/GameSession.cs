@@ -82,14 +82,14 @@ internal sealed class GameSession : IDisposable
         Screen = new GameScreen(
             this, uiContext, spriteBatch, itemIconRenderer, equipmentSlotRenderer,
             portraitRenderer, inputManager, audioManager, tooltipView, _chat, _gameInput,
-            statsViewModel, characterViewModel, inventoryViewModel, hotbarViewModel, tradeViewModel, partyViewModel, shopViewModel
+            statsViewModel, characterViewModel, inventoryViewModel, hotbarViewModel, tradeViewModel, partyViewModel,
+            shopViewModel
         );
 
         CameraManager = new CameraManager(spriteBatch.RenderWindow);
         var groundRenderers = new List<IRenderer>
         {
-            new GroundSpriteRenderer(World, spriteBatch),
-            new EntitySpriteRenderer(World, spriteBatch)
+            new GroundSpriteRenderer(World, spriteBatch), new EntitySpriteRenderer(World, spriteBatch)
         };
         var fringeRenderers = new List<IRenderer>
         {
@@ -98,7 +98,8 @@ internal sealed class GameSession : IDisposable
             new FogRenderer(World, spriteBatch)
         };
         var tilemapRenderer = new TilemapRenderer(spriteBatch, World, CameraManager);
-        RenderPipeline = new RenderPipeline(spriteBatch, CameraManager, tilemapRenderer, uiContext, groundRenderers, fringeRenderers);
+        RenderPipeline = new RenderPipeline(spriteBatch, CameraManager, tilemapRenderer, uiContext, groundRenderers,
+            fringeRenderers);
 
         var mapRepo = new MapRepository();
         var contentSender = new ContentSender(connection);

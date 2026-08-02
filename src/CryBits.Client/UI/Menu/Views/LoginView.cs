@@ -6,7 +6,8 @@ using Iguina.Entities;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class LoginView(UiContext uiContext, AuthSender authSender, Connection connection, MenuScreen menuScreen) : ViewBase
+internal class LoginView(UiContext uiContext, AuthSender authSender, Connection connection, MenuScreen menuScreen)
+    : ViewBase
 {
     private Panel LoginPanel => uiContext.Get<Panel>("Login");
     private TextInput UsernameTextBox => uiContext.Get<TextInput>("Username");
@@ -18,10 +19,7 @@ internal class LoginView(UiContext uiContext, AuthSender authSender, Connection 
     public void Open()
     {
         SaveUsernameCheckbox.Checked = Options.Instance.SaveUsername;
-        if (Options.Instance.SaveUsername)
-            UsernameTextBox.Value = Options.Instance.Username;
-        else
-            UsernameTextBox.Value = string.Empty;
+        UsernameTextBox.Value = Options.Instance.SaveUsername ? Options.Instance.Username : string.Empty;
 
         PasswordTextBox.Value = string.Empty;
         LoginPanel.Visible = true;

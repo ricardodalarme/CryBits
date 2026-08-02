@@ -32,17 +32,15 @@ internal sealed class TilemapRenderer(SpriteBatch spriteBatch, World world, Came
         var endChunkY = (short)(sight.Height / ChunkGrid.ChunkSize);
 
         for (var cx = startChunkX; cx <= endChunkX; cx++)
-        {
             for (var cy = startChunkY; cy <= endChunkY; cy++)
             {
-                if (!map.Chunks.TryGetValue(((short)cx, (short)cy), out var chunk)) continue;
+                if (!map.Chunks.TryGetValue((cx, cy), out var chunk)) continue;
                 if (chunk.Tiles == null) continue;
 
                 var baseX = cx * ChunkGrid.ChunkSize;
                 var baseY = cy * ChunkGrid.ChunkSize;
 
                 for (var tx = 0; tx < ChunkGrid.ChunkSize; tx++)
-                {
                     for (var ty = 0; ty < ChunkGrid.ChunkSize; ty++)
                     {
                         var tileX = baseX + tx;
@@ -52,16 +50,14 @@ internal sealed class TilemapRenderer(SpriteBatch spriteBatch, World world, Came
                             continue;
 
                         var data = chunk.Tiles[tx, ty];
-                        if (data == null || !data.IsVisible || data.Layer != layerType) continue;
+                        if (data is not { IsVisible: true } || data.Layer != layerType) continue;
 
                         var va = GetBatch(data.Texture);
 
                         if (!data.IsAutoTile)
                             AppendTile(va, tileX, tileY, data.SourceX * Grid, data.SourceY * Grid, Grid, Grid, tint);
                     }
-                }
             }
-        }
 
         foreach (var (texIndex, va) in _batches)
         {
@@ -88,10 +84,12 @@ internal sealed class TilemapRenderer(SpriteBatch spriteBatch, World world, Came
         return va;
     }
 
-    private static void AppendTile(VertexArray va, int tileX, int tileY, float srcX, float srcY, float w, float h, Color tint) =>
+    private static void AppendTile(VertexArray va, int tileX, int tileY, float srcX, float srcY, float w, float h,
+        Color tint) =>
         AppendQuad(va, tileX * Grid, tileY * Grid, srcX, srcY, w, h, tint);
 
-    private static void AppendQuad(VertexArray va, float px, float py, float srcX, float srcY, float w, float h, Color tint)
+    private static void AppendQuad(VertexArray va, float px, float py, float srcX, float srcY, float w, float h,
+        Color tint)
     {
         va.Append(new Vertex(new Vector2f(px, py), tint, new Vector2f(srcX, srcY)));
         va.Append(new Vertex(new Vector2f(px + w, py), tint, new Vector2f(srcX + w, srcY)));

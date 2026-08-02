@@ -23,10 +23,8 @@ public sealed class CombatSystem : ISimulationSystem
             world.Remove<AttackHit>(entityId);
 
         foreach (var intent in tick.Intents.All)
-        {
             if (intent is AttackIntent atk)
                 Attack(world, tick, atk);
-        }
     }
 
     private void Attack(World world, Tick tick, AttackIntent intent)
@@ -39,7 +37,7 @@ public sealed class CombatSystem : ISimulationSystem
 
         if (world.Get<ShopState>(intent.SourceEntityId)?.ShopId != null) return;
         var cooldown = world.Get<AttackCooldown>(intent.SourceEntityId)!;
-        if (tick.TickNumber < cooldown.NextAllowedTick + (int)AttackSpeedTicks) return;
+        if (tick.TickNumber < cooldown.NextAllowedTick + AttackSpeedTicks) return;
 
         var victimId = intent.TargetId;
         if (victimId == null)
@@ -67,7 +65,8 @@ public sealed class CombatSystem : ISimulationSystem
 
         if (world.Has<PlayerTag>(victimId.Value) && mapDef.Moral == Moral.Pacific)
         {
-            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, intent.SourceEntityId, "This is a peaceful area.", ChatColors.White));
+            tick.Events.Emit(new ChatMessageEvent(tick.TickNumber, intent.SourceEntityId, "This is a peaceful area.",
+                ChatColors.White));
             return;
         }
 
@@ -106,21 +105,27 @@ public sealed class CombatSystem : ISimulationSystem
             : (short)0;
         var netDamage = CombatFormulas.NetDamage(attackerDamage, victimDefense);
 
-        tick.Events.Emit(new CombatAttackEvent(tick.TickNumber, attackerId, victimId, attackerPos.MapId, netDamage > 0));
+        tick.Events.Emit(new CombatAttackEvent(tick.TickNumber, attackerId, victimId, attackerPos.MapId,
+            netDamage > 0));
 
         var victimPos = world.Get<Position>(victimId);
         if (netDamage > 0)
         {
             if (netDamage < victimVitals.Hp)
+            {
                 world.Update<Vitals>(victimId, v => v with { Hp = (short)(v.Hp - netDamage) });
+            }
             else
             {
                 if (world.Has<PlayerTag>(victimId))
+                {
                     tick.Events.Emit(new PlayerDiedEvent(tick.TickNumber, victimId, attackerId));
+                }
                 else if (world.Has<NpcTag>(victimId))
                 {
                     var npcState = world.Get<NpcState>(victimId)!;
-                    tick.Events.Emit(new NpcDiedEvent(tick.TickNumber, victimId, attackerPos.MapId, npcState.NpcDefId, npcState.Index, attackerId));
+                    tick.Events.Emit(new NpcDiedEvent(tick.TickNumber, victimId, attackerPos.MapId, npcState.NpcDefId,
+                        npcState.Index, attackerId));
                 }
             }
         }

@@ -18,7 +18,6 @@ internal class Loop(MapInstance mapInstance)
         short fps = 0;
 
         while (Program.Working)
-        {
             try
             {
                 var count = Environment.TickCount64;
@@ -47,7 +46,6 @@ internal class Loop(MapInstance mapInstance)
             {
                 Console.WriteLine($"[Editor] Loop threw an exception: {ex}");
             }
-        }
 
         Program.Close();
     }

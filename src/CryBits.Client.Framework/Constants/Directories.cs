@@ -14,18 +14,12 @@ public static class Directories
     public static readonly DirectoryInfo Musics = new(Path.Combine(BaseDir, "Audio", "Musics"));
     public static readonly DirectoryInfo Fonts = new(Path.Combine(BaseDir, "Graphics", "Fonts"));
     public static readonly FileInfo Options = new(Path.Combine(BaseDir, "Data", "Options.json"));
-    public static readonly DirectoryInfo UITheme = new(Path.Combine(BaseDir, "Data", "UI"));
+    public static readonly DirectoryInfo UiTheme = new(Path.Combine(BaseDir, "Data", "UI"));
     private static readonly FileInfo ToolsData = new(Path.Combine(BaseDir, "Data", "Tools.json"));
 
     private static readonly DirectoryInfo MapsData = new(Path.Combine(BaseDir, "Data", "Maps"));
     public static readonly DirectoryInfo Tiles = new(Path.Combine(BaseDir, "Data", "Tiles"));
-    private static readonly FileInfo TexBackground = new(Path.Combine(BaseDir, "Graphics", "Interface", "Background"));
-    private static readonly FileInfo TexChat = new(Path.Combine(BaseDir, "Graphics", "Interface", "Chat"));
     public static readonly FileInfo TexEquipments = new(Path.Combine(BaseDir, "Graphics", "Interface", "Equipments"));
-    public static readonly DirectoryInfo TexPanels = new(Path.Combine(BaseDir, "Graphics", "Interface", "Panels"));
-    public static readonly DirectoryInfo TexButtons = new(Path.Combine(BaseDir, "Graphics", "Interface", "Buttons"));
-    public static readonly FileInfo TexCheckBox = new(Path.Combine(BaseDir, "Graphics", "Interface", "CheckBox"));
-    public static readonly FileInfo TexTextBox = new(Path.Combine(BaseDir, "Graphics", "Interface", "TextBox"));
     public static readonly DirectoryInfo TexCharacters = new(Path.Combine(BaseDir, "Graphics", "Characters"));
     public static readonly DirectoryInfo TexTiles = new(Path.Combine(BaseDir, "Graphics", "Tiles"));
     public static readonly DirectoryInfo TexFaces = new(Path.Combine(BaseDir, "Graphics", "Faces"));
@@ -52,17 +46,11 @@ public static class Directories
         Musics.Create();
         Fonts.Create();
         Options.Directory?.Create();
-        UITheme.Create();
+        UiTheme.Create();
         MapsData.Create();
         Tiles.Create();
         ToolsData.Directory?.Create();
-        TexBackground.Directory?.Create();
-        TexChat.Directory?.Create();
         TexEquipments.Directory?.Create();
-        TexPanels.Create();
-        TexButtons.Create();
-        TexCheckBox.Directory?.Create();
-        TexTextBox.Directory?.Create();
         TexCharacters.Create();
         TexTiles.Create();
         TexFaces.Create();

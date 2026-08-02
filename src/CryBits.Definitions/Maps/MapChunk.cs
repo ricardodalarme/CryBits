@@ -14,7 +14,7 @@ public sealed partial record MapChunk(
 )
 {
     [MemoryPackConstructor]
-    public MapChunk() : this(0, 0, 0, null, null, null, null) { }
+    public MapChunk() : this(0, 0, 0) { }
 
     public MapChunk WithNextVersion() => this with { Version = Version + 1 };
 }

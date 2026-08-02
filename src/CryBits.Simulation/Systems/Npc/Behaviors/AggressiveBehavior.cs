@@ -8,7 +8,7 @@ namespace CryBits.Simulation.Systems.Npc.Behaviors;
 
 public sealed class AggressiveBehavior : INpcBehavior
 {
-    public Intent? GetNextAction(World world, EntityId entity, Definitions.Npcs.Npc npcData, Tick tick)
+    public Intent? GetNextAction(World world, EntityId entity, Definitions.Npcs.Npc npcData)
     {
         var npcState = world.Get<NpcState>(entity)!;
         if (!npcState.TargetId.HasValue) return null;
@@ -33,11 +33,7 @@ public sealed class AggressiveBehavior : INpcBehavior
             return null;
 
         var path = Pathfinder.FindPath(world, pos.MapId, pos.X, pos.Y, targetPos.X, targetPos.Y);
-        if (path != null)
-        {
-            world.Set(entity, new PathFollow(path));
-            return null;
-        }
+        if (path != null) world.Set(entity, new PathFollow(path));
 
         return null;
     }

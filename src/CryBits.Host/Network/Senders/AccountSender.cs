@@ -8,19 +8,14 @@ internal sealed class AccountSender(PackageSender packageSender)
 {
     public void Characters(Session session)
     {
-        var packet = new CharactersPacket
-        {
-            Characters = new PacketsTempCharacter[session.Account!.Characters.Count]
-        };
+        var packet = new CharactersPacket { Characters = new PacketsTempCharacter[session.Account!.Characters.Count] };
 
         for (byte i = 0; i < session.Account!.Characters.Count; i++)
-        {
             packet.Characters[i] = new PacketsTempCharacter
             {
                 Name = session.Account!.Characters[i].Name,
                 TextureNum = session.Account!.Characters[i].TextureNum
             };
-        }
 
         packageSender.ToPlayer(session, packet);
     }

@@ -12,7 +12,6 @@ public sealed class HotbarSystem : ISimulationSystem
     public void Execute(World world, Tick tick)
     {
         foreach (var intent in tick.Intents.All)
-        {
             switch (intent)
             {
                 case HotbarAddIntent add:
@@ -25,14 +24,11 @@ public sealed class HotbarSystem : ISimulationSystem
                     Use(world, tick, use.SourceEntityId, use.Slot);
                     break;
             }
-        }
 
         var events = tick.Events.Events;
-        for (var i = 0; i < events.Count; i++)
-        {
-            if (events[i] is InventorySwappedEvent swapped)
+        foreach (var t in events)
+            if (t is InventorySwappedEvent swapped)
                 SyncInventorySwap(world, swapped.EntityId, swapped.SlotOld, swapped.SlotNew);
-        }
     }
 
     private void Add(World world, EntityId entityId, short hotbarSlot, SlotType type, short slot)
@@ -78,13 +74,11 @@ public sealed class HotbarSystem : ISimulationSystem
 
         int? foundSlot = null;
         for (var i = 0; i < hotbar.Slots.Length; i++)
-        {
             if (hotbar.Slots[i].Type == SlotType.Item && hotbar.Slots[i].Slot == slotOld)
             {
                 foundSlot = i;
                 break;
             }
-        }
 
         if (foundSlot == null) return;
 

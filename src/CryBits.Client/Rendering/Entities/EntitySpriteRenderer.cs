@@ -95,8 +95,8 @@ internal sealed class EntitySpriteRenderer(World world, SpriteBatch spriteBatch)
         int frameH,
         NameColorComponent? nameColor)
     {
-        var x = transform.X + frameW / 2;
-        var y = transform.Y - frameH / 2;
+        var x = transform.X + (frameW / 2);
+        var y = transform.Y - (frameH / 2);
         var color = nameColor?.Value ?? Color.White;
         spriteBatch.DrawText(appearance.Name, x, y, color, TextAlign.Center);
     }

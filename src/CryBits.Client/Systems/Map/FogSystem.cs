@@ -12,11 +12,12 @@ internal sealed class FogSystem : IClientSystem
             var fog = world.Get<FogComponent>(entityId);
             if (fog == null) continue;
 
-            world.Set(entityId, fog with
-            {
-                OffsetX = fog.OffsetX + fog.SpeedX * deltaTime,
-                OffsetY = fog.OffsetY + fog.SpeedY * deltaTime
-            });
+            world.Set(entityId,
+                fog with
+                {
+                    OffsetX = fog.OffsetX + (fog.SpeedX * deltaTime),
+                    OffsetY = fog.OffsetY + (fog.SpeedY * deltaTime)
+                });
         }
     }
 }

@@ -25,7 +25,7 @@
 
         <!-- New / Remove buttons (bottom-left) -->
         <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,6,0,0">
-            <Button Grid.Column="0" Content="New"    Command="{Binding CreateNewCommand}"
+            <Button Grid.Column="0" Content="New" Command="{Binding CreateNewCommand}"
                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
             <Button Grid.Column="1" Content="Remove" Command="{Binding RemoveCommand}"
                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
@@ -66,7 +66,7 @@
                             <TextBlock Text="Items Sold" FontWeight="Bold" />
                             <ListBox x:Name="lstSold" Grid.Row="1" />
                             <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8">
-                                <Button Grid.Column="0" Content="Add"    Click="butSold_Add_Click"
+                                <Button Grid.Column="0" Content="Add" Click="butSold_Add_Click"
                                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                                 <Button Grid.Column="1" Content="Remove" Click="butSold_Remove_Click"
                                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
@@ -82,7 +82,7 @@
                             <TextBlock Text="Items Bought" FontWeight="Bold" />
                             <ListBox x:Name="lstBought" Grid.Row="1" />
                             <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8">
-                                <Button Grid.Column="0" Content="Add"    Click="butBought_Add_Click"
+                                <Button Grid.Column="0" Content="Add" Click="butBought_Add_Click"
                                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                                 <Button Grid.Column="1" Content="Remove" Click="butBought_Remove_Click"
                                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
@@ -127,7 +127,7 @@
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
                     <Button Grid.Column="0" Content="Save All" Command="{Binding SaveCommand}"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
-                    <Button Grid.Column="1" Content="Cancel"   Command="{Binding CancelCommand}"
+                    <Button Grid.Column="1" Content="Cancel" Command="{Binding CancelCommand}"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                 </Grid>
 

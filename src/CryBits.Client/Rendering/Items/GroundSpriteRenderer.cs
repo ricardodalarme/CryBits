@@ -16,7 +16,7 @@ internal sealed class GroundSpriteRenderer(World world, SpriteBatch spriteBatch)
             if (transform == null || sprite == null) continue;
             if (world.Has<AnimationState>(entityId)) continue;
 
-            var source = sprite.SourceRect.HasValue ? sprite.SourceRect.Value : new Rectangle(Point.Empty, sprite.Texture.ToSize());
+            var source = sprite.SourceRect ?? new Rectangle(Point.Empty, sprite.Texture.ToSize());
             var dest = source with { X = transform.X, Y = transform.Y };
 
             spriteBatch.Draw(sprite.Texture, source, dest, sprite.Tint);

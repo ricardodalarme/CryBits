@@ -74,14 +74,17 @@ internal partial class EditorItemsWindow : Window
         _viewModel = new ItemEditorViewModel(item, _catalog);
         DataContext = _viewModel;
 
-        _viewModel.RequestClose += () => Close();
+        _viewModel.RequestClose += Close;
         _viewModel.RequestRefreshList += RefreshItemList;
-        _viewModel.RequestSelectItem += i => lstItems.SelectedItem = _catalog.Items.Values.FirstOrDefault(x => x.Id == i.Id);
+        _viewModel.RequestSelectItem +=
+            i => lstItems.SelectedItem = _catalog.Items.Values.FirstOrDefault(x => x.Id == i.Id);
 
         numTexture.Maximum = Math.Max(0, Textures.Items.Count - 1);
 
         cmbType.SelectedIndex = (byte)item.Type;
-        cmbReq_Class.SelectedIndex = item.ReqClassId.HasValue ? cmbReq_Class.Items.IndexOf(_catalog.Classes.Get(item.ReqClassId.Value)) : 0;
+        cmbReq_Class.SelectedIndex = item.ReqClassId.HasValue
+            ? cmbReq_Class.Items.IndexOf(_catalog.Classes.Get(item.ReqClassId.Value))
+            : 0;
         cmbEquipment_Type.SelectedIndex = item.EquipType;
 
         UpdateTypePanels((byte)item.Type);

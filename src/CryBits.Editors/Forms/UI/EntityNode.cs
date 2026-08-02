@@ -7,8 +7,7 @@ namespace CryBits.Editors.Forms.UI;
 
 internal sealed partial class EntityNode : ObservableObject
 {
-    [ObservableProperty]
-    private string _header = string.Empty;
+    [ObservableProperty] private string _header = string.Empty;
 
     public Entity? Entity { get; set; }
     public Element? ConfigElement { get; set; }

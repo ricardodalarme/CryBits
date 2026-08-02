@@ -16,7 +16,11 @@ internal sealed partial class ShopEditorViewModel(Shop model, DefinitionCatalog 
     public string Name
     {
         get => Model.Name;
-        set { Model.Name = value; OnPropertyChanged(); }
+        set
+        {
+            Model.Name = value;
+            OnPropertyChanged();
+        }
     }
 
     [RelayCommand]
