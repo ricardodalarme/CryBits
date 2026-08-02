@@ -1,12 +1,22 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="CryBits.Editors.Forms.Maps.Panes.ZonesPane">
-    <StackPanel Spacing="6" Margin="4">
-        <TextBlock x:Name="lblZone" Text="Zone: None" FontWeight="Bold" />
-        <ScrollBar x:Name="scrlZone"
-                   Orientation="Horizontal"
-                   Minimum="0" Maximum="20" Value="0" />
-        <Button Content="Clear" x:Name="butZonesClear"
-                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+﻿<UserControl
+    x:Class="CryBits.Editors.Forms.Maps.Panes.ZonesPane"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel Margin="4" Spacing="6">
+        <TextBlock
+            x:Name="lblZone"
+            FontWeight="Bold"
+            Text="Zone: None" />
+        <ScrollBar
+            x:Name="scrlZone"
+            Maximum="20"
+            Minimum="0"
+            Orientation="Horizontal"
+            Value="0" />
+        <Button
+            x:Name="butZonesClear"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Content="Clear" />
     </StackPanel>
 </UserControl>

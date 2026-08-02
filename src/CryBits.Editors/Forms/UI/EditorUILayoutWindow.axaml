@@ -1,77 +1,122 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:CryBits.Editors.Forms.UI"
-        xmlns:apc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
-        x:Class="CryBits.Editors.Forms.UI.EditorUILayoutWindow"
-        x:DataType="vm:EditorUILayoutViewModel"
-        Title="UI Layout Editor"
-        Width="1450" Height="850"
-        CanResize="False"
-        WindowStartupLocation="CenterScreen">
+﻿<Window
+    x:Class="CryBits.Editors.Forms.UI.EditorUILayoutWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:apc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
+    xmlns:vm="using:CryBits.Editors.Forms.UI"
+    Title="UI Layout Editor"
+    Width="1450"
+    Height="850"
+    x:DataType="vm:EditorUILayoutViewModel"
+    CanResize="False"
+    WindowStartupLocation="CenterScreen">
 
     <Grid Margin="8" RowDefinitions="Auto,*,Auto,Auto">
 
-        <ComboBox Grid.Row="0" HorizontalAlignment="Stretch" Margin="0,0,0,4"
-                  ItemsSource="{Binding ScreenNames}" SelectedItem="{Binding SelectedScreen}" />
+        <ComboBox
+            Grid.Row="0"
+            Margin="0,0,0,4"
+            HorizontalAlignment="Stretch"
+            ItemsSource="{Binding ScreenNames}"
+            SelectedItem="{Binding SelectedScreen}" />
 
         <Grid Grid.Row="1" ColumnDefinitions="280,8,*,8,330">
 
-            <Border Grid.Column="0" BorderThickness="1"
-                    BorderBrush="{DynamicResource SemiBorderColor}"
-                    CornerRadius="4" Padding="8">
+            <Border Grid.Column="0" Padding="8">
                 <Grid RowDefinitions="Auto,Auto,*,Auto">
-                    <TextBlock Grid.Row="0" Text="Entities" FontWeight="Bold" Margin="0,0,0,6" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="0,0,0,6"
+                        FontWeight="Bold"
+                        Text="Entities" />
 
-                    <Grid Grid.Row="1" ColumnDefinitions="*,4,*" Margin="0,0,0,6">
-                        <Button x:Name="butAdd" Grid.Column="0" Content="Add"
-                                HorizontalAlignment="Stretch" Click="butAdd_Click" />
-                        <Button Grid.Column="2" Content="Remove" Command="{Binding RemoveCommand}"
-                                HorizontalAlignment="Stretch" />
+                    <Grid
+                        Grid.Row="1"
+                        Margin="0,0,0,6"
+                        ColumnDefinitions="*,4,*">
+                        <Button
+                            x:Name="butAdd"
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            Click="butAdd_Click"
+                            Content="Add" />
+                        <Button
+                            Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding RemoveCommand}"
+                            Content="Remove" />
                     </Grid>
 
-                    <TreeView x:Name="treEntities" Grid.Row="2"
-                              SelectionChanged="treEntities_SelectionChanged"
-                              Margin="0,0,0,6">
+                    <TreeView
+                        x:Name="treEntities"
+                        Grid.Row="2"
+                        Margin="0,0,0,6"
+                        SelectionChanged="treEntities_SelectionChanged">
                         <TreeView.ItemTemplate>
-                            <TreeDataTemplate ItemsSource="{Binding Children}" x:DataType="vm:EntityNode">
+                            <TreeDataTemplate x:DataType="vm:EntityNode" ItemsSource="{Binding Children}">
                                 <TextBlock Text="{Binding Header}" />
                             </TreeDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
 
                     <Grid Grid.Row="3" ColumnDefinitions="*,4,*">
-                        <Button Grid.Column="0" Content="Up" Command="{Binding MoveUpCommand}"
-                                HorizontalAlignment="Stretch" />
-                        <Button Grid.Column="2" Content="Down" Command="{Binding MoveDownCommand}"
-                                HorizontalAlignment="Stretch" />
+                        <Button
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding MoveUpCommand}"
+                            Content="Up" />
+                        <Button
+                            Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding MoveDownCommand}"
+                            Content="Down" />
                     </Grid>
                 </Grid>
             </Border>
 
-            <Grid Grid.Column="2" VerticalAlignment="Top" ClipToBounds="True">
-                <Border Background="Black" Width="800" Height="608" HorizontalAlignment="Left">
-                    <Image x:Name="imgPreview" Stretch="None"
-                           HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Grid
+                Grid.Column="2"
+                VerticalAlignment="Top"
+                ClipToBounds="True">
+                <Border
+                    Width="800"
+                    Height="608"
+                    HorizontalAlignment="Left"
+                    Background="Black">
+                    <Image
+                        x:Name="imgPreview"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Stretch="None" />
                 </Border>
             </Grid>
 
-            <Border Grid.Column="4" BorderThickness="1"
-                    BorderBrush="{DynamicResource SemiBorderColor}"
-                    CornerRadius="4" Padding="8">
+            <Border Grid.Column="4" Padding="8">
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" Text="Properties" FontWeight="Bold" Margin="0,0,0,4" />
-                    <apc:PropertyGrid x:Name="propertyGrid"
-                                      IsQuickFilterVisible="False" />
+                    <TextBlock
+                        Margin="0,0,0,4"
+                        DockPanel.Dock="Top"
+                        FontWeight="Bold"
+                        Text="Properties" />
+                    <apc:PropertyGrid x:Name="propertyGrid" IsQuickFilterVisible="False" />
                 </DockPanel>
             </Border>
         </Grid>
 
         <Grid Grid.Row="2" ColumnDefinitions="*,8,Auto">
-            <Button Grid.Column="2" Content="Edit Theme" Command="{Binding EditThemeCommand}"
-                    HorizontalAlignment="Stretch" Margin="0,6,0,0" />
+            <Button
+                Grid.Column="2"
+                Margin="0,6,0,0"
+                HorizontalAlignment="Stretch"
+                Command="{Binding EditThemeCommand}"
+                Content="Edit Theme" />
         </Grid>
 
-        <Button Grid.Row="3" Content="Save Layout" Command="{Binding SaveCommand}"
-                HorizontalAlignment="Stretch" Margin="0,6,0,0" />
+        <Button
+            Grid.Row="3"
+            Margin="0,6,0,0"
+            HorizontalAlignment="Stretch"
+            Command="{Binding SaveCommand}"
+            Content="Save Layout" />
     </Grid>
 </Window>

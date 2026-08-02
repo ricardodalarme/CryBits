@@ -1,7 +1,11 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:apc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
-             x:Class="CryBits.Editors.Forms.Maps.Panes.PropertiesPane">
-    <apc:PropertyGrid x:Name="prgMapProperties" NameWidth="110"
-                      IsHeaderVisible="False" IsTitleVisible="False" />
+﻿<UserControl
+    x:Class="CryBits.Editors.Forms.Maps.Panes.PropertiesPane"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:apc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid">
+    <apc:PropertyGrid
+        x:Name="prgMapProperties"
+        IsHeaderVisible="False"
+        IsTitleVisible="False"
+        NameWidth="110" />
 </UserControl>

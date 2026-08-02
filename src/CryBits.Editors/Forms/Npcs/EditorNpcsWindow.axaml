@@ -1,12 +1,14 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:CryBits.Editors.Forms.Npcs"
-        x:Class="CryBits.Editors.Forms.Npcs.EditorNpcsWindow"
-        x:DataType="vm:NpcEditorViewModel"
-        Title="NPC Editor"
-        Width="860" Height="760"
-        CanResize="False"
-        WindowStartupLocation="CenterScreen">
+﻿<Window
+    x:Class="CryBits.Editors.Forms.Npcs.EditorNpcsWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:CryBits.Editors.Forms.Npcs"
+    Title="NPC Editor"
+    Width="860"
+    Height="760"
+    x:DataType="vm:NpcEditorViewModel"
+    CanResize="False"
+    WindowStartupLocation="CenterScreen">
 
     <Grid Margin="8">
         <Grid.ColumnDefinitions>
@@ -18,140 +20,275 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- ═══════════════════════════════════════════════════════ -->
-        <!-- LEFT: NPC list                                          -->
-        <!-- ═══════════════════════════════════════════════════════ -->
-        <Grid Grid.Column="0" Grid.Row="0" RowDefinitions="Auto,*" Margin="0,0,8,0">
-            <TextBox x:Name="txtFilter" Grid.Row="0" PlaceholderText="Filter…" Margin="0,0,0,4"
-                     TextChanged="txtFilter_TextChanged" />
-            <ListBox x:Name="lstNpcs" Grid.Row="1"
-                     SelectionMode="Single"
-                     SelectionChanged="lstNpcs_SelectionChanged" />
+        <!--  ═══════════════════════════════════════════════════════  -->
+        <!--  LEFT: NPC list  -->
+        <!--  ═══════════════════════════════════════════════════════  -->
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0,0,8,0"
+            RowDefinitions="Auto,*">
+            <TextBox
+                x:Name="txtFilter"
+                Grid.Row="0"
+                Margin="0,0,0,4"
+                PlaceholderText="Filter…"
+                TextChanged="txtFilter_TextChanged" />
+            <ListBox
+                x:Name="lstNpcs"
+                Grid.Row="1"
+                SelectionChanged="lstNpcs_SelectionChanged"
+                SelectionMode="Single" />
         </Grid>
 
-        <!-- New / Remove (bottom-left) -->
-        <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,*" Margin="0,6,8,0">
-            <Button Grid.Column="0" Content="New" Command="{Binding CreateNewCommand}"
-                    Margin="0,0,3,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
-            <Button Grid.Column="1" Content="Remove" Command="{Binding RemoveCommand}"
-                    Margin="3,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+        <!--  New / Remove (bottom-left)  -->
+        <Grid
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,6,8,0"
+            ColumnDefinitions="*,*">
+            <Button
+                Grid.Column="0"
+                Margin="0,0,3,0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Command="{Binding CreateNewCommand}"
+                Content="New" />
+            <Button
+                Grid.Column="1"
+                Margin="3,0,0,0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Command="{Binding RemoveCommand}"
+                Content="Remove" />
         </Grid>
 
-        <!-- ═══════════════════════════════════════════════════════ -->
-        <!-- RIGHT: Editor panels                                    -->
-        <!-- ═══════════════════════════════════════════════════════ -->
-        <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
-                      x:Name="pnlContent" IsVisible="False"
-                      VerticalScrollBarVisibility="Auto">
+        <!--  ═══════════════════════════════════════════════════════  -->
+        <!--  RIGHT: Editor panels  -->
+        <!--  ═══════════════════════════════════════════════════════  -->
+        <ScrollViewer
+            x:Name="pnlContent"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            IsVisible="False"
+            VerticalScrollBarVisibility="Auto">
             <StackPanel Spacing="6">
 
-                <!-- ── General ── -->
-                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-                        CornerRadius="4" Padding="8">
+                <!--  ── General ──  -->
+                <Border Padding="8">
                     <Grid ColumnDefinitions="*,Auto">
                         <StackPanel Grid.Column="0" Spacing="4">
-                            <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,4" />
+                            <TextBlock
+                                Margin="0,0,0,4"
+                                FontWeight="Bold"
+                                Text="General" />
 
                             <Grid ColumnDefinitions="90,*">
-                                <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Text="Name:" />
                                 <TextBox Grid.Column="1" Text="{Binding Name}" />
                             </Grid>
                             <Grid ColumnDefinitions="90,*">
-                                <TextBlock Grid.Column="0" Text="Say message:" VerticalAlignment="Center" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Text="Say message:" />
                                 <TextBox Grid.Column="1" Text="{Binding SayMsg}" />
                             </Grid>
                             <Grid ColumnDefinitions="90,*">
-                                <TextBlock Grid.Column="0" Text="Texture:" VerticalAlignment="Center" />
-                                <NumericUpDown x:Name="numTexture" Grid.Column="1" Minimum="0" Maximum="255"
-                                               FormatString="0" Value="{Binding Texture}"
-                                               ValueChanged="numTexture_ValueChanged" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Text="Texture:" />
+                                <NumericUpDown
+                                    x:Name="numTexture"
+                                    Grid.Column="1"
+                                    FormatString="0"
+                                    Maximum="255"
+                                    Minimum="0"
+                                    ValueChanged="numTexture_ValueChanged"
+                                    Value="{Binding Texture}" />
                             </Grid>
                             <Grid ColumnDefinitions="90,*">
-                                <TextBlock Grid.Column="0" Text="Range (sight):" VerticalAlignment="Center" />
-                                <NumericUpDown Grid.Column="1" Minimum="0" Maximum="20"
-                                               FormatString="0" Value="{Binding Sight}" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Text="Range (sight):" />
+                                <NumericUpDown
+                                    Grid.Column="1"
+                                    FormatString="0"
+                                    Maximum="20"
+                                    Minimum="0"
+                                    Value="{Binding Sight}" />
                             </Grid>
                             <Grid ColumnDefinitions="90,*">
-                                <TextBlock Grid.Column="0" Text="Spawn rate (s):" VerticalAlignment="Center" />
-                                <NumericUpDown Grid.Column="1" Minimum="0" Maximum="255"
-                                               FormatString="0" Value="{Binding SpawnTime}" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Text="Spawn rate (s):" />
+                                <NumericUpDown
+                                    Grid.Column="1"
+                                    FormatString="0"
+                                    Maximum="255"
+                                    Minimum="0"
+                                    Value="{Binding SpawnTime}" />
                             </Grid>
                         </StackPanel>
 
-                        <!-- Texture preview (right side of General card) -->
-                        <Border Grid.Column="1" Margin="8,0,0,0"
-                                Width="80" Height="80"
-                                BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-                                CornerRadius="2" VerticalAlignment="Top">
-                            <Image x:Name="imgTexture" Stretch="Uniform"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <!--  Texture preview (right side of General card)  -->
+                        <Border
+                            Grid.Column="1"
+                            Width="80"
+                            Height="80"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Top">
+                            <Image
+                                x:Name="imgTexture"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Stretch="Uniform" />
                         </Border>
                     </Grid>
                 </Border>
 
-                <!-- ── Attributes ── -->
-                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-                        CornerRadius="4" Padding="8">
+                <!--  ── Attributes ──  -->
+                <Border Padding="8">
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Attributes" FontWeight="Bold" Margin="0,0,0,4" />
+                        <TextBlock
+                            Margin="0,0,0,4"
+                            FontWeight="Bold"
+                            Text="Attributes" />
                         <Grid ColumnDefinitions="*,*">
-                            <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,4,0">
+                            <StackPanel
+                                Grid.Column="0"
+                                Margin="0,0,4,0"
+                                Spacing="4">
                                 <Grid ColumnDefinitions="90,*">
-                                    <TextBlock Grid.Column="0" Text="HP:" VerticalAlignment="Center" />
-                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" Value="{Binding Hp}" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="HP:" />
+                                    <NumericUpDown
+                                        Grid.Column="1"
+                                        FormatString="0"
+                                        Maximum="32767"
+                                        Minimum="0"
+                                        Value="{Binding Hp}" />
                                 </Grid>
                                 <Grid ColumnDefinitions="90,*">
-                                    <TextBlock Grid.Column="0" Text="MP:" VerticalAlignment="Center" />
-                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" Value="{Binding Mp}" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="MP:" />
+                                    <NumericUpDown
+                                        Grid.Column="1"
+                                        FormatString="0"
+                                        Maximum="32767"
+                                        Minimum="0"
+                                        Value="{Binding Mp}" />
                                 </Grid>
                                 <Grid ColumnDefinitions="90,*">
-                                    <TextBlock Grid.Column="0" Text="Strength:" VerticalAlignment="Center" />
-                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" Value="{Binding Strength}" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="Strength:" />
+                                    <NumericUpDown
+                                        Grid.Column="1"
+                                        FormatString="0"
+                                        Maximum="32767"
+                                        Minimum="0"
+                                        Value="{Binding Strength}" />
                                 </Grid>
                                 <Grid ColumnDefinitions="90,*">
-                                    <TextBlock Grid.Column="0" Text="Resistance:" VerticalAlignment="Center" />
-                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" Value="{Binding Resistance}" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="Resistance:" />
+                                    <NumericUpDown
+                                        Grid.Column="1"
+                                        FormatString="0"
+                                        Maximum="32767"
+                                        Minimum="0"
+                                        Value="{Binding Resistance}" />
                                 </Grid>
                             </StackPanel>
-                            <StackPanel Grid.Column="1" Spacing="4" Margin="4,0,0,0">
+                            <StackPanel
+                                Grid.Column="1"
+                                Margin="4,0,0,0"
+                                Spacing="4">
                                 <Grid ColumnDefinitions="100,*">
-                                    <TextBlock Grid.Column="0" Text="Intelligence:" VerticalAlignment="Center" />
-                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" Value="{Binding Intelligence}" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="Intelligence:" />
+                                    <NumericUpDown
+                                        Grid.Column="1"
+                                        FormatString="0"
+                                        Maximum="32767"
+                                        Minimum="0"
+                                        Value="{Binding Intelligence}" />
                                 </Grid>
                                 <Grid ColumnDefinitions="100,*">
-                                    <TextBlock Grid.Column="0" Text="Agility:" VerticalAlignment="Center" />
-                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" Value="{Binding Agility}" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="Agility:" />
+                                    <NumericUpDown
+                                        Grid.Column="1"
+                                        FormatString="0"
+                                        Maximum="32767"
+                                        Minimum="0"
+                                        Value="{Binding Agility}" />
                                 </Grid>
                                 <Grid ColumnDefinitions="100,*">
-                                    <TextBlock Grid.Column="0" Text="Vitality:" VerticalAlignment="Center" />
-                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="32767"
-                                                   FormatString="0" Value="{Binding Vitality}" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="Vitality:" />
+                                    <NumericUpDown
+                                        Grid.Column="1"
+                                        FormatString="0"
+                                        Maximum="32767"
+                                        Minimum="0"
+                                        Value="{Binding Vitality}" />
                                 </Grid>
                                 <Grid ColumnDefinitions="100,*">
-                                    <TextBlock Grid.Column="0" Text="Experience:" VerticalAlignment="Center" />
-                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="2147483647"
-                                                   FormatString="0" Value="{Binding Experience}" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="Experience:" />
+                                    <NumericUpDown
+                                        Grid.Column="1"
+                                        FormatString="0"
+                                        Maximum="2147483647"
+                                        Minimum="0"
+                                        Value="{Binding Experience}" />
                                 </Grid>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
                 </Border>
 
-                <!-- ── Behaviour ── -->
-                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-                        CornerRadius="4" Padding="8">
+                <!--  ── Behaviour ──  -->
+                <Border Padding="8">
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Behaviour" FontWeight="Bold" Margin="0,0,0,4" />
+                        <TextBlock
+                            Margin="0,0,0,4"
+                            FontWeight="Bold"
+                            Text="Behaviour" />
                         <Grid ColumnDefinitions="90,*">
-                            <TextBlock Grid.Column="0" Text="Behavior:" VerticalAlignment="Center" />
-                            <ComboBox x:Name="cmbBehavior" Grid.Column="1" HorizontalAlignment="Stretch"
-                                      SelectionChanged="cmbBehavior_SelectionChanged">
+                            <TextBlock
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                Text="Behavior:" />
+                            <ComboBox
+                                x:Name="cmbBehavior"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                SelectionChanged="cmbBehavior_SelectionChanged">
                                 <ComboBoxItem Content="Friendly" />
                                 <ComboBoxItem Content="Attack On Sight" />
                                 <ComboBoxItem Content="Attack When Attacked" />
@@ -159,101 +296,188 @@
                             </ComboBox>
                         </Grid>
                         <Grid ColumnDefinitions="90,*">
-                            <TextBlock Grid.Column="0" Text="Movement:" VerticalAlignment="Center" />
-                            <ComboBox x:Name="cmbMovement" Grid.Column="1" HorizontalAlignment="Stretch"
-                                      SelectionChanged="cmbMovement_SelectionChanged" />
+                            <TextBlock
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                Text="Movement:" />
+                            <ComboBox
+                                x:Name="cmbMovement"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                SelectionChanged="cmbMovement_SelectionChanged" />
                         </Grid>
                         <Grid ColumnDefinitions="90,*">
-                            <TextBlock Grid.Column="0" Text="Flee at HP%:" VerticalAlignment="Center" />
-                            <NumericUpDown Grid.Column="1" Minimum="0" Maximum="100"
-                                           FormatString="0" Value="{Binding FleeHealth}" />
+                            <TextBlock
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                Text="Flee at HP%:" />
+                            <NumericUpDown
+                                Grid.Column="1"
+                                FormatString="0"
+                                Maximum="100"
+                                Minimum="0"
+                                Value="{Binding FleeHealth}" />
                         </Grid>
-                        <Grid x:Name="pnlShop" ColumnDefinitions="90,*" IsVisible="False">
-                            <TextBlock Grid.Column="0" Text="Shop:" VerticalAlignment="Center" />
-                            <ComboBox x:Name="cmbShop" Grid.Column="1" HorizontalAlignment="Stretch"
-                                      SelectionChanged="cmbShop_SelectionChanged" />
+                        <Grid
+                            x:Name="pnlShop"
+                            ColumnDefinitions="90,*"
+                            IsVisible="False">
+                            <TextBlock
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                Text="Shop:" />
+                            <ComboBox
+                                x:Name="cmbShop"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                SelectionChanged="cmbShop_SelectionChanged" />
                         </Grid>
                     </StackPanel>
                 </Border>
 
-                <!-- ── Drop ── -->
-                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-                        CornerRadius="4" Padding="8">
+                <!--  ── Drop ──  -->
+                <Border Padding="8">
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Drop" FontWeight="Bold" Margin="0,0,0,4" />
-                        <ListBox x:Name="lstDrop" Height="90" SelectionMode="Single" />
+                        <TextBlock
+                            Margin="0,0,0,4"
+                            FontWeight="Bold"
+                            Text="Drop" />
+                        <ListBox
+                            x:Name="lstDrop"
+                            Height="90"
+                            SelectionMode="Single" />
                         <StackPanel Orientation="Horizontal" Spacing="4">
-                            <Button Content="Add" Click="butDrop_Add_Click" />
-                            <Button Content="Delete" Click="butDrop_Delete_Click" />
+                            <Button Click="butDrop_Add_Click" Content="Add" />
+                            <Button Click="butDrop_Delete_Click" Content="Delete" />
                         </StackPanel>
 
-                        <!-- Add-drop inline form -->
-                        <Border x:Name="pnlDrop_Add" IsVisible="False"
-                                BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-                                CornerRadius="4" Padding="8">
+                        <!--  Add-drop inline form  -->
+                        <Border
+                            x:Name="pnlDrop_Add"
+                            Padding="8"
+                            IsVisible="False">
                             <StackPanel Spacing="4">
-                                <TextBlock Text="Add drop" FontWeight="Bold" Margin="0,0,0,4" />
+                                <TextBlock
+                                    Margin="0,0,0,4"
+                                    FontWeight="Bold"
+                                    Text="Add drop" />
                                 <Grid ColumnDefinitions="70,*">
-                                    <TextBlock Grid.Column="0" Text="Item:" VerticalAlignment="Center" />
-                                    <ComboBox x:Name="cmbDrop_Item" Grid.Column="1" HorizontalAlignment="Stretch" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="Item:" />
+                                    <ComboBox
+                                        x:Name="cmbDrop_Item"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Stretch" />
                                 </Grid>
                                 <Grid ColumnDefinitions="70,*">
-                                    <TextBlock Grid.Column="0" Text="Amount:" VerticalAlignment="Center" />
-                                    <NumericUpDown x:Name="numDrop_Amount" Grid.Column="1" Minimum="1" Maximum="32767"
-                                                   Value="1" FormatString="0" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="Amount:" />
+                                    <NumericUpDown
+                                        x:Name="numDrop_Amount"
+                                        Grid.Column="1"
+                                        FormatString="0"
+                                        Maximum="32767"
+                                        Minimum="1"
+                                        Value="1" />
                                 </Grid>
                                 <Grid ColumnDefinitions="70,*">
-                                    <TextBlock Grid.Column="0" Text="Chance%:" VerticalAlignment="Center" />
-                                    <NumericUpDown x:Name="numDrop_Chance" Grid.Column="1" Minimum="1" Maximum="100"
-                                                   Value="100" FormatString="0" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="Chance%:" />
+                                    <NumericUpDown
+                                        x:Name="numDrop_Chance"
+                                        Grid.Column="1"
+                                        FormatString="0"
+                                        Maximum="100"
+                                        Minimum="1"
+                                        Value="100" />
                                 </Grid>
-                                <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right">
-                                    <Button Content="Cancel" Click="butDrop_Cancel_Click" />
-                                    <Button Content="OK" Click="butDrop_Ok_Click" />
+                                <StackPanel
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal"
+                                    Spacing="4">
+                                    <Button Click="butDrop_Cancel_Click" Content="Cancel" />
+                                    <Button Click="butDrop_Ok_Click" Content="OK" />
                                 </StackPanel>
                             </StackPanel>
                         </Border>
                     </StackPanel>
                 </Border>
 
-                <!-- ── Allies ── -->
-                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-                        CornerRadius="4" Padding="8">
+                <!--  ── Allies ──  -->
+                <Border Padding="8">
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Allies" FontWeight="Bold" Margin="0,0,0,4" />
-                        <CheckBox x:Name="chkAttackNpc" Content="Attack other NPCs"
-                                  IsCheckedChanged="chkAttackNpc_IsCheckedChanged" />
-                        <ListBox x:Name="lstAllies" Height="80" SelectionMode="Single" IsEnabled="False" />
+                        <TextBlock
+                            Margin="0,0,0,4"
+                            FontWeight="Bold"
+                            Text="Allies" />
+                        <CheckBox
+                            x:Name="chkAttackNpc"
+                            Content="Attack other NPCs"
+                            IsCheckedChanged="chkAttackNpc_IsCheckedChanged" />
+                        <ListBox
+                            x:Name="lstAllies"
+                            Height="80"
+                            IsEnabled="False"
+                            SelectionMode="Single" />
                         <StackPanel Orientation="Horizontal" Spacing="4">
-                            <Button Content="Add" Click="butAllie_Add_Click" />
-                            <Button Content="Delete" Click="butAllie_Delete_Click" />
+                            <Button Click="butAllie_Add_Click" Content="Add" />
+                            <Button Click="butAllie_Delete_Click" Content="Delete" />
                         </StackPanel>
 
-                        <!-- Add-ally inline form -->
-                        <Border x:Name="pnlAllie_Add" IsVisible="False"
-                                BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-                                CornerRadius="4" Padding="8">
+                        <!--  Add-ally inline form  -->
+                        <Border
+                            x:Name="pnlAllie_Add"
+                            Padding="8"
+                            IsVisible="False">
                             <StackPanel Spacing="4">
-                                <TextBlock Text="Add ally" FontWeight="Bold" Margin="0,0,0,4" />
+                                <TextBlock
+                                    Margin="0,0,0,4"
+                                    FontWeight="Bold"
+                                    Text="Add ally" />
                                 <Grid ColumnDefinitions="70,*">
-                                    <TextBlock Grid.Column="0" Text="NPC:" VerticalAlignment="Center" />
-                                    <ComboBox x:Name="cmbAllie_Npc" Grid.Column="1" HorizontalAlignment="Stretch" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="NPC:" />
+                                    <ComboBox
+                                        x:Name="cmbAllie_Npc"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Stretch" />
                                 </Grid>
-                                <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right">
-                                    <Button Content="Cancel" Click="butAllie_Cancel_Click" />
-                                    <Button Content="OK" Click="butAllie_Ok_Click" />
+                                <StackPanel
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal"
+                                    Spacing="4">
+                                    <Button Click="butAllie_Cancel_Click" Content="Cancel" />
+                                    <Button Click="butAllie_Ok_Click" Content="OK" />
                                 </StackPanel>
                             </StackPanel>
                         </Border>
                     </StackPanel>
                 </Border>
 
-                <!-- ── Save / Cancel ── -->
-                <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
-                    <Button Grid.Column="0" Content="Save All" Command="{Binding SaveCommand}"
-                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,4,0" />
-                    <Button Grid.Column="1" Content="Cancel" Command="{Binding CancelCommand}"
-                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,0,0" />
+                <!--  ── Save / Cancel ──  -->
+                <Grid Margin="0,4,0,0" ColumnDefinitions="*,*">
+                    <Button
+                        Grid.Column="0"
+                        Margin="0,0,4,0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding SaveCommand}"
+                        Content="Save All" />
+                    <Button
+                        Grid.Column="1"
+                        Margin="4,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding CancelCommand}"
+                        Content="Cancel" />
                 </Grid>
 
             </StackPanel>

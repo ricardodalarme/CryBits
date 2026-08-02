@@ -1,22 +1,41 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="CryBits.Editors.Forms.Maps.Panes.ChunksPane">
-    <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-            CornerRadius="4" Padding="4">
+﻿<UserControl
+    x:Class="CryBits.Editors.Forms.Maps.Panes.ChunksPane"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Padding="4">
         <Grid RowDefinitions="*,Auto">
             <ListBox x:Name="lstChunks" Grid.Row="0" />
 
-            <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*,*" ColumnSpacing="3" Margin="0,4,0,0">
-                <Button Grid.Column="0" Content="←" x:Name="butChunkLeft"
-                        ToolTip.Tip="Add chunk to left" />
-                <Button Grid.Column="1" Content="↑" x:Name="butChunkUp"
-                        ToolTip.Tip="Add chunk above" />
-                <Button Grid.Column="2" Content="↓" x:Name="butChunkDown"
-                        ToolTip.Tip="Add chunk below" />
-                <Button Grid.Column="3" Content="→" x:Name="butChunkRight"
-                        ToolTip.Tip="Add chunk to right" />
-                <Button Grid.Column="4" Content="−" x:Name="butDeleteChunk"
-                        ToolTip.Tip="Delete current chunk" />
+            <Grid
+                Grid.Row="1"
+                Margin="0,4,0,0"
+                ColumnDefinitions="*,*,*,*,*"
+                ColumnSpacing="3">
+                <Button
+                    x:Name="butChunkLeft"
+                    Grid.Column="0"
+                    Content="←"
+                    ToolTip.Tip="Add chunk to left" />
+                <Button
+                    x:Name="butChunkUp"
+                    Grid.Column="1"
+                    Content="↑"
+                    ToolTip.Tip="Add chunk above" />
+                <Button
+                    x:Name="butChunkDown"
+                    Grid.Column="2"
+                    Content="↓"
+                    ToolTip.Tip="Add chunk below" />
+                <Button
+                    x:Name="butChunkRight"
+                    Grid.Column="3"
+                    Content="→"
+                    ToolTip.Tip="Add chunk to right" />
+                <Button
+                    x:Name="butDeleteChunk"
+                    Grid.Column="4"
+                    Content="-"
+                    ToolTip.Tip="Delete current chunk" />
             </Grid>
         </Grid>
     </Border>

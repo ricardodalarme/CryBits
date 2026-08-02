@@ -1,56 +1,75 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:panes="using:CryBits.Editors.Forms.Maps.Panes"
-        xmlns:semi="https://irihi.tech/semi"
-        xmlns:apc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
-        xmlns:dock="using:Dock.Avalonia.Controls"
-        xmlns:dockFactory="using:Dock.Model.Avalonia"
-        xmlns:dockModel="using:Dock.Model.Avalonia.Controls"
-        x:Class="CryBits.Editors.Forms.Maps.EditorMapsWindow"
-        Title="CryBits Editor"
-        Width="1449" Height="735"
-        MinWidth="931" MinHeight="686"
-        CanResize="True"
-        WindowStartupLocation="CenterScreen">
+﻿<Window
+    x:Class="CryBits.Editors.Forms.Maps.EditorMapsWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dock="using:Dock.Avalonia.Controls"
+    xmlns:dockFactory="using:Dock.Model.Avalonia"
+    xmlns:dockModel="using:Dock.Model.Avalonia.Controls"
+    xmlns:panes="using:CryBits.Editors.Forms.Maps.Panes"
+    Title="CryBits Editor"
+    Width="1449"
+    Height="735"
+    MinWidth="931"
+    MinHeight="686"
+    CanResize="True"
+    WindowStartupLocation="CenterScreen">
 
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- Root grid: toolbar | content | statusbar                            -->
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  ═══════════════════════════════════════════════════════════════════  -->
+    <!--  Root grid: toolbar | content | statusbar  -->
+    <!--  ═══════════════════════════════════════════════════════════════════  -->
     <Grid RowDefinitions="Auto,*,Auto">
 
         <panes:ToolbarPane x:Name="toolbarPane" Grid.Row="0" />
 
-        <!-- ────────────────────────────────────────────────────────────── -->
-        <!-- Row 1 – Dock layout (inline UserControl content)               -->
-        <!-- ────────────────────────────────────────────────────────────── -->
-        <dock:DockControl x:Name="DockControl" Grid.Row="1"
-                          InitializeLayout="True" InitializeFactory="True">
+        <!--  ──────────────────────────────────────────────────────────────  -->
+        <!--  Row 1 – Dock layout (inline UserControl content)  -->
+        <!--  ──────────────────────────────────────────────────────────────  -->
+        <dock:DockControl
+            x:Name="DockControl"
+            Grid.Row="1"
+            InitializeFactory="True"
+            InitializeLayout="True">
             <dock:DockControl.Factory>
                 <dockFactory:Factory />
             </dock:DockControl.Factory>
             <dockModel:RootDock Id="Root" IsCollapsable="False">
                 <dockModel:ProportionalDock Id="MainLayout" Orientation="Horizontal">
 
-                    <!-- Left panel: Tile Sheet (top) + Layers & Modes (bottom) -->
+                    <!--  Left panel: Tile Sheet (top) + Layers & Modes (bottom)  -->
                     <dockModel:ToolDock Id="LeftDock" Proportion="0.21">
-                        <dockModel:Tool Id="LeftPanel" Title="Editor" CanClose="False" />
+                        <dockModel:Tool
+                            Title="Editor"
+                            CanClose="False"
+                            Id="LeftPanel" />
                     </dockModel:ToolDock>
                     <dockModel:ProportionalDockSplitter Id="LeftRightSplitter" />
 
-                    <!-- Center: Map Canvas -->
+                    <!--  Center: Map Canvas  -->
                     <dockModel:DocumentDock Id="MapDock">
-                        <dockModel:Document Id="MapCanvas" Title="Map Canvas" CanClose="False" />
+                        <dockModel:Document
+                            Title="Map Canvas"
+                            CanClose="False"
+                            Id="MapCanvas" />
                     </dockModel:DocumentDock>
                     <dockModel:ProportionalDockSplitter Id="CenterRightSplitter" />
 
-                    <!-- Right panel: Map Explorer (top) + Properties (bottom) -->
-                    <dockModel:ProportionalDock Id="RightPanel" Proportion="0.21" Orientation="Vertical">
+                    <!--  Right panel: Map Explorer (top) + Properties (bottom)  -->
+                    <dockModel:ProportionalDock
+                        Id="RightPanel"
+                        Orientation="Vertical"
+                        Proportion="0.21">
                         <dockModel:ToolDock Id="ExplorerDock">
-                            <dockModel:Tool Id="MapExplorer" Title="Map Explorer" CanClose="False" />
+                            <dockModel:Tool
+                                Title="Map Explorer"
+                                CanClose="False"
+                                Id="MapExplorer" />
                         </dockModel:ToolDock>
                         <dockModel:ProportionalDockSplitter Id="RightSplitter" />
                         <dockModel:ToolDock Id="PropertiesDock">
-                            <dockModel:Tool Id="Properties" Title="Properties" CanClose="False" />
+                            <dockModel:Tool
+                                Title="Properties"
+                                CanClose="False"
+                                Id="Properties" />
                         </dockModel:ToolDock>
                     </dockModel:ProportionalDock>
 
@@ -58,18 +77,15 @@
             </dockModel:RootDock>
         </dock:DockControl>
 
-        <!-- ────────────────────────────────────────────────────────────── -->
-        <!-- Row 2 – Status bar (FPS | Revision | Position)                 -->
-        <!-- ────────────────────────────────────────────────────────────── -->
-        <Border Grid.Row="2"
-                BorderThickness="0,1,0,0" BorderBrush="{DynamicResource SemiBorderColor}"
-                Padding="6,3">
+        <!--  ──────────────────────────────────────────────────────────────  -->
+        <!--  Row 2 – Status bar (FPS | Revision | Position)  -->
+        <!--  ──────────────────────────────────────────────────────────────  -->
+        <Border Grid.Row="2" Padding="6,3">
             <StackPanel Orientation="Horizontal" Spacing="12">
                 <TextBlock x:Name="lblFPS" Text="FPS: —" />
                 <Separator Width="1" />
                 <TextBlock x:Name="lblPosition" Text="Position: {0;0}" />
             </StackPanel>
         </Border>
-
     </Grid>
 </Window>

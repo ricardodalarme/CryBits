@@ -1,25 +1,51 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="CryBits.Editors.Forms.Maps.Panes.TileSheetPane">
+﻿<UserControl
+    x:Class="CryBits.Editors.Forms.Maps.Panes.TileSheetPane"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid RowDefinitions="Auto,Auto,*">
-        <ComboBox x:Name="cmbTiles" Grid.Row="0"
-                  HorizontalAlignment="Stretch"
-                  Margin="4,4,4,2" />
-        <CheckBox x:Name="chkAuto" Grid.Row="1"
-                  Content="Auto"
-                  Margin="8,0,0,2" />
-        <Grid Grid.Row="2" RowDefinitions="*,Auto" ColumnDefinitions="*,Auto" Margin="4,0,4,4">
-            <Border x:Name="tileViewport" Grid.Row="0" Grid.Column="0" Background="Black" ClipToBounds="True">
-                <Image x:Name="imgTile"
-                       Stretch="None"
-                       HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <ComboBox
+            x:Name="cmbTiles"
+            Grid.Row="0"
+            Margin="4,4,4,2"
+            HorizontalAlignment="Stretch" />
+        <CheckBox
+            x:Name="chkAuto"
+            Grid.Row="1"
+            Margin="8,0,0,2"
+            Content="Auto" />
+        <Grid
+            Grid.Row="2"
+            Margin="4,0,4,4"
+            ColumnDefinitions="*,Auto"
+            RowDefinitions="*,Auto">
+            <Border
+                x:Name="tileViewport"
+                Grid.Row="0"
+                Grid.Column="0"
+                Background="Black"
+                ClipToBounds="True">
+                <Image
+                    x:Name="imgTile"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Stretch="None" />
             </Border>
-            <ScrollBar x:Name="scrlTileY" Grid.Row="0" Grid.Column="1"
-                       Orientation="Vertical"
-                       Minimum="0" Maximum="255" Value="0" />
-            <ScrollBar x:Name="scrlTileX" Grid.Row="1" Grid.Column="0"
-                       Orientation="Horizontal"
-                       Minimum="0" Maximum="0" Value="0" />
+            <ScrollBar
+                x:Name="scrlTileY"
+                Grid.Row="0"
+                Grid.Column="1"
+                Maximum="255"
+                Minimum="0"
+                Orientation="Vertical"
+                Value="0" />
+            <ScrollBar
+                x:Name="scrlTileX"
+                Grid.Row="1"
+                Grid.Column="0"
+                Maximum="0"
+                Minimum="0"
+                Orientation="Horizontal"
+                Value="0" />
         </Grid>
     </Grid>
 </UserControl>

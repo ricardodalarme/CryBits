@@ -9,15 +9,5 @@
         <semi:ColorPickerSemiTheme />
         <StyleInclude Source="avares://Semi.Avalonia.DataGrid/Index.axaml" />
         <dockTheme:DockFluentTheme />
-        <Style Selector="Border.card">
-            <Setter Property="BorderBrush" Value="{DynamicResource SemiBorderColor}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Padding" Value="8" />
-        </Style>
-        <Style Selector="TextBlock.section-title">
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Margin" Value="0,0,0,4" />
-        </Style>
     </Application.Styles>
 </Application>

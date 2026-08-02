@@ -1,64 +1,93 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:panes="using:CryBits.Editors.Forms.Maps.Panes"
-             xmlns:models="using:CryBits.Editors.Forms.Maps.Models"
-             xmlns:semi="https://irihi.tech/semi"
-             x:Class="CryBits.Editors.Forms.Maps.Panes.LayersPane"
-             x:DataType="models:LayerVm">
+﻿<UserControl
+    x:Class="CryBits.Editors.Forms.Maps.Panes.LayersPane"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:CryBits.Editors.Forms.Maps.Models"
+    xmlns:panes="using:CryBits.Editors.Forms.Maps.Panes"
+    x:DataType="models:LayerVm">
     <TabControl x:Name="mainTabs">
         <TabItem Header="Layers">
             <ScrollViewer>
-                <StackPanel Spacing="4" Margin="4">
+                <StackPanel Margin="4" Spacing="4">
 
-                    <!-- Layers group -->
-                    <Border x:Name="grpLayersBorder"
-                            BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-                            CornerRadius="4" Padding="4">
+                    <!--  Layers group  -->
+                    <Border x:Name="grpLayersBorder" Padding="4">
                         <Grid RowDefinitions="Auto,Auto">
-                            <DataGrid x:Name="lstLayers" Grid.Row="0"
-                                      IsReadOnly="False"
-                                      CanUserReorderColumns="False"
-                                      CanUserResizeColumns="False"
-                                      CanUserSortColumns="False"
-                                      GridLinesVisibility="Horizontal"
-                                      Height="128"
-                                      SelectionMode="Single">
+                            <DataGrid
+                                x:Name="lstLayers"
+                                Grid.Row="0"
+                                Height="128"
+                                CanUserReorderColumns="False"
+                                CanUserResizeColumns="False"
+                                CanUserSortColumns="False"
+                                GridLinesVisibility="Horizontal"
+                                IsReadOnly="False"
+                                SelectionMode="Single">
                                 <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn Header="" Binding="{Binding Visible}" Width="22" />
-                                    <DataGridTextColumn Header="Nº" Binding="{Binding Index}" Width="24"
-                                                        IsReadOnly="True" />
-                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"
-                                                        IsReadOnly="True" />
-                                    <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" Width="50"
-                                                        IsReadOnly="True" />
+                                    <DataGridCheckBoxColumn
+                                        Width="22"
+                                        Binding="{Binding Visible}"
+                                        Header="" />
+                                    <DataGridTextColumn
+                                        Width="24"
+                                        Binding="{Binding Index}"
+                                        Header="Nº"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Name}"
+                                        Header="Name"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="50"
+                                        Binding="{Binding TypeName}"
+                                        Header="Type"
+                                        IsReadOnly="True" />
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="3" Margin="0,3,0,0">
-                                <Button Content="Add" x:Name="butLayers_Add" />
-                                <Button Content="Remove" x:Name="butLayers_Remove" />
-                                <Button Content="Edit" x:Name="butLayers_Edit" />
+                            <StackPanel
+                                Grid.Row="1"
+                                Margin="0,3,0,0"
+                                Orientation="Horizontal"
+                                Spacing="3">
+                                <Button x:Name="butLayers_Add" Content="Add" />
+                                <Button x:Name="butLayers_Remove" Content="Remove" />
+                                <Button x:Name="butLayers_Edit" Content="Edit" />
                                 <Separator Width="4" />
-                                <Button Content="↑" x:Name="butLayers_Up" />
-                                <Button Content="↓" x:Name="butLayers_Down" />
+                                <Button x:Name="butLayers_Up" Content="↑" />
+                                <Button x:Name="butLayers_Down" Content="↓" />
                             </StackPanel>
                         </Grid>
                     </Border>
 
-                    <!-- Layer add/edit panel (hidden by default) -->
-                    <Border x:Name="pnlLayerEdit"
-                            BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
-                            CornerRadius="4" Padding="8"
-                            IsVisible="False">
+                    <!--  Layer add/edit panel (hidden by default)  -->
+                    <Border
+                        x:Name="pnlLayerEdit"
+                        Padding="8"
+                        IsVisible="False">
                         <StackPanel Spacing="4">
-                            <TextBlock x:Name="lblLayerEditTitle" Text="Add layer" FontWeight="Bold" />
+                            <TextBlock
+                                x:Name="lblLayerEditTitle"
+                                FontWeight="Bold"
+                                Text="Add layer" />
                             <TextBlock Text="Name:" />
                             <TextBox x:Name="txtLayer_Name" MaxLength="12" />
-                            <TextBlock Text="Type:" Margin="0,4,0,0" />
+                            <TextBlock Margin="0,4,0,0" Text="Type:" />
                             <ComboBox x:Name="cmbLayers_Type" HorizontalAlignment="Stretch" />
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4" Margin="0,4,0,0">
-                                <Button x:Name="butLayer_Ok" Grid.Column="0" Content="Add"
-                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
-                                <Button Grid.Column="1" Content="Cancel" x:Name="butLayer_Cancel" />
+                            <Grid
+                                Margin="0,4,0,0"
+                                ColumnDefinitions="*,Auto"
+                                ColumnSpacing="4">
+                                <Button
+                                    x:Name="butLayer_Ok"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Content="Add" />
+                                <Button
+                                    x:Name="butLayer_Cancel"
+                                    Grid.Column="1"
+                                    Content="Cancel" />
                             </Grid>
                         </StackPanel>
                     </Border>
