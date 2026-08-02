@@ -31,7 +31,6 @@ namespace CryBits.Client.Core;
 
 internal sealed class GameSession : IDisposable
 {
-    public GameContext Context { get; }
     public World World { get; }
     public GameScreen Screen { get; }
     public SystemScheduler Scheduler { get; }
@@ -60,7 +59,6 @@ internal sealed class GameSession : IDisposable
         long localPlayerId)
     {
         var replication = new ReplicationState(localPlayerId);
-        Context = new GameContext();
         World = new(catalog, enableDirtyTracking: false);
 
         IntentSender = new IntentSender(connection);
@@ -99,7 +97,7 @@ internal sealed class GameSession : IDisposable
             new WeatherParticleRenderer(World, spriteBatch),
             new FogRenderer(World, spriteBatch)
         };
-        var tilemapRenderer = new TilemapRenderer(spriteBatch, Context, CameraManager);
+        var tilemapRenderer = new TilemapRenderer(spriteBatch, World, CameraManager);
         RenderPipeline = new RenderPipeline(spriteBatch, CameraManager, tilemapRenderer, uiContext, groundRenderers, fringeRenderers);
 
         var mapRepo = new MapRepository();
@@ -112,10 +110,10 @@ internal sealed class GameSession : IDisposable
         Scheduler
             .AddSimulation(new FadeSystem())
             .AddSimulation(new FogSystem())
-            .AddSimulation(new WeatherSimulationSystem(replication, Context))
-            .AddSimulation(new WeatherSpawnSystem(replication, Context))
-            .AddSimulation(new LightningSystem(replication, Context, audioManager))
-            .AddSimulation(new MovementInputSystem(replication, Context, inputManager, IntentSender))
+            .AddSimulation(new WeatherSimulationSystem(replication))
+            .AddSimulation(new WeatherSpawnSystem(replication))
+            .AddSimulation(new LightningSystem(replication, audioManager))
+            .AddSimulation(new MovementInputSystem(replication, inputManager, IntentSender))
             .AddSimulation(new ItemPickupSystem(replication, inputManager, IntentSender))
             .AddSimulation(new MovementSystem())
             .AddSimulation(new CameraSystem(replication, CameraManager))
@@ -124,7 +122,7 @@ internal sealed class GameSession : IDisposable
             .AddSimulation(new AttackHitSystem(replication))
             .AddSimulation(new AttackSystem(replication, inputManager, IntentSender, uiContext))
             .AddSimulation(new DamageDecaySystem());
-        _mapHandler = new MapHandler(World, replication, Context, contentSender, audioManager, mapRepo);
+        _mapHandler = new MapHandler(World, replication, contentSender, audioManager, mapRepo);
         _replicationHandler = new ReplicationHandler(applier);
         _chatHandler = new ChatHandler(_chat);
         _partyHandler = new PartyHandler(IntentSender, Screen, partyViewModel);
@@ -154,6 +152,7 @@ internal sealed class GameSession : IDisposable
         PacketDispatcher.Unregister(_shopHandler);
 
         Screen.Unbind();
+        World.MapDefs.Clear();
         World.Clear();
     }
 }

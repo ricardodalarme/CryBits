@@ -14,7 +14,7 @@ using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Systems.Movement;
 
-internal sealed class MovementInputSystem(ReplicationState replication, GameContext context, InputManager inputManager, IntentSender intentSender) : IClientSystem
+internal sealed class MovementInputSystem(ReplicationState replication, InputManager inputManager, IntentSender intentSender) : IClientSystem
 {
     private const float ThrottleInterval = 0.030f;
 
@@ -64,7 +64,7 @@ internal sealed class MovementInputSystem(ReplicationState replication, GameCont
             _ => movement.TileY
         };
 
-        var map = context.CurrentMap;
+        var map = world.CurrentMap;
         if (map != null && ChunkGrid.IsTileBlocked(map, nextX, nextY))
         {
             world.Set(entity, movement with { Direction = direction });

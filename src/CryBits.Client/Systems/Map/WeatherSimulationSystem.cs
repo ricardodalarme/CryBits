@@ -10,7 +10,7 @@ using MapDef = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Client.Systems.Map;
 
-internal sealed class WeatherSimulationSystem(ReplicationState replication, GameContext context) : IClientSystem
+internal sealed class WeatherSimulationSystem(ReplicationState replication) : IClientSystem
 {
     private const float SnowDriftInterval = 0.035f;
 
@@ -32,7 +32,7 @@ internal sealed class WeatherSimulationSystem(ReplicationState replication, Game
 
     public void Update(World world, float dt)
     {
-        var map = context.CurrentMap;
+        var map = world.CurrentMap;
         if (map == null) return;
 
         var type = GetEffectiveWeather(world, map);

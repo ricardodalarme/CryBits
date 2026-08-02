@@ -51,13 +51,13 @@ internal class GameScreen
         DropItemView = new(uiContext, session.IntentSender);
         HotbarView = new(uiContext, itemRenderer, tooltip, InventoryView, this, hotbarViewModel);
         MenusView = new(uiContext);
-        OptionsView = new(uiContext, audioManager, session.Context, chat);
+        OptionsView = new(uiContext, audioManager, session.World, chat);
         PartyInvitationView = new(uiContext, session.IntentSender);
         ShopSellView = new(uiContext, shopViewModel);
         TradeAmountView = new(uiContext, session.IntentSender);
         TradeInvitationView = new(uiContext, session.IntentSender);
         TradeView = new(uiContext, itemRenderer, InventoryView, this, tradeViewModel);
-        MapNameView = new(uiContext, session.Context);
+        MapNameView = new(uiContext, session.World);
         MetricsView = new(uiContext);
         PartyView = new(uiContext, spriteBatch, partyViewModel);
         StatsView = new(uiContext, statsViewModel);

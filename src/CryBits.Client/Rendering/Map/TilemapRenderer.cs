@@ -1,22 +1,23 @@
-using CryBits.Client.Core;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Rendering.Camera;
 using CryBits.Definitions.Maps;
+using CryBits.Simulation.Core;
 using CryBits.Simulation.Spatial;
 using SFML.Graphics;
 using SFML.System;
 using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
+using CryBits.Client.Core;
 
 namespace CryBits.Client.Rendering.Map;
 
-internal sealed class TilemapRenderer(SpriteBatch spriteBatch, GameContext context, CameraManager cameraManager)
+internal sealed class TilemapRenderer(SpriteBatch spriteBatch, World world, CameraManager cameraManager)
 {
     private readonly Dictionary<int, VertexArray> _batches = [];
 
     public void DrawLayer(Layer layerType)
     {
-        var map = context.CurrentMap;
+        var map = world.CurrentMap;
         if (map == null || map.Chunks.Count == 0) return;
 
         var sight = cameraManager.TileSight;
@@ -71,8 +72,8 @@ internal sealed class TilemapRenderer(SpriteBatch spriteBatch, GameContext conte
 
     public void DrawPanorama()
     {
-        if (context.CurrentMap == null) return;
-        var panorama = context.CurrentMap.Panorama;
+        if (world.CurrentMap == null) return;
+        var panorama = world.CurrentMap!.Panorama;
         if (panorama > 0)
             spriteBatch.Draw(Textures.Panoramas[panorama], new System.Drawing.Point(0));
     }

@@ -13,7 +13,7 @@ using MemoryPack;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class MapHandler(World world, ReplicationState replication, GameContext context, ContentSender contentSender, AudioManager audioManager, MapRepository mapRepository)
+internal class MapHandler(World world, ReplicationState replication, ContentSender contentSender, AudioManager audioManager, MapRepository mapRepository)
 {
     [PacketHandler]
     internal void MapRevision(MapRevisionPacket packet)
@@ -29,7 +29,7 @@ internal class MapHandler(World world, ReplicationState replication, GameContext
         var map = mapRepository.LoadMap(id);
         if (map is not null)
         {
-            context.CurrentMap = map;
+            world.CurrentMap = map;
 
             if (string.IsNullOrEmpty(map.Music))
                 audioManager.StopMusic();
@@ -46,34 +46,35 @@ internal class MapHandler(World world, ReplicationState replication, GameContext
         var map = packet.Map;
 
         // Preserve chunks that have already arrived via ChunkPayload
-        if (context.CurrentMap?.Id == map.Id)
-            foreach (var (coord, chunk) in context.CurrentMap.Chunks)
+        var oldMap = world.CurrentMap;
+        if (oldMap?.Id == map.Id)
+            foreach (var (coord, chunk) in oldMap.Chunks)
                 map.Chunks.TryAdd(coord, chunk);
 
-        context.CurrentMap = map;
+        world.CurrentMap = map;
 
         mapRepository.SaveMap(map);
 
-        WeatherSpawner.Reset(world, context.CurrentMap.DefaultWeather, audioManager);
-        FogSpawner.Spawn(world, context.CurrentMap.DefaultFog);
+        WeatherSpawner.Reset(world, world.CurrentMap!.DefaultWeather, audioManager);
+        FogSpawner.Spawn(world, world.CurrentMap!.DefaultFog);
 
-        if (string.IsNullOrEmpty(context.CurrentMap.Music))
+        if (string.IsNullOrEmpty(world.CurrentMap!.Music))
             audioManager.StopMusic();
         else
-            audioManager.PlayMusic(context.CurrentMap.Music);
+            audioManager.PlayMusic(world.CurrentMap!.Music);
     }
 
     [PacketHandler]
     internal void HandleChunkRevision(ChunkRevisionPacket packet)
     {
         if (packet.Version < 0)
-            context.CurrentMap?.Chunks.Remove(new ChunkCoord(packet.ChunkX, packet.ChunkY));
+            world.CurrentMap?.Chunks.Remove(new ChunkCoord(packet.ChunkX, packet.ChunkY));
     }
 
     [PacketHandler]
     internal void ChunkPayload(ChunkPayload packet)
     {
-        var map = context.CurrentMap;
+        var map = world.CurrentMap;
         if (map == null) return;
 
         TileData[,]? tiles = null;

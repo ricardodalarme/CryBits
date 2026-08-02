@@ -11,7 +11,7 @@ using MapDef = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Client.Systems.Map;
 
-internal sealed class LightningSystem(ReplicationState replication, GameContext context, AudioManager audioManager) : IClientSystem
+internal sealed class LightningSystem(ReplicationState replication, AudioManager audioManager) : IClientSystem
 {
     private static readonly string[] _thunderSounds = [Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4];
 
@@ -31,7 +31,7 @@ internal sealed class LightningSystem(ReplicationState replication, GameContext 
 
     public void Update(World world, float dt)
     {
-        var map = context.CurrentMap;
+        var map = world.CurrentMap;
         if (map == null) return;
         var weather = GetEffectiveWeather(world, map);
         if (weather == WeatherType.None) return;

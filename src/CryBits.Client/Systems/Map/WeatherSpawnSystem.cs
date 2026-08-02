@@ -1,5 +1,4 @@
 using CryBits.Client.Components;
-using CryBits.Client.Core;
 using CryBits.Client.Replication;
 using CryBits.Simulation.Core;
 using CryBits.Definitions.Maps;
@@ -7,14 +6,15 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Spatial;
 using static CryBits.Definitions.Globals;
 using MapDef = CryBits.Definitions.Maps.Map;
+using CryBits.Client.Core;
 
 namespace CryBits.Client.Systems.Map;
 
-internal sealed class WeatherSpawnSystem(ReplicationState replication, GameContext context) : IClientSystem
+internal sealed class WeatherSpawnSystem(ReplicationState replication) : IClientSystem
 {
     public void Update(World world, float dt)
     {
-        var map = context.CurrentMap;
+        var map = world.CurrentMap;
         if (map == null) return;
 
         var type = GetEffectiveWeather(world, map);

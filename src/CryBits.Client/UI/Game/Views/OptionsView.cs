@@ -3,11 +3,12 @@ using CryBits.Client.Framework;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Persistence.Repositories;
+using CryBits.Simulation.Core;
 using Iguina.Entities;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class OptionsView(UiContext uiContext, AudioManager audioManager, GameContext context, Chat chat) : ViewBase
+internal class OptionsView(UiContext uiContext, AudioManager audioManager, World world, Chat chat) : ViewBase
 {
     internal Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
     internal Checkbox MusicsCheckbox => uiContext.Get<Checkbox>("Music");
@@ -50,8 +51,8 @@ internal class OptionsView(UiContext uiContext, AudioManager audioManager, GameC
 
         if (!Options.Instance.Musics)
             audioManager.StopMusic();
-        else if (context.CurrentMap?.Music != null)
-            audioManager.PlayMusic(context.CurrentMap.Music);
+        else if (world.CurrentMap?.Music != null)
+            audioManager.PlayMusic(world.CurrentMap!.Music);
         else
             audioManager.PlayMusic(Musics.Menu);
     }

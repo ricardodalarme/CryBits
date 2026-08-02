@@ -1,11 +1,12 @@
 using CryBits.Client.Core;
 using CryBits.Definitions.Maps;
+using CryBits.Simulation.Core;
 using Iguina.Entities;
 using Color = Iguina.Defs.Color;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class MapNameView(UiContext uiContext, GameContext context) : ViewBase
+internal class MapNameView(UiContext uiContext, World world) : ViewBase
 {
     private Label MapNameLabel => uiContext.Get<Label>("MapName");
 
@@ -19,7 +20,7 @@ internal class MapNameView(UiContext uiContext, GameContext context) : ViewBase
 
     private void OnPostDraw()
     {
-        var map = context.CurrentMap;
+        var map = world.CurrentMap;
         if (map == null) { MapNameLabel.Visible = false; return; }
 
         MapNameLabel.Visible = true;
