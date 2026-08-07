@@ -148,7 +148,7 @@ internal partial class EditorClassesWindow : Window
             return;
         }
 
-        SfmlRenderBlit.BlitTexture(Textures.Characters[textureIndex], imgTexturePreview, 4, 4);
+        imgTexturePreview.Blit(Textures.Characters[textureIndex], cols: 4, rows: 4);
     }
 
     private void butTexture_Ok_Click(object? sender, RoutedEventArgs e)

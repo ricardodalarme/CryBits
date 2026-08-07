@@ -1,17 +1,13 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using Avalonia.Threading;
 using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
-using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Utils;
-using SFML.Graphics;
-using SFML.System;
 
 namespace CryBits.Editors.Forms.Npcs;
 
@@ -28,12 +24,9 @@ internal partial class EditorNpcsWindow : Window
         window.Show();
     }
 
-    public static short CurrentTextureIndex { get; private set; }
+    private static short CurrentTextureIndex { get; set; }
 
     private Npc? _selected;
-
-    private WriteableBitmap? _previewBitmap;
-    private readonly DispatcherTimer? _timer;
 
     public EditorNpcsWindow(DefinitionCatalog catalog)
     {
@@ -46,30 +39,7 @@ internal partial class EditorNpcsWindow : Window
         cmbDrop_Item.ItemsSource = _catalog.Items.Values.ToList();
         cmbShop.ItemsSource = _catalog.Shops.Values.ToList();
 
-        PortraitRenderer.Instance.WinCharacter = new RenderTexture(new Vector2u(80, 80));
-
-        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
-        _timer.Tick += OnRenderTick;
-        _timer.Start();
-
         RefreshNpcList();
-    }
-
-    protected override void OnClosed(EventArgs e)
-    {
-        _timer?.Stop();
-        PortraitRenderer.Instance.WinCharacter?.Dispose();
-        PortraitRenderer.Instance.WinCharacter = null;
-        _previewBitmap?.Dispose();
-        base.OnClosed(e);
-    }
-
-    private void OnRenderTick(object? sender, EventArgs e)
-    {
-        if (PortraitRenderer.Instance.WinCharacter == null || CurrentTextureIndex <= 0) return;
-
-        PortraitRenderer.Instance.Character();
-        SfmlRenderBlit.Blit(PortraitRenderer.Instance.WinCharacter, ref _previewBitmap, imgTexture);
     }
 
     private void RefreshNpcList()
@@ -98,6 +68,7 @@ internal partial class EditorNpcsWindow : Window
 
         numTexture.Maximum = Math.Max(0, Textures.Characters.Count - 1);
         CurrentTextureIndex = npc.Texture;
+        UpdateTexturePreview(CurrentTextureIndex);
 
         cmbBehavior.SelectedIndex = (int)npc.Behaviour;
         cmbMovement.SelectedIndex = (int)npc.Movement;
@@ -121,6 +92,18 @@ internal partial class EditorNpcsWindow : Window
     private void numTexture_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         CurrentTextureIndex = (short)(e.NewValue ?? 0);
+        UpdateTexturePreview(CurrentTextureIndex);
+    }
+
+    private void UpdateTexturePreview(short textureIndex)
+    {
+        if (textureIndex <= 0 || textureIndex >= Textures.Characters.Count)
+        {
+            imgTexture.Source = null;
+            return;
+        }
+
+        imgTexture.Blit(Textures.Characters[textureIndex], cols: 4, rows: 4);
     }
 
     private void cmbBehavior_SelectionChanged(object? sender, SelectionChangedEventArgs e)

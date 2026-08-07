@@ -30,7 +30,6 @@ internal partial class EditorTilesWindow : Window
     private const int CanvasH = 443;
 
     private readonly TileEditorViewModel? _viewModel;
-    private WriteableBitmap? _bitmap;
     private readonly DispatcherTimer? _timer;
 
     public EditorTilesWindow()
@@ -56,7 +55,6 @@ internal partial class EditorTilesWindow : Window
         _timer?.Stop();
         TileRenderer.Instance.WinTile?.Dispose();
         TileRenderer.Instance.WinTile = null;
-        _bitmap?.Dispose();
         base.OnClosed(e);
     }
 
@@ -66,7 +64,7 @@ internal partial class EditorTilesWindow : Window
 
         TileRenderer.Instance.Tile(_viewModel.TileIndex, _viewModel.ScrollX, _viewModel.ScrollY,
             _viewModel.IsAttributeMode);
-        SfmlRenderBlit.Blit(TileRenderer.Instance.WinTile, ref _bitmap, imgCanvas);
+        imgCanvas.Blit(TileRenderer.Instance.WinTile);
     }
 
     private void imgCanvas_PointerPressed(object? sender, PointerPressedEventArgs e)

@@ -27,7 +27,6 @@ internal sealed partial class EditorUILayoutWindow : Window
     private readonly IguinaEditorPreview _preview;
     private readonly DispatcherTimer _timer;
     private readonly EditorUILayoutViewModel _viewModel;
-    private WriteableBitmap? _bitmap;
 
     public EditorUILayoutWindow()
     {
@@ -64,7 +63,7 @@ internal sealed partial class EditorUILayoutWindow : Window
     private void OnRenderTick(object? s, EventArgs e)
     {
         _preview.Draw();
-        SfmlRenderBlit.Blit(_preview.Target, ref _bitmap, imgPreview);
+        imgPreview.Blit(_preview.Target);
     }
 
     private void SelectScreen()

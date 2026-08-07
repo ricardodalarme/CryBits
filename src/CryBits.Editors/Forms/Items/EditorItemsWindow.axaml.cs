@@ -25,7 +25,6 @@ internal partial class EditorItemsWindow : Window
     public static short CurrentTextureIndex { get; private set; }
 
     private Item? _selected;
-    private WriteableBitmap? _textureBitmap;
 
     public EditorItemsWindow(DefinitionCatalog catalog)
     {
@@ -142,6 +141,6 @@ internal partial class EditorItemsWindow : Window
             return;
         }
 
-        SfmlRenderBlit.BlitTexture(Textures.Items[textureIndex], ref _textureBitmap, imgTexturePreview);
+        imgTexturePreview.Blit(Textures.Items[textureIndex]);
     }
 }

@@ -306,8 +306,6 @@ internal partial class EditorMapsWindow : Window
         MapRenderer.Instance.WinMap = null;
         MapRenderer.Instance.WinMapTile?.Dispose();
         MapRenderer.Instance.WinMapTile = null;
-        _mapBitmap?.Dispose();
-        _tileBitmap?.Dispose();
         Instance = null;
         base.OnClosed(e);
     }
@@ -329,7 +327,7 @@ internal partial class EditorMapsWindow : Window
         if (MapRenderer.Instance.WinMap != null && SelectedMap != null)
         {
             MapRenderer.Instance.EditorMapsMap();
-            SfmlRenderBlit.Blit(MapRenderer.Instance.WinMap, ref _mapBitmap, mapCanvasPane.ImgMap);
+            mapCanvasPane.ImgMap.Blit(MapRenderer.Instance.WinMap);
         }
 
         if (ModeNormal)
@@ -345,14 +343,11 @@ internal partial class EditorMapsWindow : Window
             }
 
             MapRenderer.Instance.EditorMapsTile();
-            SfmlRenderBlit.Blit(tileMap, ref _tileBitmap, tileSheetPane.ImgTile);
+            tileSheetPane.ImgTile.Blit(tileMap);
         }
 
         UpdateStatusBar();
     }
-
-    private WriteableBitmap? _mapBitmap;
-    private WriteableBitmap? _tileBitmap;
 
     // ── MAP SELECTION ─────────────────────────────────────────────────
 
