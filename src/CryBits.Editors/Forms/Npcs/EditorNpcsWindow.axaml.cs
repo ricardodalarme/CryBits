@@ -8,8 +8,8 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
-using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Graphics.Renderers;
+using CryBits.Editors.Utils;
 using SFML.Graphics;
 using SFML.System;
 

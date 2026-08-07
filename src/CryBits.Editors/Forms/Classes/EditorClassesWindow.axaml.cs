@@ -4,7 +4,7 @@ using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
-using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Utils;
 using Class = CryBits.Definitions.Classes.Class;
 using Map = CryBits.Definitions.Maps.Map;
 

@@ -6,9 +6,9 @@ using Avalonia.Threading;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Dtos;
 using CryBits.Client.Framework.UI;
-using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms.UI.ViewModels;
 using CryBits.Editors.Iguina;
+using CryBits.Editors.Utils;
 using Iguina.Entities;
 using System.Collections.ObjectModel;
 

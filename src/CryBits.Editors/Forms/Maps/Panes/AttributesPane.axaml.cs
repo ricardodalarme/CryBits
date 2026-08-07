@@ -3,7 +3,7 @@ using Avalonia.Interactivity;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
-using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Utils;
 using static CryBits.Editors.Forms.Maps.MapMath;
 using SystemRect = System.Drawing.Rectangle;
 

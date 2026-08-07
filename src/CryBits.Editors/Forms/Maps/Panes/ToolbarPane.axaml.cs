@@ -3,7 +3,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using CryBits.Client.Framework;
 using CryBits.Definitions.Maps;
-using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms.Classes;
 using CryBits.Editors.Forms.Items;
 using CryBits.Editors.Forms.Npcs;
@@ -11,6 +10,7 @@ using CryBits.Editors.Forms.Shops;
 using CryBits.Editors.Forms.Tiles;
 using CryBits.Editors.Forms.UI;
 using CryBits.Editors.Network;
+using CryBits.Editors.Utils;
 using DefinitionsTileData = CryBits.Definitions.Maps.TileData;
 using SystemRect = System.Drawing.Rectangle;
 

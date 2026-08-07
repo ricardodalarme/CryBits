@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Markup.Xaml;
 
-namespace CryBits.Editors.AvaloniaUI;
+namespace CryBits.Editors;
 
 internal sealed class App : Application
 {

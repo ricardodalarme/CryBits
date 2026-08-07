@@ -4,7 +4,7 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Shops;
-using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Utils;
 
 namespace CryBits.Editors.Forms.Shops;
 

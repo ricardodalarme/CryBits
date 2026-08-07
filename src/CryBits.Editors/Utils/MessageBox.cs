@@ -1,7 +1,7 @@
 using Avalonia.Threading;
 using MsBox.Avalonia;
 
-namespace CryBits.Editors.AvaloniaUI;
+namespace CryBits.Editors.Utils;
 
 /// <summary>
 /// Thin wrapper around MsBox.Avalonia so all existing call sites

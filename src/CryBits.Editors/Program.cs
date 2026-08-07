@@ -6,7 +6,6 @@ using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Network.Transport;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Definitions.Catalog;
-using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms.Login;
 using CryBits.Editors.Logic;

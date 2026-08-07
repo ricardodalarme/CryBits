@@ -5,7 +5,7 @@ using SFML.Graphics;
 using System.Runtime.InteropServices;
 using AvaloniaImage = Avalonia.Controls.Image;
 
-namespace CryBits.Editors.AvaloniaUI;
+namespace CryBits.Editors.Utils;
 
 /// <summary>
 /// Copies the pixel data from an SFML <see cref="RenderTexture"/> into an

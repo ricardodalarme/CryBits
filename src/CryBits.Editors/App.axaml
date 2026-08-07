@@ -1,5 +1,5 @@
 ﻿<Application
-    x:Class="CryBits.Editors.AvaloniaUI.App"
+    x:Class="CryBits.Editors.App"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dg="clr-namespace:Nox.Avalonia.DataGrid;assembly=Nox.Avalonia.DataGrid"

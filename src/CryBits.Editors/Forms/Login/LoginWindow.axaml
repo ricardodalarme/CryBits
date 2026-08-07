@@ -16,7 +16,7 @@
         <!--  Logo  -->
         <Image
             Height="141"
-            Source="avares://CryBits.Editors/AvaloniaUI/Assets/Logo.webp"
+            Source="avares://CryBits.Editors/Assets/logo.webp"
             Stretch="Uniform" />
 
         <!--  Two-column: instructions (left) + login fields (right)  -->

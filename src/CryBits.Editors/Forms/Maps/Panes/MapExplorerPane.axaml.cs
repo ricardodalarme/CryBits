@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
-using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Utils;
 using TextChangedEventArgs = Avalonia.Controls.TextChangedEventArgs;
 
 namespace CryBits.Editors.Forms.Maps.Panes;
