@@ -4,9 +4,12 @@
     "net10.0": {
       "linq2db": {
         "type": "Direct",
-        "requested": "[6.3.0, )",
-        "resolved": "6.3.0",
-        "contentHash": "Ew/IWZc9tNBgAYWCME1xN6/QkiVUNp9f3ozHrrugqh4vY3ny7Y8LTqhX8thG0WFPmWer+Kf9lilbFMYu5hXKyw=="
+        "requested": "[6.4.0, )",
+        "resolved": "6.4.0",
+        "contentHash": "HT7s5JztYQqM+Oz5ql9MVDTtTliKg/fkXPiShmjgtSZNAe1UOb4wQeJFA2qWJ77KbnC/KWtk5nr/hJ3Oypbqpg==",
+        "dependencies": {
+          "linq2db.Analyzers": "6.4.0"
+        }
       },
       "Microsoft.Data.Sqlite": {
         "type": "Direct",
@@ -28,6 +31,11 @@
           "SQLite": "3.53.4",
           "SQLitePCLRaw.config.e_sqlite3": "3.0.5"
         }
+      },
+      "linq2db.Analyzers": {
+        "type": "Transitive",
+        "resolved": "6.4.0",
+        "contentHash": "sW51KlWzXRrkv7cTyqZdnhpoBWU2+ItxNBjRtaQ1v/8ZdeFu6AIUvpo6UjQ5lvo0vcZnMBh/Eq/FpZ2FqDm7KQ=="
       },
       "MemoryPack.Core": {
         "type": "Transitive",
