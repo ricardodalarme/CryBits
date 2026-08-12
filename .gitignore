@@ -336,3 +336,6 @@ Dev/
 
 # MacOS
 .DS_Store
+
+# AI
+.opencode
