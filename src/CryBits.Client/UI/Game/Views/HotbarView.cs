@@ -2,7 +2,7 @@ using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Items;
-using System.Drawing;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -86,7 +86,7 @@ internal class HotbarView(
             var item = h.Definition;
             if (item == null) return;
             var panelRect = uiContext.Registry["HotbarPanel"].LastBoundingRect;
-            tooltip.Show(item, new Point(panelRect.X, panelRect.Y + 42));
+            tooltip.Show(item, new Vector2(panelRect.X, panelRect.Y + 42));
         }
     }
 
@@ -98,7 +98,8 @@ internal class HotbarView(
         {
             var rect = Grid.GetSlotRect(i);
             var hbSlot = viewModel.Slots[i];
-            if (hbSlot is { Slot: > 0, Type: SlotType.Item } && hbSlot.Definition is { } item) itemRenderer.DrawItem(item, 1, new Point(rect.X, rect.Y));
+            if (hbSlot is { Slot: > 0, Type: SlotType.Item } && hbSlot.Definition is { } item)
+                itemRenderer.DrawItem(item, 1, new Vector2(rect.X, rect.Y));
         }
     }
 }

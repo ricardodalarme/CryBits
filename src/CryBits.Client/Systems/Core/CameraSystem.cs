@@ -2,8 +2,7 @@ using CryBits.Client.Components;
 using CryBits.Client.Rendering.Camera;
 using CryBits.Client.Replication;
 using CryBits.Simulation.Core;
-using SFML.System;
-using System.Drawing;
+using Microsoft.Xna.Framework;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Core;
@@ -39,6 +38,6 @@ internal sealed class CameraSystem(ReplicationState replication, CameraManager c
         var right = (int)((cx + halfW) / Grid);
         var bottom = (int)((cy + halfH) / Grid);
 
-        cameraManager.ApplyFrame(new Vector2f(cx, cy), new Rectangle(left, top, right, bottom));
+        cameraManager.ApplyFrame(new Vector2(cx, cy), new Rectangle(left, top, right, bottom));
     }
 }

@@ -10,9 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="Iguina" />
-    <PackageReference Include="SFML.Audio" />
-    <PackageReference Include="SFML.Graphics" />
-    <PackageReference Include="SFML.Window" />
+    <PackageReference Include="MonoGame.Framework.Native" />
+    <PackageReference Include="FontStashSharp.MonoGame" />
     <PackageReference Include="MemoryPack" />
   </ItemGroup>
 
@@ -21,5 +20,6 @@
     <ProjectReference Include="../CryBits.Protocol/CryBits.Protocol.csproj" />
     <ProjectReference Include="../CryBits.Transport/CryBits.Transport.csproj" />
     <ProjectReference Include="../CryBits.Persistence/CryBits.Persistence.csproj" />
+    <ProjectReference Include="../../../Iguina.Drivers/src/Iguina.Drivers.MonoGame/Iguina.Drivers.MonoGame.csproj" />
   </ItemGroup>
 </Project>

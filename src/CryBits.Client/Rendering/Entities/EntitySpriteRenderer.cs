@@ -1,10 +1,10 @@
 using CryBits.Client.Components;
+using Microsoft.Xna.Framework.Graphics;
 using CryBits.Client.Framework.Assets;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using System.Drawing;
-using Color = SFML.Graphics.Color;
-using TextAlign = CryBits.Definitions.Common.TextAlign;
+using FontStashSharp;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.Rendering.Entities;
 
@@ -38,31 +38,29 @@ internal sealed class EntitySpriteRenderer(World world, SpriteBatch spriteBatch)
             if (transform == null || sprite == null || anim == null || name == null) continue;
 
             var sheet = SpriteSheet.Default;
-            var textureSize = sprite.Texture.ToSize();
-            var fw = sheet.FrameW(textureSize.Width);
-            var fh = sheet.FrameH(textureSize.Height);
+            var frameW = sheet.FrameW(sprite.Texture.Width);
+            var frameH = sheet.FrameH(sprite.Texture.Height);
             var isHurt = world.Has<HurtComponent>(entity);
 
-            DrawShadow(transform, fw, fh);
-            DrawSprite(transform, sprite, anim, fw, fh, isHurt);
+            DrawShadow(transform, frameW, frameH);
+            DrawSprite(transform, sprite, anim, frameW, frameH, isHurt);
             var nameColor = world.Get<NameColorComponent>(entity);
-            DrawName(transform, name, fw, fh, nameColor);
+            DrawName(transform, name, frameW, frameH, nameColor);
         }
     }
 
     private void DrawShadow(TransformComponent transform, int frameW, int frameH)
     {
         var texture = Textures.Shadow;
-        var shadowSize = texture.ToSize();
-        var source = new Rectangle(0, 0, shadowSize.Width, shadowSize.Height);
+        var source = new Rectangle(0, 0, texture.Width, texture.Height);
 
         var dest = new Rectangle(
             transform.X,
-            transform.Y + frameH - shadowSize.Height + 5,
+            transform.Y + frameH - texture.Height + 5,
             frameW,
-            shadowSize.Height);
+            texture.Height);
 
-        spriteBatch.Draw(texture, source, dest);
+        spriteBatch.Draw(texture, dest, source, Color.White);
     }
 
     private void DrawSprite(
@@ -79,13 +77,13 @@ internal sealed class EntitySpriteRenderer(World world, SpriteBatch spriteBatch)
             frameW,
             frameH);
 
-        var dest = source with { X = transform.X, Y = transform.Y };
+        var dest = new Rectangle(transform.X, transform.Y, source.Width, source.Height);
 
         var tint = isHurt
-            ? new Color(205, 125, 125, sprite.Tint.A)
+            ? new Color((byte)205, (byte)125, (byte)125, sprite.Tint.A)
             : sprite.Tint;
 
-        spriteBatch.Draw(sprite.Texture, source, dest, tint);
+        spriteBatch.Draw(sprite.Texture, dest, source, tint);
     }
 
     private void DrawName(
@@ -95,9 +93,13 @@ internal sealed class EntitySpriteRenderer(World world, SpriteBatch spriteBatch)
         int frameH,
         NameColorComponent? nameColor)
     {
-        var x = transform.X + (frameW / 2);
+        var font = Fonts.Default;
+        var textSize = font.MeasureString(appearance.Name);
+
+        var x = transform.X + (frameW / 2) - textSize.X / 2;
         var y = transform.Y - (frameH / 2);
         var color = nameColor?.Value ?? Color.White;
-        spriteBatch.DrawText(appearance.Name, x, y, color, TextAlign.Center);
+
+        spriteBatch.DrawString(font, appearance.Name, new Vector2(x, y), color);
     }
 }

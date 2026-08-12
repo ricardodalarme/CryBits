@@ -17,11 +17,9 @@
 
   <ItemGroup>
     <PackageReference Include="Iguina" />
-    <PackageReference Include="Iguina.Drivers.Sfml" />
+    <PackageReference Include="MonoGame.Framework.Native" />
+    <PackageReference Include="FontStashSharp.MonoGame" />
     <PackageReference Include="LiteNetLib" />
-    <PackageReference Include="SFML.Audio" />
-    <PackageReference Include="SFML.Graphics" />
-    <PackageReference Include="SFML.Window" />
   </ItemGroup>
 
   <ItemGroup>

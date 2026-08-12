@@ -4,7 +4,7 @@ using CryBits.Client.Rendering.UI;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using Iguina.Entities;
-using System.Drawing;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.UI.Menu.Views;
 
@@ -91,7 +91,7 @@ internal class CreateCharacterView(
         var textureNum = GetCurrentTextureNum();
         if (textureNum <= 0) return;
         var pos = FacePicture.LastBoundingRect;
-        characterRenderer.DrawFace(textureNum, new Point(pos.X, pos.Y));
+        characterRenderer.DrawFace(textureNum, new Vector2(pos.X, pos.Y));
     }
 
     private void RenderSprite()
@@ -99,7 +99,7 @@ internal class CreateCharacterView(
         var textureNum = GetCurrentTextureNum();
         if (textureNum <= 0) return;
         var pos = SpritePicture.LastBoundingRect;
-        characterRenderer.DrawCharacter(textureNum, new Point(pos.X, pos.Y), Direction.Down, 1);
+        characterRenderer.DrawCharacter(textureNum, new Vector2(pos.X, pos.Y), Direction.Down, 1);
     }
 
     private void OnCreatePressed(Entity _)

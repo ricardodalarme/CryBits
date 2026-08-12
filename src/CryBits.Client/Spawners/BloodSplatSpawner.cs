@@ -1,7 +1,7 @@
 using CryBits.Client.Components;
 using CryBits.Client.Framework.Assets;
 using CryBits.Simulation.Core;
-using System.Drawing;
+using Microsoft.Xna.Framework;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Spawners;
@@ -17,7 +17,7 @@ internal static class BloodSplatSpawner
 
         return world.SpawnBuilder()
             .With(new TransformComponent(tileX * Grid, tileY * Grid))
-            .With(new SpriteComponent(Textures.Blood, sourceRect, SFML.Graphics.Color.White))
+            .With(new SpriteComponent(Textures.Blood, sourceRect, Color.White))
             .With(new FadeComponent())
             .Id;
     }

@@ -7,7 +7,6 @@ using CryBits.Client.Framework.Persistence.Dtos;
 using CryBits.Client.Framework.UI;
 using CryBits.Editors.Forms.UI.ViewModels;
 using CryBits.Editors.Iguina;
-using CryBits.Editors.Utils;
 using Iguina.Entities;
 using System.Collections.ObjectModel;
 
@@ -61,8 +60,9 @@ internal sealed partial class EditorUILayoutWindow : Window
 
     private void OnRenderTick(object? s, EventArgs e)
     {
+        Graphics.EditorGraphics.Tick();
         _preview.Draw();
-        imgPreview.Blit(_preview.Target);
+        imgPreview.BlitRenderTarget(_preview.Target);
     }
 
     private void SelectScreen()

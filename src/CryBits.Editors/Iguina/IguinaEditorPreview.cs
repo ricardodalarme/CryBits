@@ -1,31 +1,43 @@
 using CryBits.Client.Framework.Constants;
+using CryBits.Editors.Graphics;
+using Iguina.Drivers.MonoGame;
+using FontStashSharp;
 using Iguina;
-using Iguina.Drivers.Sfml;
 using Iguina.Entities;
-using SFML.Graphics;
-using SFML.System;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CryBits.Editors.Iguina;
 
+/// <summary>
+/// Editor Iguina preview. Renders an Iguina UI into a <see cref="RenderTarget2D"/> using the
+/// MonoGame driver and a non-interactive input provider. The texture is then exposed to the
+/// editor through <see cref="Target"/>.
+/// </summary>
 internal sealed class IguinaEditorPreview : IDisposable
 {
-    private readonly SfmlRenderer _renderer;
+    private readonly MonoGameRenderer _renderer;
+    private readonly FontSystem _fonts = new();
+    private readonly SpriteBatch _spriteBatch;
     private Entity? _loadedEntity;
 
-    public RenderTexture Target { get; }
+    public RenderTarget2D Target { get; }
 
     public UISystem UISystem { get; }
 
-    public IguinaEditorPreview(int width, int height)
+    public IguinaEditorPreview(int width = 800, int height = 600, GraphicsDevice? device = null)
     {
-        Target = new RenderTexture(new Vector2u((uint)width, (uint)height));
+        var activeDevice = device ?? EditorGraphics.Device;
+        Target = new RenderTarget2D(activeDevice, width, height);
+        _spriteBatch = new SpriteBatch(activeDevice);
+
         var themePath = Directories.UiTheme.FullName;
         var fontPath = Path.Combine(AppContext.BaseDirectory, "Graphics", "Fonts", "Georgia.ttf");
-        _renderer = new SfmlRenderer(Target, themePath, new Font(fontPath));
-        var input = new StubInputProvider();
+        _fonts.AddFont(File.ReadAllBytes(fontPath));
 
-        var sPath = Path.Combine(themePath, "SystemStyle.json");
-        UISystem = new UISystem(sPath, _renderer, input);
+        _renderer = new MonoGameRenderer(activeDevice, _spriteBatch, _fonts, themePath);
+        // Use a stub input (non-interactive preview).
+        var input = new StubInputProvider();
+        UISystem = new UISystem(Path.Combine(themePath, "SystemStyle.json"), _renderer, input);
     }
 
     public void LoadEntity(Entity entity)
@@ -43,13 +55,17 @@ internal sealed class IguinaEditorPreview : IDisposable
 
     public void Draw()
     {
-        Target.Clear(Color.Black);
+        Target.GraphicsDevice.SetRenderTarget(Target);
+        Target.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
+        _renderer.StartFrame();
         UISystem.Draw();
-        Target.Display();
+        _renderer.EndFrame();
+        Target.GraphicsDevice.SetRenderTarget(null);
     }
 
     public void Dispose()
     {
         Target.Dispose();
+        _spriteBatch.Dispose();
     }
 }

@@ -1,6 +1,7 @@
 using CryBits.Client.Components;
+using Microsoft.Xna.Framework.Graphics;
 using CryBits.Simulation.Core;
-using System.Drawing;
+using Microsoft.Xna.Framework;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Rendering.Effects;

@@ -3,7 +3,7 @@ using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Items;
 using Iguina.Entities;
-using System.Drawing;
+using Microsoft.Xna.Framework;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Client.UI.Game.Views;
@@ -78,13 +78,13 @@ internal class CharacterView(
         var equipVM = viewModel.Equipment[slot];
         if (equipVM is not { Definition: { } item }) return;
 
-        tooltip.Show(item, new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5));
+        tooltip.Show(item, new Vector2(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5));
     }
 
     private void RenderFace()
     {
         var pos = FacePicture.LastBoundingRect;
-        characterRenderer.DrawFace(viewModel.TextureNum, new Point(pos.X, pos.Y));
+        characterRenderer.DrawFace(viewModel.TextureNum, new Vector2(pos.X, pos.Y));
     }
 
     private void OnAddStrengthPressed(Entity _) => viewModel.SpendPoint(Attribute.Strength);
@@ -118,7 +118,7 @@ internal class CharacterView(
         {
             var rect = EquipmentGrid.GetSlotRect(i);
             var item = viewModel.Equipment[i]?.Definition;
-            equipmentRenderer.DrawSlot(i, item, new Point(rect.X, rect.Y));
+            equipmentRenderer.DrawSlot(i, item, new Vector2(rect.X, rect.Y));
         }
     }
 }

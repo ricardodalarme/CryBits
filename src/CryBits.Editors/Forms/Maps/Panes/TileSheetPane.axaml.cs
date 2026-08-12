@@ -23,8 +23,8 @@ internal partial class TileSheetPane : UserControl
     /// <summary>Mouse position within the tile sheet (pixel coordinates).</summary>
     public SystemPoint TileMousePosition { get; set; }
 
-    public Image ImgTile => imgTile;
     public Border TileViewport => tileViewport;
+    public Image ImgTile => imgTile;
 
     /// <summary>Raised when the selected tile index, auto-tile, or scroll changes.</summary>
     public event Action? SelectionChanged;
@@ -77,9 +77,11 @@ internal partial class TileSheetPane : UserControl
         var pt = e.GetPosition(imgTile);
         var x = (int)(pt.X + scrlTileX.Value) / Globals.Grid;
         var y = (int)(pt.Y + scrlTileY.Value) / Globals.Grid;
-        var tex = Textures.Tiles[cmbTiles.SelectedIndex + 1];
-        if ((int)(pt.X + scrlTileX.Value) > tex.ToSize().Width) return;
-        if ((int)(pt.Y + scrlTileY.Value) > tex.ToSize().Height) return;
+        var texture = Textures.Tiles[cmbTiles.SelectedIndex + 1];
+
+        if (texture == null) return;
+        if ((int)(pt.X + scrlTileX.Value) > texture.Width) return;
+        if ((int)(pt.Y + scrlTileY.Value) > texture.Height) return;
 
         TileSelectionRect = new SystemRect(new SystemPoint(x, y), TileSelectionRect.Size);
         UpdateSelectedSize();
@@ -92,18 +94,18 @@ internal partial class TileSheetPane : UserControl
         var pt = e.GetPosition(imgTile);
         var x = (int)(pt.X + scrlTileX.Value) / Globals.Grid;
         var y = (int)(pt.Y + scrlTileY.Value) / Globals.Grid;
-        var tex = Textures.Tiles[cmbTiles.SelectedIndex + 1];
-        var size = tex.ToSize();
+        var texture = Textures.Tiles[cmbTiles.SelectedIndex + 1];
 
         TileMousePosition = new SystemPoint(
             (x * Globals.Grid) - (int)scrlTileX.Value,
             (y * Globals.Grid) - (int)scrlTileY.Value);
 
+        if (texture == null) return;
         if (!e.GetCurrentPoint(imgTile).Properties.IsLeftButtonPressed) return;
         if (chkAuto.IsChecked == true) return;
 
-        x = Math.Clamp(x, 0, (size.Width / Globals.Grid) - 1);
-        y = Math.Clamp(y, 0, (size.Height / Globals.Grid) - 1);
+        x = Math.Clamp(x, 0, (texture.Width / Globals.Grid) - 1);
+        y = Math.Clamp(y, 0, (texture.Height / Globals.Grid) - 1);
         TileSelectionRect = new SystemRect(
             TileSelectionRect.Location,
             new SystemSize(x - TileSelectionRect.X + 1, y - TileSelectionRect.Y + 1));
@@ -120,10 +122,13 @@ internal partial class TileSheetPane : UserControl
     private void UpdateScrollBounds()
     {
         if (cmbTiles.SelectedIndex < 0) return;
-        var texSize = Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize();
+
+        var texture = Textures.Tiles[cmbTiles.SelectedIndex + 1];
+        if (texture == null) return;
+
         var visibleW = Math.Max(1, (int)tileViewport.Bounds.Width);
         var visibleH = Math.Max(1, (int)tileViewport.Bounds.Height);
-        scrlTileX.Maximum = Math.Max(0, texSize.Width - visibleW);
-        scrlTileY.Maximum = Math.Max(0, texSize.Height - visibleH);
+        scrlTileX.Maximum = Math.Max(0, texture.Width - visibleW);
+        scrlTileY.Maximum = Math.Max(0, texture.Height - visibleH);
     }
 }

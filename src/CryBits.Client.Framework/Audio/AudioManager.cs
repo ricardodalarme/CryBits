@@ -1,26 +1,51 @@
 using CryBits.Client.Framework.Constants;
-using SFML.Audio;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace CryBits.Client.Framework.Audio;
 
 public class AudioManager
 {
-    /// <summary>Loaded sound instances keyed by filename.</summary>
-    public readonly Dictionary<string, Sound> Sounds = [];
+    /// <summary>Loaded sound effect instances keyed by filename.</summary>
+    public readonly Dictionary<string, SoundEffectInstance> Sounds = [];
 
-    // Current music playback device.
-    public Music? CurrentMusicDevice { get; private set; }
+    // Currently playing music track name.
+    public string? CurrentMusic { get; private set; }
 
-    // Currently playing music name.
-    public string CurrentMusicName { get; private set; } = string.Empty;
+    // Music volume
+    private const float MusicVolume = 0.20f;
+    private const float SoundVolume = 0.20f;
+
+    /// <summary>Whitelisted audio extensions for SoundEffect.</summary>
+    private static readonly HashSet<string> SoundExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".wav", ".xma", ".aiff", ".aif"
+    };
+
+    /// <summary>Whitelisted audio extensions for Song / MediaPlayer.</summary>
+    private static readonly HashSet<string> MusicExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".wma", ".mp3", ".m4a", ".aiff", ".aif", ".wav"
+    };
 
     public void LoadSounds()
     {
-        var files = Directories.Sounds.GetFiles();
+        if (!Directory.Exists(Directories.Sounds.FullName)) return;
 
-        // Load all files and add them to the list.
-        foreach (var file in files)
-            Sounds.Add(file.Name, new Sound(new SoundBuffer(file.FullName)));
+        foreach (var file in Directories.Sounds.GetFiles())
+        {
+            if (!SoundExtensions.Contains(file.Extension)) continue;
+
+            try
+            {
+                var effect = SoundEffect.FromFile(file.FullName);
+                Sounds.Add(file.Name, effect.CreateInstance());
+            }
+            catch
+            {
+                // Skip malformed / unsupported files rather than crashing the game.
+            }
+        }
     }
 
     public void PlaySound(string soundName, bool loop = false)
@@ -28,21 +53,19 @@ public class AudioManager
         if (!Options.Instance.Sounds) return;
         if (!Sounds.TryGetValue(soundName, out var sound)) return;
 
-        // Play sound.
-        sound.Volume = 20;
-        sound.IsLooping = loop;
+        sound.Volume = SoundVolume;
+        sound.IsLooped = loop;
         sound.Play();
     }
 
     public bool IsPlaying(string soundName)
     {
         if (!Sounds.TryGetValue(soundName, out var sound)) return false;
-        return sound.Status == SoundStatus.Playing;
+        return sound.State == SoundState.Playing;
     }
 
     public void StopAllSounds()
     {
-        // Stop all sounds.
         foreach (var sound in Sounds)
             sound.Value.Stop();
     }
@@ -50,26 +73,36 @@ public class AudioManager
     public void PlayMusic(string musicName, bool loop = false)
     {
         if (!Options.Instance.Musics) return;
-        var directory = Path.Combine(Directories.Musics.FullName, musicName);
+        if (!string.IsNullOrEmpty(CurrentMusic)) return;
 
-        // Return early if a music device already exists or file missing.
-        if (CurrentMusicDevice != null) return;
-        if (!File.Exists(directory)) return;
+        var path = Path.Combine(Directories.Musics.FullName, musicName);
+        if (!File.Exists(path)) return;
+        if (!MusicExtensions.Contains(Path.GetExtension(path))) return;
 
-        // Load audio file into SFML Music.
-        CurrentMusicDevice = new Music(directory) { Volume = 20, IsLooping = loop };
-
-        // Start playback.
-        CurrentMusicDevice.Play();
-        CurrentMusicName = musicName;
+        // Load audio file into a Song and start playback.
+        try
+        {
+            MediaPlayer.IsRepeating = loop;
+            MediaPlayer.Volume = MusicVolume;
+            MediaPlayer.Play(Song.FromUri(musicName, new Uri(path)));
+            CurrentMusic = musicName;
+        }
+        catch
+        {
+            // Skip unsupported formats silently.
+        }
     }
 
     public void StopMusic()
     {
-        // Stop and dispose current music.
-        CurrentMusicName = string.Empty;
-        CurrentMusicDevice?.Stop();
-        CurrentMusicDevice?.Dispose();
-        CurrentMusicDevice = null;
+        CurrentMusic = string.Empty;
+        try
+        {
+            MediaPlayer.Stop();
+        }
+        catch
+        {
+            // MediaPlayer may throw if no song is loaded.
+        }
     }
 }

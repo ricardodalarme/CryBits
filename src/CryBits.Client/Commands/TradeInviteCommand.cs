@@ -1,6 +1,6 @@
 using CryBits.Client.Network.Senders;
 using CryBits.Simulation.Intents;
-using SFML.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.Commands;
 

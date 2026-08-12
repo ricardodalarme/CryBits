@@ -1,30 +1,24 @@
 using CryBits.Client.Core;
+using Microsoft.Xna.Framework.Graphics;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Rendering.Camera;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Spatial;
-using SFML.Graphics;
-using SFML.System;
+using Microsoft.Xna.Framework;
 using static CryBits.Definitions.Globals;
-using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Rendering.Map;
 
 internal sealed class TilemapRenderer(SpriteBatch spriteBatch, World world, CameraManager cameraManager)
 {
-    private readonly Dictionary<int, VertexArray> _batches = [];
-
     public void DrawLayer(Layer layerType)
     {
         var map = world.CurrentMap;
         if (map == null || map.Chunks.Count == 0) return;
 
         var sight = cameraManager.TileSight;
-        var tint = new Color((byte)(map.ColorArgb >> 16), (byte)(map.ColorArgb >> 8), (byte)map.ColorArgb);
-
-        foreach (var va in _batches.Values)
-            va.Clear();
+        var tint = new Color((uint)map.ColorArgb);
 
         var startChunkX = (short)(sight.X / ChunkGrid.ChunkSize);
         var startChunkY = (short)(sight.Y / ChunkGrid.ChunkSize);
@@ -52,18 +46,15 @@ internal sealed class TilemapRenderer(SpriteBatch spriteBatch, World world, Came
                         var data = chunk.Tiles[tx, ty];
                         if (data is not { IsVisible: true } || data.Layer != layerType) continue;
 
-                        var va = GetBatch(data.Texture);
+                        if (data.IsAutoTile) continue;
 
-                        if (!data.IsAutoTile)
-                            AppendTile(va, tileX, tileY, data.SourceX * Grid, data.SourceY * Grid, Grid, Grid, tint);
+                        var texture = Textures.Tiles[data.Texture];
+                        var sourceRect = new Rectangle(data.SourceX * Grid, data.SourceY * Grid, Grid, Grid);
+                        var destRect = new Rectangle(tileX * Grid, tileY * Grid, Grid, Grid);
+
+                        spriteBatch.Draw(texture, destRect, sourceRect, tint);
                     }
             }
-
-        foreach (var (texIndex, va) in _batches)
-        {
-            if (va.VertexCount == 0) continue;
-            spriteBatch.RenderWindow.Draw(va, new RenderStates(Textures.Tiles[texIndex]));
-        }
     }
 
     public void DrawPanorama()
@@ -71,32 +62,6 @@ internal sealed class TilemapRenderer(SpriteBatch spriteBatch, World world, Came
         if (world.CurrentMap == null) return;
         var panorama = world.CurrentMap!.Panorama;
         if (panorama > 0)
-            spriteBatch.Draw(Textures.Panoramas[panorama], new System.Drawing.Point(0));
-    }
-
-    private VertexArray GetBatch(int textureIndex)
-    {
-        if (_batches.TryGetValue(textureIndex, out var va)) return va;
-
-        va = new VertexArray(PrimitiveType.Triangles);
-        _batches[textureIndex] = va;
-
-        return va;
-    }
-
-    private static void AppendTile(VertexArray va, int tileX, int tileY, float srcX, float srcY, float w, float h,
-        Color tint) =>
-        AppendQuad(va, tileX * Grid, tileY * Grid, srcX, srcY, w, h, tint);
-
-    private static void AppendQuad(VertexArray va, float px, float py, float srcX, float srcY, float w, float h,
-        Color tint)
-    {
-        va.Append(new Vertex(new Vector2f(px, py), tint, new Vector2f(srcX, srcY)));
-        va.Append(new Vertex(new Vector2f(px + w, py), tint, new Vector2f(srcX + w, srcY)));
-        va.Append(new Vertex(new Vector2f(px, py + h), tint, new Vector2f(srcX, srcY + h)));
-
-        va.Append(new Vertex(new Vector2f(px, py + h), tint, new Vector2f(srcX, srcY + h)));
-        va.Append(new Vertex(new Vector2f(px + w, py), tint, new Vector2f(srcX + w, srcY)));
-        va.Append(new Vertex(new Vector2f(px + w, py + h), tint, new Vector2f(srcX + w, srcY + h)));
+            spriteBatch.Draw(Textures.Panoramas[panorama], new Vector2(0, 0), Color.White);
     }
 }

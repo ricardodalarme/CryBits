@@ -3,9 +3,9 @@ using CryBits.Client.Rendering.UI;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Items;
 using Iguina.Entities;
+using Microsoft.Xna.Framework;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using Color = Iguina.Defs.Color;
-using DrawingPoint = System.Drawing.Point;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -27,11 +27,11 @@ internal class TooltipView(UiContext uiContext, ItemIconRenderer itemRenderer) :
         Hide();
     }
 
-    public void Show(Item item, DrawingPoint position, string? contextLine = null)
+    public void Show(Item item, Vector2 position, string? contextLine = null)
     {
         _currentItem = item;
 
-        Panel.Offset.SetPixels(position.X, position.Y);
+        Panel.Offset.SetPixels((int)position.X, (int)position.Y);
         TitleLabel.Offset.SetPixels(41, 6);
         DescriptionLabel.Offset.SetPixels(82, 20);
         ItemPicture.Offset.SetPixels(9, 21);
@@ -88,6 +88,6 @@ internal class TooltipView(UiContext uiContext, ItemIconRenderer itemRenderer) :
     {
         if (_currentItem == null) return;
         var rect = ItemPicture.LastBoundingRect;
-        itemRenderer.DrawItem(_currentItem, 1, new DrawingPoint(rect.X, rect.Y));
+        itemRenderer.DrawItem(_currentItem, 1, new Vector2(rect.X, rect.Y));
     }
 }

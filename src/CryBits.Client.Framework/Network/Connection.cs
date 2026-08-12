@@ -1,4 +1,3 @@
-using CryBits.Client.Framework.Network.Transport;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Client;
 using CryBits.Transport;

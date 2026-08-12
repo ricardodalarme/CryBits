@@ -2,54 +2,52 @@ using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Maps;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms.Maps;
-using SFML.Graphics;
-using System.Drawing;
+using SysRect = System.Drawing.Rectangle;
+using SysPoint = System.Drawing.Point;
+using Color = Microsoft.Xna.Framework.Color;
 using static CryBits.Definitions.Globals;
 using static CryBits.Editors.Forms.Maps.MapMath;
-using Color = SFML.Graphics.Color;
 
 namespace CryBits.Editors.Graphics.Renderers;
 
 internal class MapRenderer(Renderer renderer, MapInstance mapInstance, Func<EditorMapsWindow?> getMapsWindow)
 {
-    private EditorMapsWindow? Window => getMapsWindow();
+    public Microsoft.Xna.Framework.Graphics.RenderTarget2D? WinMap { get; set; }
+    public Microsoft.Xna.Framework.Graphics.RenderTarget2D? WinMapTile { get; set; }
 
-    public RenderTexture? WinMap;
-    public RenderTexture? WinMapTile;
+    private EditorMapsWindow? Window => getMapsWindow();
 
     public void EditorMapsTile()
     {
         var win = Window;
-        if (WinMapTile == null || win is not { ModeNormal: true }) return;
+        if (win is not { ModeNormal: true }) return;
 
-        WinMapTile.Clear(Color.Black);
         var texture = Textures.Tiles[win.TileSheetIndex + 1];
-        var position = new Point(win.TileScrollX, win.TileScrollY);
-        renderer.DrawTransparentBackground(WinMapTile);
-        renderer.Draw(WinMapTile, texture, new Rectangle(position, texture.ToSize()),
-            new Rectangle(new Point(0), texture.ToSize()));
-        renderer.DrawRectangle(WinMapTile,
-            new Rectangle(new Point(win.TileSource.X - position.X, win.TileSource.Y - position.Y), win.TileSource.Size),
+        if (texture == null) return;
+
+        var position = new SysPoint(win.TileScrollX, win.TileScrollY);
+        renderer.DrawTransparentBackground();
+        renderer.Draw(texture, new SysRect(position.X, position.Y, texture.Width, texture.Height),
+            new SysRect(0, 0, texture.Width, texture.Height));
+        renderer.DrawRectangle(
+            new SysRect(new SysPoint(win.TileSource.X - position.X, win.TileSource.Y - position.Y), win.TileSource.Size),
             new Color(165, 42, 42, 250));
-        renderer.DrawRectangle(WinMapTile, win.TileMouse.X, win.TileMouse.Y, Grid, Grid, new Color(65, 105, 225, 250));
-        WinMapTile.Display();
+        renderer.DrawRectangle(win.TileMouse.X, win.TileMouse.Y, Grid, Grid, new Color(65, 105, 225, 250));
     }
 
     public void EditorMapsMap()
     {
         var win = Window;
-        if (WinMap == null || win == null) return;
+        if (win == null) return;
         var selected = win.SelectedMap;
         if (selected == null) return;
 
-        WinMap.Clear(Color.Black);
         EditorMapsMapPanorama(selected);
         EditorMapsMapTiles(selected);
         EditorMapsMapWeather(selected);
         RenderFog(selected);
         EditorMapsMapGrids(selected);
         EditorMapsMapNpcs(selected);
-        WinMap.Display();
     }
 
     private void EditorMapsMapPanorama(Map map)
@@ -57,13 +55,17 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance, Func<Edit
         var win = Window!;
         if (win.ShowVisualizationSafe && map.Panorama > 0)
         {
-            var destiny = new Rectangle
+            var texture = Textures.Panoramas[map.Panorama];
+            if (texture == null) return;
+
+            var destiny = new SysRect
             {
                 X = win.MapScrollX * -Grid,
                 Y = win.MapScrollY * -Grid,
-                Size = Textures.Panoramas[map.Panorama].ToSize()
+                Width = texture.Width,
+                Height = texture.Height
             };
-            renderer.Draw(WinMap!, Textures.Panoramas[map.Panorama], destiny);
+            renderer.Draw(texture, destiny);
         }
     }
 
@@ -98,10 +100,12 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance, Func<Edit
                         var screenX = (worldX - scrollX) * Grid;
                         var screenY = (worldY - scrollY) * Grid;
 
-                        var source = new Rectangle(new Point(data.SourceX * Grid, data.SourceY * Grid),
-                            new Size(Grid, Grid));
-                        renderer.Draw(WinMap!, Textures.Tiles[data.Texture], source,
-                            new Rectangle(new Point(screenX, screenY), new Size(Grid, Grid)));
+                        var source = new SysRect(data.SourceX * Grid, data.SourceY * Grid, Grid, Grid);
+
+                        if (Textures.Tiles[data.Texture] is not { } texture) continue;
+
+                        renderer.Draw(texture, source,
+                            new SysRect(screenX, screenY, Grid, Grid));
                     }
             }
 
@@ -117,7 +121,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance, Func<Edit
                     {
                         var x = screenX + (tx * Grid * 16);
                         var y = screenY + (ty * Grid * 16);
-                        renderer.DrawRectangle(WinMap!, x, y, Grid * 16, Grid * 16,
+                        renderer.DrawRectangle(x, y, Grid * 16, Grid * 16,
                             (tx + ty) % 2 == 0 ? new Color(40, 40, 40, 120) : new Color(60, 60, 60, 120));
                     }
             }
@@ -178,11 +182,11 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance, Func<Edit
 
                         if (color.HasValue)
                         {
-                            renderer.Draw(WinMap!, Textures.Blank,
-                                new Rectangle(new Point(screenX, screenY), new Size(Grid, Grid)),
+                            renderer.Draw(Textures.Blank,
+                                new SysRect(screenX, screenY, Grid, Grid),
                                 color.Value);
                             if (letter != null)
-                                renderer.DrawText(WinMap!, letter, screenX, screenY, Color.White);
+                                renderer.DrawText((screenX, screenY), letter, Color.White);
                         }
                     }
             }
@@ -193,18 +197,20 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance, Func<Edit
         var win = Window!;
         if (map.DefaultFog is not { Texture: > 0 } || !win.ShowVisualizationSafe) return;
 
-        var textureSize = Textures.Fogs[map.DefaultFog.Texture].ToSize();
+        var texture = Textures.Fogs[map.DefaultFog.Texture];
+        if (texture == null) return;
+
         var tilesW = (win.MapCanvasWidth / Grid / ChunkSize) + 2;
         var tilesH = (win.MapCanvasHeight / Grid / ChunkSize) + 2;
 
         for (var x = -1; x <= tilesW; x++)
             for (var y = -1; y <= tilesH; y++)
             {
-                var position = new Point((x * textureSize.Width) + mapInstance.FogX,
-                    (y * textureSize.Height) + mapInstance.FogY);
-                renderer.Draw(WinMap!, Textures.Fogs[map.DefaultFog.Texture],
-                    new Rectangle(position, textureSize),
-                    new Color(255, 255, 255, map.DefaultFog.Alpha));
+                var position = new SysPoint((x * texture.Width) + mapInstance.FogX,
+                    (y * texture.Height) + mapInstance.FogY);
+                renderer.Draw(texture,
+                    new SysRect(position.X, position.Y, texture.Width, texture.Height),
+                    new Color(255, 255, 255, (int)map.DefaultFog.Alpha));
             }
     }
 
@@ -213,24 +219,26 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance, Func<Edit
         var win = Window!;
         if (!win.ShowVisualizationSafe || map.DefaultWeather == WeatherType.None) return;
 
-        byte srcX = 0;
+        var srcX = 0;
         if (map.DefaultWeather == WeatherType.Snow) srcX = 32;
 
         foreach (var t in mapInstance.Weather)
             if (t.Visible)
-                renderer.Draw(WinMap!, Textures.Weather, new Rectangle(srcX, 0, 32, 32),
-                    new Rectangle(t.X, t.Y, 32, 32),
+                renderer.Draw(Textures.Weather, new SysRect(srcX, 0, 32, 32),
+                    new SysRect(t.X, t.Y, 32, 32),
                     new Color(255, 255, 255, 150));
     }
 
     private void EditorMapsMapGrids(Map map)
     {
         var win = Window!;
-        Rectangle source = win.TileSource, destiny = new();
-        var begin = new Point(win.MapSelection.X - win.MapScrollX, win.MapSelection.Y - win.MapScrollY);
+        SysRect source = win.TileSource, destiny = new();
+        var begin = new SysPoint(win.MapSelection.X - win.MapScrollX, win.MapSelection.Y - win.MapScrollY);
 
-        destiny.Location = new Point(begin.X * Grid, begin.Y * Grid);
-        destiny.Size = new Size(source.Width, source.Height);
+        destiny.X = begin.X * Grid;
+        destiny.Y = begin.Y * Grid;
+        destiny.Width = source.Width;
+        destiny.Height = source.Height;
 
         if (win.ShowGrid)
         {
@@ -250,23 +258,24 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance, Func<Edit
                             var worldY = (cy * ChunkSize) + ty;
                             var gx = (worldX - scrollX) * Grid;
                             var gy = (worldY - scrollY) * Grid;
-                            renderer.DrawRectangle(WinMap!, gx, gy, Grid, Grid,
-                                new Color(25, 25, 25, 70));
+                            renderer.DrawRectangle(gx, gy, Grid, Grid, new Color(25, 25, 25, 70));
                         }
         }
 
         if (!win.AutoTile && win.ModeNormal)
         {
+            var tileTexture = Textures.Tiles[win.TileSheetIndex + 1];
+            if (tileTexture == null) return;
             if (win.ToolPencil)
-                renderer.Draw(WinMap!, Textures.Tiles[win.TileSheetIndex + 1], source, destiny);
+                renderer.Draw(tileTexture, source, destiny);
             else if (win.ToolRectangle)
                 for (var x = begin.X; x < begin.X + win.MapSelection.Width; x++)
                     for (var y = begin.Y; y < begin.Y + win.MapSelection.Height; y++)
-                        renderer.Draw(WinMap!, Textures.Tiles[win.TileSheetIndex + 1], source,
-                            new Rectangle(new Point(x * Grid, y * Grid), destiny.Size));
+                        renderer.Draw(tileTexture, source,
+                            new SysRect(x * Grid, y * Grid, destiny.Width, destiny.Height));
         }
 
-        renderer.DrawRectangle(WinMap!, destiny.X, destiny.Y, win.MapSelection.Width * Grid,
+        renderer.DrawRectangle(destiny.X, destiny.Y, win.MapSelection.Width * Grid,
             win.MapSelection.Height * Grid);
     }
 
@@ -278,11 +287,11 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance, Func<Edit
         for (byte i = 0; i < map.Npc.Count; i++)
             if (map.Npc[i].Spawn)
             {
-                var position = new Point((map.Npc[i].X - win.MapScrollX) * Grid,
+                var position = new SysPoint((map.Npc[i].X - win.MapScrollX) * Grid,
                     (map.Npc[i].Y - win.MapScrollY) * Grid);
-                renderer.Draw(WinMap!, Textures.Blank, new Rectangle(position, new Size(Grid, Grid)),
+                renderer.Draw(Textures.Blank, new SysRect(position.X, position.Y, Grid, Grid),
                     new Color(0, 220, 0, 150));
-                renderer.DrawText(WinMap!, (i + 1).ToString(), position.X + 10, position.Y + 10, Color.White);
+                renderer.DrawText((position.X + 10, position.Y + 10), (i + 1).ToString(), Color.White);
             }
     }
 }

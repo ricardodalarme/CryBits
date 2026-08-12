@@ -1,22 +1,23 @@
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Rendering.Entities;
 using CryBits.Definitions.Common;
-using System.Drawing;
-using Color = SFML.Graphics.Color;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CryBits.Client.Rendering.UI;
 
 internal sealed class PortraitRenderer(SpriteBatch spriteBatch)
 {
-    public void DrawFace(short textureNum, Point position) =>
-        spriteBatch.Draw(Textures.Faces[textureNum], position);
+    public void DrawFace(short textureNum, Vector2 position) =>
+        spriteBatch.Draw(Textures.Faces[textureNum], position, Color.White);
 
-    public void DrawCharacter(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
+    public void DrawCharacter(short textureNum, Vector2 position, Direction direction, byte column, bool hurt = false)
     {
         var sheet = SpriteSheet.Default;
-        var size = Textures.Characters[textureNum].ToSize();
-        var frameW = sheet.FrameW(size.Width);
-        var frameH = sheet.FrameH(size.Height);
+
+        if (Textures.Characters[textureNum] is not { } texture) return;
+        var frameW = sheet.FrameW(texture.Width);
+        var frameH = sheet.FrameH(texture.Height);
         var line = sheet.RowForDirection(direction);
 
         var recSource = new Rectangle(
@@ -25,18 +26,19 @@ internal sealed class PortraitRenderer(SpriteBatch spriteBatch)
             frameW,
             frameH);
 
-        var recDestiny = new Rectangle(position, recSource.Size);
+        var recDestiny = new Rectangle((int)position.X, (int)position.Y, recSource.Width, recSource.Height);
         var color = hurt ? new Color(205, 125, 125) : new Color(255, 255, 255);
 
         DrawShadow(position, frameW, frameH);
-        spriteBatch.Draw(Textures.Characters[textureNum], recSource, recDestiny, color);
+        spriteBatch.Draw(texture, recDestiny, recSource, color);
     }
 
-    public void DrawShadow(Point position, int frameW, int frameH)
+    public void DrawShadow(Vector2 position, int frameW, int frameH)
     {
-        var shadowSize = Textures.Shadow.ToSize();
-        spriteBatch.Draw(Textures.Shadow, position.X,
-            position.Y + frameH - shadowSize.Height + 5, 0, 0,
-            frameW, shadowSize.Height);
+        var shadow = Textures.Shadow;
+
+        spriteBatch.Draw(shadow,
+            new Rectangle((int)position.X, (int)position.Y + frameH - shadow.Height + 5, frameW, shadow.Height),
+            Color.White);
     }
 }

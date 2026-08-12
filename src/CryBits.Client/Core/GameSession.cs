@@ -1,4 +1,5 @@
 using CryBits.Client.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Input;
 using CryBits.Client.Network.Handlers;
@@ -88,20 +89,8 @@ internal sealed class GameSession : IDisposable
             shopViewModel
         );
 
-        CameraManager = new CameraManager(spriteBatch.RenderWindow);
-        var groundRenderers = new List<IRenderer>
-        {
-            new GroundSpriteRenderer(World, spriteBatch), new EntitySpriteRenderer(World, spriteBatch)
-        };
-        var fringeRenderers = new List<IRenderer>
-        {
-            new HealthBarRenderer(World, spriteBatch),
-            new WeatherParticleRenderer(World, spriteBatch),
-            new FogRenderer(World, spriteBatch)
-        };
-        var tilemapRenderer = new TilemapRenderer(spriteBatch, World, CameraManager);
-        RenderPipeline = new RenderPipeline(spriteBatch, CameraManager, tilemapRenderer, uiContext, groundRenderers,
-            fringeRenderers);
+        CameraManager = new CameraManager(spriteBatch);
+        RenderPipeline = new RenderPipeline(World, spriteBatch, CameraManager);
 
         var mapRepo = new MapRepository();
         var contentSender = new ContentSender(connection);

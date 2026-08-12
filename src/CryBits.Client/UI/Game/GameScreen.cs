@@ -1,9 +1,9 @@
 using CryBits.Client.Core;
+using Microsoft.Xna.Framework.Graphics;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Input;
-using CryBits.Client.Rendering;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Client.UI.Game.Views;

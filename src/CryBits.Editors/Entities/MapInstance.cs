@@ -39,7 +39,10 @@ internal class MapInstance(AudioManager audio, Func<EditorMapsWindow?> getMapsWi
         var map = Window!.SelectedMap!;
         var fog = map.DefaultFog;
         if (fog == null) return;
-        var textureSize = Textures.Fogs[fog.Texture].ToSize();
+
+        var texture = Textures.Fogs[fog.Texture];
+        if (texture == null) return;
+
         int speed = fog.SpeedX;
 
         if (_fogXTimer >= Environment.TickCount64) return;
@@ -48,12 +51,12 @@ internal class MapInstance(AudioManager audio, Func<EditorMapsWindow?> getMapsWi
         if (speed < 0)
         {
             FogX--;
-            if (FogX < -textureSize.Width) FogX = 0;
+            if (FogX < -texture.Width) FogX = 0;
         }
         else
         {
             FogX++;
-            if (FogX > textureSize.Width) FogX = 0;
+            if (FogX > texture.Width) FogX = 0;
         }
 
         if (speed < 0) speed *= -1;
@@ -64,22 +67,25 @@ internal class MapInstance(AudioManager audio, Func<EditorMapsWindow?> getMapsWi
     {
         var map = Window!.SelectedMap!;
         var fog = map.DefaultFog;
+
         if (fog == null) return;
-        var textureSize = Textures.Fogs[fog.Texture].ToSize();
+
+        var texture = Textures.Fogs[fog.Texture];
         int speed = fog.SpeedY;
 
+        if (texture == null) return;
         if (_fogYTimer >= Environment.TickCount64) return;
         if (speed == 0) return;
 
         if (speed < 0)
         {
             FogY--;
-            if (FogY < -textureSize.Height) FogY = 0;
+            if (FogY < -texture.Height) FogY = 0;
         }
         else
         {
             FogY++;
-            if (FogY > textureSize.Height) FogY = 0;
+            if (FogY > texture.Height) FogY = 0;
         }
 
         if (speed < 0) speed *= -1;

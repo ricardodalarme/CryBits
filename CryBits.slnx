@@ -3,6 +3,7 @@
     <Project Path="src/CryBits.Definitions/CryBits.Definitions.csproj" />
     <Project Path="src/CryBits.Protocol/CryBits.Protocol.csproj" />
     <Project Path="src/CryBits.Transport/CryBits.Transport.csproj" />
+    <Project Path="../Iguina.Drivers/src/Iguina.Drivers.MonoGame/Iguina.Drivers.MonoGame.csproj" />
     <Project Path="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
     <Project Path="src/CryBits.Client.Launcher/CryBits.Client.Launcher.csproj">
       <BuildDependency Project="src/CryBits.Client/CryBits.Client.csproj" />

@@ -1,88 +1,54 @@
 using Iguina;
-using SFML.Graphics;
-using SFML.System;
-using SFML.Window;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace CryBits.Client.Input;
 
-public class InputManager
+public class InputManager(UISystem system)
 {
-    private readonly UISystem _uiSystem;
-    private readonly RenderWindow _renderWindow;
+    private readonly UISystem _uiSystem = system;
+
+    private KeyboardState _previousKeyboardState;
+    private KeyboardState _currentKeyboardState;
+    private MouseState _currentMouseState;
+
+    /// <summary>Fired when a key is released this frame.</summary>
+    public event Action<Keys>? OnKeyReleased;
 
     /// <summary>
-    /// Tracks window focus state. Set by LostFocus/GainedFocus events in Renderer.Init().
+    /// Capture the current input state. Call once per Update frame.
+    /// Detects key-release transitions vs the previous frame and invokes OnKeyReleased event.
     /// </summary>
-    public bool IsFocused { get; set; } = true;
-
-    public event EventHandler<MouseButtonEventArgs>? MouseButtonPressed;
-    public event EventHandler<MouseButtonEventArgs>? MouseButtonReleased;
-    public event EventHandler<MouseMoveEventArgs>? MouseMoved;
-    public event EventHandler<KeyEventArgs>? KeyPressed;
-    public event EventHandler<KeyEventArgs>? KeyReleased;
-    public event EventHandler<TextEventArgs>? TextEntered;
-
-    private readonly HashSet<Keyboard.Key> _pressedThisFrame = [];
-    private readonly HashSet<Keyboard.Key> _releasedThisFrame = [];
-
-    public InputManager(UISystem system, RenderWindow window)
+    public void Capture()
     {
-        _uiSystem = system;
-        _renderWindow = window;
+        _previousKeyboardState = _currentKeyboardState;
+        _currentKeyboardState = Keyboard.GetState();
+        _currentMouseState = Mouse.GetState();
 
-        window.MouseButtonPressed += (s, e) => MouseButtonPressed?.Invoke(s, e);
-        window.MouseButtonReleased += (s, e) => MouseButtonReleased?.Invoke(s, e);
-        window.MouseMoved += (s, e) => MouseMoved?.Invoke(s, e);
-        window.KeyPressed += (s, e) =>
-        {
-            _pressedThisFrame.Add(e.Code);
-            KeyPressed?.Invoke(s, e);
-        };
-        window.KeyReleased += (s, e) =>
-        {
-            _releasedThisFrame.Add(e.Code);
-            KeyReleased?.Invoke(s, e);
-        };
-        window.TextEntered += (s, e) => TextEntered?.Invoke(s, e);
-    }
-
-    public void BeginFrame()
-    {
-        _pressedThisFrame.Clear();
-        _releasedThisFrame.Clear();
+        foreach (var key in _previousKeyboardState.GetPressedKeys())
+            if (_currentKeyboardState.IsKeyUp(key))
+                OnKeyReleased?.Invoke(key);
     }
 
     /// <summary>
-    /// Checks if a key is currently held down using layout-independent scancodes.
-    /// Preferred for movement and game actions where physical key position matters.
+    /// Checks if a key is currently held down. Polled from the MonoGame keyboard state.
+    /// Skips input when window is unfocused or a UI element has focus.
     /// </summary>
-    public bool IsScancodePressed(Keyboard.Scancode scancode)
+    public bool IsKeyDown(Keys key)
     {
-        if (!IsFocused) return false;
         if (_uiSystem.FocusedEntity != null) return false;
-
-        return Keyboard.IsScancodePressed(scancode);
+        return _currentKeyboardState.IsKeyDown(key);
     }
 
-    public bool IsKeyPressed(Keyboard.Key key)
+    /// <summary>Returns true if the key was released this frame.</summary>
+    public bool WasKeyReleased(Keys key)
     {
-        if (!IsFocused) return false;
         if (_uiSystem.FocusedEntity != null) return false;
-
-        return Keyboard.IsKeyPressed(key);
-    }
-
-    public bool WasKeyReleased(Keyboard.Key key)
-    {
-        if (!IsFocused) return false;
-        if (_uiSystem.FocusedEntity != null) return false;
-
-        return _releasedThisFrame.Contains(key);
+        return _previousKeyboardState.IsKeyDown(key) && _currentKeyboardState.IsKeyUp(key);
     }
 
     /// <summary>
     /// Current mouse position relative to the game window in screen pixels.
-    /// Use this for UI hit-testing.
     /// </summary>
-    public Vector2i MousePosition => Mouse.GetPosition(_renderWindow);
+    public Point MousePosition => _currentMouseState.Position;
 }

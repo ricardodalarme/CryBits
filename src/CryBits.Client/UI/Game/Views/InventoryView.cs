@@ -2,7 +2,7 @@ using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Items;
-using System.Drawing;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -116,7 +116,7 @@ internal class InventoryView(
             additionalInfo = "Sale price: " + price;
 
         var panelRect = uiContext.Registry["InventoryPanel"].LastBoundingRect;
-        tooltip.Show(item, new Point(panelRect.X - 186, panelRect.Y + 3), additionalInfo);
+        tooltip.Show(item, new Vector2(panelRect.X - 186, panelRect.Y + 3), additionalInfo);
     }
 
     private void OnPostDraw()
@@ -130,7 +130,7 @@ internal class InventoryView(
             if (itemVM == null || itemVM.ItemId == Guid.Empty) continue;
             var item = itemVM.Definition;
             if (item != null)
-                itemRenderer.DrawItem(item, itemVM.Amount, new Point(rect.X, rect.Y));
+                itemRenderer.DrawItem(item, itemVM.Amount, new Vector2(rect.X, rect.Y));
         }
     }
 }

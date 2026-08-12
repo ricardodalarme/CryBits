@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
@@ -11,21 +12,31 @@ using CryBits.Editors.Forms.Login;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Editors.Network.Handlers;
+
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Editors;
 
 internal static class Program
 {
-    private static void Main()
+    /// <summary>
+    /// The active MonoGame <see cref="Microsoft.Xna.Framework.Graphics.GraphicsDevice"/> in the
+    /// editor process. Set by the first editor window that creates an <see cref="EditorGame"/>;
+    /// used by <see cref="Forms.UI.EditorUILayoutWindow"/> and
+    /// <see cref="Forms.UI.EditorUIThemeWindow"/> for their Iguina previews.
+    /// </summary>
+    public static Microsoft.Xna.Framework.Graphics.GraphicsDevice? SharedDevice { get; set; }
+
+    public static void Main()
     {
         Directories.Create();
         OptionsRepository.Read();
+        EditorGraphics.Initialize();
 
         // ── Create all infrastructure ──
         var audio = new AudioManager();
         var catalog = new DefinitionCatalog();
-        var renderer = new Renderer();
+        var renderer = EditorGraphics.Renderer;
         var clientTransport = new UdpClientTransport();
         clientTransport.Connect("localhost", Config.Port, Config.GameName);
         var connection = new Connection(clientTransport);
@@ -63,7 +74,7 @@ internal static class Program
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
             if (Application.Current?.ApplicationLifetime is
-                Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+                IClassicDesktopStyleApplicationLifetime desktop)
                 foreach (var win in desktop.Windows.ToArray())
                     win.Close();
 

@@ -1,11 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
 using CryBits.Editors.Iguina;
-using CryBits.Editors.Utils;
 
 namespace CryBits.Editors.Forms.UI;
 
-internal partial class EditorUIThemeWindow : Window
+internal sealed partial class EditorUIThemeWindow : Window
 {
     private readonly IguinaEditorPreview _preview;
     private readonly DispatcherTimer _timer;
@@ -35,6 +34,6 @@ internal partial class EditorUIThemeWindow : Window
     private void OnRenderTick(object? s, EventArgs e)
     {
         _preview.Draw();
-        imgPreview.Blit(_preview.Target);
+        imgPreview.BlitRenderTarget(_preview.Target);
     }
 }

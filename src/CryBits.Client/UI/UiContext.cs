@@ -1,12 +1,14 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Framework.UI;
+using Iguina.Drivers.MonoGame;
+using FontStashSharp;
 using Iguina;
-using Iguina.Drivers.Sfml;
 using Iguina.Entities;
-using SFML.Graphics;
-using SFML.System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics.CodeAnalysis;
+
 namespace CryBits.Client.UI;
 
 public enum ScreenType
@@ -18,8 +20,10 @@ public enum ScreenType
 internal sealed class UiContext : IDisposable
 {
     private Entity? _currentScreen;
+    private readonly MonoGameRenderer _renderer;
+    private readonly MonoGameInputProvider _input;
 
-    public RenderTexture Target { get; }
+    public RenderTarget2D Target { get; }
     public UISystem UISystem { get; }
     public Dictionary<string, Entity> Registry { get; } = [];
     public ScreenType CurrentScreen { get; set; }
@@ -39,21 +43,23 @@ internal sealed class UiContext : IDisposable
         return false;
     }
 
-    public UiContext(uint width, uint height, RenderWindow window)
+    public UiContext(GameWindow window, GraphicsDevice device, SpriteBatch spriteBatch, int width, int height)
     {
         var themePath = Directories.UiTheme.FullName;
         if (!Directory.Exists(themePath))
             throw new DirectoryNotFoundException($"UI theme directory not found: {themePath}");
 
-        Target = new RenderTexture(new Vector2u(width, height));
+        Target = new RenderTarget2D(device, width, height);
 
         var fontPath = Path.Combine(AppContext.BaseDirectory, "Graphics", "Fonts", "Georgia.ttf");
-        var renderer = new SfmlRenderer(Target, themePath, new Font(fontPath));
+        var fontSystem = new FontSystem();
+        fontSystem.AddFont(File.ReadAllBytes(fontPath));
 
-        var input = new SfmlInputProvider(window);
+        _renderer = new MonoGameRenderer(device, spriteBatch, fontSystem, themePath);
+        _input = new MonoGameInputProvider(window);
         var sPath = Path.Combine(themePath, "SystemStyle.json");
 
-        UISystem = new UISystem(sPath, renderer, input);
+        UISystem = new UISystem(sPath, _renderer, _input);
     }
 
     public void LoadScreen(string screenName)
@@ -92,16 +98,21 @@ internal sealed class UiContext : IDisposable
         UISystem.Update(deltaTime);
     }
 
-    public void Draw()
+    /// <summary>Drive the MonoGame input provider once per frame before UI update.</summary>
+    public void StartInputFrame(GameTime gameTime)
     {
-        if (Target == null || UISystem == null) return;
-        Target.Clear(new Color(0, 0, 0, 0));
-        UISystem.Draw();
-        Target.Display();
+        _input.StartFrame(gameTime);
+    }
+
+    /// <summary>End the input provider's frame (must be called after Update).</summary>
+    public void EndInputFrame()
+    {
+        _input.EndFrame();
     }
 
     public void Dispose()
     {
+        _input.Dispose();
         Target?.Dispose();
     }
 }

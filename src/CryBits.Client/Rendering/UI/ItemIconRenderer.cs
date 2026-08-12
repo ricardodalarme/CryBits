@@ -1,7 +1,8 @@
 using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Items;
-using System.Drawing;
-using Color = SFML.Graphics.Color;
+using FontStashSharp;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CryBits.Client.Rendering.UI;
 
@@ -10,10 +11,11 @@ internal sealed class ItemIconRenderer(SpriteBatch spriteBatch)
     /// <summary>
     /// Render an item icon and its amount at an already-computed screen position.
     /// </summary>
-    public void DrawItem(Item item, short amount, Point position)
+    public void DrawItem(Item item, short amount, Vector2 position)
     {
         if (item == null) return;
-        spriteBatch.Draw(Textures.Items[item.Texture], position);
-        if (amount > 1) spriteBatch.DrawText(amount.ToString(), position.X + 2, position.Y + 17, Color.White);
+        spriteBatch.Draw(Textures.Items[item.Texture], position, Color.White);
+        if (amount > 1)
+            spriteBatch.DrawString(Fonts.Default, amount.ToString(), new Vector2(position.X + 2, position.Y + 17), Color.White);
     }
 }

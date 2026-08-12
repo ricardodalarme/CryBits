@@ -3,7 +3,7 @@ using CryBits.Client.Network.Senders;
 using CryBits.Definitions.Common;
 using CryBits.Simulation.Intents;
 using Iguina.Entities;
-using SFML.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.UI.Game;
 

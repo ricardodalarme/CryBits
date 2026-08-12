@@ -3,7 +3,7 @@ using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Common;
 using Iguina.Entities;
-using System.Drawing;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -164,7 +164,7 @@ internal class TradeView(
             var rect = OwnGrid.GetSlotRect(i);
             var offer = ownOffer[i];
             if (offer != null && offer.Definition is { } item)
-                itemRenderer.DrawItem(item, offer.Amount, new Point(rect.X, rect.Y));
+                itemRenderer.DrawItem(item, offer.Amount, new Vector2(rect.X, rect.Y));
         }
 
         if (theirOffer == null) return;
@@ -174,7 +174,7 @@ internal class TradeView(
             var rect = TheirGrid.GetSlotRect(i);
             var offer = theirOffer[i];
             if (offer != null && offer.Definition is { } item)
-                itemRenderer.DrawItem(item, offer.Amount, new Point(rect.X, rect.Y));
+                itemRenderer.DrawItem(item, offer.Amount, new Vector2(rect.X, rect.Y));
         }
     }
 }

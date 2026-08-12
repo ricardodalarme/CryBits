@@ -1,4 +1,4 @@
-using SFML.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.Components;
 

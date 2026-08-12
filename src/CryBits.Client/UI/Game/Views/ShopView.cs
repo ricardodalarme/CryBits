@@ -3,7 +3,7 @@ using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Shops;
 using Iguina.Entities;
-using System.Drawing;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -83,7 +83,7 @@ internal class ShopView(
         if (itemVM.Definition is not { } item) return;
 
         tooltip.Show(item,
-            new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5),
+            new Vector2(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5),
             "Price: " + itemVM.Price);
     }
 
@@ -97,7 +97,7 @@ internal class ShopView(
             var rect = Grid.GetSlotRect(i);
             var itemVM = viewModel.SoldItems[i];
             if (itemVM.Definition is { } item)
-                itemRenderer.DrawItem(item, itemVM.Amount, new Point(rect.X, rect.Y));
+                itemRenderer.DrawItem(item, itemVM.Amount, new Vector2(rect.X, rect.Y));
         }
     }
 }

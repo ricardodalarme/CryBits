@@ -5,7 +5,7 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Npcs;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using SFML.Graphics;
+using Microsoft.Xna.Framework;
 using Direction = CryBits.Definitions.Common.Direction;
 using MovementState = CryBits.Definitions.Common.Movement;
 
@@ -16,7 +16,8 @@ internal static class NpcSpawner
     public static EntityId Spawn(World world, long npcId, Npc data, int x, int y, Direction direction,
         Vitals currentVitals)
     {
-        var texture = Textures.Characters[data.Texture];
+        if (Textures.Characters[data.Texture] is not { } texture)
+            throw new InvalidOperationException($"NPC texture not found: {data.Texture}");
 
         var nameColor = data.Behaviour switch
         {

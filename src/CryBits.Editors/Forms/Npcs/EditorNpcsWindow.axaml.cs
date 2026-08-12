@@ -7,7 +7,6 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
 using CryBits.Editors.Network;
-using CryBits.Editors.Utils;
 
 namespace CryBits.Editors.Forms.Npcs;
 

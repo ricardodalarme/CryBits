@@ -2,6 +2,7 @@ using CryBits.Client.Input;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Items;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -19,10 +20,10 @@ internal class DraggableSlotView(
 
     private void OnPostDraw()
     {
-        var pos = new System.Drawing.Point(
-             inputManager.MousePosition.X + 6,
-             inputManager.MousePosition.Y + 6
-         );
+        var pos = new Vector2(
+            inputManager.MousePosition.X + 6,
+            inputManager.MousePosition.Y + 6
+        );
 
         if (gameScreen.HotbarChange is { } hotSlot)
         {
