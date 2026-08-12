@@ -1,22 +1,23 @@
-using CryBits.Client.Framework.UI.Entities;
+using CryBits.Client.Framework.Assets;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.Rendering.UI;
+using CryBits.Client.Rendering.Entities;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
-using Iguina.Entities;
 using Microsoft.Xna.Framework;
+using Myra.Events;
+using Myra.Graphics2D.TextureAtlases;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Menu.Views;
 
 internal class CreateCharacterView(
     UiContext uiContext,
     AccountSender accountSender,
-    PortraitRenderer characterRenderer,
     DefinitionCatalog catalog,
     MenuScreen menuScreen) : ViewBase
 {
     private Panel CreateCharacterPanel => uiContext.Get<Panel>("CreateCharacter");
-    private TextInput NameTextBox => uiContext.Get<TextInput>("CreateName");
+    private TextBox NameTextBox => uiContext.Get<TextBox>("CreateName");
     private Button CreateButton => uiContext.Get<Button>("CreateBtn");
     private Button ChangeClassRightButton => uiContext.Get<Button>("CreateClassRight");
     private Button ChangeClassLeftButton => uiContext.Get<Button>("CreateClassLeft");
@@ -24,8 +25,8 @@ internal class CreateCharacterView(
     private Button TextureChangeRightButton => uiContext.Get<Button>("CreateTexRight");
     private RadioButton GenderMaleRadio => uiContext.Get<RadioButton>("CreateMale");
     private RadioButton GenderFemaleRadio => uiContext.Get<RadioButton>("CreateFemale");
-    private Picture FacePicture => uiContext.Get<Picture>("CreateFace");
-    private Picture SpritePicture => uiContext.Get<Picture>("CreateSprite");
+    private Image FaceImage => uiContext.Get<Image>("CreateFace");
+    private Image SpriteImage => uiContext.Get<Image>("CreateSprite");
     private Button BackButton => uiContext.Get<Button>("CreateBackBtn");
     private Label ClassNameLabel => uiContext.Get<Label>("CreateClassName");
     private Label ClassDescLabel => uiContext.Get<Label>("CreateClassDesc");
@@ -35,9 +36,9 @@ internal class CreateCharacterView(
 
     public void Open()
     {
-        NameTextBox.Value = string.Empty;
-        GenderMaleRadio.Checked = true;
-        GenderFemaleRadio.Checked = false;
+        NameTextBox.Text = string.Empty;
+        GenderMaleRadio.IsPressed = true;
+        GenderFemaleRadio.IsPressed = false;
         _currentClass = 0;
         _currentTexture = 0;
 
@@ -53,103 +54,109 @@ internal class CreateCharacterView(
 
     public override void Bind()
     {
-        CreateButton.Events.OnClick += OnCreatePressed;
-        ChangeClassRightButton.Events.OnClick += OnChangeClassRightPressed;
-        ChangeClassLeftButton.Events.OnClick += OnChangeClassLeftPressed;
-        TextureChangeLeftButton.Events.OnClick += OnChangeTextureLeftPressed;
-        TextureChangeRightButton.Events.OnClick += OnChangeTextureRight;
-        GenderMaleRadio.Events.OnValueChanged += OnGenderChanged;
-        GenderFemaleRadio.Events.OnValueChanged += OnGenderChanged;
-        BackButton.Events.OnClick += OnBackPressed;
-
-        FacePicture.OnRenderPicture += RenderFace;
-        SpritePicture.OnRenderPicture += RenderSprite;
-        uiContext.PostDraw += FacePicture.Render;
-        uiContext.PostDraw += SpritePicture.Render;
+        CreateButton.Click += OnCreatePressed;
+        ChangeClassRightButton.Click += OnChangeClassRightPressed;
+        ChangeClassLeftButton.Click += OnChangeClassLeftPressed;
+        TextureChangeLeftButton.Click += OnChangeTextureLeftPressed;
+        TextureChangeRightButton.Click += OnChangeTextureRight;
+        GenderMaleRadio.Click += OnGenderChanged;
+        GenderFemaleRadio.Click += OnGenderChanged;
+        BackButton.Click += OnBackPressed;
 
         UpdateClassLabels();
     }
 
     public override void Unbind()
     {
-        CreateButton.Events.OnClick -= OnCreatePressed;
-        ChangeClassRightButton.Events.OnClick -= OnChangeClassRightPressed;
-        ChangeClassLeftButton.Events.OnClick -= OnChangeClassLeftPressed;
-        TextureChangeLeftButton.Events.OnClick -= OnChangeTextureLeftPressed;
-        TextureChangeRightButton.Events.OnClick -= OnChangeTextureRight;
-        GenderMaleRadio.Events.OnValueChanged -= OnGenderChanged;
-        GenderFemaleRadio.Events.OnValueChanged -= OnGenderChanged;
-        BackButton.Events.OnClick -= OnBackPressed;
-        FacePicture.OnRenderPicture -= RenderFace;
-        SpritePicture.OnRenderPicture -= RenderSprite;
-        uiContext.PostDraw -= FacePicture.Render;
-        uiContext.PostDraw -= SpritePicture.Render;
+        CreateButton.Click -= OnCreatePressed;
+        ChangeClassRightButton.Click -= OnChangeClassRightPressed;
+        ChangeClassLeftButton.Click -= OnChangeClassLeftPressed;
+        TextureChangeLeftButton.Click -= OnChangeTextureLeftPressed;
+        TextureChangeRightButton.Click -= OnChangeTextureRight;
+        GenderMaleRadio.Click -= OnGenderChanged;
+        GenderFemaleRadio.Click -= OnGenderChanged;
+        BackButton.Click -= OnBackPressed;
     }
 
-    private void RenderFace()
+    private void UpdateRenderables()
     {
         var textureNum = GetCurrentTextureNum();
-        if (textureNum <= 0) return;
-        var pos = FacePicture.LastBoundingRect;
-        characterRenderer.DrawFace(textureNum, new Vector2(pos.X, pos.Y));
+        if (textureNum > 0 && Textures.Faces[textureNum] is { } faceTex)
+        {
+            FaceImage.Renderable = new TextureRegion(faceTex);
+        }
+        else
+        {
+            FaceImage.Renderable = null;
+        }
+
+        if (textureNum > 0 && Textures.Characters[textureNum] is { } charTex)
+        {
+            var sheet = SpriteSheet.Default;
+            var frameW = sheet.FrameW(charTex.Width);
+            var frameH = sheet.FrameH(charTex.Height);
+            var line = sheet.RowForDirection(Direction.Down);
+            var recSource = new Rectangle(1 * frameW, line * frameH, frameW, frameH);
+            SpriteImage.Renderable = new TextureRegion(charTex, recSource);
+        }
+        else
+        {
+            SpriteImage.Renderable = null;
+        }
     }
 
-    private void RenderSprite()
-    {
-        var textureNum = GetCurrentTextureNum();
-        if (textureNum <= 0) return;
-        var pos = SpritePicture.LastBoundingRect;
-        characterRenderer.DrawCharacter(textureNum, new Vector2(pos.X, pos.Y), Direction.Down, 1);
-    }
-
-    private void OnCreatePressed(Entity _)
+    private void OnCreatePressed(object? sender, MyraEventArgs e)
     {
         var classId = catalog.Classes.Count == 0 ? Guid.Empty : catalog.Classes.ElementAt(_currentClass).Key;
         accountSender.CreateCharacter(
-            name: NameTextBox.Value,
-            isMale: GenderMaleRadio.Checked,
+            name: NameTextBox.Text,
+            isMale: GenderMaleRadio.IsPressed,
             classId: classId,
             textureNum: _currentTexture
         );
     }
 
-    private void OnChangeClassRightPressed(Entity _)
+    private void OnChangeClassRightPressed(object? sender, MyraEventArgs e)
     {
         if (_currentClass == catalog.Classes.Count - 1) _currentClass = 0;
         else _currentClass++;
         UpdateClassLabels();
     }
 
-    private void OnChangeClassLeftPressed(Entity _)
+    private void OnChangeClassLeftPressed(object? sender, MyraEventArgs e)
     {
         if (_currentClass == 0) _currentClass = (byte)(catalog.Classes.Count - 1);
         else _currentClass--;
         UpdateClassLabels();
     }
 
-    private void OnChangeTextureRight(Entity _)
+    private void OnChangeTextureRight(object? sender, MyraEventArgs e)
     {
+        if (catalog.Classes.Count == 0) return;
         var @class = catalog.Classes.ElementAt(_currentClass).Value;
-        var texList = GenderMaleRadio.Checked ? @class.TextureMale : @class.TextureFemale;
+        var texList = GenderMaleRadio.IsPressed ? @class.TextureMale : @class.TextureFemale;
         if (_currentTexture == texList.Count - 1) _currentTexture = 0;
         else _currentTexture++;
+        UpdateRenderables();
     }
 
-    private void OnChangeTextureLeftPressed(Entity _)
+    private void OnChangeTextureLeftPressed(object? sender, MyraEventArgs e)
     {
+        if (catalog.Classes.Count == 0) return;
         var @class = catalog.Classes.ElementAt(_currentClass).Value;
-        var texList = GenderMaleRadio.Checked ? @class.TextureMale : @class.TextureFemale;
+        var texList = GenderMaleRadio.IsPressed ? @class.TextureMale : @class.TextureFemale;
         if (_currentTexture == 0) _currentTexture = (byte)(texList.Count - 1);
         else _currentTexture--;
+        UpdateRenderables();
     }
 
-    private void OnGenderChanged(Entity _)
+    private void OnGenderChanged(object? sender, MyraEventArgs e)
     {
         _currentTexture = 0;
         UpdateClassLabels();
     }
 
-    private void OnBackPressed(Entity _)
+    private void OnBackPressed(object? sender, MyraEventArgs e)
     {
         menuScreen.ShowSelectCharacter([]);
     }
@@ -158,7 +165,7 @@ internal class CreateCharacterView(
     {
         if (catalog.Classes.Count == 0) return 0;
         var @class = catalog.Classes.ElementAt(_currentClass).Value;
-        if (GenderMaleRadio.Checked && @class.TextureMale.Count > 0)
+        if (GenderMaleRadio.IsPressed && @class.TextureMale.Count > 0)
             return @class.TextureMale[_currentTexture];
         if (@class.TextureFemale.Count > 0)
             return @class.TextureFemale[_currentTexture];
@@ -171,5 +178,6 @@ internal class CreateCharacterView(
         var @class = catalog.Classes.ElementAt(_currentClass).Value;
         ClassNameLabel.Text = @class.Name;
         ClassDescLabel.Text = @class.Description;
+        UpdateRenderables();
     }
 }

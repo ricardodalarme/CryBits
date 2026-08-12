@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Iguina" />
+    <PackageReference Include="Myra" />
     <PackageReference Include="MonoGame.Framework.Native" />
     <PackageReference Include="MonoGame.Runtime.Mac.Vulkan" />
     <PackageReference Include="MonoGame.Runtime.Linux.Vulkan" />

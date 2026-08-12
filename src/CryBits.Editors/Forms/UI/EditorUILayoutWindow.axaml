@@ -1,4 +1,4 @@
-﻿<Window
+<Window
     x:Class="CryBits.Editors.Forms.UI.EditorUILayoutWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -53,7 +53,7 @@
                         Margin="0,0,0,6"
                         SelectionChanged="treEntities_SelectionChanged">
                         <TreeView.ItemTemplate>
-                            <TreeDataTemplate x:DataType="vm:EntityNode" ItemsSource="{Binding Children}">
+                            <TreeDataTemplate x:DataType="vm:WidgetNode" ItemsSource="{Binding Children}">
                                 <TextBlock Text="{Binding Header}" />
                             </TreeDataTemplate>
                         </TreeView.ItemTemplate>
@@ -103,14 +103,7 @@
             </Border>
         </Grid>
 
-        <Grid Grid.Row="2" ColumnDefinitions="*,8,Auto">
-            <Button
-                Grid.Column="2"
-                Margin="0,6,0,0"
-                HorizontalAlignment="Stretch"
-                Command="{Binding EditThemeCommand}"
-                Content="Edit Theme" />
-        </Grid>
+
 
         <Button
             Grid.Row="3"

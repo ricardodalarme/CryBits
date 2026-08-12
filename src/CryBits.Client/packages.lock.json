@@ -4,21 +4,15 @@
     "net10.0": {
       "FontStashSharp.MonoGame": {
         "type": "Direct",
-        "requested": "[1.3.9, )",
-        "resolved": "1.3.9",
-        "contentHash": "AiyqJjrfD6LAcbo8isYYxiqfmeDM8qQcYAjE5cR1vdXNBU7uOFRNq/NNIcvgU3XLuY+jzFbn6l3TjmjGq5wsEQ==",
+        "requested": "[1.5.6, )",
+        "resolved": "1.5.6",
+        "contentHash": "/daTEWXJ+WvKe2FOv1VsRCoqZMBiKqJZcjr6NwOGNgr13CsX1aVVoIVJL0PYZs0qiQfLIfXaVWaG4liNmHkrdA==",
         "dependencies": {
           "Cyotek.Drawing.BitmapFont": "2.0.4",
-          "FontStashSharp.Base": "1.1.9",
-          "FontStashSharp.Rasterizers.StbTrueTypeSharp": "1.1.9",
+          "FontStashSharp.Base": "1.2.3",
+          "FontStashSharp.Rasterizers.StbTrueTypeSharp": "1.2.3",
           "StbImageSharp": "2.30.15"
         }
-      },
-      "Iguina": {
-        "type": "Direct",
-        "requested": "[1.1.5, )",
-        "resolved": "1.1.5",
-        "contentHash": "nJ/INUaV2Ha0J1vzwyEB/pmE6VVPdK3/1fvzwFE832qS8Kyydl/F3Hb7SLND/DOwFhnJT4/TFC0EoOTc9CHT3Q=="
       },
       "LiteNetLib": {
         "type": "Direct",
@@ -32,6 +26,21 @@
         "resolved": "3.8.5",
         "contentHash": "fobFZ8nfhCmt98HD0FNX+nP1IOoJ2N/Zk/JHY6148i4CEpIThv+OJeiR8W+zba+Xz5NkPC2pmWHRum0jN37boQ=="
       },
+      "Myra": {
+        "type": "Direct",
+        "requested": "[1.6.4, )",
+        "resolved": "1.6.4",
+        "contentHash": "PBuEV0FwWONTtkJ/eEaQKc5cq8gqTTYm31/F49SSPLqjvDXewEFslTkmTxQab6iI/sT58NjxrN67GXj6kjPWbA==",
+        "dependencies": {
+          "XNAssets.FontStashSharp.MonoGame": "0.8.5",
+          "XNAssets.MonoGame": "0.8.5"
+        }
+      },
+      "AssetManagementBase": {
+        "type": "Transitive",
+        "resolved": "0.7.3",
+        "contentHash": "DRlzdQRtk+YHB6GgHRU3nVSO657Yd/OUojoihTHHftZxr469lHOeW685lDelUlbKetGIIXlVRi3SpIOrRUiJBA=="
+      },
       "Cyotek.Drawing.BitmapFont": {
         "type": "Transitive",
         "resolved": "2.0.4",
@@ -39,15 +48,15 @@
       },
       "FontStashSharp.Base": {
         "type": "Transitive",
-        "resolved": "1.1.9",
-        "contentHash": "/AjkOcPNijs8vyNgcCj3FfBJbVWmsSH744hqkhLfBt8qspDz/tEoD+U09my5u9eRBX6zX+RLQ/gdCvwy+ZBOtg=="
+        "resolved": "1.2.3",
+        "contentHash": "kw8ovakGHz8jCah+H5M7qI8aOvtESF0jQRpcpubXUMsSid86dRO6DoDPlh+Tk/XAW5a3XgzGDgsHfeZTfZTr+Q=="
       },
       "FontStashSharp.Rasterizers.StbTrueTypeSharp": {
         "type": "Transitive",
-        "resolved": "1.1.9",
-        "contentHash": "yi5iuTERem46uyHC5p+jRi3Jh8dKWzgNWLqcvHciGlyVHD1cWFdERgnxshZU4xWB2hRGnogxaCudCirbMpg4eQ==",
+        "resolved": "1.2.3",
+        "contentHash": "xjzgWeiaODbW7DR/kI05V7C3CVtDvtB+4TrgX4EKNpRGzxb42vsvXKWrXORQWU2LCLnPPqdBNNSgtRujnpK2ww==",
         "dependencies": {
-          "FontStashSharp.Base": "1.1.9",
+          "FontStashSharp.Base": "1.2.3",
           "StbTrueTypeSharp": "1.26.12"
         }
       },
@@ -105,6 +114,25 @@
         "resolved": "1.26.12",
         "contentHash": "hCc6/OsfcPa5VsLECcEU2m78WOshBrKwK42nAodSm9Z5wH68f7n66SoiRLCdGCkDaqbWz2TlX4zYHIjogj1HJA=="
       },
+      "XNAssets.FontStashSharp.MonoGame": {
+        "type": "Transitive",
+        "resolved": "0.8.5",
+        "contentHash": "IAzVYCGHwkbLU3VxvoBFFvFaxgHsJfF6OqofaPMMUTZQHTf8zUNoFdXtg16U7Z3lj5CPwAG207XUpqkVcPLC7Q==",
+        "dependencies": {
+          "AssetManagementBase": "0.7.3",
+          "FontStashSharp.MonoGame": "1.5.6"
+        }
+      },
+      "XNAssets.MonoGame": {
+        "type": "Transitive",
+        "resolved": "0.8.5",
+        "contentHash": "E0xDOxyv3SO+sI9aJGKjyTAvqyt55eY/qLNLMxcVRPxuXVnD15jH8+nKeXh8smOqsoV50kb+suR4eGefM5Bj/Q==",
+        "dependencies": {
+          "AssetManagementBase": "0.7.3",
+          "Cyotek.Drawing.BitmapFont": "2.0.4",
+          "StbImageSharp": "2.30.15"
+        }
+      },
       "crybits.client.framework": {
         "type": "Project",
         "dependencies": {
@@ -112,11 +140,10 @@
           "CryBits.Persistence": "[1.0.0, )",
           "CryBits.Protocol": "[1.0.0, )",
           "CryBits.Transport": "[1.0.0, )",
-          "FontStashSharp.MonoGame": "[1.3.9, )",
-          "Iguina": "[1.1.5, )",
-          "Iguina.Drivers.MonoGame": "[1.0.0, )",
+          "FontStashSharp.MonoGame": "[1.5.6, )",
           "MemoryPack": "[1.21.4, )",
-          "MonoGame.Framework.Native": "[3.8.5, )"
+          "MonoGame.Framework.Native": "[3.8.5, )",
+          "Myra": "[1.6.4, )"
         }
       },
       "crybits.definitions": {
@@ -155,17 +182,6 @@
           "LiteNetLib": "[2.1.4, )"
         }
       },
-      "iguina.drivers.monogame": {
-        "type": "Project",
-        "dependencies": {
-          "FontStashSharp.MonoGame": "[1.3.9, )",
-          "Iguina": "[1.1.5, )",
-          "MonoGame.Framework.Native": "[3.8.5, )",
-          "MonoGame.Runtime.Linux.Vulkan": "[3.8.5, )",
-          "MonoGame.Runtime.Mac.Vulkan": "[3.8.5, )",
-          "MonoGame.Runtime.Windows.Vulkan": "[3.8.5, )"
-        }
-      },
       "linq2db": {
         "type": "CentralTransitive",
         "requested": "[6.3.0, )",
@@ -192,24 +208,6 @@
           "SQLitePCLRaw.bundle_e_sqlite3": "2.1.11",
           "SQLitePCLRaw.core": "2.1.11"
         }
-      },
-      "MonoGame.Runtime.Linux.Vulkan": {
-        "type": "CentralTransitive",
-        "requested": "[3.8.5, )",
-        "resolved": "3.8.5",
-        "contentHash": "hfoeAoeBpdKAh9IjqZMllh/JHvIs7RtVpONMqh+3S32qyraE6xgDXsSFecGxgptOhTnDyy496XHSSRShfG8HJQ=="
-      },
-      "MonoGame.Runtime.Mac.Vulkan": {
-        "type": "CentralTransitive",
-        "requested": "[3.8.5, )",
-        "resolved": "3.8.5",
-        "contentHash": "5AEZewEsZMmjbyDnMK313eJfG1RTtcfg+oS1g0Gtthicc8PHLE2yD8kA591eWeNcLdHDJfQV9qHmiAVBwJA4EA=="
-      },
-      "MonoGame.Runtime.Windows.Vulkan": {
-        "type": "CentralTransitive",
-        "requested": "[3.8.5, )",
-        "resolved": "3.8.5",
-        "contentHash": "YZnBW6w0bVTZfMPJ1WljajLWS6OVS6T8ohw0VWpcyNr90bR+sHkVFIoRGkglVP8HlaDb+5B07U1E/sywo4GcWg=="
       },
       "SQLitePCLRaw.bundle_e_sqlite3": {
         "type": "CentralTransitive",

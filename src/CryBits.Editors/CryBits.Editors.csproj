@@ -28,7 +28,7 @@
     <PackageReference Include="Dock.Avalonia" />
     <PackageReference Include="Dock.Model.Avalonia" />
     <PackageReference Include="FontStashSharp.MonoGame" />
-    <PackageReference Include="Iguina" />
+    <PackageReference Include="Myra" />
     <PackageReference Include="LiteNetLib" />
     <PackageReference Include="MessageBox.Avalonia" />
     <PackageReference Include="MonoGame.Framework.Native" />
@@ -48,7 +48,6 @@
     <ProjectReference Include="../CryBits.Protocol/CryBits.Protocol.csproj" />
     <ProjectReference Include="../CryBits.Transport/CryBits.Transport.csproj" />
     <ProjectReference Include="../CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
-    <ProjectReference Include="../../../Iguina.Drivers/src/Iguina.Drivers.MonoGame/Iguina.Drivers.MonoGame.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,6 +8,8 @@ namespace CryBits.Client.Rendering.UI;
 
 internal sealed class ItemIconRenderer(SpriteBatch spriteBatch)
 {
+    public Texture2D? GetTexture(Item item) => item == null ? null : Textures.Items[item.Texture];
+
     /// <summary>
     /// Render an item icon and its amount at an already-computed screen position.
     /// </summary>

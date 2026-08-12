@@ -67,8 +67,8 @@ public sealed class Game : Microsoft.Xna.Framework.Game
         Textures.Initialize(GraphicsDevice);
 
         var viewport = GraphicsDevice.Viewport;
-        _uiContext = new UiContext(Window, GraphicsDevice, _spriteBatch, viewport.Width, viewport.Height);
-        _inputManager = new InputManager(_uiContext.UISystem);
+        _uiContext = new UiContext(this, GraphicsDevice, viewport.Width, viewport.Height);
+        _inputManager = new InputManager(_uiContext.Desktop);
         _audioManager = new AudioManager();
         _catalog = new DefinitionCatalog();
 
@@ -95,9 +95,7 @@ public sealed class Game : Microsoft.Xna.Framework.Game
         var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         _connection.Poll();
-        _uiContext.StartInputFrame(gameTime);
         _inputManager.Capture();
-        _uiContext.Update(deltaTime);
         _activeSession?.Scheduler.Update(_activeSession.World, deltaTime);
 
         _fpsCounter++;
@@ -113,17 +111,11 @@ public sealed class Game : Microsoft.Xna.Framework.Game
 
     protected override void Draw(GameTime gameTime)
     {
-        _uiContext.EndInputFrame();
-
         GraphicsDevice.Clear(Color.Black);
 
         _activeSession?.RenderPipeline.Present();
 
-        _spriteBatch.Begin();
-        _uiContext.UISystem.Draw();
-        _spriteBatch.Draw(_uiContext.Target, GraphicsDevice.Viewport.Bounds, Color.White);
-        _uiContext.PostDraw?.Invoke();
-        _spriteBatch.End();
+        _uiContext.Render();
 
         base.Draw(gameTime);
     }
@@ -158,7 +150,6 @@ public sealed class Game : Microsoft.Xna.Framework.Game
         {
             _activeSession?.Dispose();
             _spriteBatch?.Dispose();
-            _uiContext?.Dispose();
         }
 
         base.Dispose(disposing);

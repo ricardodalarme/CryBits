@@ -42,7 +42,7 @@ internal class GameInput(IntentSender intentSender, Chat chat, InputManager inpu
 
     private void UseHotbar(byte slot)
     {
-        if (uiContext.UISystem?.FocusedEntity != null) return;
+        if (uiContext.Desktop.FocusedKeyboardWidget != null || uiContext.Desktop.IsMouseOverGUI) return;
         intentSender.Send(new HotbarUseIntent(default, slot));
     }
 }

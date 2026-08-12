@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Iguina" />
+    <PackageReference Include="Myra" />
     <PackageReference Include="MonoGame.Framework.Native" />
     <PackageReference Include="FontStashSharp.MonoGame" />
     <PackageReference Include="MemoryPack" />
@@ -20,6 +20,5 @@
     <ProjectReference Include="../CryBits.Protocol/CryBits.Protocol.csproj" />
     <ProjectReference Include="../CryBits.Transport/CryBits.Transport.csproj" />
     <ProjectReference Include="../CryBits.Persistence/CryBits.Persistence.csproj" />
-    <ProjectReference Include="../../../Iguina.Drivers/src/Iguina.Drivers.MonoGame/Iguina.Drivers.MonoGame.csproj" />
   </ItemGroup>
 </Project>

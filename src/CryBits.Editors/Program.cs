@@ -22,8 +22,7 @@ internal static class Program
     /// <summary>
     /// The active MonoGame <see cref="Microsoft.Xna.Framework.Graphics.GraphicsDevice"/> in the
     /// editor process. Set by the first editor window that creates an <see cref="EditorGame"/>;
-    /// used by <see cref="Forms.UI.EditorUILayoutWindow"/> and
-    /// <see cref="Forms.UI.EditorUIThemeWindow"/> for their Iguina previews.
+    /// used by <see cref="Forms.UI.EditorUILayoutWindow"/> for Myra previews.
     /// </summary>
     public static Microsoft.Xna.Framework.Graphics.GraphicsDevice? SharedDevice { get; set; }
 

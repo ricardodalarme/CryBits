@@ -1,33 +1,32 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CryBits.Client.Framework.Persistence.Dtos;
 using CryBits.Client.Framework.Persistence.Repositories;
+using Myra.Graphics2D.UI;
 using System.Collections.ObjectModel;
 
 namespace CryBits.Editors.Forms.UI;
 
 internal sealed partial class EditorUILayoutViewModel : ObservableObject
 {
-    private UILayout? _currentLayout;
-    private EntityNode? _selectedNode;
-    private string _configPath = string.Empty;
+    private Project? _currentProject;
+    private WidgetNode? _selectedNode;
+    private string _themeDir = string.Empty;
 
     public event Action? RequestRefresh;
-    public event Action? RequestOpenTheme;
 
     public ObservableCollection<string> ScreenNames { get; } = [];
 
-    public UILayout? CurrentLayout
+    public Project? CurrentProject
     {
-        get => _currentLayout;
+        get => _currentProject;
         set
         {
-            _currentLayout = value;
+            _currentProject = value;
             OnPropertyChanged();
         }
     }
 
-    public EntityNode? SelectedNode
+    public WidgetNode? SelectedNode
     {
         get => _selectedNode;
         set
@@ -41,16 +40,12 @@ internal sealed partial class EditorUILayoutViewModel : ObservableObject
 
     public void Load(string themeDir)
     {
-        var path = Path.Combine(themeDir, "Layout.json");
-        if (!File.Exists(path)) return;
-        _configPath = path;
-        CurrentLayout = InterfaceRepository.Load(path);
+        _themeDir = themeDir;
         SelectedNode = null;
 
         ScreenNames.Clear();
-        if (_currentLayout == null) return;
-        foreach (var screen in _currentLayout.Screens)
-            ScreenNames.Add(screen.Name);
+        ScreenNames.Add("Menu");
+        ScreenNames.Add("Game");
 
         if (ScreenNames.Count > 0)
             SelectedScreen = ScreenNames[0];
@@ -59,73 +54,62 @@ internal sealed partial class EditorUILayoutViewModel : ObservableObject
     partial void OnSelectedScreenChanged(string? value)
     {
         if (value != null)
+        {
+            var path = Path.Combine(_themeDir, $"{value}.xmmp");
+            if (File.Exists(path))
+            {
+                CurrentProject = MmlRepository.Load(path);
+            }
+            else
+            {
+                CurrentProject = null;
+            }
             RequestRefresh?.Invoke();
-    }
-
-    public void AddElement(Element el)
-    {
-        if (_currentLayout == null) return;
-        _currentLayout.Screens.FirstOrDefault()?.Children.Add(el);
-        SelectedNode = null;
-        RequestRefresh?.Invoke();
+        }
     }
 
     [RelayCommand]
     private void Remove()
     {
-        if (_selectedNode?.ConfigElement == null || _currentLayout == null) return;
-        var screen = _currentLayout.Screens.FirstOrDefault();
-        if (screen == null) return;
-
-        RemoveRecursive(screen.Children, _selectedNode.ConfigElement);
+        if (_selectedNode?.Widget == null || _currentProject?.Root is not Container container) return;
+        container.Widgets.Remove(_selectedNode.Widget);
         SelectedNode = null;
         RequestRefresh?.Invoke();
     }
 
     [RelayCommand]
-    private void MoveUp() => Reorder(-1);
-
-    [RelayCommand]
-    private void MoveDown() => Reorder(1);
-
-    private void Reorder(int dir)
+    private void MoveUp()
     {
-        if (_selectedNode?.ConfigElement == null || _currentLayout == null) return;
-        var screen = _currentLayout.Screens.FirstOrDefault();
-        if (screen == null) return;
-
-        if (ReorderInList(screen.Children, _selectedNode.ConfigElement, dir))
+        if (_selectedNode?.Widget == null || _currentProject?.Root is not Container container) return;
+        var idx = container.Widgets.IndexOf(_selectedNode.Widget);
+        if (idx > 0)
+        {
+            container.Widgets.RemoveAt(idx);
+            container.Widgets.Insert(idx - 1, _selectedNode.Widget);
             RequestRefresh?.Invoke();
+        }
     }
 
     [RelayCommand]
-    private void EditTheme() => RequestOpenTheme?.Invoke();
+    private void MoveDown()
+    {
+        if (_selectedNode?.Widget == null || _currentProject?.Root is not Container container) return;
+        var idx = container.Widgets.IndexOf(_selectedNode.Widget);
+        if (idx >= 0 && idx < container.Widgets.Count - 1)
+        {
+            container.Widgets.RemoveAt(idx);
+            container.Widgets.Insert(idx + 1, _selectedNode.Widget);
+            RequestRefresh?.Invoke();
+        }
+    }
 
     [RelayCommand]
     private void Save()
     {
-        if (_currentLayout == null || string.IsNullOrEmpty(_configPath)) return;
-        InterfaceRepository.Save(_configPath, _currentLayout);
-    }
-
-    private static bool RemoveRecursive(List<Element> list, Element target)
-    {
-        if (list.Remove(target)) return true;
-        return list.Any(el => RemoveRecursive(el.Children, target));
-    }
-
-    private static bool ReorderInList(List<Element> list, Element target, int dir)
-    {
-        var idx = list.IndexOf(target);
-        if (idx >= 0)
+        if (SelectedScreen != null && CurrentProject != null)
         {
-            var newIdx = idx + dir;
-            if (newIdx < 0 || newIdx >= list.Count) return false;
-            list.RemoveAt(idx);
-            list.Insert(newIdx, target);
-            return true;
+            var path = Path.Combine(_themeDir, $"{SelectedScreen}.xmmp");
+            MmlRepository.Save(path, CurrentProject);
         }
-
-        return list.Any(el => ReorderInList(el.Children, target, dir));
     }
 }

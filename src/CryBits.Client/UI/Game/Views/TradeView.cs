@@ -1,9 +1,10 @@
-using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Definitions.Common;
-using Iguina.Entities;
-using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using Myra.Events;
+using Myra.Graphics2D.TextureAtlases;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -20,11 +21,68 @@ internal class TradeView(
     private Button AcceptOfferButton => uiContext.Get<Button>("TradeAccept");
     private Button DeclineOfferButton => uiContext.Get<Button>("TradeDecline");
     private Button ConfirmOfferButton => uiContext.Get<Button>("TradeConfirm");
-    private SlotGrid OwnGrid => uiContext.Get<SlotGrid>("TradeGridOwn");
-    private SlotGrid TheirGrid => uiContext.Get<SlotGrid>("TradeGridTheir");
+    private Grid OwnGrid => uiContext.Get<Grid>("TradeGridOwn");
+    private Grid TheirGrid => uiContext.Get<Grid>("TradeGridTheir");
+
+    private readonly List<Image> _ownSlotWidgets = new();
+    private readonly List<Image> _theirSlotWidgets = new();
 
     private short _ownSlot;
     private short _inventorySlot;
+
+    private void EnsureSlotWidgets()
+    {
+        if (_ownSlotWidgets.Count > 0) return;
+
+        int cols = 4;
+        int rows = 3;
+        int slotSize = 32;
+        int spacing = 4;
+
+        SetupGrid(OwnGrid, _ownSlotWidgets, cols, rows, slotSize, spacing, isOwnGrid: true);
+        SetupGrid(TheirGrid, _theirSlotWidgets, cols, rows, slotSize, spacing, isOwnGrid: false);
+    }
+
+    private void SetupGrid(Grid grid, List<Image> list, int cols, int rows, int slotSize, int spacing, bool isOwnGrid)
+    {
+        grid.ColumnsProportions.Clear();
+        for (int c = 0; c < cols; c++)
+            grid.ColumnsProportions.Add(new Proportion(ProportionType.Pixels, slotSize));
+
+        grid.RowsProportions.Clear();
+        for (int r = 0; r < rows; r++)
+            grid.RowsProportions.Add(new Proportion(ProportionType.Pixels, slotSize));
+
+        grid.ColumnSpacing = spacing;
+        grid.RowSpacing = spacing;
+        grid.Widgets.Clear();
+
+        for (int r = 0; r < rows; r++)
+        {
+            for (int c = 0; c < cols; c++)
+            {
+                int slotIndex = r * cols + c;
+                var img = new Image
+                {
+                    Width = slotSize,
+                    Height = slotSize,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                Grid.SetColumn(img, c);
+                Grid.SetRow(img, r);
+
+                if (isOwnGrid)
+                {
+                    img.TouchDown += (sender, e) => OnOwnSlotTouchDown(slotIndex);
+                    img.TouchUp += (sender, e) => OnOwnSlotLeftUp(slotIndex);
+                }
+
+                grid.Widgets.Add(img);
+                list.Add(img);
+            }
+        }
+    }
 
     public void Open(bool activeState)
     {
@@ -76,24 +134,62 @@ internal class TradeView(
 
     public override void Bind()
     {
-        OwnGrid.OnSlotRightClick += OnOwnSlotRightClick;
-        OwnGrid.OnSlotLeftUp += OnOwnSlotLeftUp;
-        CloseButton.Events.OnClick += OnClosePressed;
-        AcceptOfferButton.Events.OnClick += OnAcceptOfferPressed;
-        DeclineOfferButton.Events.OnClick += OnDeclineOfferPressed;
-        ConfirmOfferButton.Events.OnClick += OnConfirmPressed;
-        uiContext.PostDraw += OnPostDraw;
+        EnsureSlotWidgets();
+        CloseButton.Click += OnClosePressed;
+        AcceptOfferButton.Click += OnAcceptOfferPressed;
+        DeclineOfferButton.Click += OnDeclineOfferPressed;
+        ConfirmOfferButton.Click += OnConfirmPressed;
+        UpdateSlotIcons();
     }
 
     public override void Unbind()
     {
-        OwnGrid.OnSlotRightClick -= OnOwnSlotRightClick;
-        OwnGrid.OnSlotLeftUp -= OnOwnSlotLeftUp;
-        CloseButton.Events.OnClick -= OnClosePressed;
-        AcceptOfferButton.Events.OnClick -= OnAcceptOfferPressed;
-        DeclineOfferButton.Events.OnClick -= OnDeclineOfferPressed;
-        ConfirmOfferButton.Events.OnClick -= OnConfirmPressed;
-        uiContext.PostDraw -= OnPostDraw;
+        CloseButton.Click -= OnClosePressed;
+        AcceptOfferButton.Click -= OnAcceptOfferPressed;
+        DeclineOfferButton.Click -= OnDeclineOfferPressed;
+        ConfirmOfferButton.Click -= OnConfirmPressed;
+    }
+
+    public void UpdateSlotIcons()
+    {
+        EnsureSlotWidgets();
+        var ownOffer = viewModel.OwnOffer;
+        var theirOffer = viewModel.TheirOffer;
+
+        for (int i = 0; i < _ownSlotWidgets.Count; i++)
+        {
+            if (ownOffer != null && i < ownOffer.Length && ownOffer[i]?.Definition is { } item)
+            {
+                var tex = itemRenderer.GetTexture(item);
+                _ownSlotWidgets[i].Renderable = tex != null ? new TextureRegion(tex) : null;
+            }
+            else
+            {
+                _ownSlotWidgets[i].Renderable = null;
+            }
+        }
+
+        for (int i = 0; i < _theirSlotWidgets.Count; i++)
+        {
+            if (theirOffer != null && i < theirOffer.Length && theirOffer[i]?.Definition is { } item)
+            {
+                var tex = itemRenderer.GetTexture(item);
+                _theirSlotWidgets[i].Renderable = tex != null ? new TextureRegion(tex) : null;
+            }
+            else
+            {
+                _theirSlotWidgets[i].Renderable = null;
+            }
+        }
+    }
+
+    private void OnOwnSlotTouchDown(int slot)
+    {
+        var mouse = Mouse.GetState();
+        if (mouse.RightButton == ButtonState.Pressed)
+        {
+            OnOwnSlotRightClick(slot);
+        }
     }
 
     private void OnOwnSlotRightClick(int slot)
@@ -122,13 +218,13 @@ internal class TradeView(
         }
     }
 
-    private void OnClosePressed(Entity _)
+    private void OnClosePressed(object? sender, MyraEventArgs e)
     {
         viewModel.Close();
         Close();
     }
 
-    private void OnAcceptOfferPressed(Entity _)
+    private void OnAcceptOfferPressed(object? sender, MyraEventArgs e)
     {
         ConfirmOfferButton.Visible = true;
         AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
@@ -136,7 +232,7 @@ internal class TradeView(
         viewModel.Accept();
     }
 
-    private void OnDeclineOfferPressed(Entity _)
+    private void OnDeclineOfferPressed(object? sender, MyraEventArgs e)
     {
         ConfirmOfferButton.Visible = true;
         AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
@@ -144,37 +240,10 @@ internal class TradeView(
         viewModel.Decline();
     }
 
-    private void OnConfirmPressed(Entity _)
+    private void OnConfirmPressed(object? sender, MyraEventArgs e)
     {
         ConfirmOfferButton.Visible = AcceptOfferButton.Visible = DeclineOfferButton.Visible = false;
         OfferDisabledPanel.Visible = true;
         viewModel.Confirm();
-    }
-
-    private void OnPostDraw()
-    {
-        if (!Panel.Visible) return;
-
-        var ownOffer = viewModel.OwnOffer;
-        var theirOffer = viewModel.TheirOffer;
-
-        for (var i = 0; i < OwnGrid.TotalSlots; i++)
-        {
-            if (i >= ownOffer.Length) break;
-            var rect = OwnGrid.GetSlotRect(i);
-            var offer = ownOffer[i];
-            if (offer != null && offer.Definition is { } item)
-                itemRenderer.DrawItem(item, offer.Amount, new Vector2(rect.X, rect.Y));
-        }
-
-        if (theirOffer == null) return;
-        for (var i = 0; i < TheirGrid.TotalSlots; i++)
-        {
-            if (i >= theirOffer.Length) break;
-            var rect = TheirGrid.GetSlotRect(i);
-            var offer = theirOffer[i];
-            if (offer != null && offer.Definition is { } item)
-                itemRenderer.DrawItem(item, offer.Amount, new Vector2(rect.X, rect.Y));
-        }
     }
 }

@@ -2,8 +2,8 @@ using CryBits.Client.Commands;
 using CryBits.Client.Network.Senders;
 using CryBits.Definitions.Common;
 using CryBits.Simulation.Intents;
-using Iguina.Entities;
 using Microsoft.Xna.Framework;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game;
 
@@ -50,7 +50,7 @@ internal class Chat
     public void Type()
     {
         if (!_uiContext.TryGet<Panel>("ChatPanel", out var panel) ||
-            !_uiContext.TryGet<TextInput>("ChatInput", out var input))
+            !_uiContext.TryGet<TextBox>("ChatInput", out var input))
             return;
 
         panel.Visible = !panel.Visible;
@@ -58,21 +58,21 @@ internal class Chat
         if (panel.Visible)
         {
             VisibilityTimer = Environment.TickCount64 + SleepTimer;
-            _uiContext.UISystem.FocusedEntity = input;
+            _uiContext.Desktop.FocusedKeyboardWidget = input;
             return;
         }
 
-        _uiContext.UISystem.FocusedEntity = null;
+        _uiContext.Desktop.FocusedKeyboardWidget = null;
 
-        var message = input.Value;
+        var message = input.Text;
 
         if (message.Length < 3)
         {
-            input.Value = string.Empty;
+            input.Text = string.Empty;
             return;
         }
 
-        input.Value = string.Empty;
+        input.Text = string.Empty;
 
         if (!_dispatcher.TryDispatch(message))
             SendMessage(message);

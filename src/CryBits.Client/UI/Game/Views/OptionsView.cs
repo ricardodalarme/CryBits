@@ -4,49 +4,50 @@ using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Simulation.Core;
-using Iguina.Entities;
+using Myra.Events;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game.Views;
 
 internal class OptionsView(UiContext uiContext, AudioManager audioManager, World world, Chat chat) : ViewBase
 {
-    internal Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
-    internal Checkbox MusicsCheckbox => uiContext.Get<Checkbox>("Music");
-    internal Checkbox ChatCheckbox => uiContext.Get<Checkbox>("ChatPreview");
-    internal Checkbox MetricsCheckbox => uiContext.Get<Checkbox>("ShowFPS");
-    internal Checkbox PartyCheckbox => uiContext.Get<Checkbox>("PartyInvites");
-    internal Checkbox TradeCheckbox => uiContext.Get<Checkbox>("TradeInvites");
+    internal CheckButton SoundsCheckbox => uiContext.Get<CheckButton>("Sounds");
+    internal CheckButton MusicsCheckbox => uiContext.Get<CheckButton>("Music");
+    internal CheckButton ChatCheckbox => uiContext.Get<CheckButton>("ChatPreview");
+    internal CheckButton MetricsCheckbox => uiContext.Get<CheckButton>("ShowFPS");
+    internal CheckButton PartyCheckbox => uiContext.Get<CheckButton>("PartyInvites");
+    internal CheckButton TradeCheckbox => uiContext.Get<CheckButton>("TradeInvites");
 
     public override void Bind()
     {
-        SoundsCheckbox.Events.OnValueChanged += OnSoundsChanged;
-        MusicsCheckbox.Events.OnValueChanged += OnMusicsChanged;
-        ChatCheckbox.Events.OnValueChanged += OnChatChanged;
-        MetricsCheckbox.Events.OnValueChanged += OnMetricsChanged;
-        PartyCheckbox.Events.OnValueChanged += OnPartyInvitationsChanged;
-        TradeCheckbox.Events.OnValueChanged += OnTradeInvitationsChanged;
+        SoundsCheckbox.Click += OnSoundsChanged;
+        MusicsCheckbox.Click += OnMusicsChanged;
+        ChatCheckbox.Click += OnChatChanged;
+        MetricsCheckbox.Click += OnMetricsChanged;
+        PartyCheckbox.Click += OnPartyInvitationsChanged;
+        TradeCheckbox.Click += OnTradeInvitationsChanged;
     }
 
     public override void Unbind()
     {
-        SoundsCheckbox.Events.OnValueChanged -= OnSoundsChanged;
-        MusicsCheckbox.Events.OnValueChanged -= OnMusicsChanged;
-        ChatCheckbox.Events.OnValueChanged -= OnChatChanged;
-        MetricsCheckbox.Events.OnValueChanged -= OnMetricsChanged;
-        PartyCheckbox.Events.OnValueChanged -= OnPartyInvitationsChanged;
-        TradeCheckbox.Events.OnValueChanged -= OnTradeInvitationsChanged;
+        SoundsCheckbox.Click -= OnSoundsChanged;
+        MusicsCheckbox.Click -= OnMusicsChanged;
+        ChatCheckbox.Click -= OnChatChanged;
+        MetricsCheckbox.Click -= OnMetricsChanged;
+        PartyCheckbox.Click -= OnPartyInvitationsChanged;
+        TradeCheckbox.Click -= OnTradeInvitationsChanged;
     }
 
-    private void OnSoundsChanged(Entity _)
+    private void OnSoundsChanged(object? sender, MyraEventArgs e)
     {
-        Options.Instance.Sounds = SoundsCheckbox.Checked;
+        Options.Instance.Sounds = SoundsCheckbox.IsChecked;
         if (!Options.Instance.Sounds) audioManager.StopAllSounds();
         OptionsRepository.Write();
     }
 
-    private void OnMusicsChanged(Entity _)
+    private void OnMusicsChanged(object? sender, MyraEventArgs e)
     {
-        Options.Instance.Musics = MusicsCheckbox.Checked;
+        Options.Instance.Musics = MusicsCheckbox.IsChecked;
         OptionsRepository.Write();
 
         if (!Options.Instance.Musics)
@@ -57,28 +58,28 @@ internal class OptionsView(UiContext uiContext, AudioManager audioManager, World
             audioManager.PlayMusic(Musics.Menu);
     }
 
-    private void OnChatChanged(Entity _)
+    private void OnChatChanged(object? sender, MyraEventArgs e)
     {
-        Options.Instance.Chat = ChatCheckbox.Checked;
+        Options.Instance.Chat = ChatCheckbox.IsChecked;
         OptionsRepository.Write();
         if (Options.Instance.Chat) chat.VisibilityTimer = Environment.TickCount64 + Chat.SleepTimer;
     }
 
-    private void OnMetricsChanged(Entity _)
+    private void OnMetricsChanged(object? sender, MyraEventArgs e)
     {
-        Options.Instance.ShowMetrics = MetricsCheckbox.Checked;
+        Options.Instance.ShowMetrics = MetricsCheckbox.IsChecked;
         OptionsRepository.Write();
     }
 
-    private void OnPartyInvitationsChanged(Entity _)
+    private void OnPartyInvitationsChanged(object? sender, MyraEventArgs e)
     {
-        Options.Instance.Party = PartyCheckbox.Checked;
+        Options.Instance.Party = PartyCheckbox.IsChecked;
         OptionsRepository.Write();
     }
 
-    private void OnTradeInvitationsChanged(Entity _)
+    private void OnTradeInvitationsChanged(object? sender, MyraEventArgs e)
     {
-        Options.Instance.Trade = TradeCheckbox.Checked;
+        Options.Instance.Trade = TradeCheckbox.IsChecked;
         OptionsRepository.Write();
     }
 }

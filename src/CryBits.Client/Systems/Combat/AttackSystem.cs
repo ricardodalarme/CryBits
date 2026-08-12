@@ -5,8 +5,8 @@ using CryBits.Client.Replication;
 using CryBits.Client.UI;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
-using Iguina.Entities;
 using Microsoft.Xna.Framework.Input;
+using Myra.Graphics2D.UI;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Combat;

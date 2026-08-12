@@ -1,5 +1,6 @@
 using CryBits.Client.UI.Game.ViewModels;
-using Iguina.Entities;
+using Myra.Events;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -8,7 +9,7 @@ internal class ShopSellView(
     ShopViewModel viewModel) : ViewBase
 {
     internal Panel Panel => uiContext.Get<Panel>("ShopSell");
-    internal NumericInput AmountInput => uiContext.Get<NumericInput>("SellAmount");
+    internal SpinButton AmountInput => uiContext.Get<SpinButton>("SellAmount");
     private Button ConfirmButton => uiContext.Get<Button>("SellConfirm");
     private Button CancelButton => uiContext.Get<Button>("SellCancel");
 
@@ -22,29 +23,30 @@ internal class ShopSellView(
 
     public override void Bind()
     {
-        ConfirmButton.Events.OnClick += OnConfirmPressed;
-        CancelButton.Events.OnClick += OnCancelPressed;
+        ConfirmButton.Click += OnConfirmPressed;
+        CancelButton.Click += OnCancelPressed;
     }
 
     public override void Unbind()
     {
-        ConfirmButton.Events.OnClick -= OnConfirmPressed;
-        CancelButton.Events.OnClick -= OnCancelPressed;
+        ConfirmButton.Click -= OnConfirmPressed;
+        CancelButton.Click -= OnCancelPressed;
     }
 
-    private void OnConfirmPressed(Entity _)
+    private void OnConfirmPressed(object? sender, MyraEventArgs e)
     {
-        if (AmountInput.NumericValue <= 0)
+        var amount = AmountInput.Value ?? 0;
+        if (amount <= 0)
         {
-            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Invalid", "Enter a valid value!");
+            Dialog.CreateMessageBox("Invalid", "Enter a valid value!").ShowModal(uiContext.Desktop);
             return;
         }
 
-        viewModel.Sell(_inventorySlot, (short)AmountInput.NumericValue);
+        viewModel.Sell(_inventorySlot, (short)amount);
         Panel.Visible = false;
     }
 
-    private void OnCancelPressed(Entity _)
+    private void OnCancelPressed(object? sender, MyraEventArgs e)
     {
         Panel.Visible = false;
     }

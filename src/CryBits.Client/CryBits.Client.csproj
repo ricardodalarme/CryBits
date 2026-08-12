@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Title>Client</Title>
@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Iguina" />
+    <PackageReference Include="Myra" />
     <PackageReference Include="MonoGame.Framework.Native" />
     <PackageReference Include="FontStashSharp.MonoGame" />
     <PackageReference Include="LiteNetLib" />

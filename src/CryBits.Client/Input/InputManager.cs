@@ -1,12 +1,12 @@
-using Iguina;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.Input;
 
-public class InputManager(UISystem system)
+public class InputManager(Desktop desktop)
 {
-    private readonly UISystem _uiSystem = system;
+    private readonly Desktop _desktop = desktop;
 
     private KeyboardState _previousKeyboardState;
     private KeyboardState _currentKeyboardState;
@@ -36,14 +36,14 @@ public class InputManager(UISystem system)
     /// </summary>
     public bool IsKeyDown(Keys key)
     {
-        if (_uiSystem.FocusedEntity != null) return false;
+        if (_desktop.FocusedKeyboardWidget != null) return false;
         return _currentKeyboardState.IsKeyDown(key);
     }
 
     /// <summary>Returns true if the key was released this frame.</summary>
     public bool WasKeyReleased(Keys key)
     {
-        if (_uiSystem.FocusedEntity != null) return false;
+        if (_desktop.FocusedKeyboardWidget != null) return false;
         return _previousKeyboardState.IsKeyDown(key) && _currentKeyboardState.IsKeyUp(key);
     }
 

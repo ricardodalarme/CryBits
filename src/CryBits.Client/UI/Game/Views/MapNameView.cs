@@ -1,8 +1,8 @@
 using CryBits.Client.Core;
 using CryBits.Definitions.Maps;
 using CryBits.Simulation.Core;
-using Iguina.Entities;
-using Color = Iguina.Defs.Color;
+using Microsoft.Xna.Framework;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -12,13 +12,13 @@ internal class MapNameView(UiContext uiContext, World world) : ViewBase
 
     public override void Bind()
     {
-        Track(
-            () => uiContext.PostDraw += OnPostDraw,
-            () => uiContext.PostDraw -= OnPostDraw
-        );
     }
 
-    private void OnPostDraw()
+    public override void Unbind()
+    {
+    }
+
+    public void UpdateMapName()
     {
         var map = world.CurrentMap;
         if (map == null)
@@ -29,11 +29,10 @@ internal class MapNameView(UiContext uiContext, World world) : ViewBase
 
         MapNameLabel.Visible = true;
         MapNameLabel.Text = map.Name;
-
-        MapNameLabel.OverrideStyles.TextFillColor = map.Moral switch
+        MapNameLabel.TextColor = map.Moral switch
         {
-            Moral.Dangerous => new Color(255, 0, 0, 255),
-            _ => new Color(255, 255, 255, 255)
+            Moral.Dangerous => Color.Red,
+            _ => Color.White
         };
     }
 }
