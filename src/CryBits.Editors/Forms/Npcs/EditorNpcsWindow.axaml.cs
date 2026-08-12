@@ -1,12 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Media.Imaging;
 using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
+using CryBits.Editors.Network;
 using CryBits.Editors.Utils;
 
 namespace CryBits.Editors.Forms.Npcs;
@@ -14,12 +14,13 @@ namespace CryBits.Editors.Forms.Npcs;
 internal partial class EditorNpcsWindow : Window
 {
     private readonly DefinitionCatalog _catalog;
+    private readonly PackageSender _sender;
     private NpcEditorViewModel? _viewModel;
 
-    public static void Open(Window owner)
+    public static void Open(Window owner, DefinitionCatalog catalog, PackageSender sender)
     {
         owner.Hide();
-        var window = new EditorNpcsWindow(Program.Catalog);
+        var window = new EditorNpcsWindow(catalog, sender);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }
@@ -28,9 +29,10 @@ internal partial class EditorNpcsWindow : Window
 
     private Npc? _selected;
 
-    public EditorNpcsWindow(DefinitionCatalog catalog)
+    public EditorNpcsWindow(DefinitionCatalog catalog, PackageSender sender)
     {
         _catalog = catalog;
+        _sender = sender;
         InitializeComponent();
 
         foreach (var ms in Enum.GetValues<MovementStyle>())
@@ -61,7 +63,7 @@ internal partial class EditorNpcsWindow : Window
     {
         if (lstNpcs.SelectedItem is not Npc npc) return;
         _selected = npc;
-        _viewModel = new NpcEditorViewModel(npc, _catalog);
+        _viewModel = new NpcEditorViewModel(npc, _catalog, _sender);
         DataContext = _viewModel;
         _viewModel.RequestClose += Close;
         _viewModel.RequestRefreshList += RefreshNpcList;

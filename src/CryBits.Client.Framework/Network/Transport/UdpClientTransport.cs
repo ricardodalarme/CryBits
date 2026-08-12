@@ -11,7 +11,7 @@ public class UdpClientTransport : IClientTransport
     private NetPeer? _peer;
 
     /// <summary>Latest measured round-trip latency in milliseconds.</summary>
-    public static int Latency;
+    public int Latency { get; private set; }
 
     public bool IsConnected => _peer?.ConnectionState == ConnectionState.Connected;
 

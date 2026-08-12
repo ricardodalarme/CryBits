@@ -14,10 +14,8 @@ namespace CryBits.Client.Framework.Network;
 /// </summary>
 public class Connection(IClientTransport transport)
 {
-    public static Connection Instance { get; set; } = null!;
-
     /// <summary>Latest measured round-trip latency in milliseconds.</summary>
-    public static int Latency => UdpClientTransport.Latency;
+    public int Latency => transport.Latency;
 
     public void Start(Action onDisconnected)
     {

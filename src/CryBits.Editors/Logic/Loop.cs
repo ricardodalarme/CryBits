@@ -1,39 +1,26 @@
-using CryBits.Client.Framework.Audio;
-using CryBits.Client.Framework.Network;
-using CryBits.Editors.Entities;
-using CryBits.Editors.Forms.Maps;
+using CryBits.Editors.Core;
 
 namespace CryBits.Editors.Logic;
 
-internal class Loop(MapInstance mapInstance)
+internal class Loop(EditorShell shell)
 {
-    public static Loop? Instance { get; set; }
-
     /// <summary>
-    /// Start the editor main loop: process incoming data, update state and present render targets.
+    /// Run the editor tick loop: process incoming data, update map state and play map music.
     /// </summary>
-    public void Init()
+    public async Task Run()
     {
-        long timer1000 = 0;
+        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(10));
         short fps = 0;
+        long timer1000 = 0;
 
-        while (Program.Working)
+        while (shell.Working && await timer.WaitForNextTickAsync())
             try
             {
-                var count = Environment.TickCount64;
-
-                Connection.Instance.Poll();
-
-                mapInstance.UpdateFog();
-                mapInstance.UpdateWeather();
-                MapsMusic();
-
-                // Throttle loop to ~10ms per iteration.
-                while (Environment.TickCount64 < count + 10) Thread.Sleep(1);
+                Tick();
 
                 if (timer1000 < Environment.TickCount64)
                 {
-                    Program.Fps = fps;
+                    shell.Fps = fps;
                     fps = 0;
                     timer1000 = Environment.TickCount64 + 1000;
                 }
@@ -47,41 +34,49 @@ internal class Loop(MapInstance mapInstance)
                 Console.WriteLine($"[Editor] Loop threw an exception: {ex}");
             }
 
-        Program.Close();
+        shell.Close();
     }
 
-    private static void MapsMusic()
+    private void Tick()
+    {
+        shell.Connection.Poll();
+        shell.MapInstance.UpdateFog();
+        shell.MapInstance.UpdateWeather();
+        MapsMusic();
+    }
+
+    private void MapsMusic()
     {
         // Return early when the selected map is unavailable or audio is disabled.
-        var win = EditorMapsWindow.Instance;
+        var win = shell.MapsWindow;
         if (win?.SelectedMap == null) return;
         if (!win.IsOpen)
         {
-            AudioManager.Instance?.StopMusic();
+            shell.Audio.StopMusic();
             return;
         }
 
         if (!win.ShowAudioSafe)
         {
-            AudioManager.Instance?.StopMusic();
+            shell.Audio.StopMusic();
             return;
         }
 
         if (!win.ShowVisualizationSafe)
         {
-            AudioManager.Instance?.StopMusic();
+            shell.Audio.StopMusic();
             return;
         }
 
         if (string.IsNullOrEmpty(win.SelectedMap?.Music))
         {
-            AudioManager.Instance?.StopMusic();
+            shell.Audio.StopMusic();
             return;
         }
 
         // Start the map music if not already playing.
-        if (AudioManager.Instance?.CurrentMusicDevice == null ||
-            AudioManager.Instance?.CurrentMusicName != win.SelectedMap?.Music)
-            AudioManager.Instance?.PlayMusic(win.SelectedMap!.Music);
+        if (shell.Audio.CurrentMusicDevice == null ||
+            shell.Audio.CurrentMusicName != win.SelectedMap?.Music)
+            shell.Audio.PlayMusic(win.SelectedMap!.Music);
     }
 }

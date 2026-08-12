@@ -80,9 +80,9 @@ internal class ShopView(
     {
         if (slot >= viewModel.SoldItems.Count) return;
         var itemVM = viewModel.SoldItems[slot];
-        if (itemVM.Definition == null) return;
+        if (itemVM.Definition is not { } item) return;
 
-        tooltip.Show(itemVM.ItemId,
+        tooltip.Show(item,
             new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5),
             "Price: " + itemVM.Price);
     }

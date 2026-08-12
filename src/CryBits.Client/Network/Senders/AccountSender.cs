@@ -1,17 +1,16 @@
 using CryBits.Client.Framework.Network;
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Protocol.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
-internal class AccountSender(Connection connection, DefinitionCatalog catalog)
+internal class AccountSender(Connection connection)
 {
-    public void CreateCharacter(string name, bool isMale, short @class, short textureNum) =>
+    public void CreateCharacter(string name, bool isMale, Guid classId, short textureNum) =>
         connection.SendPacket(new CreateCharacterPacket
         {
             Name = name,
-            ClassId = catalog.Classes.ElementAt(@class).Value.Id.ToString(),
+            ClassId = classId.ToString(),
             Gender = isMale ? Gender.Male : Gender.Female,
             TextureNum = textureNum
         });

@@ -8,7 +8,8 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Editors.Forms.Npcs;
 
-internal sealed partial class NpcEditorViewModel(Npc model, DefinitionCatalog catalog) : ObservableObject
+internal sealed partial class NpcEditorViewModel(Npc model, DefinitionCatalog catalog, PackageSender sender)
+    : ObservableObject
 {
     private Npc Model { get; } = model;
 
@@ -173,14 +174,14 @@ internal sealed partial class NpcEditorViewModel(Npc model, DefinitionCatalog ca
     [RelayCommand]
     private void Save()
     {
-        PackageSender.Instance!.WriteNpcs();
+        sender.WriteNpcs(catalog.Npcs);
         RequestClose?.Invoke();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        PackageSender.Instance!.RequestNpcs();
+        sender.RequestNpcs();
         RequestClose?.Invoke();
     }
 }

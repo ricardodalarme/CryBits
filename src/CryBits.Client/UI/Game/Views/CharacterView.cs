@@ -76,9 +76,9 @@ internal class CharacterView(
     private void OnSlotHoverEnter(int slot)
     {
         var equipVM = viewModel.Equipment[slot];
-        if (equipVM == null || equipVM.ItemId == Guid.Empty) return;
+        if (equipVM is not { Definition: { } item }) return;
 
-        tooltip.Show(equipVM.ItemId, new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5));
+        tooltip.Show(item, new Point(Panel.LastBoundingRect.X - 186, Panel.LastBoundingRect.Y + 5));
     }
 
     private void RenderFace()
@@ -117,8 +117,8 @@ internal class CharacterView(
         for (var i = 0; i < EquipmentGrid.TotalSlots; i++)
         {
             var rect = EquipmentGrid.GetSlotRect(i);
-            var itemId = viewModel.Equipment[i]?.ItemId ?? Guid.Empty;
-            equipmentRenderer.DrawSlot(i, itemId, new Point(rect.X, rect.Y));
+            var item = viewModel.Equipment[i]?.Definition;
+            equipmentRenderer.DrawSlot(i, item, new Point(rect.X, rect.Y));
         }
     }
 }

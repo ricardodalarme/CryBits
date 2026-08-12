@@ -6,9 +6,9 @@ using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Network.Transport;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Definitions.Catalog;
-using CryBits.Editors.Entities;
+using CryBits.Editors.Core;
 using CryBits.Editors.Forms.Login;
-using CryBits.Editors.Logic;
+using CryBits.Editors.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Editors.Network.Handlers;
 using static CryBits.Definitions.Globals;
@@ -17,13 +17,6 @@ namespace CryBits.Editors;
 
 internal static class Program
 {
-    public static bool Working = true;
-    public static short Fps;
-
-    internal static DefinitionCatalog Catalog = null!;
-    internal static PackageSender Sender = null!;
-    internal static Loop EditorLoop = null!;
-
     private static void Main()
     {
         Directories.Create();
@@ -31,31 +24,26 @@ internal static class Program
 
         // ── Create all infrastructure ──
         var audio = new AudioManager();
-        AudioManager.Instance = audio;
         var catalog = new DefinitionCatalog();
-        Catalog = catalog;
+        var renderer = new Renderer();
         var clientTransport = new UdpClientTransport();
         clientTransport.Connect("localhost", Config.Port, Config.GameName);
         var connection = new Connection(clientTransport);
-        Connection.Instance = connection;
-        connection.Start(onDisconnected: Leave);
-        var sender = new PackageSender(connection, catalog);
-        PackageSender.Instance = Sender = sender;
+        var sender = new PackageSender(connection);
+        var shell = new EditorShell(catalog, audio, connection, sender, renderer);
 
         audio.LoadSounds();
-        PacketDispatcher.Register(new AuthHandler());
+        PacketDispatcher.Register(new AuthHandler(shell));
         PacketDispatcher.Register(new ContentHandler(catalog));
 
         // ── Start game loop ──
+        connection.Start(onDisconnected: () => Leave(shell));
         var loopThread = new Thread(() =>
         {
             App.WaitUntilReady();
 
-            var loop = new Loop(MapInstance.Instance);
-            EditorLoop = loop;
-            Loop.Instance = loop;
-            LoginWindow.Open();
-            loop.Init();
+            LoginWindow.Open(shell);
+            shell.Loop.Run().GetAwaiter().GetResult();
         })
         { IsBackground = true };
         loopThread.Start();
@@ -70,7 +58,7 @@ internal static class Program
             .UsePlatformDetect()
             .LogToTrace();
 
-    private static void Leave()
+    private static void Leave(EditorShell shell)
     {
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
@@ -79,19 +67,7 @@ internal static class Program
                 foreach (var win in desktop.Windows.ToArray())
                     win.Close();
 
-            LoginWindow.Open();
+            LoginWindow.Open(shell);
         });
-    }
-
-    public static void Close()
-    {
-        var waitTimer = Environment.TickCount64;
-
-        Connection.Instance.Disconnect();
-
-        while (Connection.Instance.IsConnected && Environment.TickCount64 <= waitTimer + 1000)
-            Thread.Sleep(10);
-
-        Working = false;
     }
 }

@@ -26,6 +26,9 @@ public sealed class Game : IDisposable
     private readonly MenuScreen _menuScreen = null!;
     private GameSession? _activeSession;
 
+    /// <summary>Latest measured frame rate, written by the launcher loop, read by the UI.</summary>
+    public short Fps { get; set; }
+
     public Game(SpriteBatch spriteBatch, Connection connection)
     {
         _spriteBatch = spriteBatch;
@@ -41,7 +44,7 @@ public sealed class Game : IDisposable
         RegisterIntentTypes();
 
         _menuScreen = new MenuScreen(_audioManager, _uiContext, new AuthSender(connection),
-            new AccountSender(connection, _catalog), new PortraitRenderer(spriteBatch), _catalog, connection);
+            new AccountSender(connection), new PortraitRenderer(spriteBatch), _catalog, connection);
 
         PacketDispatcher.Register(new AuthHandler(_catalog, _uiContext, _menuScreen));
         PacketDispatcher.Register(new AccountHandler(this, _menuScreen));
@@ -87,7 +90,8 @@ public sealed class Game : IDisposable
     {
         if (_activeSession != null) return;
         _activeSession = new GameSession(
-            _uiContext, _spriteBatch, _inputManager, _audioManager, _catalog, _connection, localPlayerId
+            _uiContext, _spriteBatch, _inputManager, _audioManager, _catalog, _connection,
+            () => Fps, localPlayerId
         );
     }
 
@@ -105,8 +109,6 @@ public sealed class Game : IDisposable
         _activeSession = null;
         _menuScreen.Open();
     }
-
-    public static short Fps { get; set; }
 
     public void Dispose()
     {

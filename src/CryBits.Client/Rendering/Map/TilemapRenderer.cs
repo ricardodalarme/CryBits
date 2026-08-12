@@ -1,3 +1,4 @@
+using CryBits.Client.Core;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Rendering.Camera;
 using CryBits.Definitions.Maps;
@@ -7,7 +8,6 @@ using SFML.Graphics;
 using SFML.System;
 using static CryBits.Definitions.Globals;
 using Color = SFML.Graphics.Color;
-using CryBits.Client.Core;
 
 namespace CryBits.Client.Rendering.Map;
 

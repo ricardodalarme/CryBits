@@ -59,6 +59,8 @@ public sealed class LoopbackClientTransport : IClientTransport
 
     public bool IsConnected { get; private set; }
 
+    public int Latency => 0;
+
     public event Action? OnConnected;
     public event Action? OnDisconnected;
     public event Action<byte[]>? OnDataReceived;

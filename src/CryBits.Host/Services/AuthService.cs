@@ -1,3 +1,4 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Host.Core;
 using CryBits.Host.Network.Senders;
@@ -18,6 +19,7 @@ internal sealed class AuthService(
     AccountSender accountSender,
     AccountRepository accountRepository,
     CharacterRepository characterRepository,
+    DefinitionCatalog catalog,
     WorldHost host,
     ILogger<AuthService> logger)
 {
@@ -69,11 +71,11 @@ internal sealed class AuthService(
             }
 
             session.InEditor = true;
-            contentSender.Maps(session);
-            contentSender.Items(session);
-            contentSender.Shops(session);
-            contentSender.Classes(session);
-            contentSender.Npcs(session);
+            contentSender.Maps(session, catalog.Maps, session.InEditor);
+            contentSender.Items(session, catalog.Items);
+            contentSender.Shops(session, catalog.Shops);
+            contentSender.Classes(session, catalog.Classes);
+            contentSender.Npcs(session, catalog.Npcs);
             authSender.Connect(session);
         }
         else
@@ -82,7 +84,7 @@ internal sealed class AuthService(
                 .GetSlots(session.Account.Username)
                 .Select(c => new Account.CharacterSlot { Name = c.Name, TextureNum = c.TextureNum })
                 .ToList();
-            contentSender.Classes(session);
+            contentSender.Classes(session, catalog.Classes);
             accountSender.Characters(session);
 
             if (session.Account.Characters.Count == 0)
@@ -133,7 +135,7 @@ internal sealed class AuthService(
         });
 
         logger.ZLogInformation($"Account {user} registered");
-        contentSender.Classes(session);
+        contentSender.Classes(session, catalog.Classes);
         accountSender.CreateCharacter(session);
     }
 }

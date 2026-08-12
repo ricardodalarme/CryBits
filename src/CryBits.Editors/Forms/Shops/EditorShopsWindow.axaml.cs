@@ -4,6 +4,7 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Shops;
+using CryBits.Editors.Network;
 using CryBits.Editors.Utils;
 
 namespace CryBits.Editors.Forms.Shops;
@@ -11,18 +12,19 @@ namespace CryBits.Editors.Forms.Shops;
 internal partial class EditorShopsWindow : Window
 {
     private readonly DefinitionCatalog _catalog;
+    private readonly PackageSender _sender;
     private ShopEditorViewModel? _viewModel;
 
-    public static void Open(Window owner)
+    public static void Open(Window owner, DefinitionCatalog catalog, PackageSender sender)
     {
-        if (Program.Catalog.Items.Count == 0)
+        if (catalog.Items.Count == 0)
         {
             MessageBox.Show("It must have at least one item registered to open the store editor.");
             return;
         }
 
         owner.Hide();
-        var window = new EditorShopsWindow(Program.Catalog);
+        var window = new EditorShopsWindow(catalog, sender);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }
@@ -30,9 +32,10 @@ internal partial class EditorShopsWindow : Window
     private Shop? _selected;
     private bool _addingToSold;
 
-    public EditorShopsWindow(DefinitionCatalog catalog)
+    public EditorShopsWindow(DefinitionCatalog catalog, PackageSender sender)
     {
         _catalog = catalog;
+        _sender = sender;
         InitializeComponent();
 
         var items = _catalog.Items.Values.ToList();
@@ -78,7 +81,7 @@ internal partial class EditorShopsWindow : Window
         Groups_Visibility();
         if (_selected == null) return;
 
-        _viewModel = new ShopEditorViewModel(_selected, _catalog);
+        _viewModel = new ShopEditorViewModel(_selected, _catalog, _sender);
         DataContext = _viewModel;
         _viewModel.RequestClose += () => Close();
         _viewModel.RequestRefreshList += () => List_Update(_selected?.Id);

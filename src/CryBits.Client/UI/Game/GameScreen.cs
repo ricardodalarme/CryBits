@@ -1,6 +1,7 @@
 using CryBits.Client.Core;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Input;
 using CryBits.Client.Rendering;
 using CryBits.Client.Rendering.UI;
@@ -38,6 +39,7 @@ internal class GameScreen
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
         InputManager inputManager, AudioManager audioManager, TooltipView tooltip,
         Chat chat, GameInput gameInput,
+        Connection connection, Func<short> getFps,
         StatsViewModel statsViewModel, CharacterViewModel characterViewModel, InventoryViewModel inventoryViewModel,
         HotbarViewModel hotbarViewModel, TradeViewModel tradeViewModel, PartyViewModel partyViewModel,
         ShopViewModel shopViewModel)
@@ -59,7 +61,7 @@ internal class GameScreen
         TradeInvitationView = new(uiContext, session.IntentSender);
         TradeView = new(uiContext, itemRenderer, InventoryView, this, tradeViewModel);
         MapNameView = new(uiContext, session.World);
-        MetricsView = new(uiContext);
+        MetricsView = new(uiContext, connection, getFps);
         PartyView = new(uiContext, spriteBatch, partyViewModel);
         StatsView = new(uiContext, statsViewModel);
         _chat = chat;

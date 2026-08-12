@@ -1,3 +1,4 @@
+using CryBits.Editors.Core;
 using CryBits.Editors.Forms.Login;
 using CryBits.Editors.Forms.Maps;
 using CryBits.Editors.Utils;
@@ -6,7 +7,7 @@ using CryBits.Protocol.Packets.Server;
 
 namespace CryBits.Editors.Network.Handlers;
 
-internal class AuthHandler
+internal class AuthHandler(EditorShell shell)
 {
     [PacketHandler]
     internal void Alert(AlertPacket packet)
@@ -17,7 +18,7 @@ internal class AuthHandler
     [PacketHandler]
     internal void Connect(ConnectPacket _)
     {
-        LoginWindow.HideWindow();
-        EditorMapsWindow.Open();
+        LoginWindow.HideWindow(shell);
+        EditorMapsWindow.Open(shell);
     }
 }

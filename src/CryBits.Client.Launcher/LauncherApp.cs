@@ -1,3 +1,4 @@
+using CryBits.Client.Core;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Network.Transport;
@@ -69,7 +70,7 @@ public sealed class LauncherApp : IDisposable
 
                 if (timer1000 < Environment.TickCount64)
                 {
-                    Game.Fps = fps;
+                    _game.Fps = fps;
                     fps = 0;
                     timer1000 = Environment.TickCount64 + 1000;
                 }

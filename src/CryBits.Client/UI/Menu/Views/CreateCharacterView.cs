@@ -104,10 +104,11 @@ internal class CreateCharacterView(
 
     private void OnCreatePressed(Entity _)
     {
+        var classId = catalog.Classes.Count == 0 ? Guid.Empty : catalog.Classes.ElementAt(_currentClass).Key;
         accountSender.CreateCharacter(
             name: NameTextBox.Value,
             isMale: GenderMaleRadio.Checked,
-            @class: _currentClass,
+            classId: classId,
             textureNum: _currentTexture
         );
     }

@@ -1,8 +1,6 @@
 using CryBits.Client.Framework.UI.Entities;
 using CryBits.Client.Rendering.UI;
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using Iguina.Entities;
 using Attribute = CryBits.Definitions.Characters.Attribute;
@@ -11,7 +9,7 @@ using DrawingPoint = System.Drawing.Point;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TooltipView(UiContext uiContext, ItemIconRenderer itemRenderer, DefinitionCatalog catalog) : ViewBase
+internal class TooltipView(UiContext uiContext, ItemIconRenderer itemRenderer) : ViewBase
 {
     private Panel Panel => uiContext.Get<Panel>("Information");
     private Label TitleLabel => uiContext.Get<Label>("InfoTitle");
@@ -29,15 +27,8 @@ internal class TooltipView(UiContext uiContext, ItemIconRenderer itemRenderer, D
         Hide();
     }
 
-    public void Show(Guid itemId, DrawingPoint position, string? contextLine = null)
+    public void Show(Item item, DrawingPoint position, string? contextLine = null)
     {
-        var item = catalog.Items.Get(itemId);
-        if (item == null)
-        {
-            Hide();
-            return;
-        }
-
         _currentItem = item;
 
         Panel.Offset.SetPixels(position.X, position.Y);

@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Entities.Tile;
@@ -18,10 +17,10 @@ namespace CryBits.Editors.Forms.Tiles;
 
 internal partial class EditorTilesWindow : Window
 {
-    public static void Open(Window owner)
+    public static void Open(Window owner, TileRenderer tileRenderer)
     {
         owner.Hide();
-        var window = new EditorTilesWindow();
+        var window = new EditorTilesWindow(tileRenderer);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }
@@ -29,11 +28,13 @@ internal partial class EditorTilesWindow : Window
     private const int CanvasW = 298;
     private const int CanvasH = 443;
 
+    private readonly TileRenderer _tileRenderer;
     private readonly TileEditorViewModel? _viewModel;
     private readonly DispatcherTimer? _timer;
 
-    public EditorTilesWindow()
+    public EditorTilesWindow(TileRenderer tileRenderer)
     {
+        _tileRenderer = tileRenderer;
         InitializeComponent();
 
         _viewModel = new TileEditorViewModel();
@@ -43,7 +44,7 @@ internal partial class EditorTilesWindow : Window
         scrlTileX.Value = 0;
         scrlTileY.Value = 0;
 
-        TileRenderer.Instance.WinTile = new RenderTexture(new Vector2u(CanvasW, CanvasH));
+        _tileRenderer.WinTile = new RenderTexture(new Vector2u(CanvasW, CanvasH));
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
         _timer.Tick += OnRenderTick;
@@ -53,18 +54,18 @@ internal partial class EditorTilesWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
-        TileRenderer.Instance.WinTile?.Dispose();
-        TileRenderer.Instance.WinTile = null;
+        _tileRenderer.WinTile?.Dispose();
+        _tileRenderer.WinTile = null;
         base.OnClosed(e);
     }
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
-        if (TileRenderer.Instance.WinTile == null || _viewModel == null) return;
+        if (_tileRenderer.WinTile == null || _viewModel == null) return;
 
-        TileRenderer.Instance.Tile(_viewModel.TileIndex, _viewModel.ScrollX, _viewModel.ScrollY,
+        _tileRenderer.Tile(_viewModel.TileIndex, _viewModel.ScrollX, _viewModel.ScrollY,
             _viewModel.IsAttributeMode);
-        imgCanvas.Blit(TileRenderer.Instance.WinTile);
+        imgCanvas.Blit(_tileRenderer.WinTile);
     }
 
     private void imgCanvas_PointerPressed(object? sender, PointerPressedEventArgs e)

@@ -4,6 +4,7 @@ using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
+using CryBits.Editors.Network;
 using CryBits.Editors.Utils;
 using Class = CryBits.Definitions.Classes.Class;
 using Map = CryBits.Definitions.Maps.Map;
@@ -13,18 +14,19 @@ namespace CryBits.Editors.Forms.Classes;
 internal partial class EditorClassesWindow : Window
 {
     private readonly DefinitionCatalog _catalog;
+    private readonly PackageSender _sender;
     private ClassEditorViewModel? _viewModel;
 
-    public static void Open(Window owner)
+    public static void Open(Window owner, DefinitionCatalog catalog, PackageSender sender)
     {
-        if (Program.Catalog.Maps.Count == 0)
+        if (catalog.Maps.Count == 0)
         {
             MessageBox.Show("It must have at least one map registered before editing classes.");
             return;
         }
 
         owner.Hide();
-        var window = new EditorClassesWindow(Program.Catalog);
+        var window = new EditorClassesWindow(catalog, sender);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }
@@ -34,9 +36,10 @@ internal partial class EditorClassesWindow : Window
     private Class? _selected;
     private bool _addingToMale;
 
-    public EditorClassesWindow(DefinitionCatalog catalog)
+    public EditorClassesWindow(DefinitionCatalog catalog, PackageSender sender)
     {
         _catalog = catalog;
+        _sender = sender;
         InitializeComponent();
 
         cmbItems.ItemsSource = _catalog.Items.Values.ToList();
@@ -63,7 +66,7 @@ internal partial class EditorClassesWindow : Window
     {
         if (lstClasses.SelectedItem is not Class cls) return;
         _selected = cls;
-        _viewModel = new ClassEditorViewModel(cls, _catalog);
+        _viewModel = new ClassEditorViewModel(cls, _catalog, _sender);
         DataContext = _viewModel;
         _viewModel.RequestClose += () => Close();
         _viewModel.RequestRefreshList += RefreshClassList;

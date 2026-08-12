@@ -34,7 +34,7 @@ internal sealed class SilentLogger<T> : ILogger<T>
     }
 }
 
-public sealed class EmbeddedHostRunner : IDisposable
+public sealed class EmbeddedHostRunner() : IDisposable
 {
     private WorldHost? _host;
     private CancellationTokenSource? _cts;
@@ -69,7 +69,7 @@ public sealed class EmbeddedHostRunner : IDisposable
         var sessions = new SessionManager();
         var packageSender = new PackageSender(pair.Server, sessions, simulation.Entities);
 
-        var contentSender = new ContentSender(packageSender, catalog);
+        var contentSender = new ContentSender(packageSender);
         var chatSender = new ChatSender(packageSender, simulation.Entities);
 
         var deltaEncoder = new DeltaEncoder(simulation);
@@ -97,7 +97,7 @@ public sealed class EmbeddedHostRunner : IDisposable
 
         hostDispatcher.Register(new AuthService(
             authSender, contentSender,
-            accountSenderHost, accountRepo, charRepo, _host, new SilentLogger<AuthService>()));
+            accountSenderHost, accountRepo, charRepo, catalog, _host, new SilentLogger<AuthService>()));
 
         var partyService = new Host.Services.Party.PartyService(_host.IntentFunnel, ps, chatSender, ss, simulation);
 

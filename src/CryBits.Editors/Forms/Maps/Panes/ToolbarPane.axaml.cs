@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using CryBits.Client.Framework;
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
 using CryBits.Editors.Forms.Classes;
 using CryBits.Editors.Forms.Items;
@@ -9,6 +10,7 @@ using CryBits.Editors.Forms.Npcs;
 using CryBits.Editors.Forms.Shops;
 using CryBits.Editors.Forms.Tiles;
 using CryBits.Editors.Forms.UI;
+using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Network;
 using CryBits.Editors.Utils;
 using DefinitionsTileData = CryBits.Definitions.Maps.TileData;
@@ -23,6 +25,9 @@ internal sealed record ToolbarDeps
     public required MapCanvasPane CanvasPane { get; init; }
     public required LayersPane LayersPane { get; init; }
     public required TileSheetPane TileSheetPane { get; init; }
+    public required DefinitionCatalog Catalog { get; init; }
+    public required PackageSender Sender { get; init; }
+    public required TileRenderer TileRenderer { get; init; }
     public required Func<Map?> GetSelectedMap { get; init; }
     public required Func<SystemRect> GetMapSelection { get; init; }
     public required Func<DefinitionsTileData> MakeSetTile { get; init; }
@@ -81,12 +86,12 @@ internal partial class ToolbarPane : UserControl
         butEdition.Click += OnEdition;
         butAudio.Click += OnAudio;
 
-        butEditors_Classes.Click += (_, _) => EditorClassesWindow.Open(_deps!.ParentWindow!);
+        butEditors_Classes.Click += (_, _) => EditorClassesWindow.Open(_deps!.ParentWindow!, _deps!.Catalog, _deps!.Sender);
         butEditors_Interface.Click += (_, _) => EditorUILayoutWindow.Open(_deps!.ParentWindow!);
-        butEditors_Items.Click += (_, _) => EditorItemsWindow.Open(_deps!.ParentWindow!);
-        butEditors_NPCs.Click += (_, _) => EditorNpcsWindow.Open(_deps!.ParentWindow!);
-        butEditors_Shops.Click += (_, _) => EditorShopsWindow.Open(_deps!.ParentWindow!);
-        butEditors_Tiles.Click += (_, _) => EditorTilesWindow.Open(_deps!.ParentWindow!);
+        butEditors_Items.Click += (_, _) => EditorItemsWindow.Open(_deps!.ParentWindow!, _deps!.Catalog, _deps!.Sender);
+        butEditors_NPCs.Click += (_, _) => EditorNpcsWindow.Open(_deps!.ParentWindow!, _deps!.Catalog, _deps!.Sender);
+        butEditors_Shops.Click += (_, _) => EditorShopsWindow.Open(_deps!.ParentWindow!, _deps!.Catalog, _deps!.Sender);
+        butEditors_Tiles.Click += (_, _) => EditorTilesWindow.Open(_deps!.ParentWindow!, _deps!.TileRenderer);
     }
 
     // ── Mode / tool helpers ─────────────────────────────────────────
@@ -111,7 +116,7 @@ internal partial class ToolbarPane : UserControl
 
     private void OnSaveAll(object? sender, RoutedEventArgs e)
     {
-        PackageSender.Instance!.WriteMaps();
+        _deps?.Sender.WriteMaps(_deps.Catalog.Maps);
         MessageBox.Show("All maps has been saved");
     }
 
@@ -119,7 +124,7 @@ internal partial class ToolbarPane : UserControl
     {
         var map = _deps?.GetSelectedMap();
         if (map == null) return;
-        PackageSender.Instance!.RequestMap(map);
+        _deps!.Sender.RequestMap(map);
     }
 
     // ── Mode handlers ───────────────────────────────────────────────

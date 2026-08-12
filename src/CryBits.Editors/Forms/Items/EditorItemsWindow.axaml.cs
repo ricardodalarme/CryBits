@@ -1,10 +1,10 @@
 using Avalonia.Controls;
-using Avalonia.Media.Imaging;
 using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Classes;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
+using CryBits.Editors.Network;
 using CryBits.Editors.Utils;
 
 namespace CryBits.Editors.Forms.Items;
@@ -12,12 +12,13 @@ namespace CryBits.Editors.Forms.Items;
 internal partial class EditorItemsWindow : Window
 {
     private readonly DefinitionCatalog _catalog;
+    private readonly PackageSender _sender;
     private ItemEditorViewModel? _viewModel;
 
-    public static void Open(Window owner)
+    public static void Open(Window owner, DefinitionCatalog catalog, PackageSender sender)
     {
         owner.Hide();
-        var window = new EditorItemsWindow(Program.Catalog);
+        var window = new EditorItemsWindow(catalog, sender);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }
@@ -26,9 +27,10 @@ internal partial class EditorItemsWindow : Window
 
     private Item? _selected;
 
-    public EditorItemsWindow(DefinitionCatalog catalog)
+    public EditorItemsWindow(DefinitionCatalog catalog, PackageSender sender)
     {
         _catalog = catalog;
+        _sender = sender;
         InitializeComponent();
 
         numTexture.Maximum = Textures.Items.Count - 1;
@@ -70,7 +72,7 @@ internal partial class EditorItemsWindow : Window
     {
         if (lstItems.SelectedItem is not Item item) return;
         _selected = item;
-        _viewModel = new ItemEditorViewModel(item, _catalog);
+        _viewModel = new ItemEditorViewModel(item, _catalog, _sender);
         DataContext = _viewModel;
 
         _viewModel.RequestClose += Close;

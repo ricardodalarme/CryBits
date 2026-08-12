@@ -8,7 +8,8 @@ using Class = CryBits.Definitions.Classes.Class;
 
 namespace CryBits.Editors.Forms.Classes;
 
-internal sealed partial class ClassEditorViewModel(Class model, DefinitionCatalog catalog) : ObservableObject
+internal sealed partial class ClassEditorViewModel(Class model, DefinitionCatalog catalog, PackageSender sender)
+    : ObservableObject
 {
     public Class Model { get; } = model;
 
@@ -154,14 +155,14 @@ internal sealed partial class ClassEditorViewModel(Class model, DefinitionCatalo
     [RelayCommand]
     private void Save()
     {
-        PackageSender.Instance!.WriteClasses();
+        sender.WriteClasses(catalog.Classes);
         RequestClose?.Invoke();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        PackageSender.Instance!.RequestClasses();
+        sender.RequestClasses();
         RequestClose?.Invoke();
     }
 }

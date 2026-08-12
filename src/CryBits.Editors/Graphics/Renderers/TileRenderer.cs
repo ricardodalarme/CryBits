@@ -11,8 +11,6 @@ namespace CryBits.Editors.Graphics.Renderers;
 
 internal class TileRenderer(Renderer renderer)
 {
-    public static TileRenderer Instance { get; } = new(Renderer.Instance);
-
     /// <summary>
     /// Render targets used by the editor windows.
     /// </summary>

@@ -1,14 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Definitions;
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
-using CryBits.Editors.Entities;
+using CryBits.Editors.Core;
 using CryBits.Editors.Forms.Maps.Models;
 using CryBits.Editors.Forms.Maps.Panes;
-using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Utils;
 using SFML.Graphics;
 using SFML.System;
@@ -21,29 +18,27 @@ namespace CryBits.Editors.Forms.Maps;
 
 internal partial class EditorMapsWindow : Window
 {
-    private readonly DefinitionCatalog _catalog;
+    private readonly EditorShell _shell;
 
-    public static void Open()
+    public static void Open(EditorShell context)
     {
         Dispatcher.UIThread.Post(() =>
         {
-            var window = new EditorMapsWindow(Program.Catalog);
+            var window = new EditorMapsWindow(context);
             window.Show();
         });
     }
 
-    public static void Open(Window parent)
+    public static void Open(EditorShell context, Window parent)
     {
         Dispatcher.UIThread.Post(async () =>
         {
             parent.Hide();
-            var window = new EditorMapsWindow(Program.Catalog);
+            var window = new EditorMapsWindow(context);
             await window.ShowDialog(parent);
             parent.Show();
         });
     }
-
-    public static EditorMapsWindow? Instance { get; private set; }
 
     private volatile bool _isOpen;
     private volatile bool _showAudio;
@@ -115,11 +110,10 @@ internal partial class EditorMapsWindow : Window
 
     private readonly DispatcherTimer? _timer;
 
-    public EditorMapsWindow(DefinitionCatalog catalog)
+    public EditorMapsWindow(EditorShell context)
     {
-        _catalog = catalog;
+        _shell = context;
         InitializeComponent();
-        Instance = this;
 
         tileSheetPane = new TileSheetPane();
         layersPane = new LayersPane();
@@ -127,7 +121,7 @@ internal partial class EditorMapsWindow : Window
         npcPane = new NpcPane();
         zonesPane = new ZonesPane();
         mapCanvasPane = new MapCanvasPane();
-        explorerPane = new MapExplorerPane { Catalog = _catalog };
+        explorerPane = new MapExplorerPane { Catalog = _shell.Catalog };
         propertiesPane = new PropertiesPane();
 
         // Build the left panel content
@@ -261,6 +255,9 @@ internal partial class EditorMapsWindow : Window
             PaintTile = (x, y, t) => mapCanvasPane.PaintTileForTool(x, y, t),
             ResetMapSelectionSize = () => mapCanvasPane.ResetMapSelectionSize(),
             SetShowAudio = v => _showAudio = v,
+            Catalog = _shell.Catalog,
+            Sender = _shell.Sender,
+            TileRenderer = _shell.TileRenderer,
             ParentWindow = this,
             SetLeftPanelMode = mode => SetMode(mode),
             PopulateNpcCombo = () => npcPane.PopulateCombo()
@@ -287,10 +284,11 @@ internal partial class EditorMapsWindow : Window
         // Assign content to Dock model after layout has been initialized
         AssignContentToDockModels();
 
-        MapRenderer.Instance.WinMap = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
-        MapRenderer.Instance.WinMapTile =
+        _shell.MapRenderer.WinMap = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
+        _shell.MapRenderer.WinMapTile =
             new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
 
+        _shell.MapsWindow = this;
         _timer!.Start();
         explorerPane.RefreshList();
         _isOpen = true;
@@ -302,11 +300,11 @@ internal partial class EditorMapsWindow : Window
     {
         _isOpen = false;
         _timer?.Stop();
-        MapRenderer.Instance.WinMap?.Dispose();
-        MapRenderer.Instance.WinMap = null;
-        MapRenderer.Instance.WinMapTile?.Dispose();
-        MapRenderer.Instance.WinMapTile = null;
-        Instance = null;
+        _shell.MapRenderer.WinMap?.Dispose();
+        _shell.MapRenderer.WinMap = null;
+        _shell.MapRenderer.WinMapTile?.Dispose();
+        _shell.MapRenderer.WinMapTile = null;
+        _shell.MapsWindow = null;
         base.OnClosed(e);
     }
 
@@ -316,33 +314,33 @@ internal partial class EditorMapsWindow : Window
         var vh = (int)mapCanvasPane.ZoomBorder.Bounds.Height;
         if (vw > 0 && vh > 0)
         {
-            var winMap = MapRenderer.Instance.WinMap;
+            var winMap = _shell.MapRenderer.WinMap;
             if (winMap == null || winMap.Size.X != vw || winMap.Size.Y != vh)
             {
                 winMap?.Dispose();
-                MapRenderer.Instance.WinMap = new RenderTexture(new Vector2u((uint)vw, (uint)vh));
+                _shell.MapRenderer.WinMap = new RenderTexture(new Vector2u((uint)vw, (uint)vh));
             }
         }
 
-        if (MapRenderer.Instance.WinMap != null && SelectedMap != null)
+        if (_shell.MapRenderer.WinMap != null && SelectedMap != null)
         {
-            MapRenderer.Instance.EditorMapsMap();
-            mapCanvasPane.ImgMap.Blit(MapRenderer.Instance.WinMap);
+            _shell.MapRenderer.EditorMapsMap();
+            mapCanvasPane.ImgMap.Blit(_shell.MapRenderer.WinMap);
         }
 
         if (ModeNormal)
         {
             var tw = (uint)TileCanvasWidth;
             var th = (uint)TileCanvasHeight;
-            var tileMap = MapRenderer.Instance.WinMapTile;
+            var tileMap = _shell.MapRenderer.WinMapTile;
             if (tileMap == null || tileMap.Size.X != tw || tileMap.Size.Y != th)
             {
                 tileMap?.Dispose();
                 tileMap = new RenderTexture(new Vector2u(tw, th));
-                MapRenderer.Instance.WinMapTile = tileMap;
+                _shell.MapRenderer.WinMapTile = tileMap;
             }
 
-            MapRenderer.Instance.EditorMapsTile();
+            _shell.MapRenderer.EditorMapsTile();
             tileSheetPane.ImgTile.Blit(tileMap);
         }
 
@@ -362,12 +360,12 @@ internal partial class EditorMapsWindow : Window
         attributesPane.RefreshWarpMapCombo();
 
         if (_mapProps != null) _mapProps.PropertyChanged -= OnMapPropertyChanged;
-        _mapProps = new MapProperties(map);
+        _mapProps = new MapProperties(map, _shell.MapInstance);
         _mapProps.PropertyChanged += OnMapPropertyChanged;
         propertiesPane.PrgMapProperties.DataContext = _mapProps;
 
         npcPane.RefreshList();
-        MapInstance.Instance.UpdateWeatherType();
+        _shell.MapInstance.UpdateWeatherType();
         layersPane.RefreshChunkList();
     }
 
@@ -381,7 +379,7 @@ internal partial class EditorMapsWindow : Window
 
     private void UpdateStatusBar()
     {
-        lblFPS.Text = $"FPS: {Program.Fps}";
+        lblFPS.Text = $"FPS: {_shell.Fps}";
         var m = mapCanvasPane.MapMouse;
         var cx = m.X / MapMath.ChunkSize;
         var cy = m.Y / MapMath.ChunkSize;

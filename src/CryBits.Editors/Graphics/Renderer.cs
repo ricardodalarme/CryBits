@@ -9,8 +9,6 @@ namespace CryBits.Editors.Graphics;
 
 internal class Renderer
 {
-    public static Renderer Instance { get; } = new();
-
     public void Draw(IRenderTarget window, Texture texture, Rectangle source, Rectangle destiny,
         Color? color = null)
     {

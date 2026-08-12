@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Editors.Iguina;
 using CryBits.Editors.Utils;

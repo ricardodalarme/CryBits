@@ -6,7 +6,8 @@ using CryBits.Editors.Network;
 
 namespace CryBits.Editors.Forms.Shops;
 
-internal sealed partial class ShopEditorViewModel(Shop model, DefinitionCatalog catalog) : ObservableObject
+internal sealed partial class ShopEditorViewModel(Shop model, DefinitionCatalog catalog, PackageSender sender)
+    : ObservableObject
 {
     public Shop Model { get; } = model;
 
@@ -41,14 +42,14 @@ internal sealed partial class ShopEditorViewModel(Shop model, DefinitionCatalog 
     [RelayCommand]
     private void Save()
     {
-        PackageSender.Instance!.WriteShops();
+        sender.WriteShops(catalog.Shops);
         RequestClose?.Invoke();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        PackageSender.Instance!.RequestShops();
+        sender.RequestShops();
         RequestClose?.Invoke();
     }
 }

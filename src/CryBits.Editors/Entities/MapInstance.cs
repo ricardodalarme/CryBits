@@ -5,10 +5,9 @@ using CryBits.Editors.Forms.Maps;
 
 namespace CryBits.Editors.Entities;
 
-internal class MapInstance
+internal class MapInstance(AudioManager audio, Func<EditorMapsWindow?> getMapsWindow)
 {
-    public static MapInstance Instance { get; } = new();
-
+    private EditorMapsWindow? Window => getMapsWindow();
     private long _fogXTimer;
     private long _fogYTimer;
     private long _snowTimer;
@@ -27,7 +26,7 @@ internal class MapInstance
 
     public void UpdateFog()
     {
-        var win = EditorMapsWindow.Instance;
+        var win = Window;
         if (win is not { IsOpen: true }) return;
         if (win.SelectedMap == null) return;
         if (win.SelectedMap.DefaultFog?.Texture == 0) return;
@@ -37,7 +36,7 @@ internal class MapInstance
 
     private void UpdateFogX()
     {
-        var map = EditorMapsWindow.Instance!.SelectedMap!;
+        var map = Window!.SelectedMap!;
         var fog = map.DefaultFog;
         if (fog == null) return;
         var textureSize = Textures.Fogs[fog.Texture].ToSize();
@@ -63,7 +62,7 @@ internal class MapInstance
 
     private void UpdateFogY()
     {
-        var map = EditorMapsWindow.Instance!.SelectedMap!;
+        var map = Window!.SelectedMap!;
         var fog = map.DefaultFog;
         if (fog == null) return;
         var textureSize = Textures.Fogs[fog.Texture].ToSize();
@@ -91,25 +90,25 @@ internal class MapInstance
     {
         bool stop = false, move;
 
-        var win = EditorMapsWindow.Instance;
+        var win = Window;
         if (win?.SelectedMap == null) return;
 
         var weatherType = win.SelectedMap.DefaultWeather;
         if (!win.IsOpen || weatherType == WeatherType.None || !win.ShowVisualizationSafe)
         {
-            if (AudioManager.Instance!.IsPlaying(Sounds.Rain))
-                AudioManager.Instance.StopAllSounds();
+            if (audio.IsPlaying(Sounds.Rain))
+                audio.StopAllSounds();
             return;
         }
 
         if (weatherType is WeatherType.Rain or WeatherType.Thunder)
         {
-            if (!AudioManager.Instance!.IsPlaying(Sounds.Rain))
-                AudioManager.Instance.PlaySound(Sounds.Rain, true);
+            if (!audio.IsPlaying(Sounds.Rain))
+                audio.PlaySound(Sounds.Rain, true);
         }
-        else if (AudioManager.Instance!.IsPlaying(Sounds.Rain))
+        else if (audio.IsPlaying(Sounds.Rain))
         {
-            AudioManager.Instance.StopAllSounds();
+            audio.StopAllSounds();
         }
 
         if (_snowTimer < Environment.TickCount64)
@@ -165,7 +164,7 @@ internal class MapInstance
             {
                 var thunderList = new[] { Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4 };
                 var thunder = Random.Shared.Next(0, thunderList.Length);
-                AudioManager.Instance?.PlaySound(thunderList[thunder]);
+                audio.PlaySound(thunderList[thunder]);
 
                 if (thunder < 3) Lightning = 190;
             }

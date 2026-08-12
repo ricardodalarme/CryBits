@@ -7,7 +7,7 @@ using CryBits.Editors.Utils;
 
 namespace CryBits.Editors.Forms.Login;
 
-internal sealed partial class LoginViewModel : ObservableObject
+internal sealed partial class LoginViewModel(Connection connection, PackageSender sender) : ObservableObject
 {
     [ObservableProperty]
     private string _username = Options.Instance.Username;
@@ -27,13 +27,13 @@ internal sealed partial class LoginViewModel : ObservableObject
             return;
         }
 
-        if (Connection.Instance == null || !Connection.Instance.TryConnect())
+        if (!connection.TryConnect())
         {
             MessageBox.Show("The server is currently unavailable.");
             return;
         }
 
-        PackageSender.Instance!.Connect(Username, Password);
+        sender.Connect(Username, Password);
 
         if (SaveUsername)
         {

@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CryBits.Editors.Forms.Maps.Models;
 
-internal class MapProperties(Map map) : MiniReactiveObject
+internal class MapProperties(Map map, MapInstance mapInstance) : MiniReactiveObject
 {
     public readonly Map Base = map;
 
@@ -105,7 +105,7 @@ internal class MapProperties(Map map) : MiniReactiveObject
         set
         {
             Base.DefaultWeather = value;
-            MapInstance.Instance?.UpdateWeatherType();
+            mapInstance.UpdateWeatherType();
         }
     }
 

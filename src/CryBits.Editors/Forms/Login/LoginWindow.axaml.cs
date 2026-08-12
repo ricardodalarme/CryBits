@@ -1,45 +1,44 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
+using CryBits.Client.Framework.Network;
+using CryBits.Editors.Core;
+using CryBits.Editors.Network;
 
 namespace CryBits.Editors.Forms.Login;
 
 internal partial class LoginWindow : Window
 {
-    private static LoginWindow? _instance;
-
-    public static void Open()
+    public static void Open(EditorShell shell)
     {
         Dispatcher.UIThread.Post(() =>
         {
-            if (_instance == null)
+            var window = shell.LoginWindow ??= new LoginWindow(shell.Sender, shell.Connection);
+            window.Closed += (_, _) =>
             {
-                _instance = new LoginWindow();
-                _instance.Closed += (_, _) =>
-                {
-                    _instance = null;
-                    Program.Working = false;
-                };
-            }
+                if (shell.LoginWindow == window)
+                    shell.LoginWindow = null;
+                shell.Working = false;
+            };
 
-            if (!_instance.IsVisible)
-                _instance.Show();
+            if (!window.IsVisible)
+                window.Show();
 
-            _instance.Activate();
+            window.Activate();
         });
     }
 
-    public static void HideWindow()
+    public static void HideWindow(EditorShell shell)
     {
         Dispatcher.UIThread.Post(() =>
         {
-            if (_instance != null && _instance.IsVisible)
-                _instance.Hide();
+            if (shell.LoginWindow != null && shell.LoginWindow.IsVisible)
+                shell.LoginWindow.Hide();
         });
     }
 
-    public LoginWindow()
+    public LoginWindow(PackageSender sender, Connection connection)
     {
         InitializeComponent();
-        DataContext = new LoginViewModel();
+        DataContext = new LoginViewModel(connection, sender);
     }
 }

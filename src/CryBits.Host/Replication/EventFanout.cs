@@ -41,7 +41,7 @@ internal sealed class EventFanout(
                 var session = sessions.Get(warp.PlayerId);
                 if (session == null) return;
 
-                contentSender.Map(session, map.Id);
+                contentSender.Map(session, map, session.InEditor);
                 contentSender.MapRevision(session, map.Id);
 
                 // Send initial AOI chunks for the new map position

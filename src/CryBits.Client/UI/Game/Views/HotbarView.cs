@@ -86,7 +86,7 @@ internal class HotbarView(
             var item = h.Definition;
             if (item == null) return;
             var panelRect = uiContext.Registry["HotbarPanel"].LastBoundingRect;
-            tooltip.Show(item.Id, new Point(panelRect.X, panelRect.Y + 42));
+            tooltip.Show(item, new Point(panelRect.X, panelRect.Y + 42));
         }
     }
 

@@ -106,7 +106,6 @@ builder.ConfigureServices((ctx, services) =>
     services.AddSingleton<AuthSender>();
     services.AddSingleton<ChatSender>();
     services.AddSingleton<ContentSender>();
-    services.AddSingleton<ContentSender>();
 
     services.AddSingleton<TradeService>();
     services.AddSingleton<PartyService>();

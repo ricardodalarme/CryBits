@@ -128,7 +128,7 @@ internal sealed class CharacterService(
             return;
         }
 
-        contentSender.Classes(session);
+        contentSender.Classes(session, catalog.Classes);
         accountSender.CreateCharacter(session);
     }
 
@@ -239,10 +239,10 @@ internal sealed class CharacterService(
         session.Character = entityId;
 
         accountSender.Join(session, entityId);
-        contentSender.Items(session);
-        contentSender.Npcs(session);
-        contentSender.Shops(session);
-        contentSender.Map(session, mapDef.Id);
+        contentSender.Items(session, catalog.Items);
+        contentSender.Npcs(session, catalog.Npcs);
+        contentSender.Shops(session, catalog.Shops);
+        contentSender.Map(session, mapDef);
 
         // Send initial AOI chunk payloads
         var world = host.Simulation;

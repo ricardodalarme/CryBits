@@ -8,7 +8,8 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Editors.Forms.Items;
 
-internal sealed partial class ItemEditorViewModel(Item model, DefinitionCatalog catalog) : ObservableObject
+internal sealed partial class ItemEditorViewModel(Item model, DefinitionCatalog catalog, PackageSender sender)
+    : ObservableObject
 {
     public Item Model { get; } = model;
 
@@ -195,14 +196,14 @@ internal sealed partial class ItemEditorViewModel(Item model, DefinitionCatalog 
     [RelayCommand]
     private void Save()
     {
-        PackageSender.Instance!.WriteItems();
+        sender.WriteItems(catalog.Items);
         RequestClose?.Invoke();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        PackageSender.Instance!.RequestItems();
+        sender.RequestItems();
         RequestClose?.Invoke();
     }
 }

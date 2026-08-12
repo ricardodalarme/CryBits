@@ -56,6 +56,7 @@ internal sealed class GameSession : IDisposable
         AudioManager audioManager,
         DefinitionCatalog catalog,
         Connection connection,
+        Func<short> getFps,
         long localPlayerId)
     {
         var replication = new ReplicationState(localPlayerId);
@@ -76,12 +77,13 @@ internal sealed class GameSession : IDisposable
 
         var portraitRenderer = new PortraitRenderer(spriteBatch);
         var itemIconRenderer = new ItemIconRenderer(spriteBatch);
-        var equipmentSlotRenderer = new EquipmentSlotRenderer(spriteBatch, catalog);
-        var tooltipView = new TooltipView(uiContext, itemIconRenderer, catalog);
+        var equipmentSlotRenderer = new EquipmentSlotRenderer(spriteBatch);
+        var tooltipView = new TooltipView(uiContext, itemIconRenderer);
 
         Screen = new GameScreen(
             this, uiContext, spriteBatch, itemIconRenderer, equipmentSlotRenderer,
             portraitRenderer, inputManager, audioManager, tooltipView, _chat, _gameInput,
+            connection, getFps,
             statsViewModel, characterViewModel, inventoryViewModel, hotbarViewModel, tradeViewModel, partyViewModel,
             shopViewModel
         );

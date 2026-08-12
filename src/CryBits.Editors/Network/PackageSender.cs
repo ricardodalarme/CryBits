@@ -1,15 +1,16 @@
 using CryBits.Client.Framework.Network;
-using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Classes;
+using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
+using CryBits.Definitions.Npcs;
+using CryBits.Definitions.Shops;
 using CryBits.Protocol.Packets.Client;
 using CryBits.Transport;
 
 namespace CryBits.Editors.Network;
 
-internal class PackageSender(Connection connection, DefinitionCatalog catalog)
+internal class PackageSender(Connection connection)
 {
-    public static PackageSender? Instance { get; set; }
-
     public void Connect(string username, string password) =>
         connection.SendPacket(new ConnectPacket { Username = username, Password = password, IsClientAccess = true });
 
@@ -22,9 +23,14 @@ internal class PackageSender(Connection connection, DefinitionCatalog catalog)
     public void RequestNpcs() => connection.SendPacket(new RequestNpcsPacket(), DeliveryChannel.ReliableUnordered);
     public void RequestItems() => connection.SendPacket(new RequestItemsPacket(), DeliveryChannel.ReliableUnordered);
     public void RequestShops() => connection.SendPacket(new RequestShopsPacket(), DeliveryChannel.ReliableUnordered);
-    public void WriteClasses() => connection.SendPacket(new WriteClassesPacket { Classes = catalog.Classes });
-    public void WriteMaps() => connection.SendPacket(new WriteMapsPacket { Maps = catalog.Maps });
-    public void WriteNpcs() => connection.SendPacket(new WriteNpcsPacket { Npcs = catalog.Npcs });
-    public void WriteItems() => connection.SendPacket(new WriteItemsPacket { Items = catalog.Items });
-    public void WriteShops() => connection.SendPacket(new WriteShopsPacket { Shops = catalog.Shops });
+    public void WriteClasses(Dictionary<Guid, Class> classes) =>
+        connection.SendPacket(new WriteClassesPacket { Classes = classes });
+    public void WriteMaps(Dictionary<Guid, Map> maps) =>
+        connection.SendPacket(new WriteMapsPacket { Maps = maps });
+    public void WriteNpcs(Dictionary<Guid, Npc> npcs) =>
+        connection.SendPacket(new WriteNpcsPacket { Npcs = npcs });
+    public void WriteItems(Dictionary<Guid, Item> items) =>
+        connection.SendPacket(new WriteItemsPacket { Items = items });
+    public void WriteShops(Dictionary<Guid, Shop> shops) =>
+        connection.SendPacket(new WriteShopsPacket { Shops = shops });
 }

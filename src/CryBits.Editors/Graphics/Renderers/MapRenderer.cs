@@ -10,16 +10,16 @@ using Color = SFML.Graphics.Color;
 
 namespace CryBits.Editors.Graphics.Renderers;
 
-internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
+internal class MapRenderer(Renderer renderer, MapInstance mapInstance, Func<EditorMapsWindow?> getMapsWindow)
 {
-    public static MapRenderer Instance { get; } = new(Renderer.Instance, MapInstance.Instance);
+    private EditorMapsWindow? Window => getMapsWindow();
 
     public RenderTexture? WinMap;
     public RenderTexture? WinMapTile;
 
     public void EditorMapsTile()
     {
-        var win = EditorMapsWindow.Instance;
+        var win = Window;
         if (WinMapTile == null || win is not { ModeNormal: true }) return;
 
         WinMapTile.Clear(Color.Black);
@@ -37,7 +37,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
     public void EditorMapsMap()
     {
-        var win = EditorMapsWindow.Instance;
+        var win = Window;
         if (WinMap == null || win == null) return;
         var selected = win.SelectedMap;
         if (selected == null) return;
@@ -54,7 +54,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
     private void EditorMapsMapPanorama(Map map)
     {
-        var win = EditorMapsWindow.Instance!;
+        var win = Window!;
         if (win.ShowVisualizationSafe && map.Panorama > 0)
         {
             var destiny = new Rectangle
@@ -69,7 +69,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
     private void EditorMapsMapTiles(Map map)
     {
-        var win = EditorMapsWindow.Instance!;
+        var win = Window!;
         var scrollX = win.MapScrollX;
         var scrollY = win.MapScrollY;
         var viewW = (win.MapCanvasWidth / Grid) + ChunkSize;
@@ -129,7 +129,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
     private void EditorMapsMapAttributes(Map map, int scrollX, int scrollY, int viewW, int viewH)
     {
-        var win = EditorMapsWindow.Instance!;
+        var win = Window!;
         var startCx = (scrollX / ChunkSize) - 1;
         var startCy = (scrollY / ChunkSize) - 1;
         var endCx = ((scrollX + viewW) / ChunkSize) + 1;
@@ -190,7 +190,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
     private void RenderFog(Map map)
     {
-        var win = EditorMapsWindow.Instance!;
+        var win = Window!;
         if (map.DefaultFog is not { Texture: > 0 } || !win.ShowVisualizationSafe) return;
 
         var textureSize = Textures.Fogs[map.DefaultFog.Texture].ToSize();
@@ -210,7 +210,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
     private void EditorMapsMapWeather(Map map)
     {
-        var win = EditorMapsWindow.Instance!;
+        var win = Window!;
         if (!win.ShowVisualizationSafe || map.DefaultWeather == WeatherType.None) return;
 
         byte srcX = 0;
@@ -225,7 +225,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
     private void EditorMapsMapGrids(Map map)
     {
-        var win = EditorMapsWindow.Instance!;
+        var win = Window!;
         Rectangle source = win.TileSource, destiny = new();
         var begin = new Point(win.MapSelection.X - win.MapScrollX, win.MapSelection.Y - win.MapScrollY);
 
@@ -272,7 +272,7 @@ internal class MapRenderer(Renderer renderer, MapInstance mapInstance)
 
     private void EditorMapsMapNpcs(Map map)
     {
-        var win = EditorMapsWindow.Instance!;
+        var win = Window!;
         if (!win.ModeNPCs) return;
 
         for (byte i = 0; i < map.Npc.Count; i++)

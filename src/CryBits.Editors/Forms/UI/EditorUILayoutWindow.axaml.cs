@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Dtos;

@@ -116,7 +116,7 @@ internal class InventoryView(
             additionalInfo = "Sale price: " + price;
 
         var panelRect = uiContext.Registry["InventoryPanel"].LastBoundingRect;
-        tooltip.Show(item.Id, new Point(panelRect.X - 186, panelRect.Y + 3), additionalInfo);
+        tooltip.Show(item, new Point(panelRect.X - 186, panelRect.Y + 3), additionalInfo);
     }
 
     private void OnPostDraw()
