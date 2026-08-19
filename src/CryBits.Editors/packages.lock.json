@@ -55,17 +55,17 @@
       },
       "Dock.Avalonia": {
         "type": "Direct",
-        "requested": "[12.1.0, )",
-        "resolved": "12.1.0",
-        "contentHash": "8DVsw0SuqCYJEp047z7eEojazspqL5uJhP6IgXDvjYi38cWBkyHokUvslB+Ebdb1n7+yUV4+XdIZeBO7o0ZAIA==",
+        "requested": "[12.1.0.2, )",
+        "resolved": "12.1.0.2",
+        "contentHash": "sl3FUXVAEDU0q6xUTNOjBI+XNmhl8gmiiBhtvjyYvbl2k4Km2Q1mTzaYJdJeBBeJueoCvi1qX7eK4KQiFmJong==",
         "dependencies": {
           "Avalonia": "12.1.0",
-          "Dock.Controls.DeferredContentControl": "12.1.0",
-          "Dock.Controls.ProportionalStackPanel": "12.1.0",
-          "Dock.Controls.Recycling": "12.1.0",
-          "Dock.MarkupExtension": "12.1.0",
-          "Dock.Model": "12.1.0",
-          "Dock.Settings": "12.1.0"
+          "Dock.Controls.DeferredContentControl": "12.1.0.2",
+          "Dock.Controls.ProportionalStackPanel": "12.1.0.2",
+          "Dock.Controls.Recycling": "12.1.0.2",
+          "Dock.MarkupExtension": "12.1.0.2",
+          "Dock.Model": "12.1.0.2",
+          "Dock.Settings": "12.1.0.2"
         }
       },
       "Dock.Model.Avalonia": {
@@ -330,57 +330,57 @@
       },
       "Dock.Controls.DeferredContentControl": {
         "type": "Transitive",
-        "resolved": "12.1.0",
-        "contentHash": "2DBJg2qQcNeJ4xO38rHk6/ECqf0jOd9LWFEYWrjmrsgKPlDx0X6TH1tDJ8wvILcf4FmKoY5BbmOd4aGQTqd3zQ==",
+        "resolved": "12.1.0.2",
+        "contentHash": "FIm8Lz16xzY8SGtQsB0nkBgOeE0Txwvi+bKwhom+CMyN0X53Bi5nGK0GB8QlplWpLAkQUR1hOnAV6BBw7fUfng==",
         "dependencies": {
           "Avalonia": "12.1.0"
         }
       },
       "Dock.Controls.ProportionalStackPanel": {
         "type": "Transitive",
-        "resolved": "12.1.0",
-        "contentHash": "F+7+iiJp4dn8YlFtY5/YCXlC0zkykkwa7UQQ5YqNIpzeQFTAcE9il1s8j+SvRuPHQkDRCLSqL5gEzFbUsbBrBw==",
+        "resolved": "12.1.0.2",
+        "contentHash": "rQtz3AMI5Qa6fNtezPoVDv5TPYunuTz0zsbR1QyqiMuU3OxyPPWm4qsiUAJvPU5vk1oczyCPMczQmXXol1F5nA==",
         "dependencies": {
           "Avalonia": "12.1.0"
         }
       },
       "Dock.Controls.Recycling": {
         "type": "Transitive",
-        "resolved": "12.1.0",
-        "contentHash": "hD47TpNpOCUdi/j+3aka4sHXy7Ad90CDm5I96HcBc34V45bJyKi6TG+07YR/s3WwMAU1Z6DVzvzvARvbWCfMsw==",
+        "resolved": "12.1.0.2",
+        "contentHash": "fZHNTDzkBgPriXhQ/uGiNh+PC7gSDqIj5jdELOZrJ5U2A8Wx4Rr4eRgYNfRjhv+ZbYZI4JGBjYFxNU6Z3DnsJQ==",
         "dependencies": {
           "Avalonia": "12.1.0",
-          "Dock.Controls.Recycling.Model": "12.1.0"
+          "Dock.Controls.Recycling.Model": "12.1.0.2"
         }
       },
       "Dock.Controls.Recycling.Model": {
         "type": "Transitive",
-        "resolved": "12.1.0",
-        "contentHash": "ZaEVbHi07hUIl2lj2+X59VdgvqzpUYPT+K5Tx6kdCUzOnsqysai/KFIY0IRfZonhmJuuJhc6YHqbgC3eqhjsfw=="
+        "resolved": "12.1.0.2",
+        "contentHash": "kypBT0aVJ+r7kUTWA3nojhwOKSjzytgICPFVnn5na98/sO/BATiNX9dnZNtP4ydz69AlxWwkzQ1eI0UtaIFnYg=="
       },
       "Dock.MarkupExtension": {
         "type": "Transitive",
-        "resolved": "12.1.0",
-        "contentHash": "VSD9IbdeBZllsoTjcCjbEF6xPHF28gEKbuDYT6RaZuyiMETPpdoTcG+hVKqoMAXSTgRQAwD7QPQIXaPABn/MMA==",
+        "resolved": "12.1.0.2",
+        "contentHash": "VaEkYVIu5EVZj/zUuhg5UzDUJRbMF0eCZ4oMXRYHszlEdhQeFH+xxEHrByzrV6Si5sLy9uwW7GM4xo3INYI23w==",
         "dependencies": {
           "Avalonia": "12.1.0"
         }
       },
       "Dock.Model": {
         "type": "Transitive",
-        "resolved": "12.1.0",
-        "contentHash": "FLNWQHB1CF5/Z9Ndog2VbWESv4F5wjWaWn2vm8C61irwE5Rlq4bv/aZS4DxoksKU/QCcgbkO4uJFc6QJRxtI6Q==",
+        "resolved": "12.1.0.2",
+        "contentHash": "JVsG2Ak7SDzq/tv4oD+kyQZwRUW+shPWWwLMyunZsdjUSoo1ZTu5ycpWS4y5OPWD3/+zoe9AFPyYjhOnhGrkOw==",
         "dependencies": {
-          "Dock.Controls.Recycling.Model": "12.1.0"
+          "Dock.Controls.Recycling.Model": "12.1.0.2"
         }
       },
       "Dock.Settings": {
         "type": "Transitive",
-        "resolved": "12.1.0",
-        "contentHash": "9jh6mmbHr2DzHU9JPae/W0/doTX+sw8Sjj8Z2r6puYQIjBqMbojiEW1QMsvwV3xD/ikSCHUVyMH4K85bNnNSHQ==",
+        "resolved": "12.1.0.2",
+        "contentHash": "lAQ61d6hwVxn3Bg+NDHp7cq90t7S9Abo7+GBm27pCBV5QegXVhuXVQQBY6K4aQaehPJE6pZcCZNp72riaUEfhw==",
         "dependencies": {
           "Avalonia": "12.1.0",
-          "Dock.Model": "12.1.0"
+          "Dock.Model": "12.1.0.2"
         }
       },
       "HarfBuzzSharp": {
@@ -411,6 +411,11 @@
         "type": "Transitive",
         "resolved": "8.3.1.3",
         "contentHash": "bx8CE8Js+XGX8PUxAHCBDEORt5aaBYtMN4Hr9QFs57Xithh6yjUyYqksizH6eRDhJkwsGI+SXWmPmMm8lZC9Pw=="
+      },
+      "linq2db.Analyzers": {
+        "type": "Transitive",
+        "resolved": "6.4.0",
+        "contentHash": "sW51KlWzXRrkv7cTyqZdnhpoBWU2+ItxNBjRtaQ1v/8ZdeFu6AIUvpo6UjQ5lvo0vcZnMBh/Eq/FpZ2FqDm7KQ=="
       },
       "MemoryPack.Core": {
         "type": "Transitive",
@@ -529,7 +534,7 @@
           "CryBits.Definitions": "[1.0.0, )",
           "Microsoft.Data.Sqlite": "[10.0.10, )",
           "SQLitePCLRaw.bundle_e_sqlite3": "[3.0.5, )",
-          "linq2db": "[6.3.0, )"
+          "linq2db": "[6.4.0, )"
         }
       },
       "crybits.protocol": {
@@ -547,9 +552,12 @@
       },
       "linq2db": {
         "type": "CentralTransitive",
-        "requested": "[6.3.0, )",
-        "resolved": "6.3.0",
-        "contentHash": "Ew/IWZc9tNBgAYWCME1xN6/QkiVUNp9f3ozHrrugqh4vY3ny7Y8LTqhX8thG0WFPmWer+Kf9lilbFMYu5hXKyw=="
+        "requested": "[6.4.0, )",
+        "resolved": "6.4.0",
+        "contentHash": "HT7s5JztYQqM+Oz5ql9MVDTtTliKg/fkXPiShmjgtSZNAe1UOb4wQeJFA2qWJ77KbnC/KWtk5nr/hJ3Oypbqpg==",
+        "dependencies": {
+          "linq2db.Analyzers": "6.4.0"
+        }
       },
       "MemoryPack": {
         "type": "CentralTransitive",
