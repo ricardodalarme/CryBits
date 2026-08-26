@@ -163,11 +163,11 @@
       },
       "PanAndZoom": {
         "type": "Direct",
-        "requested": "[12.0.0.1, )",
-        "resolved": "12.0.0.1",
-        "contentHash": "M1aIfqmZR8bskdCT0vlC4A8ysBu3F0Qou8uWaqKJnu74cDR3Wp2UEtx2a/YTwp5UZjfDjXruqNNiAQ9+dsxb+g==",
+        "requested": "[12.1.1, )",
+        "resolved": "12.1.1",
+        "contentHash": "8mDi5ebUUGumEoISiL8CDcthW9kRYiVR6Q+PDngfwLQOR5uRxqPcXVHw7Pcop77qrIBog4PUKgxkl1m9OZigbA==",
         "dependencies": {
-          "Avalonia": "12.0.0"
+          "Avalonia": "12.1.1"
         }
       },
       "SFML.Audio": {
