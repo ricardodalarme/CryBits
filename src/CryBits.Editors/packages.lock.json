@@ -38,12 +38,12 @@
       },
       "bodong.Avalonia.PropertyGrid": {
         "type": "Direct",
-        "requested": "[12.0.4.1, )",
-        "resolved": "12.0.4.1",
-        "contentHash": "tuUUG5h2nkONpV4rEVIDtndC6MpNGzk3FbtZoNAwoh2pctycfcSn6FO1WfRaj9dcRIbv5R2P0q3d67nlY0k9aA==",
+        "requested": "[12.1.1.1, )",
+        "resolved": "12.1.1.1",
+        "contentHash": "t1Aee8bEmv2/LUbfZtslX2FF24qqS0/b2LvsOndVKQjuR2lEMu+9jBDJ8WoCdlXx3f1tukQfkkZSB1OFS9cBMw==",
         "dependencies": {
-          "Avalonia": "12.0.4",
-          "Avalonia.Controls.ColorPicker": "12.0.4",
+          "Avalonia": "12.1.1",
+          "Avalonia.Controls.ColorPicker": "12.1.1",
           "bodong.PropertyModels": "12.0.0"
         }
       },
@@ -203,11 +203,11 @@
       },
       "Avalonia.Controls.ColorPicker": {
         "type": "Transitive",
-        "resolved": "12.0.4",
-        "contentHash": "f10wfiK2qPPmuT9kGlo8nf6QXXrGTuD5Q4cImt/QzaPDTlVYD6lpernmlO6Pvr8iPqm5ZAiUvCAskpvwqdwNOw==",
+        "resolved": "12.1.1",
+        "contentHash": "OZzmYVmbYhegdGjvrHeSQVbqINY6g0OMv5HFDiu7lAuaoNcydC5lkmdd+Wn1W+wDjICM488vUkI6xhxy0xbfJQ==",
         "dependencies": {
-          "Avalonia": "12.0.4",
-          "Avalonia.Remote.Protocol": "12.0.4"
+          "Avalonia": "12.1.1",
+          "Avalonia.Remote.Protocol": "12.1.1"
         }
       },
       "Avalonia.Controls.DataGrid": {
