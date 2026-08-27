@@ -1,6 +1,6 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Network;
-using Iguina.Entities;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -11,13 +11,13 @@ internal class MetricsView(UiContext uiContext, Connection connection, Func<shor
 
     public override void Bind()
     {
-        Track(
-            () => uiContext.PostDraw += OnPostDraw,
-            () => uiContext.PostDraw -= OnPostDraw
-        );
     }
 
-    private void OnPostDraw()
+    public override void Unbind()
+    {
+    }
+
+    public void UpdateMetrics()
     {
         if (Options.Instance.ShowMetrics)
         {

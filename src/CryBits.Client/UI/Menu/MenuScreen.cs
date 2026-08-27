@@ -26,12 +26,12 @@ internal class MenuScreen
     {
         _audio = audio;
         _uiContext = uiContext;
-        _backgroundView = new(uiContext, connection, this);
+        _backgroundView = new(uiContext, this);
         _loginView = new(uiContext, authSender, connection, this);
         _registerView = new(uiContext, authSender, connection, this);
-        _optionsPanel = new(uiContext, audio, connection, this);
-        _selectCharacterView = new(uiContext, accountSender, characterRenderer);
-        _createCharacterView = new(uiContext, accountSender, characterRenderer, catalog, this);
+        _optionsPanel = new(uiContext, audio, this);
+        _selectCharacterView = new(uiContext, accountSender);
+        _createCharacterView = new(uiContext, accountSender, catalog, this);
     }
 
     public void Open()

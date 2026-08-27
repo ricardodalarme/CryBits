@@ -6,9 +6,7 @@ using CryBits.Definitions.Maps;
 using CryBits.Editors.Core;
 using CryBits.Editors.Forms.Maps.Models;
 using CryBits.Editors.Forms.Maps.Panes;
-using CryBits.Editors.Utils;
-using SFML.Graphics;
-using SFML.System;
+using CryBits.Editors.Forms.Tiles;
 using System.ComponentModel;
 using DefinitionsTileData = CryBits.Definitions.Maps.TileData;
 using SystemPoint = System.Drawing.Point;
@@ -19,6 +17,7 @@ namespace CryBits.Editors.Forms.Maps;
 internal partial class EditorMapsWindow : Window
 {
     private readonly EditorShell _shell;
+    private readonly DispatcherTimer? _timer;
 
     public static void Open(EditorShell context)
     {
@@ -107,8 +106,6 @@ internal partial class EditorMapsWindow : Window
     private readonly PropertiesPane propertiesPane;
     private readonly Grid _leftPanelRoot;
     private readonly Grid _normalView;
-
-    private readonly DispatcherTimer? _timer;
 
     public EditorMapsWindow(EditorShell context)
     {
@@ -220,7 +217,6 @@ internal partial class EditorMapsWindow : Window
     {
         // Wire pane internal handlers
         tileSheetPane.WireHandlers();
-        // WireHandlers moved into pane constructors
         explorerPane.WireHandlers();
         mapCanvasPane.WireHandlers();
 
@@ -284,12 +280,11 @@ internal partial class EditorMapsWindow : Window
         // Assign content to Dock model after layout has been initialized
         AssignContentToDockModels();
 
-        _shell.MapRenderer.WinMap = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
-        _shell.MapRenderer.WinMapTile =
-            new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
+        _shell.MapRenderer.WinMap = new Microsoft.Xna.Framework.Graphics.RenderTarget2D(Graphics.EditorGraphics.Device, MapCanvasWidth, MapCanvasHeight);
+        _shell.MapRenderer.WinMapTile = new Microsoft.Xna.Framework.Graphics.RenderTarget2D(Graphics.EditorGraphics.Device, TileCanvasWidth, TileCanvasHeight);
 
         _shell.MapsWindow = this;
-        _timer!.Start();
+        _timer?.Start();
         explorerPane.RefreshList();
         _isOpen = true;
         _showAudio = toolbarPane.ShowAudio;
@@ -310,44 +305,55 @@ internal partial class EditorMapsWindow : Window
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
+        Graphics.EditorGraphics.Tick();
         var vw = (int)mapCanvasPane.ZoomBorder.Bounds.Width;
         var vh = (int)mapCanvasPane.ZoomBorder.Bounds.Height;
         if (vw > 0 && vh > 0)
         {
             var winMap = _shell.MapRenderer.WinMap;
-            if (winMap == null || winMap.Size.X != vw || winMap.Size.Y != vh)
+            if (winMap == null || winMap.Width != vw || winMap.Height != vh)
             {
                 winMap?.Dispose();
-                _shell.MapRenderer.WinMap = new RenderTexture(new Vector2u((uint)vw, (uint)vh));
+                _shell.MapRenderer.WinMap = new Microsoft.Xna.Framework.Graphics.RenderTarget2D(Graphics.EditorGraphics.Device, vw, vh);
             }
         }
 
         if (_shell.MapRenderer.WinMap != null && SelectedMap != null)
         {
+            Graphics.EditorGraphics.Device.SetRenderTarget(_shell.MapRenderer.WinMap);
+            Graphics.EditorGraphics.Device.Clear(Microsoft.Xna.Framework.Color.Black);
+            Graphics.EditorGraphics.SpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Deferred, Microsoft.Xna.Framework.Graphics.BlendState.NonPremultiplied, Microsoft.Xna.Framework.Graphics.SamplerState.PointClamp, null, null);
             _shell.MapRenderer.EditorMapsMap();
-            mapCanvasPane.ImgMap.Blit(_shell.MapRenderer.WinMap);
+            Graphics.EditorGraphics.SpriteBatch.End();
+            Graphics.EditorGraphics.Device.SetRenderTarget(null);
+
+            mapCanvasPane.ImgMap.BlitRenderTarget(_shell.MapRenderer.WinMap);
         }
 
         if (ModeNormal)
         {
-            var tw = (uint)TileCanvasWidth;
-            var th = (uint)TileCanvasHeight;
+            var tw = Math.Max(1, TileCanvasWidth);
+            var th = Math.Max(1, TileCanvasHeight);
             var tileMap = _shell.MapRenderer.WinMapTile;
-            if (tileMap == null || tileMap.Size.X != tw || tileMap.Size.Y != th)
+            if (tileMap == null || tileMap.Width != tw || tileMap.Height != th)
             {
                 tileMap?.Dispose();
-                tileMap = new RenderTexture(new Vector2u(tw, th));
+                tileMap = new Microsoft.Xna.Framework.Graphics.RenderTarget2D(Graphics.EditorGraphics.Device, tw, th);
                 _shell.MapRenderer.WinMapTile = tileMap;
             }
 
+            Graphics.EditorGraphics.Device.SetRenderTarget(tileMap);
+            Graphics.EditorGraphics.Device.Clear(Microsoft.Xna.Framework.Color.Black);
+            Graphics.EditorGraphics.SpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Deferred, Microsoft.Xna.Framework.Graphics.BlendState.NonPremultiplied, Microsoft.Xna.Framework.Graphics.SamplerState.PointClamp, null, null);
             _shell.MapRenderer.EditorMapsTile();
-            tileSheetPane.ImgTile.Blit(tileMap);
+            Graphics.EditorGraphics.SpriteBatch.End();
+            Graphics.EditorGraphics.Device.SetRenderTarget(null);
+
+            tileSheetPane.ImgTile.BlitRenderTarget(tileMap);
         }
 
         UpdateStatusBar();
     }
-
-    // ── MAP SELECTION ─────────────────────────────────────────────────
 
     private void SelectMap(Map map)
     {
@@ -375,8 +381,6 @@ internal partial class EditorMapsWindow : Window
             explorerPane.RefreshList(SelectedMap?.Id);
     }
 
-    // ── STATUS BAR ─────────────────────────────────────────────────────
-
     private void UpdateStatusBar()
     {
         lblFPS.Text = $"FPS: {_shell.Fps}";
@@ -388,7 +392,6 @@ internal partial class EditorMapsWindow : Window
         lblPosition.Text = $"Chunk: ({cx},{cy}) Tile: ({lx},{ly}) World: ({m.X},{m.Y})";
     }
 
-    // ── UTILS ─────────────────────────────────────────────────────────
 
     public bool IsLayerVisible(Layer layer)
     {

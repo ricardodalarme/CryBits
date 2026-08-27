@@ -47,8 +47,8 @@ internal sealed partial class TileEditorViewModel : ObservableObject
     private void Clear()
     {
         if (Textures.Tiles.Count == 0 || TileIndex >= Textures.Tiles.Count) return;
-        var tileSize = Textures.Tiles[TileIndex].ToSize();
-        Tile.List[TileIndex] = new Tile(tileSize);
+        var texture = Textures.Tiles[TileIndex]!;
+        Tile.List[TileIndex] = new Tile(new System.Drawing.Size(texture.Width, texture.Height));
     }
 
     [RelayCommand]
@@ -63,10 +63,17 @@ internal sealed partial class TileEditorViewModel : ObservableObject
             return;
         }
 
-        var tex = Textures.Tiles[TileIndex];
+        var texture = Textures.Tiles[TileIndex];
+        if (texture == null)
+        {
+            MaxScrollBoundsX = 0;
+            MaxScrollBoundsY = 0;
+            return;
+        }
+
         const int canvasW = 298;
         const int canvasH = 443;
-        MaxScrollBoundsX = Math.Max(0, (tex.ToSize().Width / G.Grid) - (canvasW / G.Grid));
-        MaxScrollBoundsY = Math.Max(0, (tex.ToSize().Height / G.Grid) - (canvasH / G.Grid));
+        MaxScrollBoundsX = Math.Max(0, (texture.Width / G.Grid) - (canvasW / G.Grid));
+        MaxScrollBoundsY = Math.Max(0, (texture.Height / G.Grid) - (canvasH / G.Grid));
     }
 }

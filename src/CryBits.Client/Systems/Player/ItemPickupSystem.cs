@@ -6,7 +6,7 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.Spatial;
-using SFML.Window;
+using Microsoft.Xna.Framework.Input;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Player;
@@ -24,7 +24,7 @@ internal sealed class ItemPickupSystem(
         if (_cooldown > 0f)
             _cooldown -= dt;
 
-        if (!inputManager.WasKeyReleased(Keyboard.Key.Space)) return;
+        if (!inputManager.WasKeyReleased(Keys.Space)) return;
 
         var entity = replication.LocalPlayerEntity;
         if (entity is null || !world.IsAlive(entity.Value)) return;

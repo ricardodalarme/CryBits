@@ -2,22 +2,16 @@
   "version": 2,
   "dependencies": {
     "net10.0": {
-      "Iguina": {
+      "FontStashSharp.MonoGame": {
         "type": "Direct",
-        "requested": "[1.1.5, )",
-        "resolved": "1.1.5",
-        "contentHash": "nJ/INUaV2Ha0J1vzwyEB/pmE6VVPdK3/1fvzwFE832qS8Kyydl/F3Hb7SLND/DOwFhnJT4/TFC0EoOTc9CHT3Q=="
-      },
-      "Iguina.Drivers.Sfml": {
-        "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "1LFITbi1fdnsQeBuBsL1a/v+WJoqEiRXonMv/Ji+P1aoToSH9D8p4zjX/dxEt8AbfKA0oPD7O6OH3j4/Oz+03g==",
+        "requested": "[1.5.6, )",
+        "resolved": "1.5.6",
+        "contentHash": "/daTEWXJ+WvKe2FOv1VsRCoqZMBiKqJZcjr6NwOGNgr13CsX1aVVoIVJL0PYZs0qiQfLIfXaVWaG4liNmHkrdA==",
         "dependencies": {
-          "Iguina": "1.1.4",
-          "SFML.Graphics": "3.0.0",
-          "SFML.System": "3.0.0",
-          "SFML.Window": "3.0.0"
+          "Cyotek.Drawing.BitmapFont": "2.0.4",
+          "FontStashSharp.Base": "1.2.3",
+          "FontStashSharp.Rasterizers.StbTrueTypeSharp": "1.2.3",
+          "StbImageSharp": "2.30.15"
         }
       },
       "LiteNetLib": {
@@ -26,41 +20,45 @@
         "resolved": "2.1.4",
         "contentHash": "KWlxvMw3Urpqj9joD96LRiK+LC62pQNs/zkXRJc+rHnxgkGp+vV703xzDrxRmv+V1YhCFfIGzs5nrVWtREIlyA=="
       },
-      "SFML.Audio": {
+      "MonoGame.Framework.Native": {
         "type": "Direct",
-        "requested": "[3.0.0, )",
-        "resolved": "3.0.0",
-        "contentHash": "Dy+aRvajHurJXqAXHS2obXbxTE0dYy8dW5HS1qwjP2MgipZFjwT9cEWRfPUix/RbgE1euxg04J8gsV99iUhc+g==",
+        "requested": "[3.8.5, )",
+        "resolved": "3.8.5",
+        "contentHash": "fobFZ8nfhCmt98HD0FNX+nP1IOoJ2N/Zk/JHY6148i4CEpIThv+OJeiR8W+zba+Xz5NkPC2pmWHRum0jN37boQ=="
+      },
+      "Myra": {
+        "type": "Direct",
+        "requested": "[1.6.4, )",
+        "resolved": "1.6.4",
+        "contentHash": "PBuEV0FwWONTtkJ/eEaQKc5cq8gqTTYm31/F49SSPLqjvDXewEFslTkmTxQab6iI/sT58NjxrN67GXj6kjPWbA==",
         "dependencies": {
-          "CSFML": "[3.0.0, 3.1.0)",
-          "SFML.System": "3.0.0"
+          "XNAssets.FontStashSharp.MonoGame": "0.8.5",
+          "XNAssets.MonoGame": "0.8.5"
         }
       },
-      "SFML.Graphics": {
-        "type": "Direct",
-        "requested": "[3.0.0, )",
-        "resolved": "3.0.0",
-        "contentHash": "2dcdwHCrgVwkVa52V2T2ZaiORMXgznwdMCsNXBMn/oPnxFa7AWWuxNVftv6kvjER56SIw0f1asYs1npTyEFXxg==",
-        "dependencies": {
-          "CSFML": "[3.0.0, 3.1.0)",
-          "SFML.System": "3.0.0",
-          "SFML.Window": "3.0.0"
-        }
-      },
-      "SFML.Window": {
-        "type": "Direct",
-        "requested": "[3.0.0, )",
-        "resolved": "3.0.0",
-        "contentHash": "Yu+QJVQ4dRbfOgnN+xSl3rqetseNKD711k9gsdYqic9f9QDBK2raIUJTYx+JsH/NXo3rVt1NGkCm5ucSj5OzdQ==",
-        "dependencies": {
-          "CSFML": "[3.0.0, 3.1.0)",
-          "SFML.System": "3.0.0"
-        }
-      },
-      "CSFML": {
+      "AssetManagementBase": {
         "type": "Transitive",
-        "resolved": "3.0.0",
-        "contentHash": "iwzebpEjtHMmrBWrIZf7lo20PlzGCe4ifh5y/x0RwNE3pcUh4rdLkcnKwuxE+k6gHFbUehQ2/4GuiUB3i6v3Ww=="
+        "resolved": "0.7.3",
+        "contentHash": "DRlzdQRtk+YHB6GgHRU3nVSO657Yd/OUojoihTHHftZxr469lHOeW685lDelUlbKetGIIXlVRi3SpIOrRUiJBA=="
+      },
+      "Cyotek.Drawing.BitmapFont": {
+        "type": "Transitive",
+        "resolved": "2.0.4",
+        "contentHash": "iA6WehGVdMUuNbfsQQDq/Bt+mMd/OqHjiMUtKFLIQd/0pyYh4ehT7FEjTxN9/4OXNKQZsp9bAJgltP2nnswUJg=="
+      },
+      "FontStashSharp.Base": {
+        "type": "Transitive",
+        "resolved": "1.2.3",
+        "contentHash": "kw8ovakGHz8jCah+H5M7qI8aOvtESF0jQRpcpubXUMsSid86dRO6DoDPlh+Tk/XAW5a3XgzGDgsHfeZTfZTr+Q=="
+      },
+      "FontStashSharp.Rasterizers.StbTrueTypeSharp": {
+        "type": "Transitive",
+        "resolved": "1.2.3",
+        "contentHash": "xjzgWeiaODbW7DR/kI05V7C3CVtDvtB+4TrgX4EKNpRGzxb42vsvXKWrXORQWU2LCLnPPqdBNNSgtRujnpK2ww==",
+        "dependencies": {
+          "FontStashSharp.Base": "1.2.3",
+          "StbTrueTypeSharp": "1.26.12"
+        }
       },
       "MemoryPack.Core": {
         "type": "Transitive",
@@ -78,14 +76,6 @@
         "contentHash": "TPCs0ldm7AWqcKmp6f/Xr+14sat7hx4rHfRlS4RgCURBH2thEWbAKEyX7cCWr63zVJVOJIJZTg2cBiUXa8ys6g==",
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.11"
-        }
-      },
-      "SFML.System": {
-        "type": "Transitive",
-        "resolved": "3.0.0",
-        "contentHash": "k6s8BB53Xrugmx25rmlZRoezAkSyjpxNPeIrFT5hUoDJ32XSj0bvJdTWomB6Aiph7nNaJrCnA/K0o1x0ZCPUYQ==",
-        "dependencies": {
-          "CSFML": "[3.0.0, 3.1.0)"
         }
       },
       "SQLite": {
@@ -114,6 +104,35 @@
           "SQLitePCLRaw.core": "3.0.5"
         }
       },
+      "StbImageSharp": {
+        "type": "Transitive",
+        "resolved": "2.30.15",
+        "contentHash": "7QqbupVhz2kcFUPTgMw4iHR9rYDHGundzzee19Mwmd1typ2Lnv8EVJcLJxlkeBM2+4ex0NwsMtdbGSJctp1XCQ=="
+      },
+      "StbTrueTypeSharp": {
+        "type": "Transitive",
+        "resolved": "1.26.12",
+        "contentHash": "hCc6/OsfcPa5VsLECcEU2m78WOshBrKwK42nAodSm9Z5wH68f7n66SoiRLCdGCkDaqbWz2TlX4zYHIjogj1HJA=="
+      },
+      "XNAssets.FontStashSharp.MonoGame": {
+        "type": "Transitive",
+        "resolved": "0.8.5",
+        "contentHash": "IAzVYCGHwkbLU3VxvoBFFvFaxgHsJfF6OqofaPMMUTZQHTf8zUNoFdXtg16U7Z3lj5CPwAG207XUpqkVcPLC7Q==",
+        "dependencies": {
+          "AssetManagementBase": "0.7.3",
+          "FontStashSharp.MonoGame": "1.5.6"
+        }
+      },
+      "XNAssets.MonoGame": {
+        "type": "Transitive",
+        "resolved": "0.8.5",
+        "contentHash": "E0xDOxyv3SO+sI9aJGKjyTAvqyt55eY/qLNLMxcVRPxuXVnD15jH8+nKeXh8smOqsoV50kb+suR4eGefM5Bj/Q==",
+        "dependencies": {
+          "AssetManagementBase": "0.7.3",
+          "Cyotek.Drawing.BitmapFont": "2.0.4",
+          "StbImageSharp": "2.30.15"
+        }
+      },
       "crybits.client.framework": {
         "type": "Project",
         "dependencies": {
@@ -121,11 +140,10 @@
           "CryBits.Persistence": "[1.0.0, )",
           "CryBits.Protocol": "[1.0.0, )",
           "CryBits.Transport": "[1.0.0, )",
-          "Iguina": "[1.1.5, )",
+          "FontStashSharp.MonoGame": "[1.5.6, )",
           "MemoryPack": "[1.21.4, )",
-          "SFML.Audio": "[3.0.0, )",
-          "SFML.Graphics": "[3.0.0, )",
-          "SFML.Window": "[3.0.0, )"
+          "MonoGame.Framework.Native": "[3.8.5, )",
+          "Myra": "[1.6.4, )"
         }
       },
       "crybits.definitions": {

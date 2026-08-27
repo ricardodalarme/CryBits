@@ -1,107 +1,96 @@
+using AssetManagementBase;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Repositories;
-using CryBits.Client.Framework.UI;
-using Iguina;
-using Iguina.Drivers.Sfml;
-using Iguina.Entities;
-using SFML.Graphics;
-using SFML.System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Myra;
+using Myra.Graphics2D.UI;
 using System.Diagnostics.CodeAnalysis;
+
 namespace CryBits.Client.UI;
 
-public enum ScreenType
+internal class UiContext
 {
-    Menu,
-    Game
-}
-
-internal sealed class UiContext : IDisposable
-{
-    private Entity? _currentScreen;
-
-    public RenderTexture Target { get; }
-    public UISystem UISystem { get; }
-    public Dictionary<string, Entity> Registry { get; } = [];
+    public Desktop Desktop { get; }
+    public Dictionary<string, Widget> Registry { get; } = new(StringComparer.OrdinalIgnoreCase);
     public ScreenType CurrentScreen { get; set; }
+    public AssetManager AssetManager { get; }
 
-    public Action? PostDraw;
-
-    public T Get<T>(string key) where T : Entity => (T)Registry[key];
-
-    public bool TryGet<T>(string key, [MaybeNullWhen(false)] out T entity) where T : Entity
+    public bool TryGet<T>(string key, [MaybeNullWhen(false)] out T entity) where T : Widget
     {
         if (Registry.TryGetValue(key, out var raw) && raw is T typed)
         {
             entity = typed;
             return true;
         }
+
         entity = null;
         return false;
     }
 
-    public UiContext(uint width, uint height, RenderWindow window)
+    public T Get<T>(string key) where T : Widget
     {
-        var themePath = Directories.UiTheme.FullName;
-        if (!Directory.Exists(themePath))
-            throw new DirectoryNotFoundException($"UI theme directory not found: {themePath}");
+        if (TryGet<T>(key, out var entity))
+            return entity;
+        throw new KeyNotFoundException($"Widget with key '{key}' was not found in UiContext Registry.");
+    }
 
-        Target = new RenderTexture(new Vector2u(width, height));
+    public UiContext(Microsoft.Xna.Framework.Game game, GraphicsDevice device, int width, int height)
+    {
+        MyraEnvironment.Game = game;
+        AssetManager = AssetManager.CreateFileAssetManager(Directories.UiTheme.FullName);
+        Desktop = new Desktop
+        {
+            BoundsFetcher = () => device.Viewport.Bounds
+        };
+    }
 
-        var fontPath = Path.Combine(AppContext.BaseDirectory, "Graphics", "Fonts", "Georgia.ttf");
-        var renderer = new SfmlRenderer(Target, themePath, new Font(fontPath));
-
-        var input = new SfmlInputProvider(window);
-        var sPath = Path.Combine(themePath, "SystemStyle.json");
-
-        UISystem = new UISystem(sPath, renderer, input);
+    public void ClearKeyboardFocus()
+    {
+        Desktop.FocusedKeyboardWidget = null;
     }
 
     public void LoadScreen(string screenName)
     {
-        if (UISystem == null) return;
-
-        var config = InterfaceRepository.Load(Path.Combine(Directories.UiTheme.FullName, "Layout.json"));
-        var screenElement = config.Screens.FirstOrDefault(s => s.Name == screenName);
-        if (screenElement == null) return;
+        var themePath = Directories.UiTheme.FullName;
+        var filePath = Path.Combine(themePath, $"{screenName}.xmmp");
+        if (!File.Exists(filePath)) return;
 
         Clear();
-        var (panel, reg) = LayoutBuilder.BuildScreen(UISystem, screenElement);
-        UISystem.Root.AddChild(panel);
-        _currentScreen = panel;
-
-        Registry.Clear();
-        foreach (var (k, v) in reg)
-            Registry[k] = v;
-        CurrentScreen = screenName switch
+        var xml = File.ReadAllText(filePath);
+        var project = Project.LoadFromXml(xml, AssetManager);
+        if (project.Root != null)
         {
-            "Menu" => ScreenType.Menu,
-            "Game" => ScreenType.Game,
-            _ => ScreenType.Menu
-        };
+            Desktop.Root = project.Root;
+            PopulateRegistry(project.Root);
+        }
+    }
+
+    private void PopulateRegistry(Widget widget)
+    {
+        if (!string.IsNullOrEmpty(widget.Id))
+        {
+            Registry[widget.Id] = widget;
+        }
+
+        if (widget is Container container)
+        {
+            foreach (var child in container.Widgets)
+            {
+                PopulateRegistry(child);
+            }
+        }
+    }
+
+    public void Render()
+    {
+        Desktop.Render();
     }
 
     public void Clear()
     {
-        _currentScreen?.RemoveSelf();
-        _currentScreen = null;
+        ClearKeyboardFocus();
         Registry.Clear();
-    }
-
-    public void Update(float deltaTime)
-    {
-        UISystem.Update(deltaTime);
-    }
-
-    public void Draw()
-    {
-        if (Target == null || UISystem == null) return;
-        Target.Clear(new Color(0, 0, 0, 0));
-        UISystem.Draw();
-        Target.Display();
-    }
-
-    public void Dispose()
-    {
-        Target?.Dispose();
+        Desktop.Root = null;
     }
 }

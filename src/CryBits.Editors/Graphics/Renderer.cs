@@ -1,93 +1,85 @@
 using CryBits.Client.Framework.Assets;
 using CryBits.Definitions.Common;
-using SFML.Graphics;
-using SFML.System;
-using System.Drawing;
-using Color = SFML.Graphics.Color;
+using FontStashSharp;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using SysRect = System.Drawing.Rectangle;
+using SysPoint = System.Drawing.Point;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace CryBits.Editors.Graphics;
 
-internal class Renderer
+/// <summary>
+/// Editor drawing helper. Mirrors the legacy CryBits SFML <c>Renderer</c> surface but operates
+/// against a MonoGame <see cref="SpriteBatch"/> and <see cref="Texture2D"/> provided by the
+/// hosted game in the editor.
+/// </summary>
+public class Renderer
 {
-    public void Draw(IRenderTarget window, Texture texture, Rectangle source, Rectangle destiny,
-        Color? color = null)
-    {
-        using var sprite = new Sprite(texture)
-        {
-            TextureRect = new IntRect(new Vector2i(source.X, source.Y), new Vector2i(source.Width, source.Height)),
-            Position = new Vector2f(destiny.X, destiny.Y),
-            Scale = new Vector2f(destiny.Width / (float)source.Width, destiny.Height / (float)source.Height),
-            Color = color ?? Color.White
-        };
+    private SpriteBatch _spriteBatch = null!;
+    private Texture2D _whiteTexture = null!;
+    private SpriteFontBase _font = null!;
 
-        window.Draw(sprite, RenderStates.Default);
+    public void Attach(SpriteBatch spriteBatch, SpriteFontBase font)
+    {
+        _spriteBatch = spriteBatch;
+        _font = font;
+        _whiteTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+        _whiteTexture.SetData([Color.White]);
     }
 
-    public void Draw(IRenderTarget window, Texture texture, int x, int y, int sourceX, int sourceY,
-        int sourceWidth, int sourceHeight, Color? color = null)
-    {
-        var source = new Rectangle(new Point(sourceX, sourceY), new Size(sourceWidth, sourceHeight));
-        var destiny = new Rectangle(new Point(x, y), new Size(sourceWidth, sourceHeight));
+    public void Draw(Texture2D texture, SysRect source, SysRect destiny, Color? color = null) =>
+        _spriteBatch.Draw(texture, ToMgRect(destiny), ToMgRect(source), color ?? Color.White);
 
-        Draw(window, texture, source, destiny, color);
+    public void Draw(Texture2D texture, int x, int y, int sourceX, int sourceY,
+        int sourceWidth, int sourceHeight, Color? color = null) =>
+        Draw(texture,
+            new SysRect(sourceX, sourceY, sourceWidth, sourceHeight),
+            new SysRect(x, y, sourceWidth, sourceHeight),
+            color);
+
+    public void Draw(Texture2D texture, SysRect destiny, Color? color = null) =>
+        _spriteBatch.Draw(texture, ToMgRect(destiny), null, color ?? Color.White);
+
+    public void Draw(Texture2D texture, SysPoint point, Color? color = null) =>
+        Draw(texture, new SysRect(point.X, point.Y, texture.Width, texture.Height), color);
+
+    public void DrawRectangle(SysRect rectangle, Color? color = null)
+    {
+        var c = color ?? Color.White;
+        var texture = Textures.Grid;
+        Draw(texture, rectangle.X, rectangle.Y, 0, 0, rectangle.Width, 1, c);
+        Draw(texture, rectangle.X, rectangle.Y, 0, 0, 1, rectangle.Height, c);
+        Draw(texture, rectangle.X, rectangle.Y + rectangle.Height - 1, 0, 0, rectangle.Width, 1, c);
+        Draw(texture, rectangle.X + rectangle.Width - 1, rectangle.Y, 0, 0, 1, rectangle.Height, c);
     }
 
-    public void Draw(IRenderTarget window, Texture texture, Rectangle destiny, Color? color = null)
+    public void DrawRectangle(int x, int y, int width, int height, Color? color = null) =>
+        DrawRectangle(new SysRect(x, y, width, height), color);
+
+    public void DrawText((int x, int y) position, string text, Color color, TextAlign alignment = TextAlign.Center)
     {
-        var source = new Rectangle(new Point(0), texture.ToSize());
-        Draw(window, texture, source, destiny, color);
-    }
-
-    public void Draw(IRenderTarget window, Texture texture, Point point, Color? color = null)
-    {
-        var source = new Rectangle(new Point(0), texture.ToSize());
-        var destiny = new Rectangle(point, texture.ToSize());
-
-        Draw(window, texture, source, destiny, color);
-    }
-
-    public void DrawRectangle(IRenderTarget window, Rectangle rectangle, Color? color = null)
-    {
-        Draw(window, Textures.Grid, rectangle.X, rectangle.Y, 0, 0, rectangle.Width, 1, color);
-        Draw(window, Textures.Grid, rectangle.X, rectangle.Y, 0, 0, 1, rectangle.Height, color);
-        Draw(window, Textures.Grid, rectangle.X, rectangle.Y + rectangle.Height - 1, 0, 0, rectangle.Width, 1, color);
-        Draw(window, Textures.Grid, rectangle.X + rectangle.Width - 1, rectangle.Y, 0, 0, 1, rectangle.Height, color);
-    }
-
-    public void DrawRectangle(IRenderTarget window, int x, int y, int width, int height, Color? color = null)
-    {
-        DrawRectangle(window, new Rectangle(x, y, width, height), color);
-    }
-
-    public void DrawText(IRenderTarget window, string text, int x, int y, Color color,
-        TextAlign alignment = TextAlign.Left)
-    {
-        using var tempText = new Text(Fonts.Default, text)
-        {
-            CharacterSize = 10,
-            FillColor = color,
-            OutlineColor = new Color(0, 0, 0, 70),
-            OutlineThickness = 1
-        };
-
-        var width = (int)tempText.GetLocalBounds().Width;
+        if (_font == null) return;
+        var size = _font.MeasureString(text);
         var drawX = alignment switch
         {
-            TextAlign.Center => x - (width / 2),
-            TextAlign.Right => x - width,
-            _ => x
+            TextAlign.Center => position.x - size.X / 2,
+            TextAlign.Right => position.x - size.X,
+            _ => position.x
         };
-
-        tempText.Position = new Vector2f(drawX, y);
-        window.Draw(tempText);
+        var drawY = position.y - size.Y / 2;
+        _spriteBatch.DrawString(_font, text, new Vector2(drawX, drawY), color);
     }
 
-    /// <summary>Draws a checkered transparent-background pattern on the given target.</summary>
-    public void DrawTransparentBackground(IRenderTarget target)
+    public void DrawTransparentBackground()
     {
-        var textureSize = Textures.Transparent.ToSize();
-        for (var x = 0; x <= target.Size.X / textureSize.Width; x++)
-            for (var y = 0; y <= target.Size.Y / textureSize.Height; y++)
-                Draw(target, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
+        var texture = Textures.Transparent;
+        var viewport = _spriteBatch.GraphicsDevice.Viewport;
+        for (var x = 0; x <= viewport.Width / texture.Width; x++)
+            for (var y = 0; y <= viewport.Height / texture.Height; y++)
+                Draw(texture, new SysPoint(texture.Width * x, texture.Height * y));
     }
+
+    private static Rectangle ToMgRect(SysRect r) =>
+        new(r.X, r.Y, r.Width, r.Height);
 }

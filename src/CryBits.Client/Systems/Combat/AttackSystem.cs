@@ -5,8 +5,8 @@ using CryBits.Client.Replication;
 using CryBits.Client.UI;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
-using Iguina.Entities;
-using SFML.Window;
+using Microsoft.Xna.Framework.Input;
+using Myra.Graphics2D.UI;
 using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client.Systems.Combat;
@@ -30,7 +30,7 @@ internal sealed class AttackSystem(
         if (_inputThrottle < ThrottleInterval) return;
         _inputThrottle = 0f;
 
-        if (!inputManager.IsKeyPressed(Keyboard.Key.LControl)) return;
+        if (!inputManager.IsKeyDown(Keys.LeftControl)) return;
 
         var attack = world.Get<AttackComponent>(entity.Value);
         if (attack == null || attack.AttackCountdown > 0f) return;

@@ -1,28 +1,32 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Network;
-using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Network.Senders;
-using Iguina.Entities;
+using Myra.Events;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class LoginView(UiContext uiContext, AuthSender authSender, Connection connection, MenuScreen menuScreen)
-    : ViewBase
+internal class LoginView(
+    UiContext uiContext,
+    AuthSender authSender,
+    Connection connection,
+    MenuScreen menuScreen) : ViewBase
 {
     private Panel LoginPanel => uiContext.Get<Panel>("Login");
-    private TextInput UsernameTextBox => uiContext.Get<TextInput>("Username");
-    private TextInput PasswordTextBox => uiContext.Get<TextInput>("Password");
-    private Checkbox SaveUsernameCheckbox => uiContext.Get<Checkbox>("SaveUsername");
-    private Button ConfirmButton => uiContext.Get<Button>("LoginConfirm");
+    private TextBox UsernameTextBox => uiContext.Get<TextBox>("Username");
+    private TextBox PasswordTextBox => uiContext.Get<TextBox>("Password");
+    private CheckButton SaveAccountCheckbox => uiContext.Get<CheckButton>("SaveUsername");
+
+    private Button LoginButton => uiContext.Get<Button>("LoginConfirm");
     private Button RegisterButton => uiContext.Get<Button>("LoginRegister");
+    private Button OptionsButton => uiContext.Get<Button>("OptionsButton");
 
     public void Open()
     {
-        SaveUsernameCheckbox.Checked = Options.Instance.SaveUsername;
-        UsernameTextBox.Value = Options.Instance.SaveUsername ? Options.Instance.Username : string.Empty;
-
-        PasswordTextBox.Value = string.Empty;
         LoginPanel.Visible = true;
+        UsernameTextBox.Text = Options.Instance.Username;
+        PasswordTextBox.Text = string.Empty;
+        SaveAccountCheckbox.IsChecked = Options.Instance.SaveUsername;
         Bind();
     }
 
@@ -34,41 +38,41 @@ internal class LoginView(UiContext uiContext, AuthSender authSender, Connection 
 
     public override void Bind()
     {
-        SaveUsernameCheckbox.Events.OnValueChanged += OnSaveUsernameChanged;
-        ConfirmButton.Events.OnClick += OnConfirmPressed;
-        RegisterButton.Events.OnClick += OnRegisterPressed;
+        LoginButton.Click += OnLoginPressed;
+        RegisterButton.Click += OnRegisterPressed;
+        OptionsButton.Click += OnOptionsPressed;
     }
 
     public override void Unbind()
     {
-        SaveUsernameCheckbox.Events.OnValueChanged -= OnSaveUsernameChanged;
-        ConfirmButton.Events.OnClick -= OnConfirmPressed;
-        RegisterButton.Events.OnClick -= OnRegisterPressed;
+        LoginButton.Click -= OnLoginPressed;
+        RegisterButton.Click -= OnRegisterPressed;
+        OptionsButton.Click -= OnOptionsPressed;
     }
 
-    private void OnSaveUsernameChanged(Entity _)
+    private void OnLoginPressed(object? sender, MyraEventArgs e)
     {
-        Options.Instance.SaveUsername = SaveUsernameCheckbox.Checked;
-        OptionsRepository.Write();
-    }
-
-    private void OnConfirmPressed(Entity _)
-    {
-        Options.Instance.Username = UsernameTextBox.Value;
-        OptionsRepository.Write();
-
-        if (!connection.TryConnect())
+        if (!connection.IsConnected)
         {
-            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Server", "The server is currently unavailable.");
+            Dialog.CreateMessageBox("Error", "Can't connect to server!").ShowModal(uiContext.Desktop);
             return;
         }
 
-        authSender.Connect(UsernameTextBox.Value, PasswordTextBox.Value);
+        var username = UsernameTextBox.Text;
+        var password = PasswordTextBox.Text;
+
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        {
+            Dialog.CreateMessageBox("Invalid Credentials", "Username and password cannot be empty.").ShowModal(uiContext.Desktop);
+            return;
+        }
+
+        authSender.Connect(username, password);
+
+        Options.Instance.Username = SaveAccountCheckbox.IsChecked ? username : string.Empty;
+        Options.Instance.SaveUsername = SaveAccountCheckbox.IsChecked;
     }
 
-    private void OnRegisterPressed(Entity _)
-    {
-        connection.Disconnect();
-        menuScreen.ShowRegister();
-    }
+    private void OnRegisterPressed(object? sender, MyraEventArgs e) => menuScreen.ShowRegister();
+    private void OnOptionsPressed(object? sender, MyraEventArgs e) => menuScreen.ShowOptions();
 }

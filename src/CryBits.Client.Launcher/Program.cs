@@ -1,4 +1,4 @@
-﻿using CryBits.Client.Launcher;
+using CryBits.Client.Launcher;
 
-using var launcher = new LauncherApp(args.Contains("--offline"));
+using var launcher = new LauncherApp(args);
 launcher.Run();

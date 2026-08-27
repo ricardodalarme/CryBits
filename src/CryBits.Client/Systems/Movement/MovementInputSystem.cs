@@ -7,7 +7,7 @@ using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.Spatial;
-using SFML.Window;
+using Microsoft.Xna.Framework.Input;
 using static CryBits.Definitions.Globals;
 using Direction = CryBits.Definitions.Common.Direction;
 using MovementState = CryBits.Definitions.Common.Movement;
@@ -40,16 +40,16 @@ internal sealed class MovementInputSystem(
         var movement = world.Get<MovementComponent>(entity);
         if (movement is not { MovementState: MovementState.Stopped }) return;
 
-        if (inputManager.IsScancodePressed(Keyboard.Scancode.Up)) Move(world, entity, Direction.Up, movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Down)) Move(world, entity, Direction.Down, movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Left)) Move(world, entity, Direction.Left, movement);
-        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Right))
+        if (inputManager.IsKeyDown(Keys.Up)) Move(world, entity, Direction.Up, movement);
+        else if (inputManager.IsKeyDown(Keys.Down)) Move(world, entity, Direction.Down, movement);
+        else if (inputManager.IsKeyDown(Keys.Left)) Move(world, entity, Direction.Left, movement);
+        else if (inputManager.IsKeyDown(Keys.Right))
             Move(world, entity, Direction.Right, movement);
     }
 
     private void Move(World world, EntityId entity, Direction direction, MovementComponent movement)
     {
-        var desired = inputManager.IsKeyPressed(Keyboard.Key.LShift)
+        var desired = inputManager.IsKeyDown(Keys.LeftShift)
             ? MovementState.Moving
             : MovementState.Walking;
 

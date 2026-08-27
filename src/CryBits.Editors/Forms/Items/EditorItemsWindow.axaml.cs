@@ -5,7 +5,6 @@ using CryBits.Definitions.Classes;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Editors.Network;
-using CryBits.Editors.Utils;
 
 namespace CryBits.Editors.Forms.Items;
 

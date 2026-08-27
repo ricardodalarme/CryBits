@@ -2,6 +2,8 @@ using CryBits.Client.Components;
 using CryBits.Client.Framework.Assets;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CryBits.Client.Rendering.Entities;
 
@@ -23,16 +25,22 @@ internal sealed class HealthBarRenderer(World world, SpriteBatch spriteBatch) : 
             if (hp <= 0 || hp >= maxHp) continue;
 
             var sheet = SpriteSheet.Default;
-            var textureSize = sprite.Texture.ToSize();
-            var frameW = sheet.FrameW(textureSize.Width);
-            var frameH = sheet.FrameH(textureSize.Height);
+            var texture = sprite.Texture;
+            var frameW = sheet.FrameW(texture.Width);
+            var frameH = sheet.FrameH(texture.Height);
 
             var barX = transform.X;
             var barY = transform.Y + frameH + 4;
             var fillWidth = hp * frameW / maxHp;
 
-            spriteBatch.Draw(Textures.Bars, barX, barY, 0, 4, frameW, 4);
-            spriteBatch.Draw(Textures.Bars, barX, barY, 0, 0, fillWidth, 4);
+            spriteBatch.Draw(Textures.Bars,
+                new Rectangle(barX, barY, frameW, 4),
+                new Rectangle(0, 4, frameW, 4),
+                Color.White);
+            spriteBatch.Draw(Textures.Bars,
+                new Rectangle(barX, barY, fillWidth, 4),
+                new Rectangle(0, 0, fillWidth, 4),
+                Color.White);
         }
     }
 }

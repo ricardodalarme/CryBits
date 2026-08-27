@@ -1,25 +1,20 @@
-using CryBits.Client.Framework.Network;
-using Iguina.Entities;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class BackgroundView(UiContext uiContext, Connection connection, MenuScreen menuScreen) : ViewBase
+internal class BackgroundView(UiContext uiContext, MenuScreen menuScreen) : ViewBase
 {
     private Button OptionsButton => uiContext.Get<Button>("OptionsButton");
 
     public override void Bind()
     {
-        OptionsButton.Events.OnClick += OnOptionsPressed;
+        OptionsButton.Click += OnOptionsPressed;
     }
 
     public override void Unbind()
     {
-        OptionsButton.Events.OnClick -= OnOptionsPressed;
+        OptionsButton.Click -= OnOptionsPressed;
     }
 
-    private void OnOptionsPressed(Entity _)
-    {
-        connection.Disconnect();
-        menuScreen.ShowOptions();
-    }
+    private void OnOptionsPressed(object? sender, Myra.Events.MyraEventArgs e) => menuScreen.ShowOptions();
 }

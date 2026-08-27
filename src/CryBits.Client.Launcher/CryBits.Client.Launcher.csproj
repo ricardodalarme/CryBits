@@ -1,10 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <Title>Client Launcher</Title>
     <Product>CryBits.Client.Launcher</Product>
     <AssemblyVersion>0.8.0</AssemblyVersion>
+    <MonoGamePlatform>DesktopVK</MonoGamePlatform>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -17,12 +18,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Iguina" />
-    <PackageReference Include="Iguina.Drivers.Sfml" />
+    <PackageReference Include="Myra" />
+    <PackageReference Include="MonoGame.Framework.Native" />
+    <PackageReference Include="MonoGame.Runtime.Mac.Vulkan" />
+    <PackageReference Include="MonoGame.Runtime.Linux.Vulkan" />
+    <PackageReference Include="MonoGame.Runtime.Windows.Vulkan" />
+    <PackageReference Include="FontStashSharp.MonoGame" />
     <PackageReference Include="LiteNetLib" />
-    <PackageReference Include="SFML.Audio" />
-    <PackageReference Include="SFML.Graphics" />
-    <PackageReference Include="SFML.Window" />
   </ItemGroup>
 
   <ItemGroup>

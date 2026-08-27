@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="CryBits.Editors.Forms.Maps.Panes.MapCanvasPane"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

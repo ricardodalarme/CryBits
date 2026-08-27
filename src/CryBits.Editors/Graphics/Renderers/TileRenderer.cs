@@ -1,36 +1,30 @@
 using CryBits.Client.Framework.Assets;
-using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
-using SFML.Graphics;
-using System.Drawing;
+using Direction = CryBits.Definitions.Common.Direction;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using SysRect = System.Drawing.Rectangle;
 using static CryBits.Definitions.Globals;
 using static CryBits.Editors.Logic.Utils;
-using Color = SFML.Graphics.Color;
 
 namespace CryBits.Editors.Graphics.Renderers;
 
 internal class TileRenderer(Renderer renderer)
 {
-    /// <summary>
-    /// Render targets used by the editor windows.
-    /// </summary>
-    public RenderTexture? WinTile;
+    public RenderTarget2D? WinTile { get; set; }
 
-    /// <summary>
-    /// Render the Tile editor preview.
-    /// </summary>
+    /// <summary>Render the Tile editor preview.</summary>
     public void Tile(int textureNum, int scrollX, int scrollY, bool modeAttributes)
     {
-        if (WinTile == null || Textures.Tiles.Count == 0) return;
+        if (Textures.Tiles.Count == 0) return;
         if (textureNum < 0 || textureNum >= Textures.Tiles.Count) return;
 
-        WinTile.Clear();
-        renderer.DrawTransparentBackground(WinTile);
+        renderer.DrawTransparentBackground();
 
-        var texture = Textures.Tiles[textureNum];
-        var position = new Point(scrollX * Grid, scrollY * Grid);
-        renderer.Draw(WinTile, texture, new Rectangle(position, texture.ToSize()),
-            new Rectangle(new Point(0), texture.ToSize()));
+        if (Textures.Tiles[textureNum] is not { } texture) return;
+
+        var position = new SysRect(scrollX * Grid, scrollY * Grid, texture.Width, texture.Height);
+        renderer.Draw(texture, position, new SysRect(0, 0, texture.Width, texture.Height));
 
         for (var x = 0; x <= 298 / Grid; x++)
             for (var y = 0; y <= 443 / Grid; y++)
@@ -40,10 +34,8 @@ internal class TileRenderer(Renderer renderer)
                 else
                     TileDirBlock(textureNum, scrollX, scrollY, x, y);
 
-                renderer.DrawRectangle(WinTile, x * Grid, y * Grid, Grid, Grid, new Color(25, 25, 25, 70));
+                renderer.DrawRectangle(x * Grid, y * Grid, Grid, Grid, new Color(25, 25, 25, 70));
             }
-
-        WinTile.Display();
     }
 
     private void TileAttributes(int textureNum, int scrollX, int scrollY, int x, int y)
@@ -56,8 +48,8 @@ internal class TileRenderer(Renderer renderer)
         switch ((TileAttribute)Client.Framework.Entities.Tile.Tile.List[textureNum].Data[tile.X, tile.Y].Attribute)
         {
             case TileAttribute.Block:
-                renderer.Draw(WinTile!, Textures.Blank, x * Grid, y * Grid, 0, 0, Grid, Grid, new Color(225, 0, 0, 75));
-                renderer.DrawText(WinTile!, "B", point.X, point.Y, Color.Red);
+                renderer.Draw(Textures.Blank, x * Grid, y * Grid, 0, 0, Grid, Grid, new Color(225, 0, 0, 75));
+                renderer.DrawText((point.X, point.Y), "B", Color.Red);
                 break;
         }
     }
@@ -79,7 +71,7 @@ internal class TileRenderer(Renderer renderer)
             var sourceY = Client.Framework.Entities.Tile.Tile.List[textureNum].Data[tile.X, tile.Y].Block[i]
                 ? (byte)8
                 : (byte)0;
-            renderer.Draw(WinTile!, Textures.Directions, (x * Grid) + Block_Position(i).X, (y * Grid) + Block_Position(i).Y,
+            renderer.Draw(Textures.Directions, (x * Grid) + Block_Position(i).X, (y * Grid) + Block_Position(i).Y,
                 i * 8, sourceY, 6, 6);
         }
     }

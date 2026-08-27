@@ -3,11 +3,10 @@ using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Input;
-using CryBits.Client.Rendering;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI.Game.ViewModels;
 using CryBits.Client.UI.Game.Views;
-using Iguina.Entities;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game;
 
@@ -15,7 +14,6 @@ internal class GameScreen
 {
     internal readonly CharacterView CharacterView;
     internal readonly ChatView ChatView;
-    internal readonly DraggableSlotView DraggableSlotView;
     internal readonly DropItemView DropItemView;
     internal readonly HotbarView HotbarView;
     internal readonly TooltipView InformationView;
@@ -30,12 +28,11 @@ internal class GameScreen
     internal readonly TradeView TradeView;
     internal readonly MapNameView MapNameView;
     internal readonly MetricsView MetricsView;
-    internal readonly PartyView PartyView;
     internal readonly StatsView StatsView;
 
     internal readonly UiContext UiContext;
 
-    internal GameScreen(GameSession session, UiContext uiContext, SpriteBatch spriteBatch,
+    internal GameScreen(GameSession session, UiContext uiContext,
         ItemIconRenderer itemRenderer, EquipmentSlotRenderer equipmentRenderer, PortraitRenderer characterRenderer,
         InputManager inputManager, AudioManager audioManager, TooltipView tooltip,
         Chat chat, GameInput gameInput,
@@ -48,9 +45,8 @@ internal class GameScreen
         ShopView = new(uiContext, itemRenderer, tooltip, shopViewModel);
         InformationView = tooltip;
         InventoryView = new(uiContext, itemRenderer, tooltip, ShopView, this, inventoryViewModel);
-        CharacterView = new(uiContext, equipmentRenderer, characterRenderer, tooltip, characterViewModel);
+        CharacterView = new(uiContext, itemRenderer, tooltip, characterViewModel);
         ChatView = new(uiContext, chat);
-        DraggableSlotView = new(uiContext, itemRenderer, inputManager, this, inventoryViewModel, hotbarViewModel);
         DropItemView = new(uiContext, session.IntentSender);
         HotbarView = new(uiContext, itemRenderer, tooltip, InventoryView, this, hotbarViewModel);
         MenusView = new(uiContext);
@@ -62,7 +58,6 @@ internal class GameScreen
         TradeView = new(uiContext, itemRenderer, InventoryView, this, tradeViewModel);
         MapNameView = new(uiContext, session.World);
         MetricsView = new(uiContext, connection, getFps);
-        PartyView = new(uiContext, spriteBatch, partyViewModel);
         StatsView = new(uiContext, statsViewModel);
         _chat = chat;
         _gameInput = gameInput;
@@ -78,7 +73,6 @@ internal class GameScreen
     [
         CharacterView,
         ChatView,
-        DraggableSlotView,
         DropItemView,
         HotbarView,
         InformationView,
@@ -87,7 +81,6 @@ internal class GameScreen
         MenusView,
         MetricsView,
         OptionsView,
-        PartyView,
         PartyInvitationView,
         ShopSellView,
         ShopView,
@@ -120,13 +113,13 @@ internal class GameScreen
 
         _chat.Order.Clear();
         _chat.VisibilityTimer = Environment.TickCount64 + Chat.SleepTimer;
-        ChatView.MessageTextInput.Value = string.Empty;
-        OptionsView.SoundsCheckbox.Checked = Options.Instance.Sounds;
-        OptionsView.MusicsCheckbox.Checked = Options.Instance.Musics;
-        OptionsView.ChatCheckbox.Checked = Options.Instance.Chat;
-        OptionsView.MetricsCheckbox.Checked = Options.Instance.ShowMetrics;
-        OptionsView.TradeCheckbox.Checked = Options.Instance.Trade;
-        OptionsView.PartyCheckbox.Checked = Options.Instance.Party;
+        ChatView.MessageTextInput.Text = string.Empty;
+        OptionsView.SoundsCheckbox.IsChecked = Options.Instance.Sounds;
+        OptionsView.MusicsCheckbox.IsChecked = Options.Instance.Musics;
+        OptionsView.ChatCheckbox.IsChecked = Options.Instance.Chat;
+        OptionsView.MetricsCheckbox.IsChecked = Options.Instance.ShowMetrics;
+        OptionsView.TradeCheckbox.IsChecked = Options.Instance.Trade;
+        OptionsView.PartyCheckbox.IsChecked = Options.Instance.Party;
         InformationView.Hide();
     }
 

@@ -31,11 +31,12 @@
   </ItemGroup>
 
   <ItemGroup Label="Client">
-    <PackageVersion Include="Iguina" Version="1.1.5" />
-    <PackageVersion Include="Iguina.Drivers.Sfml" Version="1.0.0" />
-    <PackageVersion Include="SFML.Audio" Version="3.0.0" />
-    <PackageVersion Include="SFML.Graphics" Version="3.0.0" />
-    <PackageVersion Include="SFML.Window" Version="3.0.0" />
+    <PackageVersion Include="Myra" Version="1.6.4" />
+    <PackageVersion Include="MonoGame.Framework.Native" Version="3.8.5" />
+    <PackageVersion Include="MonoGame.Runtime.Mac.Vulkan" Version="3.8.5" />
+    <PackageVersion Include="MonoGame.Runtime.Linux.Vulkan" Version="3.8.5" />
+    <PackageVersion Include="MonoGame.Runtime.Windows.Vulkan" Version="3.8.5" />
+    <PackageVersion Include="FontStashSharp.MonoGame" Version="1.5.6" />
   </ItemGroup>
 
   <ItemGroup Label="Editor">

@@ -1,13 +1,14 @@
 using CryBits.Client.Network.Senders;
 using CryBits.Simulation.Intents;
-using Iguina.Entities;
+using Myra.Events;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game.Views;
 
 internal class TradeAmountView(UiContext uiContext, IntentSender intentSender) : ViewBase
 {
     private Panel Panel => uiContext.Get<Panel>("TradeAmount");
-    private NumericInput AmountInput => uiContext.Get<NumericInput>("TradeAmountInput");
+    private SpinButton AmountInput => uiContext.Get<SpinButton>("TradeAmountInput");
     private Button ConfirmButton => uiContext.Get<Button>("TradeAmtConfirm");
     private Button CancelButton => uiContext.Get<Button>("TradeAmtCancel");
 
@@ -18,7 +19,7 @@ internal class TradeAmountView(UiContext uiContext, IntentSender intentSender) :
     {
         _ownSlot = ownSlot;
         _inventorySlot = inventorySlot;
-        AmountInput.Value = string.Empty;
+        AmountInput.Value = 1;
         Panel.Visible = true;
         Bind();
     }
@@ -31,29 +32,30 @@ internal class TradeAmountView(UiContext uiContext, IntentSender intentSender) :
 
     public override void Bind()
     {
-        ConfirmButton.Events.OnClick += OnConfirmPressed;
-        CancelButton.Events.OnClick += OnCancelPressed;
+        ConfirmButton.Click += OnConfirmPressed;
+        CancelButton.Click += OnCancelPressed;
     }
 
     public override void Unbind()
     {
-        ConfirmButton.Events.OnClick -= OnConfirmPressed;
-        CancelButton.Events.OnClick -= OnCancelPressed;
+        ConfirmButton.Click -= OnConfirmPressed;
+        CancelButton.Click -= OnCancelPressed;
     }
 
-    private void OnConfirmPressed(Entity _)
+    private void OnConfirmPressed(object? sender, MyraEventArgs e)
     {
-        if (AmountInput.NumericValue <= 0)
+        var amount = AmountInput.Value ?? 0;
+        if (amount <= 0)
         {
-            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Invalid", "Enter a valid value!");
+            Dialog.CreateMessageBox("Invalid", "Enter a valid value!").ShowModal(uiContext.Desktop);
             return;
         }
 
-        intentSender.Send(new TradeOfferIntent(default, _ownSlot, _inventorySlot, (short)AmountInput.NumericValue));
+        intentSender.Send(new TradeOfferIntent(default, _ownSlot, _inventorySlot, (short)amount));
         Close();
     }
 
-    private void OnCancelPressed(Entity _)
+    private void OnCancelPressed(object? sender, MyraEventArgs e)
     {
         Close();
     }

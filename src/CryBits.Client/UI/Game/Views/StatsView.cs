@@ -1,5 +1,5 @@
 using CryBits.Client.UI.Game.ViewModels;
-using Iguina.Entities;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -14,19 +14,17 @@ internal class StatsView(UiContext uiContext, StatsViewModel viewModel) : ViewBa
 
     public override void Bind()
     {
-        uiContext.PostDraw += OnPostDraw;
     }
 
     public override void Unbind()
     {
-        uiContext.PostDraw -= OnPostDraw;
     }
 
-    private void OnPostDraw()
+    public void UpdateStats()
     {
-        HpBar.ValueSafe = viewModel.HpPercent;
-        MpBar.ValueSafe = viewModel.MpPercent;
-        ExpBar.ValueSafe = viewModel.ExpPercent;
+        HpBar.Value = (float)viewModel.HpPercent;
+        MpBar.Value = (float)viewModel.MpPercent;
+        ExpBar.Value = (float)viewModel.ExpPercent;
 
         HpValueLabel.Text = $"HP: {viewModel.Hp}/{viewModel.MaxHp}";
         MpValueLabel.Text = $"MP: {viewModel.Mp}/{viewModel.MaxMp}";

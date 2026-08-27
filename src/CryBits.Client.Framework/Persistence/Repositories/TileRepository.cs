@@ -2,6 +2,7 @@ using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Persistence.Serialization;
+using System.Drawing;
 using System.Text.Json;
 
 namespace CryBits.Client.Framework.Persistence.Repositories;
@@ -21,8 +22,8 @@ public static class TileRepository
 
         if (!File.Exists(path))
         {
-            var textureSize = Textures.Tiles[index].ToSize();
-            var tile = new Tile(textureSize);
+            var texture = Textures.Tiles[index]!;
+            var tile = new Tile(new Size(texture.Width, texture.Height));
             Write(index, tile);
             return tile;
         }

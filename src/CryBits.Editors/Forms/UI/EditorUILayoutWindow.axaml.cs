@@ -3,19 +3,19 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Persistence.Dtos;
-using CryBits.Client.Framework.UI;
 using CryBits.Editors.Forms.UI.ViewModels;
-using CryBits.Editors.Iguina;
-using CryBits.Editors.Utils;
-using Iguina.Entities;
+using CryBits.Editors.Preview;
+using Myra.Graphics2D.UI;
 using System.Collections.ObjectModel;
+using AvWindow = Avalonia.Controls.Window;
+using AvMenuItem = Avalonia.Controls.MenuItem;
+using MyraWidget = Myra.Graphics2D.UI.Widget;
 
 namespace CryBits.Editors.Forms.UI;
 
-internal sealed partial class EditorUILayoutWindow : Window
+internal sealed partial class EditorUILayoutWindow : AvWindow
 {
-    public static void Open(Window owner)
+    public static void Open(AvWindow owner)
     {
         owner.Hide();
         var window = new EditorUILayoutWindow();
@@ -23,7 +23,7 @@ internal sealed partial class EditorUILayoutWindow : Window
         window.Show();
     }
 
-    private readonly IguinaEditorPreview _preview;
+    private readonly MyraEditorPreview _preview;
     private readonly DispatcherTimer _timer;
     private readonly EditorUILayoutViewModel _viewModel;
 
@@ -34,9 +34,8 @@ internal sealed partial class EditorUILayoutWindow : Window
         _viewModel = new EditorUILayoutViewModel();
         DataContext = _viewModel;
         _viewModel.RequestRefresh += RebuildTree;
-        _viewModel.RequestOpenTheme += () => new EditorUIThemeWindow().Show();
 
-        _preview = new IguinaEditorPreview(800, 608);
+        _preview = new MyraEditorPreview(Program.SharedDevice!, 800, 608);
 
         var themeDir = ResolveThemeDir();
         if (themeDir != null)
@@ -61,29 +60,28 @@ internal sealed partial class EditorUILayoutWindow : Window
 
     private void OnRenderTick(object? s, EventArgs e)
     {
-        _preview.Draw();
-        imgPreview.Blit(_preview.Target);
+        Graphics.EditorGraphics.Tick();
+        _preview.Render();
+        imgPreview.BlitRenderTarget(_preview.Target);
     }
 
     private void SelectScreen()
     {
-        var config = _viewModel.CurrentLayout;
-        if (config == null || _viewModel.SelectedScreen == null) return;
+        var project = _viewModel.CurrentProject;
+        if (project == null || _viewModel.SelectedScreen == null) return;
 
-        _preview.Clear();
+        _preview.Desktop.Root = project.Root;
         _viewModel.SelectedNode = null;
         propertyGrid.DataContext = null;
 
-        var screen = config.Screens.FirstOrDefault(s => s.Name == _viewModel.SelectedScreen);
-        if (screen == null) return;
+        if (project.Root == null)
+        {
+            treEntities.ItemsSource = null;
+            return;
+        }
 
-        var (panel, reg) = LayoutBuilder.BuildScreen(_preview.UISystem, screen);
-        _preview.LoadEntity(panel);
-
-        var rootNode = new EntityNode { Header = $"[Screen] {screen.Name}", Entity = panel };
-        foreach (var el in screen.Children)
-            rootNode.Children.Add(MakeElementNode(el, reg));
-        treEntities.ItemsSource = new ObservableCollection<EntityNode> { rootNode };
+        var rootNode = MakeWidgetNode(project.Root);
+        treEntities.ItemsSource = new ObservableCollection<WidgetNode> { rootNode };
     }
 
     private void RebuildTree()
@@ -91,26 +89,30 @@ internal sealed partial class EditorUILayoutWindow : Window
         if (_viewModel.SelectedScreen != null) SelectScreen();
     }
 
-    private static EntityNode MakeElementNode(Element el, Dictionary<string, Entity> reg)
+    private static WidgetNode MakeWidgetNode(MyraWidget widget)
     {
-        var typeDiscriminator = ElementViewModelFactory.GetDiscriminator(el);
-        var node = new EntityNode { Header = $"[{typeDiscriminator}] {el.Name}", ConfigElement = el };
-        if (reg.TryGetValue(el.Name, out var entity))
-            node.Entity = entity;
-        foreach (var child in el.Children)
-            node.Children.Add(MakeElementNode(child, reg));
+        var typeName = widget.GetType().Name;
+        var id = !string.IsNullOrEmpty(widget.Id) ? widget.Id : typeName;
+        var node = new WidgetNode { Header = $"[{typeName}] {id}", Widget = widget };
+
+        if (widget is Container container)
+        {
+            foreach (var child in container.Widgets)
+            {
+                node.Children.Add(MakeWidgetNode(child));
+            }
+        }
+
         return node;
     }
 
     private void treEntities_SelectionChanged(object? s, SelectionChangedEventArgs e)
     {
-        _viewModel.SelectedNode = e.AddedItems.Count > 0 ? e.AddedItems[0] as EntityNode : null;
+        _viewModel.SelectedNode = e.AddedItems.Count > 0 ? e.AddedItems[0] as WidgetNode : null;
 
-        if (_viewModel.SelectedNode is { Entity: not null, ConfigElement: not null })
+        if (_viewModel.SelectedNode?.Widget is { } widget)
         {
-            var vm = ElementViewModelFactory.Create(_viewModel.SelectedNode.ConfigElement,
-                _viewModel.SelectedNode.Entity);
-            propertyGrid.DataContext = vm;
+            propertyGrid.DataContext = WidgetPropertiesFactory.Create(widget);
         }
         else
         {
@@ -122,16 +124,16 @@ internal sealed partial class EditorUILayoutWindow : Window
     {
         var types = new[]
         {
-            ("Panel", "Panel"), ("Button", "Button"), ("Checkbox", "Checkbox"), ("RadioButton", "Radio Button"),
-            ("TextInput", "Text Input"), ("NumericInput", "Numeric Input"), ("Label", "Label"), ("Title", "Title"),
-            ("Paragraph", "Paragraph"), ("ProgressBar", "Progress Bar"), ("Slider", "Slider"),
-            ("Picture", "Picture"), ("SlotGrid", "Slot Grid"), ("ListBox", "List Box"), ("DropDown", "Drop Down")
+            ("Panel", "Panel"), ("Button", "Button"), ("CheckButton", "Check Button"), ("RadioButton", "Radio Button"),
+            ("TextBox", "Text Box"), ("SpinButton", "Spin Button"), ("Label", "Label"),
+            ("ProgressBar", "Progress Bar"), ("Slider", "Slider"),
+            ("ListView", "List View"), ("ComboView", "Combo View"), ("Grid", "Grid")
         };
 
         var flyout = new MenuFlyout();
         foreach (var (key, label) in types)
         {
-            var item = new MenuItem { Header = label, Tag = key };
+            var item = new AvMenuItem { Header = label, Tag = key };
             item.Click += (_, _) => AddElement(key);
             flyout.Items.Add(item);
         }
@@ -139,20 +141,30 @@ internal sealed partial class EditorUILayoutWindow : Window
         FlyoutBase.SetAttachedFlyout(butAdd, flyout);
     }
 
-    private void AddElement(string discriminator)
+    private void AddElement(string widgetType)
     {
-        var config = _viewModel.CurrentLayout;
-        if (config == null || _viewModel.SelectedScreen == null) return;
-        var screen = config.Screens.FirstOrDefault(s => s.Name == _viewModel.SelectedScreen);
-        if (screen == null) return;
+        var project = _viewModel.CurrentProject;
+        if (project == null || project.Root is not Container container) return;
 
-        var el = ElementViewModelFactory.CreateDefault(discriminator);
-        el.Name = $"New{discriminator}";
-        el.X = 0;
-        el.Y = 0;
-        el.Width = 100;
-        el.Height = 24;
-        _viewModel.AddElement(el);
+        MyraWidget newWidget = widgetType switch
+        {
+            "Button" => new Myra.Graphics2D.UI.Button { Width = 100, Height = 30 },
+            "CheckButton" => new Myra.Graphics2D.UI.CheckButton(),
+            "RadioButton" => new Myra.Graphics2D.UI.RadioButton(),
+            "TextBox" => new Myra.Graphics2D.UI.TextBox { Width = 140 },
+            "SpinButton" => new Myra.Graphics2D.UI.SpinButton { Width = 80 },
+            "Label" => new Myra.Graphics2D.UI.Label { Text = "Label" },
+            "ProgressBar" => new Myra.Graphics2D.UI.HorizontalProgressBar { Width = 150, Height = 16 },
+            "Slider" => new Myra.Graphics2D.UI.HorizontalSlider { Width = 150 },
+            "ListView" => new Myra.Graphics2D.UI.ListView { Width = 120, Height = 100 },
+            "ComboView" => new Myra.Graphics2D.UI.ComboView { Width = 120 },
+            "Grid" => new Myra.Graphics2D.UI.Grid { Width = 200, Height = 200 },
+            _ => new Myra.Graphics2D.UI.Panel { Width = 100, Height = 100 }
+        };
+
+        newWidget.Id = $"New{widgetType}";
+        container.Widgets.Add(newWidget);
+        RebuildTree();
     }
 
     private void butAdd_Click(object? s, RoutedEventArgs e)

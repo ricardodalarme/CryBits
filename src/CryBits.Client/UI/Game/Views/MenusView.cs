@@ -1,4 +1,5 @@
-using Iguina.Entities;
+using Myra.Events;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -10,33 +11,33 @@ internal class MenusView(UiContext uiContext) : ViewBase
 
     public override void Bind()
     {
-        CharacterButton.Events.OnClick += OnCharacterPressed;
-        InventoryButton.Events.OnClick += OnInventoryPressed;
-        OptionsButton.Events.OnClick += OnOptionsPressed;
+        CharacterButton.Click += OnCharacterPressed;
+        InventoryButton.Click += OnInventoryPressed;
+        OptionsButton.Click += OnOptionsPressed;
     }
 
     public override void Unbind()
     {
-        CharacterButton.Events.OnClick -= OnCharacterPressed;
-        InventoryButton.Events.OnClick -= OnInventoryPressed;
-        OptionsButton.Events.OnClick -= OnOptionsPressed;
+        CharacterButton.Click -= OnCharacterPressed;
+        InventoryButton.Click -= OnInventoryPressed;
+        OptionsButton.Click -= OnOptionsPressed;
     }
 
-    private void OnCharacterPressed(Entity _)
+    private void OnCharacterPressed(object? sender, MyraEventArgs e)
     {
         uiContext.Registry["CharacterPanel"].Visible = !uiContext.Registry["CharacterPanel"].Visible;
         uiContext.Registry["InventoryPanel"].Visible = false;
         uiContext.Registry["OptionsPanel"].Visible = false;
     }
 
-    private void OnInventoryPressed(Entity _)
+    private void OnInventoryPressed(object? sender, MyraEventArgs e)
     {
         uiContext.Registry["InventoryPanel"].Visible = !uiContext.Registry["InventoryPanel"].Visible;
         uiContext.Registry["CharacterPanel"].Visible = false;
         uiContext.Registry["OptionsPanel"].Visible = false;
     }
 
-    private void OnOptionsPressed(Entity _)
+    private void OnOptionsPressed(object? sender, MyraEventArgs e)
     {
         uiContext.Registry["OptionsPanel"].Visible = !uiContext.Registry["OptionsPanel"].Visible;
         uiContext.Registry["CharacterPanel"].Visible = false;

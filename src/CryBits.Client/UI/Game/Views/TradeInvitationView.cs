@@ -1,6 +1,7 @@
 using CryBits.Client.Network.Senders;
 using CryBits.Simulation.Intents;
-using Iguina.Entities;
+using Myra.Events;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -13,23 +14,23 @@ internal class TradeInvitationView(UiContext uiContext, IntentSender intentSende
 
     public override void Bind()
     {
-        AcceptButton.Events.OnClick += OnAcceptPressed;
-        DeclineButton.Events.OnClick += OnDeclinePressed;
+        AcceptButton.Click += OnAcceptPressed;
+        DeclineButton.Click += OnDeclinePressed;
     }
 
     public override void Unbind()
     {
-        AcceptButton.Events.OnClick -= OnAcceptPressed;
-        DeclineButton.Events.OnClick -= OnDeclinePressed;
+        AcceptButton.Click -= OnAcceptPressed;
+        DeclineButton.Click -= OnDeclinePressed;
     }
 
-    private void OnAcceptPressed(Entity _)
+    private void OnAcceptPressed(object? sender, MyraEventArgs e)
     {
         intentSender.Send(new TradeAcceptIntent(default));
         Panel.Visible = false;
     }
 
-    private void OnDeclinePressed(Entity _)
+    private void OnDeclinePressed(object? sender, MyraEventArgs e)
     {
         intentSender.Send(new TradeDeclineIntent(default));
         Panel.Visible = false;

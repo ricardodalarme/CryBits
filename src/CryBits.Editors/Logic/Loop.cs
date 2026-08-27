@@ -75,8 +75,8 @@ internal class Loop(EditorShell shell)
         }
 
         // Start the map music if not already playing.
-        if (shell.Audio.CurrentMusicDevice == null ||
-            shell.Audio.CurrentMusicName != win.SelectedMap?.Music)
+        if (shell.Audio.CurrentMusic == null ||
+            shell.Audio.CurrentMusic != win.SelectedMap?.Music)
             shell.Audio.PlayMusic(win.SelectedMap!.Music);
     }
 }

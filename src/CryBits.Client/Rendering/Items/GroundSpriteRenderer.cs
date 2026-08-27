@@ -1,7 +1,7 @@
 using CryBits.Client.Components;
-using CryBits.Client.Framework.Assets;
+using Microsoft.Xna.Framework.Graphics;
 using CryBits.Simulation.Core;
-using System.Drawing;
+using Microsoft.Xna.Framework;
 
 namespace CryBits.Client.Rendering.Items;
 
@@ -16,8 +16,8 @@ internal sealed class GroundSpriteRenderer(World world, SpriteBatch spriteBatch)
             if (transform == null || sprite == null) continue;
             if (world.Has<AnimationState>(entityId)) continue;
 
-            var source = sprite.SourceRect ?? new Rectangle(Point.Empty, sprite.Texture.ToSize());
-            var dest = source with { X = transform.X, Y = transform.Y };
+            var source = new Rectangle(0, 0, sprite.Texture.Width, sprite.Texture.Height);
+            var dest = new Rectangle(transform.X, transform.Y, source.Width, source.Height);
 
             spriteBatch.Draw(sprite.Texture, source, dest, sprite.Tint);
         }

@@ -1,60 +1,50 @@
 using CryBits.Client.Rendering.Camera;
+using CryBits.Client.Rendering.Effects;
+using CryBits.Client.Rendering.Entities;
+using CryBits.Client.Rendering.Items;
 using CryBits.Client.Rendering.Map;
-using CryBits.Client.UI;
 using CryBits.Definitions.Maps;
-using SFML.Graphics;
-using Color = SFML.Graphics.Color;
+using CryBits.Simulation.Core;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CryBits.Client.Rendering;
 
-internal sealed class RenderPipeline(
-    SpriteBatch spriteBatch,
-    CameraManager cameraManager,
-    TilemapRenderer tilemapRenderer,
-    UiContext uiContext,
-    IEnumerable<IRenderer> groundRenderers,
-    IEnumerable<IRenderer> fringeRenderers)
+internal sealed class RenderPipeline(World world, SpriteBatch spriteBatch, CameraManager cameraManager)
 {
+    private readonly SpriteBatch _spriteBatch = spriteBatch;
+    private readonly CameraManager _cameraManager = cameraManager;
+    private readonly TilemapRenderer _tilemapRenderer = new(spriteBatch, world, cameraManager);
+    private readonly IRenderer[] _groundRenderers =
+    [
+        new GroundSpriteRenderer(world, spriteBatch),
+        new EntitySpriteRenderer(world, spriteBatch)
+    ];
+    private readonly IRenderer[] _fringeRenderers =
+    [
+        new HealthBarRenderer(world, spriteBatch),
+        new WeatherParticleRenderer(world, spriteBatch),
+        new FogRenderer(world, spriteBatch)
+    ];
+
+    private static readonly BlendState DefaultBlend = BlendState.NonPremultiplied;
+    private static readonly SamplerState DefaultSampler = SamplerState.PointClamp;
+    private static readonly SpriteSortMode DefaultSort = SpriteSortMode.Deferred;
+
     public void Present()
     {
-        spriteBatch.RenderWindow.Clear(Color.Black);
+        _spriteBatch.Begin(DefaultSort, DefaultBlend, DefaultSampler, transformMatrix: _cameraManager.WorldTransform);
 
-        InGame();
+        _tilemapRenderer.DrawPanorama();
+        _tilemapRenderer.DrawLayer(Layer.Ground);
 
-        DrawUI();
+        foreach (var renderer in _groundRenderers)
+            renderer.Render();
 
-        spriteBatch.RenderWindow.Display();
-    }
+        _tilemapRenderer.DrawLayer(Layer.Fringe);
 
-    private void InGame()
-    {
-        if (uiContext.CurrentScreen != ScreenType.Game) return;
+        foreach (var renderer in _fringeRenderers)
+            renderer.Render();
 
-        cameraManager.BeginWorldDraw();
-
-        tilemapRenderer.DrawPanorama();
-        tilemapRenderer.DrawLayer(Layer.Ground);
-
-        foreach (var renderer in groundRenderers) renderer.Render();
-
-        tilemapRenderer.DrawLayer(Layer.Fringe);
-
-        foreach (var renderer in fringeRenderers) renderer.Render();
-    }
-
-    private void DrawUI()
-    {
-        cameraManager.BeginUIDraw();
-
-        uiContext.Draw();
-
-        var uiTarget = uiContext.Target;
-        if (uiTarget != null)
-        {
-            var sprite = new Sprite(uiTarget.Texture);
-            spriteBatch.RenderWindow.Draw(sprite);
-        }
-
-        uiContext.PostDraw?.Invoke();
+        _spriteBatch.End();
     }
 }

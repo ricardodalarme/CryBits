@@ -1,50 +1,82 @@
 using CryBits.Client.Core;
+using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Input;
 using CryBits.Client.Network.Handlers;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.Rendering;
 using CryBits.Client.Rendering.UI;
 using CryBits.Client.UI;
 using CryBits.Client.UI.Menu;
 using CryBits.Definitions.Catalog;
 using CryBits.Protocol.Serialization;
 using CryBits.Simulation.Intents;
-using SFML.Graphics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+using static CryBits.Definitions.Globals;
 
 namespace CryBits.Client;
 
-public sealed class Game : IDisposable
+public sealed class Game : Microsoft.Xna.Framework.Game
 {
-    private readonly UiContext _uiContext;
-    private readonly InputManager _inputManager;
-    private readonly SpriteBatch _spriteBatch;
+    private readonly GraphicsDeviceManager _graphics;
     private readonly Connection _connection;
-    private readonly AudioManager _audioManager = new();
-    private readonly DefinitionCatalog _catalog = new();
-    private readonly MenuScreen _menuScreen = null!;
+
+    private SpriteBatch _spriteBatch = null!;
+    private UiContext _uiContext = null!;
+    private InputManager _inputManager = null!;
+    private AudioManager _audioManager = null!;
+    private DefinitionCatalog _catalog = null!;
+    private MenuScreen _menuScreen = null!;
     private GameSession? _activeSession;
 
-    /// <summary>Latest measured frame rate, written by the launcher loop, read by the UI.</summary>
-    public short Fps { get; set; }
+    private short _fpsCounter;
+    private double _nextFpsReset;
 
-    public Game(SpriteBatch spriteBatch, Connection connection)
+    /// <summary>Latest measured frame rate.</summary>
+    public short Fps { get; private set; }
+
+    public Game(Connection connection)
     {
-        _spriteBatch = spriteBatch;
         _connection = connection;
 
-        var window = spriteBatch.RenderWindow;
-        _uiContext = new UiContext(window.Size.X, window.Size.Y, window);
-        _inputManager = new InputManager(_uiContext.UISystem, window);
+        _graphics = new GraphicsDeviceManager(this)
+        {
+            PreferredBackBufferWidth = ScreenWidth,
+            PreferredBackBufferHeight = ScreenHeight
+        };
+        _graphics.ApplyChanges();
 
-        window.LostFocus += (_, _) => _inputManager.IsFocused = false;
-        window.GainedFocus += (_, _) => _inputManager.IsFocused = true;
+        Content.RootDirectory = "Content";
+        Window.Title = Config.GameName;
+        Window.AllowUserResizing = false;
+        IsFixedTimeStep = false;
+        IsMouseVisible = true;
+    }
+
+    protected override void Initialize()
+    {
+        // Touch the static font cache so it pre-loads Georgia.ttf before any UI starts.
+        _ = Fonts.System;
+
+        // Build the MonoGame SpriteBatch directly on the GraphicsDevice.
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        // Register the GraphicsDevice so the static Textures cache can lazy-load assets.
+        Textures.Initialize(GraphicsDevice);
+
+        var viewport = GraphicsDevice.Viewport;
+        _uiContext = new UiContext(this, GraphicsDevice, viewport.Width, viewport.Height);
+        _inputManager = new InputManager(_uiContext.Desktop);
+        _audioManager = new AudioManager();
+        _catalog = new DefinitionCatalog();
 
         RegisterIntentTypes();
 
-        _menuScreen = new MenuScreen(_audioManager, _uiContext, new AuthSender(connection),
-            new AccountSender(connection), new PortraitRenderer(spriteBatch), _catalog, connection);
+        _menuScreen = new MenuScreen(
+            _audioManager, _uiContext, new AuthSender(_connection),
+            new AccountSender(_connection), new PortraitRenderer(_spriteBatch), _catalog, _connection);
 
         PacketDispatcher.Register(new AuthHandler(_catalog, _uiContext, _menuScreen));
         PacketDispatcher.Register(new AccountHandler(this, _menuScreen));
@@ -52,38 +84,40 @@ public sealed class Game : IDisposable
 
         _audioManager.LoadSounds();
         _menuScreen.Open();
+
+        _connection.Start(onDisconnected: EndSession);
+
+        base.Initialize();
     }
 
-    public void Update(float deltaTime)
+    protected override void Update(GameTime gameTime)
     {
-        _inputManager.BeginFrame();
-        _uiContext.Update(deltaTime);
+        var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        _connection.Poll();
+        _inputManager.Capture();
         _activeSession?.Scheduler.Update(_activeSession.World, deltaTime);
+
+        _fpsCounter++;
+        if (gameTime.TotalGameTime.TotalSeconds >= _nextFpsReset)
+        {
+            Fps = _fpsCounter;
+            _fpsCounter = 0;
+            _nextFpsReset = gameTime.TotalGameTime.TotalSeconds + 1.0;
+        }
+
+        base.Update(gameTime);
     }
 
-    public void Render(RenderWindow window)
+    protected override void Draw(GameTime gameTime)
     {
-        if (_activeSession != null)
-        {
-            _activeSession.RenderPipeline.Present();
-        }
-        else
-        {
-            window.Clear(Color.Black);
-            var originalView = window.DefaultView;
-            window.SetView(originalView);
-            _uiContext.Draw();
+        GraphicsDevice.Clear(Color.Black);
 
-            var uiTarget = _uiContext.Target;
-            if (uiTarget != null)
-            {
-                var sprite = new Sprite(uiTarget.Texture);
-                window.Draw(sprite);
-            }
+        _activeSession?.RenderPipeline.Present();
 
-            _uiContext.PostDraw?.Invoke();
-            window.Display();
-        }
+        _uiContext.Render();
+
+        base.Draw(gameTime);
     }
 
     public void StartSession(long localPlayerId)
@@ -110,9 +144,15 @@ public sealed class Game : IDisposable
         _menuScreen.Open();
     }
 
-    public void Dispose()
+    protected override void Dispose(bool disposing)
     {
-        _activeSession?.Dispose();
+        if (disposing)
+        {
+            _activeSession?.Dispose();
+            _spriteBatch?.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 
     private static void RegisterIntentTypes()

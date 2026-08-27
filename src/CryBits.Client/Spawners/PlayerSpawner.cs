@@ -7,7 +7,7 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using SFML.Graphics;
+using Microsoft.Xna.Framework;
 using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Spawners;
@@ -24,7 +24,8 @@ internal static class PlayerSpawner
         int x, int y,
         Direction direction)
     {
-        var texture = Textures.Characters[textureNum];
+        if (Textures.Characters[textureNum] is not { } texture)
+            throw new InvalidOperationException($"Character texture not found: {textureNum}");
 
         return world.SpawnBuilder()
             .With(new NetworkId(networkId))

@@ -1,16 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <Title>CryBits.Editors</Title>
     <Product>CryBits</Product>
     <AssemblyVersion>0.8.0</AssemblyVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <RootNamespace>CryBits.Editors</RootNamespace>
     <AssemblyName>CryBits.Editors</AssemblyName>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <MonoGamePlatform>DesktopVK</MonoGamePlatform>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,17 +27,19 @@
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Dock.Avalonia" />
     <PackageReference Include="Dock.Model.Avalonia" />
-    <PackageReference Include="Iguina" />
-    <PackageReference Include="Iguina.Drivers.Sfml" />
+    <PackageReference Include="FontStashSharp.MonoGame" />
+    <PackageReference Include="Myra" />
     <PackageReference Include="LiteNetLib" />
     <PackageReference Include="MessageBox.Avalonia" />
+    <PackageReference Include="MonoGame.Framework.Native" />
+    <PackageReference Include="MonoGame.Runtime.Mac.Vulkan" />
+    <PackageReference Include="MonoGame.Runtime.Linux.Vulkan" />
+    <PackageReference Include="MonoGame.Runtime.Windows.Vulkan" />
     <PackageReference Include="Nox.Avalonia" />
     <PackageReference Include="Nox.Avalonia.DataGrid" />
     <PackageReference Include="Nox.Avalonia.Dock" />
     <PackageReference Include="Nox.Avalonia.PropertyGrid" />
     <PackageReference Include="PanAndZoom" />
-    <PackageReference Include="SFML.Audio" />
-    <PackageReference Include="SFML.Graphics" />
     <PackageReference Include="bodong.Avalonia.PropertyGrid" />
   </ItemGroup>
 

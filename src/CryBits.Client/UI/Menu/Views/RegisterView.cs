@@ -1,25 +1,30 @@
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Network.Senders;
-using Iguina.Entities;
+using Myra.Events;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class RegisterView(UiContext uiContext, AuthSender authSender, Connection connection, MenuScreen menuScreen)
-    : ViewBase
+internal class RegisterView(
+    UiContext uiContext,
+    AuthSender authSender,
+    Connection connection,
+    MenuScreen menuScreen) : ViewBase
 {
     private Panel RegisterPanel => uiContext.Get<Panel>("Register");
-    private TextInput UsernameTextBox => uiContext.Get<TextInput>("RegisterUsername");
-    private TextInput PasswordTextBox => uiContext.Get<TextInput>("RegisterPassword");
-    private TextInput ConfirmPasswordTextBox => uiContext.Get<TextInput>("RegisterConfirm");
-    private Button ConfirmButton => uiContext.Get<Button>("RegisterConfirmBtn");
-    private Button LoginButton => uiContext.Get<Button>("RegisterBackBtn");
+    private TextBox UsernameTextBox => uiContext.Get<TextBox>("RegisterUsername");
+    private TextBox PasswordTextBox => uiContext.Get<TextBox>("RegisterPassword");
+    private TextBox PasswordConfirmTextBox => uiContext.Get<TextBox>("RegisterConfirm");
+
+    private Button RegisterButton => uiContext.Get<Button>("RegisterConfirmBtn");
+    private Button BackButton => uiContext.Get<Button>("RegisterBackBtn");
 
     public void Open()
     {
-        UsernameTextBox.Value = string.Empty;
-        PasswordTextBox.Value = string.Empty;
-        ConfirmPasswordTextBox.Value = string.Empty;
         RegisterPanel.Visible = true;
+        UsernameTextBox.Text = string.Empty;
+        PasswordTextBox.Text = string.Empty;
+        PasswordConfirmTextBox.Text = string.Empty;
         Bind();
     }
 
@@ -31,36 +36,36 @@ internal class RegisterView(UiContext uiContext, AuthSender authSender, Connecti
 
     public override void Bind()
     {
-        ConfirmButton.Events.OnClick += OnConfirmPressed;
-        LoginButton.Events.OnClick += OnLoginPressed;
+        RegisterButton.Click += OnRegisterPressed;
+        BackButton.Click += OnBackPressed;
     }
 
     public override void Unbind()
     {
-        ConfirmButton.Events.OnClick -= OnConfirmPressed;
-        LoginButton.Events.OnClick -= OnLoginPressed;
+        RegisterButton.Click -= OnRegisterPressed;
+        BackButton.Click -= OnBackPressed;
     }
 
-    private void OnConfirmPressed(Entity _)
+    private void OnRegisterPressed(object? sender, MyraEventArgs e)
     {
-        if (PasswordTextBox.Value != ConfirmPasswordTextBox.Value)
+        if (!connection.IsConnected)
         {
-            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Registration", "The passwords don't match.");
+            Dialog.CreateMessageBox("Error", "Can't connect to server!").ShowModal(uiContext.Desktop);
             return;
         }
 
-        if (!connection.TryConnect())
+        var username = UsernameTextBox.Text;
+        var password = PasswordTextBox.Text;
+        var confirmPassword = PasswordConfirmTextBox.Text;
+
+        if (password != confirmPassword)
         {
-            uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Server", "The server is currently unavailable.");
+            Dialog.CreateMessageBox("Error", "Passwords do not match!").ShowModal(uiContext.Desktop);
             return;
         }
 
-        authSender.Register(UsernameTextBox.Value, PasswordTextBox.Value);
+        authSender.Register(username, password);
     }
 
-    private void OnLoginPressed(Entity _)
-    {
-        connection.Disconnect();
-        menuScreen.ShowLogin();
-    }
+    private void OnBackPressed(object? sender, MyraEventArgs e) => menuScreen.ShowLogin();
 }

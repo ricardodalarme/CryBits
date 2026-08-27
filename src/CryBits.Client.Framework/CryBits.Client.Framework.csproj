@@ -9,10 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Iguina" />
-    <PackageReference Include="SFML.Audio" />
-    <PackageReference Include="SFML.Graphics" />
-    <PackageReference Include="SFML.Window" />
+    <PackageReference Include="Myra" />
+    <PackageReference Include="MonoGame.Framework.Native" />
+    <PackageReference Include="FontStashSharp.MonoGame" />
     <PackageReference Include="MemoryPack" />
   </ItemGroup>
 

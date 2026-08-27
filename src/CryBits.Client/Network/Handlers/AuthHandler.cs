@@ -3,6 +3,7 @@ using CryBits.Client.UI.Menu;
 using CryBits.Definitions.Catalog;
 using CryBits.Protocol;
 using CryBits.Protocol.Packets.Server;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -11,7 +12,7 @@ internal class AuthHandler(DefinitionCatalog catalog, UiContext uiContext, MenuS
     [PacketHandler]
     internal void Alert(AlertPacket packet)
     {
-        uiContext.UISystem?.MessageBoxes.ShowInfoMessageBox("Server", packet.Message);
+        Dialog.CreateMessageBox("Server", packet.Message).ShowModal(uiContext.Desktop);
     }
 
     [PacketHandler]

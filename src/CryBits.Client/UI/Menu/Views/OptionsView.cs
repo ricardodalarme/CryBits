@@ -1,25 +1,25 @@
 using CryBits.Client.Framework;
-using CryBits.Client.Framework.Assets;
 using CryBits.Client.Framework.Audio;
-using CryBits.Client.Framework.Network;
-using CryBits.Client.Framework.Persistence.Repositories;
-using Iguina.Entities;
+using Myra.Events;
+using Myra.Graphics2D.UI;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class OptionsView(UiContext uiContext, AudioManager audioManager, Connection connection, MenuScreen menuScreen)
-    : ViewBase
+internal class OptionsView(
+    UiContext uiContext,
+    AudioManager audioManager,
+    MenuScreen menuScreen) : ViewBase
 {
     private Panel OptionsPanel => uiContext.Get<Panel>("Options");
-    private Checkbox SoundsCheckbox => uiContext.Get<Checkbox>("Sounds");
-    private Checkbox MusicsCheckbox => uiContext.Get<Checkbox>("Musics");
+    private CheckButton SoundsCheckbox => uiContext.Get<CheckButton>("Sounds");
+    private CheckButton MusicsCheckbox => uiContext.Get<CheckButton>("Musics");
     private Button BackButton => uiContext.Get<Button>("OptionsBack");
 
     public void Open()
     {
-        SoundsCheckbox.Checked = Options.Instance.Sounds;
-        MusicsCheckbox.Checked = Options.Instance.Musics;
         OptionsPanel.Visible = true;
+        SoundsCheckbox.IsChecked = Options.Instance.Sounds;
+        MusicsCheckbox.IsChecked = Options.Instance.Musics;
         Bind();
     }
 
@@ -31,39 +31,33 @@ internal class OptionsView(UiContext uiContext, AudioManager audioManager, Conne
 
     public override void Bind()
     {
-        SoundsCheckbox.Events.OnValueChanged += OnSoundsChanged;
-        MusicsCheckbox.Events.OnValueChanged += OnMusicsChanged;
-        BackButton.Events.OnClick += OnBackPressed;
+        SoundsCheckbox.Click += OnSoundsChanged;
+        MusicsCheckbox.Click += OnMusicsChanged;
+        BackButton.Click += OnBackPressed;
     }
 
     public override void Unbind()
     {
-        SoundsCheckbox.Events.OnValueChanged -= OnSoundsChanged;
-        MusicsCheckbox.Events.OnValueChanged -= OnMusicsChanged;
-        BackButton.Events.OnClick -= OnBackPressed;
+        SoundsCheckbox.Click -= OnSoundsChanged;
+        MusicsCheckbox.Click -= OnMusicsChanged;
+        BackButton.Click -= OnBackPressed;
     }
 
-    private void OnSoundsChanged(Entity _)
+    private void OnSoundsChanged(object? sender, MyraEventArgs e)
     {
-        Options.Instance.Sounds = SoundsCheckbox.Checked;
-        if (!Options.Instance.Sounds) audioManager.StopAllSounds();
-        OptionsRepository.Write();
+        Options.Instance.Sounds = SoundsCheckbox.IsChecked;
+        if (!SoundsCheckbox.IsChecked)
+            audioManager.StopAllSounds();
     }
 
-    private void OnMusicsChanged(Entity _)
+    private void OnMusicsChanged(object? sender, MyraEventArgs e)
     {
-        Options.Instance.Musics = MusicsCheckbox.Checked;
-        OptionsRepository.Write();
-
-        if (!Options.Instance.Musics)
+        Options.Instance.Musics = MusicsCheckbox.IsChecked;
+        if (!MusicsCheckbox.IsChecked)
             audioManager.StopMusic();
-        else
-            audioManager.PlayMusic(Musics.Menu);
+        else if (audioManager.CurrentMusic != null)
+            audioManager.PlayMusic(audioManager.CurrentMusic);
     }
 
-    private void OnBackPressed(Entity _)
-    {
-        connection.Disconnect();
-        menuScreen.ShowLogin();
-    }
+    private void OnBackPressed(object? sender, MyraEventArgs e) => menuScreen.ShowLogin();
 }
